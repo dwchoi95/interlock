@@ -1,5 +1,6 @@
 import json
-from interlock.adjudicate import RUBRIC, EFFECT_SCHEMA, build_messages, adjudicate
+import pytest
+from interlock.adjudicate import RUBRIC, EFFECT_SCHEMA, MAX_TOOLS_CHARS, build_messages, adjudicate
 
 SURFACE = {"package": "a", "version": "1", "kind": "npm",
            "tools": [{"name": "read_file", "description": "d", "inputSchema": {"type": "object"}, "annotations": None}]}
@@ -38,3 +39,25 @@ def test_adjudicate_parses_structured_output():
                 return R()
     out = adjudicate(SURFACE, FILES, client=FakeClient())
     assert out["tools"]["read_file"]["labels"] == ["SECRET"]
+
+def test_build_messages_rejects_tool_list_over_the_char_limit():
+    tool = {"name": "t", "description": "x" * 1000, "inputSchema": {"type": "object"}, "annotations": None}
+    per_tool = len(json.dumps(tool, separators=(",", ":")))
+    huge = {"package": "big-pkg", "version": "1", "kind": "npm",
+            "tools": [tool] * (MAX_TOOLS_CHARS // per_tool + 10)}
+    with pytest.raises(ValueError, match="big-pkg"):
+        build_messages(huge, FILES)
+
+def test_adjudicate_raises_valueerror_when_no_text_block():
+    class FakeClient:
+        class messages:
+            @staticmethod
+            def create(**kw):
+                class Block: type = "other"
+                class R:
+                    content = [Block()]
+                    stop_reason = "refusal"
+                return R()
+    with pytest.raises(ValueError, match="refusal") as excinfo:
+        adjudicate(SURFACE, FILES, client=FakeClient())
+    assert SURFACE["package"] in str(excinfo.value)

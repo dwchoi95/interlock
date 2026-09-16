@@ -65,9 +65,16 @@ EFFECT_SCHEMA = {
     "additionalProperties": False,
 }
 
+MAX_TOOLS_CHARS = 400_000
+
 def build_messages(surface: dict, source_files: list[tuple[str, str]]) -> list[dict]:
     code = "\n\n".join(f"===== {rel} =====\n{text}" for rel, text in source_files)
-    tools = json.dumps(surface["tools"], indent=1)[:200_000]
+    tools = json.dumps(surface["tools"], separators=(",", ":"))
+    if len(tools) > MAX_TOOLS_CHARS:
+        raise ValueError(
+            f"{surface['package']}: {len(surface['tools'])} tools serialise to {len(tools)} chars, "
+            f"exceeding MAX_TOOLS_CHARS={MAX_TOOLS_CHARS}; refusing to silently truncate the tool list"
+        )
     return [{"role": "user", "content": [
         {"type": "text",
          "text": f"Server {surface['package']}@{surface['version']} ({surface['kind']}). Source follows.\n\n{code}",
@@ -87,7 +94,12 @@ def _params(surface, source_files, model):
 
 def adjudicate(surface: dict, source_files: list[tuple[str, str]], client, model: str = "claude-opus-5") -> dict:
     response = client.messages.create(**_params(surface, source_files, model))
-    text = next(b.text for b in response.content if b.type == "text")
+    text = next((b.text for b in response.content if b.type == "text"), None)
+    if text is None:
+        raise ValueError(
+            f"{surface['package']}: no text block in response "
+            f"(stop_reason={getattr(response, 'stop_reason', None)!r})"
+        )
     return json.loads(text)
 
 def batch_request(custom_id: str, surface: dict, source_files: list[tuple[str, str]], model: str = "claude-opus-5"):
