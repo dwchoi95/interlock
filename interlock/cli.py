@@ -1,6 +1,6 @@
 """interlock profile npm:@scope/pkg  |  interlock batch packages.txt"""
 from __future__ import annotations
-import argparse, json, sys, time
+import argparse, hashlib, json, re, sys, time
 from pathlib import Path
 from interlock.adjudicate import batch_request
 from interlock.pipeline import build_profile, verify
@@ -32,31 +32,91 @@ def cmd_profile(args) -> int:
           f"{stats['demoted']} demoted, {len(stats['missing_tools'])} tools unjudged")
     return 0
 
-def cmd_batch(args) -> int:
-    client = make_client()
-    specs = [l.strip() for l in Path(args.packages).read_text().splitlines() if l.strip() and not l.startswith("#")]
-    prepared = {}
+def _custom_id(kind: str, package: str) -> str:
+    """Batches API custom_id: letters/digits/_/- only, <=64 chars. Sanitise, then append a
+    hash suffix of the untruncated kind:package so truncation can't collide two long ids."""
+    base = re.sub(r"[^A-Za-z0-9_-]", "-", f"{kind}_{package}")
+    suffix = hashlib.sha256(f"{kind}:{package}".encode()).hexdigest()[:8]
+    return f"{base[:64 - len(suffix) - 1]}-{suffix}"
+
+def _manifest_path(out_dir: Path) -> Path:
+    return out_dir / "batch-manifest.json"
+
+def _write_manifest(path: Path, entries: list[dict], batch_id: str | None) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"batch_id": batch_id, "packages": entries}, indent=1))
+
+def _prepare_batch(specs: list[str], surfaces_path: Path, cache_dir: Path) -> tuple[list, list[dict]]:
+    """Load each surface, fetch its source, and build the batch request plus a manifest
+    entry recording enough to resume: custom_id, kind, package, version, resolved root."""
+    seen: dict[str, str] = {}
+    manifest_entries = []
     requests = []
     for spec in specs:
         kind, package = _split(spec)
-        surface = load_surface(Path(args.surfaces), package)
-        root = fetch_source(kind, package, surface["version"], Path(args.cache))
+        surface = load_surface(surfaces_path, package)
+        root = fetch_source(kind, package, surface["version"], cache_dir)
         files = select_files(root, [t["name"] for t in surface["tools"]])
-        cid = f"{kind}_{package.replace('/', '_').lstrip('@')}"[:64]
-        prepared[cid] = (surface, root)
+        cid = _custom_id(kind, package)
+        if cid in seen:
+            raise ValueError(f"duplicate custom_id {cid!r} for {seen[cid]!r} and {spec!r}")
+        seen[cid] = spec
+        manifest_entries.append({"custom_id": cid, "kind": kind, "package": package,
+                                  "version": surface["version"], "root": str(root)})
         requests.append(batch_request(cid, surface, files))
-    batch = client.messages.batches.create(requests=requests)
-    print(f"batch {batch.id} with {len(requests)} requests")
-    while client.messages.batches.retrieve(batch.id).processing_status != "ended":
+    return requests, manifest_entries
+
+def _poll(client, batch_id: str) -> None:
+    """Poll until the batch ends, printing progress. Tolerates transient retrieve() errors
+    (network blip mid multi-hour run) instead of dying and losing an already-billed batch."""
+    while True:
+        try:
+            status = client.messages.batches.retrieve(batch_id)
+        except Exception as e:
+            print(f"batch {batch_id}: poll error, retrying: {e}", file=sys.stderr)
+            time.sleep(30)
+            continue
+        print(f"batch {batch_id}: {status.processing_status} {getattr(status, 'request_counts', None)}")
+        if status.processing_status == "ended":
+            return
         time.sleep(30)
-    for result in client.messages.batches.results(batch.id):
-        surface, root = prepared[result.custom_id]
+
+def cmd_batch(args) -> int:
+    client = make_client()
+    out_dir = Path(args.out)
+    manifest_path = _manifest_path(out_dir)
+
+    if args.resume:
+        manifest = json.loads(manifest_path.read_text())
+        batch_id = manifest["batch_id"]
+        if not batch_id:
+            print(f"{manifest_path}: no batch id recorded, nothing to resume", file=sys.stderr)
+            return 1
+        entries = {e["custom_id"]: e for e in manifest["packages"]}
+    else:
+        specs = [l.strip() for l in Path(args.packages).read_text().splitlines() if l.strip() and not l.startswith("#")]
+        requests, manifest_entries = _prepare_batch(specs, Path(args.surfaces), Path(args.cache))
+        _write_manifest(manifest_path, manifest_entries, batch_id=None)
+        batch = client.messages.batches.create(requests=requests)
+        _write_manifest(manifest_path, manifest_entries, batch_id=batch.id)
+        print(f"batch {batch.id} with {len(requests)} requests")
+        batch_id = batch.id
+        entries = {e["custom_id"]: e for e in manifest_entries}
+
+    _poll(client, batch_id)
+
+    for result in client.messages.batches.results(batch_id):
+        entry = entries.get(result.custom_id)
+        if entry is None:
+            print(f"{result.custom_id}: not in manifest, skipping", file=sys.stderr)
+            continue
         if result.result.type != "succeeded":
             print(f"{result.custom_id}: {result.result.type}", file=sys.stderr)
             continue
+        surface = load_surface(Path(args.surfaces), entry["package"], entry["version"])
         text = next(b.text for b in result.result.message.content if b.type == "text")
-        profile, stats = verify(json.loads(text), surface, root)
-        _write(Path(args.out), profile, stats)
+        profile, stats = verify(json.loads(text), surface, Path(entry["root"]))
+        _write(out_dir, profile, stats)
         print(f"{profile.package}@{profile.version}: {stats['verified']}/{stats['claims']} verified")
     return 0
 
@@ -72,6 +132,9 @@ def main(argv: list[str] | None = None) -> int:
         if name == "profile":
             s.add_argument("--version", default=None)
             s.add_argument("--source-ref", default=None, help="git URL when kind is git")
+        else:
+            s.add_argument("--resume", default=None, metavar="BATCH_ID",
+                           help="skip preparation/submission; poll and write results for an already-submitted batch")
     args = p.parse_args(argv)
     return cmd_profile(args) if args.cmd == "profile" else cmd_batch(args)
 
