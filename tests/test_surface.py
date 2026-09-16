@@ -24,3 +24,7 @@ def test_load_specific_version(tmp_path):
 def test_missing_package_raises(tmp_path):
     with pytest.raises(KeyError):
         load_surface(fixture(tmp_path), "nope")
+
+def test_missing_version_raises(tmp_path):
+    with pytest.raises(KeyError):
+        load_surface(fixture(tmp_path), "a", "99.9.9")
