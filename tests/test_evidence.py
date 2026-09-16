@@ -32,3 +32,42 @@ def test_check_tool_uses_tool_name_and_backticked_identifiers(tmp_path):
 def test_check_tool_without_citation_is_unverified(tmp_path):
     ok, reason = check_tool(tree(tmp_path), ToolEffect(labels=["SINK"], evidence=[], rationale="x"), "post")
     assert ok is False and "no citation" in reason
+
+def test_check_citation_rejects_paths_that_escape_root(tmp_path, tmp_path_factory):
+    root = tree(tmp_path)
+    # Hermetic stand-in for a real /etc/passwd: a file that genuinely exists, outside
+    # root, containing the token — proving the rejection is containment, not mere absence.
+    outside = tmp_path_factory.mktemp("outside")
+    (outside / "passwd.conf").write_text("readFileSync\n")
+
+    absolute_citation = f"{outside / 'passwd.conf'}:1"
+    assert check_citation(root, absolute_citation, ["readFileSync"]) is False
+
+    traversal = Path("..") / outside.relative_to(tmp_path.parent) / "passwd.conf"
+    traversal_citation = f"{traversal}:1"
+    assert check_citation(root, traversal_citation, ["readFileSync"]) is False
+
+def test_check_citation_bare_basename_ambiguous_suffix_path_is_not(tmp_path):
+    # Simulates an npm-style fetch prefix ("pkg/") the citation omits, with two same-named
+    # files: a bare "index.js" must not guess between them, but a path-suffix disambiguates.
+    (tmp_path / "pkg" / "src").mkdir(parents=True)
+    (tmp_path / "pkg" / "lib").mkdir(parents=True)
+    (tmp_path / "pkg" / "src" / "index.js").write_text("module.exports = read_file;\n")
+    (tmp_path / "pkg" / "lib" / "index.js").write_text("module.exports = spawnSync;\n")
+
+    assert check_citation(tmp_path, "index.js:1", ["read_file"]) is False
+    assert check_citation(tmp_path, "src/index.js:1", ["read_file"]) is True
+
+def range_tree(tmp_path):
+    (tmp_path / "src2").mkdir()
+    (tmp_path / "src2" / "server.js").write_text(
+        "line1\nline2\nline3\nline4\nconst range_token = 1;\n")
+    return tmp_path
+
+def test_range_citation_widen_reaches_two_lines_past_end(tmp_path):
+    root = range_tree(tmp_path)
+    assert check_citation(root, "src2/server.js:2-3", ["range_token"]) is True
+
+def test_single_line_citation_does_not_widen(tmp_path):
+    root = range_tree(tmp_path)
+    assert check_citation(root, "src2/server.js:3", ["range_token"]) is False

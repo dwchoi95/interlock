@@ -14,14 +14,30 @@ def parse_citation(text: str) -> list[tuple[str, int, int]]:
         out.append((m.group(1), start, int(m.group(3)) if m.group(3) else start))
     return out
 
+def _resolve_path(root: Path, rel: str) -> Path | None:
+    """Map a cited relative path to a real file inside root, or None. Never escapes root:
+    an absolute citation or one laced with '..' is rejected even if it happens to point at
+    a real file, and a bare or ambiguous basename fallback match is refused rather than
+    guessed (an absolute right-hand side makes `Path(root) / rel` discard root entirely,
+    which is exactly what let a citation such as "/etc/passwd:1" resolve outside the tree)."""
+    root = Path(root).resolve()
+    direct = (root / rel).resolve()
+    if direct.is_relative_to(root) and direct.is_file():
+        return direct
+    # Tolerate a path prefix we did not fetch (e.g. an npm tarball's "package/" root) by
+    # matching on basename, but only accept an unambiguous, path-suffix-consistent hit —
+    # a bare "index.js" citation must not silently pick one of several same-named files.
+    rel_parts = Path(rel).parts
+    candidates = sorted(
+        p for p in root.rglob(Path(rel).name)
+        if p.is_file() and p.resolve().is_relative_to(root) and p.resolve().parts[-len(rel_parts):] == rel_parts
+    )
+    return candidates[0] if len(candidates) == 1 else None
+
 def _span_text(root: Path, rel: str, start: int, end: int) -> str | None:
-    f = Path(root) / rel
-    if not f.is_file():
-        for cand in Path(root).rglob(Path(rel).name):          # tolerate a path prefix we did not fetch
-            f = cand
-            break
-        else:
-            return None
+    f = _resolve_path(root, rel)
+    if f is None:
+        return None
     lines = f.read_text(errors="replace").splitlines()
     if start > len(lines):
         return None
