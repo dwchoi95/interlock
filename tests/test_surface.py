@@ -28,3 +28,11 @@ def test_missing_package_raises(tmp_path):
 def test_missing_version_raises(tmp_path):
     with pytest.raises(KeyError):
         load_surface(fixture(tmp_path), "a", "99.9.9")
+
+def test_returned_surface_cannot_corrupt_the_cache(tmp_path):
+    p = fixture(tmp_path)
+    first = load_surface(p, "a", "1.0.0")
+    first["tools"].append({"name": "injected"})
+    first["tools"][0]["name"] = "mutated"
+    second = load_surface(p, "a", "1.0.0")
+    assert [t["name"] for t in second["tools"]] == ["t1"]

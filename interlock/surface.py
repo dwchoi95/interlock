@@ -1,5 +1,6 @@
 """Advertised tool surfaces, as recovered by the Docker tools/list harness in spikes/p0."""
 from __future__ import annotations
+import copy
 import json
 from functools import lru_cache
 from pathlib import Path
@@ -24,4 +25,4 @@ def load_surface(path: Path, package: str, version: str | None = None) -> dict:
     row = rows[-1] if version is None else next((r for r in rows if r["version"] == version), None)
     if row is None:
         raise KeyError(f"no recovered surface for {package}@{version} in {Path(path).resolve()}")
-    return {"package": package, "version": row["version"], "kind": row["kind"], "tools": row["tools"]}
+    return {"package": package, "version": row["version"], "kind": row["kind"], "tools": copy.deepcopy(row["tools"])}
