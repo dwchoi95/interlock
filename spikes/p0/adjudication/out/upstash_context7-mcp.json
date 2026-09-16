@@ -1,0 +1,61 @@
+{
+  "package": "@upstash/context7-mcp",
+  "version": "4.1.1",
+  "source": "npm pack @upstash/context7-mcp@4.1.1, tar xzf (not installed/run) in scratchpad adj-docs/upstash-context7-mcp-4.1.1/package/ (tsc output, unminified). Paths below are relative to that package dir. The Context7 API backend is private (README.md:44), so claims about what the backend returns rest on official docs and are tagged [docs]. The remote mcp.context7.com is taken to be this server run with --transport http (package.json scripts.start; RESOURCE_URL default https://mcp.context7.com at dist/lib/constants.js:8). The hosted deployment may run a different build.",
+  "tools": {
+    "resolve-library-id": {
+      "labels": ["UNTRUSTED", "SECRET"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "The query and libraryName are sent only as query params to the fixed Context7 API, so this is not a SINK. Results are community-submitted library entries, which makes them UNTRUSTED [docs]. With a Context7 credential, results can include the user's teamspace private sources, which is SECRET [docs]; that label is removed when no credential is configured (see value_conditions).",
+      "evidence": "dist/index.js:155-232 (tool registration/handler); dist/lib/api.js:104-111 (new URL(`${CONTEXT7_API_BASE_URL}/v2/libs/search`), searchParams.set only, so the host is not agent-controlled); dist/lib/constants.js:7,10 (base https://context7.com/api); dist/lib/encryption.js:60-62 (credential sent as Authorization: Bearer); README.md:1728 [docs] ('Context7 projects are community-contributed ... cannot guarantee ... security'); https://context7.com/docs/adding-libraries [docs] ('Anyone can add a public library — you don't need to own it'); README.md:56 [docs] ('API Key ... for higher rate limits and private repositories'); https://context7.com/docs/howto/private-sources [docs] (private sources for Pro/Enterprise teams, 'accessible via the API'); dist/lib/utils.js:64 (teamspace-scoped results)"
+    },
+    "query-docs": {
+      "labels": ["UNTRUSTED", "SECRET"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "libraryId and query are sent only as query params to the fixed Context7 API (/v2/context), so this is not a SINK. The returned documentation text comes from community-submitted, third-party-maintained libraries, which is UNTRUSTED [docs]. With a credential it can return teamspace private-source documentation, which is SECRET [docs]; that label is removed when no credential is configured.",
+      "evidence": "dist/index.js:233-267 (tool registration/handler returns response.data verbatim); dist/lib/api.js:134-155 (new URL(`${CONTEXT7_API_BASE_URL}/v2/context`), libraryId only via searchParams.set; returns raw text); dist/lib/encryption.js:60-62; README.md:1728 [docs]; README.md:56 [docs]; https://context7.com/docs/howto/private-sources [docs]"
+    }
+  },
+  "value_conditions": [
+    {
+      "syntax": "--api-key <key>",
+      "kind": "flag",
+      "effect": "Supplies a Context7 credential (stdio only), which enables teamspace private sources and so SECRET on both tools. SECRET is removed from both tools only when this flag AND the CONTEXT7_API_KEY env var, all credential headers, and the /mcp/oauth path are all absent.",
+      "default": "Absent (along with the other credential conditions): anonymous API access, no private sources, SECRET removed. UNTRUSTED stays.",
+      "evidence": "dist/index.js:40 (option), dist/index.js:530 (stdioApiKey = cliOptions.apiKey || process.env.CONTEXT7_API_KEY), dist/index.js:85-90 (context), dist/lib/encryption.js:60-62"
+    },
+    {
+      "syntax": "CONTEXT7_API_KEY=<key>",
+      "kind": "env",
+      "effect": "Same credential as --api-key for stdio, enabling SECRET on both tools. SECRET is removed only when all credential conditions are absent.",
+      "default": "Absent (along with the other credential conditions): anonymous, SECRET removed.",
+      "evidence": "dist/index.js:530"
+    },
+    {
+      "syntax": "Authorization: Bearer <key> | CONTEXT7_API_KEY: <key> | X-Context7-API-Key: <key> | Context7-API-Key: <key> | X-API-Key: <key> | x_api_key: <key>",
+      "kind": "header",
+      "effect": "Credential for HTTP transport / remote mcp.context7.com, forwarded to the API as a Bearer token, enabling SECRET on both tools. SECRET is removed only when all credential conditions are absent.",
+      "default": "Absent (along with the other credential conditions): anonymous, SECRET removed.",
+      "evidence": "dist/index.js:312-318 (extractApiKey), dist/index.js:390-396 (context.apiKey), dist/lib/encryption.js:60-62"
+    },
+    {
+      "syntax": "https://mcp.context7.com/mcp/oauth",
+      "kind": "url_path",
+      "effect": "This path forces authentication: requests with no token get 401 and the client runs OAuth, so a credential exists even with no header in the config. SECRET applies to both tools. SECRET is removed only when all credential conditions are absent, i.e. the plain /mcp path with no credential header.",
+      "default": "Plain /mcp path with no credential header: no auth required, anonymous, SECRET removed.",
+      "evidence": "dist/index.js:28-34 (requiresAuthentication for /mcp/oauth), dist/index.js:353-389 (401 without token), dist/index.js:420 (route)"
+    }
+  ],
+  "notes": [
+    "Convention for this package: undetermined=false where client code plus official Context7 docs settle the question. Backend behaviour (community provenance, private-source access with a key) is documented but not visible in code, and is tagged [docs].",
+    "No SINK: both tools build URLs with new URL(fixed base) and add agent input only through searchParams.set (dist/lib/api.js:106-108, 136-138). No tool fetches an agent-chosen URL. CONTEXT7_API_URL (dist/lib/constants.js:10) can redirect the API base, but only through server config, which the attacker does not control. It does not remove labels.",
+    "No host file, database or local network access in tool paths. readFileSync is used only for package.json (constants.js:5) and NODE_EXTRA_CA_CERTS (api.js:57-62).",
+    "Residual risk for the credential conditions: a stdio server inherits process.env, so CONTEXT7_API_KEY may be present from the user's shell even if the MCP config does not show it. The conditions above treat absence in the config as absence.",
+    "Private sources need a Pro/Enterprise plan [docs]. Whether a given credential's teamspace has any cannot be known from config, so the least-restrictive default keeps SECRET whenever a credential is present.",
+    "Transport flags --transport/--port and the ?client=claude-code-plugin query do not change tools or labels (dist/index.js:25-34, 38-39)."
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "package": "@modelcontextprotocol/server-memory",
+  "version": "2026.8.31",
+  "source": "npm pack @modelcontextprotocol/server-memory@2026.8.31, tarball extracted and dist/index.js read (not installed, not executed)",
+  "tools": {
+    "create_entities": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Appends agent-supplied entities and echoes back only the newly added subset (omission reveals only whether an agent-guessed name exists).",
+      "evidence": "dist/index.js:253-259, dist/index.js:117-123"
+    },
+    "create_relations": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Appends agent-supplied relations and echoes back only the newly added subset.",
+      "evidence": "dist/index.js:277-283, dist/index.js:124-132"
+    },
+    "add_observations": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Adds agent-supplied observations and echoes back the added strings (error echoes the agent-supplied entity name).",
+      "evidence": "dist/index.js:307-313, dist/index.js:133-146"
+    },
+    "delete_entities": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Deletes by name; returns a fixed string.",
+      "evidence": "dist/index.js:332-338"
+    },
+    "delete_observations": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Deletes observations; returns a fixed string.",
+      "evidence": "dist/index.js:360-366"
+    },
+    "delete_relations": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Deletes relations; returns a fixed string.",
+      "evidence": "dist/index.js:385-391"
+    },
+    "read_graph": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns the entire graph: returns entities/relations persisted in the host JSONL memory file (non-public user data accumulated across sessions).",
+      "evidence": "dist/index.js:408-413, dist/index.js:52-81"
+    },
+    "search_nodes": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Substring search that returns entities/relations persisted in the host JSONL memory file (non-public user data accumulated across sessions).",
+      "evidence": "dist/index.js:432-437, dist/index.js:174-190"
+    },
+    "open_nodes": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns named entities and adjacent relations: returns entities/relations persisted in the host JSONL memory file (non-public user data accumulated across sessions).",
+      "evidence": "dist/index.js:456-461, dist/index.js:191-207"
+    }
+  },
+  "value_conditions": [],
+  "notes": [
+    "Storage: MEMORY_FILE_PATH env var if set (absolute as-is; relative resolved against the package's dist/ directory), else <package>/dist/memory.jsonl, i.e. inside the npx cache when launched via npx; legacy memory.json is migrated (dist/index.js:11-43, 494-496). MEMORY_FILE_PATH only relocates storage and removes no tool or label, so it is not a value condition.",
+    "SECRET decision: the knowledge graph is a host file holding facts about the user/projects that the agent chose to persist; it is non-public data, and read_graph/search_nodes/open_nodes return it, which fits the 'host files' clause of SECRET. Always enabled, so the package union is always {SECRET}.",
+    "UNTRUSTED decision (primary): not assigned. The graph is a local single-writer store; within a session any injected text it could return is already in context via the tool that first delivered it, and cross-session poisoning from an earlier injected session is excluded because PREREG's primary model says the attacker does not control the user's local data. This matches server-filesystem, where the agent can also write files that are read back later.",
+    "Secondary variant: not assigned. The graph is not a user-credential store that end users or collaborators can write (Supabase/Postgres/GitHub private data), so secondary_extra is empty.",
+    "No SINK: every write goes only to the local JSONL file via temp file + rename (dist/index.js:82-116); there is no network code. The server also exposes the graph as the MCP resource memory://knowledge-graph (dist/index.js:463-480); it is not a tool."
+  ]
+}

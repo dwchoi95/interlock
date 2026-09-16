@@ -1,0 +1,286 @@
+{
+  "package": "chrome-devtools-mcp",
+  "version": "1.9.0",
+  "source": "npm pack chrome-devtools-mcp@1.9.0, extracted with tar in scratchpad adj-browser/ (not installed or run). The package has no runtime dependencies: puppeteer, the MCP SDK and the DevTools frontend are bundled in build/src/third_party/index.js, which was grepped for the allowlist/blocklist enforcement. Evidence paths are relative to adj-browser/, and CD = chrome-devtools-mcp-1.9.0/package/build/src.",
+  "tools": {
+    "click": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Clicks a page element. With includeSnapshot=true it returns the page a11y snapshot, and it always echoes the navigated-to URL and any open dialog message. No agent-chosen data or destination is involved.",
+      "evidence": "CD/tools/input.js:119-172 (category input; includeSnapshot at 156-157); CD/McpResponse.js:514-518 (navigatedToUrl), 553-560 (dialog message echoed)"
+    },
+    "close_page": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Closes a page and returns the list of all open pages with their titles and URLs, which are page-controlled and may be localhost, intranet or user tabs.",
+      "evidence": "CD/tools/pages.js:58-87 (setIncludePages); CD/McpResponse.js:567-600 (title + url per page)"
+    },
+    "drag": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Drags one page element onto another and can return the page snapshot.",
+      "evidence": "CD/tools/input.js:397-435"
+    },
+    "emulate": {
+      "labels": ["UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "extraHttpHeaders and userAgent are agent-supplied values attached to every later request the page makes, including requests to attacker hosts. The response only echoes emulation state and any page dialog message.",
+      "evidence": "CD/tools/emulation.js:34-83 (extraHttpHeaders 70-74, page.emulate); CD/McpResponse.js:553-560"
+    },
+    "evaluate_script": {
+      "labels": ["SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Runs an agent JavaScript function inside the selected page through puppeteer evaluateHandle/evaluate. It is confined to the browser page, so not HOSTEXEC, but it can read the DOM of localhost, file:// or attacker pages and return it as JSON, and can fetch or navigate to any URL.",
+      "evidence": "CD/tools/script.js:61-178 (conditions ['javascriptEvaluation'] at 68), 179-206 (performEvaluation returns JSON)"
+    },
+    "fill": {
+      "labels": ["SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Types an agent-supplied value into a page input or select, where page script can read and send it. It can return the page snapshot.",
+      "evidence": "CD/tools/input.js:342-371"
+    },
+    "fill_form": {
+      "labels": ["SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Writes several agent-supplied values into page form elements and can return the page snapshot.",
+      "evidence": "CD/tools/input.js:436-472"
+    },
+    "get_console_message": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns one page console message in full, with its page-controlled text and stack.",
+      "evidence": "CD/tools/console.js:86-103"
+    },
+    "get_network_request": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns the request and response headers (Cookie and Set-Cookie included) and the request and response bodies of a page request inline, or writes them under the workspace roots.",
+      "evidence": "CD/tools/network.js:77-127 (description mentions Cookie/Set-Cookie); CD/formatters/NetworkFormatter.js:34-82 (postData / response body loaded into output)"
+    },
+    "handle_dialog": {
+      "labels": ["SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Accepts a dialog with agent-supplied promptText, which is returned to page script, and responds with the titles and URLs of all open pages.",
+      "evidence": "CD/tools/pages.js:293-344 (dialog.accept(promptText); setIncludePages)"
+    },
+    "hover": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Hovers over a page element and can return the page snapshot.",
+      "evidence": "CD/tools/input.js:205-247"
+    },
+    "lighthouse_audit": {
+      "labels": ["UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Reloads the current page URL (not agent-chosen) and returns only category scores, audit counts, the page URL and the report file paths; the full report is written to temp or the workspace roots. Any page dialog message is also echoed.",
+      "evidence": "CD/tools/lighthouse.js:11-137 (navigation(page, page.url()); output summary 117-135); CD/McpResponse.js:553-560"
+    },
+    "list_console_messages": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Lists the page console messages, which are page-controlled text from any page the browser reached.",
+      "evidence": "CD/tools/console.js:32-85"
+    },
+    "list_network_requests": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Lists the URLs, methods and statuses of the page's requests, including requests to localhost or intranet hosts and attacker-chosen URLs.",
+      "evidence": "CD/tools/network.js:30-76"
+    },
+    "list_pages": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns the titles and URLs of every open page. With --autoConnect or --browserUrl these are the user's own tabs.",
+      "evidence": "CD/tools/pages.js:11-28; CD/McpResponse.js:567-600"
+    },
+    "navigate_page": {
+      "labels": ["SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Navigates the page to any agent-chosen URL. validateUrl only blocks chrome:, chrome-untrusted: and chrome-extension:, so file://, localhost and intranet URLs all work. It returns page titles and URLs, and the reached content is then read by the snapshot and script tools. An optional initScript injects page-confined JavaScript.",
+      "evidence": "CD/tools/pages.js:128-254 (validateUrl + pptrPage.goto; initScript 150-157, 180-182); CD/utils/url.js:55-84 (isAllowedUrl), 95-115 (validateUrl; javascript:/data: only blocked when javascriptEvaluation=false)"
+    },
+    "new_page": {
+      "labels": ["SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Opens a new tab at any agent-chosen URL (same validateUrl as navigate_page, file:// and localhost allowed) and returns the titles and URLs of all pages.",
+      "evidence": "CD/tools/pages.js:88-127; CD/utils/url.js:95-115"
+    },
+    "performance_analyze_insight": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns details of a recorded trace insight, which include page request URLs, timings and third-party entities taken from the traced page.",
+      "evidence": "CD/tools/performance.js:120-145 (attachTraceInsight of stored recording)"
+    },
+    "performance_start_trace": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Reloads the current page URL (not agent-chosen), records a trace, and with autoStop returns a trace summary derived from the page. Trace URLs may be sent to the fixed Google CrUX endpoint, which is a fixed vendor endpoint and so not SINK.",
+      "evidence": "CD/tools/performance.js:16-97 (goto(pageUrlForTracing)), 146-185 (stopTracingAndAppendOutput -> attachTraceSummary), 187-211 (CrUX fixed endpoint)"
+    },
+    "performance_stop_trace": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Stops the trace and returns a summary derived from the page; the raw trace can optionally be written under the workspace roots.",
+      "evidence": "CD/tools/performance.js:98-119, 146-185"
+    },
+    "press_key": {
+      "labels": ["SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Sends agent-chosen key combinations that page script can observe, and can return the page snapshot.",
+      "evidence": "CD/tools/input.js:536-579 (keyboard.press; includeSnapshot at 575-576)"
+    },
+    "resize_page": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Resizes the page window and returns the titles and URLs of all open pages.",
+      "evidence": "CD/tools/pages.js:255-292 (setIncludePages at 290)"
+    },
+    "select_page": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Selects a page by id and returns the titles and URLs of all open pages.",
+      "evidence": "CD/tools/pages.js:29-57"
+    },
+    "take_heapsnapshot": {
+      "labels": ["UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Writes a heap snapshot of the page to an agent-chosen .heapsnapshot path inside the workspace roots and returns only that path. The heap-reading tools are gated by --memoryDebugging and are not advertised. The response can still echo a page dialog message.",
+      "evidence": "CD/tools/memory.js:19-43 (captureHeapSnapshot to validated path); CD/tools/memory.js:50 (other heap tools conditions ['memoryDebugging']); CD/config/mcp-options.js:52-57 (memoryDebugging default false); CD/McpResponse.js:553-560"
+    },
+    "take_screenshot": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns an image of the page or element inline (under 2 MB, no filePath), which can show file://, localhost or attacker content; with filePath it writes under the workspace roots instead.",
+      "evidence": "CD/tools/screenshot.js:142-276 (attachImage at 261-264; saveFile at 252-254)"
+    },
+    "take_snapshot": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns the a11y-tree text of the selected page, or writes it to a workspace path.",
+      "evidence": "CD/tools/snapshot.js:9-39"
+    },
+    "type_text": {
+      "labels": ["UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Types agent-supplied text into the focused page input, where page script can read and send it. There is no snapshot option; the response only echoes the typed text, the navigated URL and any dialog message.",
+      "evidence": "CD/tools/input.js:372-396 (keyboard.type(text)); CD/McpResponse.js:514-518, 553-560"
+    },
+    "upload_file": {
+      "labels": ["SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Hands host files at agent-chosen paths to a page file input, where page script can read or submit them. For a local browser the paths must lie inside the MCP client roots, the --workspace roots (default OS tmpdir) or tmpdir; with --allowUnrestrictedPaths and no client roots there is no check. It can return the page snapshot.",
+      "evidence": "CD/tools/input.js:473-535 (verifyFilesSchema local:true; handle.uploadFile); CD/ToolHandler.js:94-116, 188; CD/McpContext.js:133-199 (validatePath against roots); CD/index.js:112-126 (combined roots); CD/config/mcp-options.js:209-224"
+    },
+    "wait_for": {
+      "labels": ["SECRET", "UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Waits for text on the page and always returns the page snapshot.",
+      "evidence": "CD/tools/snapshot.js:40-62 (includeSnapshot at 60)"
+    }
+  },
+  "value_conditions": [
+    {
+      "syntax": "--slim",
+      "kind": "flag",
+      "effect": "Replaces the whole tool set with 3 slim tools (screenshot, navigate, evaluate), so all 29 advertised tools are removed. The slim tools still navigate to agent URLs, run page JavaScript and return screenshots, so SECRET, UNTRUSTED and SINK remain at package level.",
+      "default": "Absent: the full tool set (29 tools advertised with no flags).",
+      "evidence": "CD/tools/tools.js:23-43; CD/config/mcp-options.js:195-198; CD/tools/slim/tools.js:10-95"
+    },
+    {
+      "syntax": "--no-category-<name> | --category-<name>=false | --category<Name>=false, where <name> is input|navigation|emulation|performance|network|debugging|memory",
+      "kind": "flag",
+      "effect": "Tools in that category are not registered. input: click, drag, fill, fill_form, handle_dialog, hover, press_key, type_text, upload_file. navigation: list_pages, select_page, close_page, new_page, navigate_page, wait_for. emulation: emulate, resize_page. performance: performance_start_trace, performance_stop_trace, performance_analyze_insight. network: list_network_requests, get_network_request. debugging: evaluate_script, list_console_messages, get_console_message, take_snapshot, take_screenshot, lighthouse_audit. memory: take_heapsnapshot. Disabling navigation removes the agent-URL navigation tools, but evaluate_script (debugging) can still navigate or fetch through location/fetch, so SINK leaves the package only if debugging is also disabled or --no-javascript-evaluation is set. SECRET and UNTRUSTED leave only if every page-content tool is disabled.",
+      "default": "Absent: all seven categories are enabled (default true). experimentalWebmcp, extensions, experimentalThirdParty and pwa are off by default.",
+      "evidence": "CD/config/category-options.js:7-54 (createOption default:true unless offByDefault); CD/ToolHandler.js:22-32, 131-133; CD/index.js:218-222 (unregistered when disabled); CD/config/mcp-options.js:271 (strip-dashed), 334-339 ('--no-category-emulation' examples); category assignments at the tool definitions cited per tool"
+    },
+    {
+      "syntax": "--no-javascript-evaluation | --javascript-evaluation=false | --javascriptEvaluation=false",
+      "kind": "flag",
+      "effect": "evaluate_script is removed (condition javascriptEvaluation), the initScript parameter of navigate_page disappears, and javascript:, data: and vbscript: navigation is refused. Page-confined JavaScript execution by the agent is gone; the navigation and input tools keep their labels.",
+      "default": "Absent: true (JavaScript evaluation enabled).",
+      "evidence": "CD/config/mcp-options.js:126-130; CD/tools/script.js:68; CD/ToolHandler.js:33-40; CD/tools/pages.js:150-157; CD/utils/url.js:104-107"
+    },
+    {
+      "syntax": "--allowedUrlPattern=<URLPattern> (repeatable; also --allowed-url-pattern)",
+      "kind": "flag",
+      "effect": "puppeteer rejects page.goto to non-matching URLs, and every attached target gets Network.emulateNetworkConditionsByRule, which puts non-matching URLs offline. Targets whose URL does not match are detached. The DevTools-frontend resource loader applies the same allowlist. If every pattern names a fixed non-attacker host, UNTRUSTED and SINK go away from the navigation, page-reading and input tools, and SECRET goes away unless file:, localhost or intranet patterns are allowed. Residual: evaluate_script could still reach non-HTTP channels (e.g. WebRTC) that network-condition emulation may not cover. The package code cannot settle this, so under the least-restrictive default evaluate_script keeps SINK unless --no-javascript-evaluation is also set. Requires Chrome 149+ (otherwise browser startup throws). emulate refuses network throttling while an allowlist is set.",
+      "default": "Absent: no network restriction.",
+      "evidence": "CD/config/mcp-options.js:106-115; CD/index.js:152-157, 162-189; CD/third_party/index.js:59360-59362 (goto check), 64995-65016 (isUrlAllowed), 65024-65070 (emulateNetworkConditionsByRule, catch-all offline rule), 65085-65090 (Chrome 149 check); CD/McpPage.js:612-616; CD/McpContext.js:588-632"
+    },
+    {
+      "syntax": "--blockedUrlPattern=<URLPattern> (repeatable; also --blocked-url-pattern)",
+      "kind": "flag",
+      "effect": "Blocks only the listed patterns, both navigation and runtime requests. It can remove SECRET only if file:, localhost and every intranet host are listed, which cannot be enumerated, so under the least-restrictive default it removes no label. It never removes UNTRUSTED or SINK. Mutually exclusive with --allowedUrlPattern.",
+      "default": "Absent: nothing blocked.",
+      "evidence": "CD/config/mcp-options.js:106-110; CD/third_party/index.js:65002-65006, 65029-65037"
+    }
+  ],
+  "notes": [
+    "All 29 input tools are on by default: categories input, navigation, emulation, performance, network, debugging and memory default to true (CD/config/category-options.js:42-53), and evaluate_script's javascriptEvaluation condition defaults to true (mcp-options.js:126-130). Opt-in and not advertised: click_at (--experimentalVision), get_tab_id (--experimentalInteropTools), screencast_* (--experimentalScreencast), get_heapsnapshot_* and friends (--memoryDebugging), webmcp tools (--categoryExperimentalWebmcp), extension tools (--categoryExtensions), 3p developer tools (--categoryExperimentalThirdParty), pwa tools (--categoryPwa).",
+    "No HOSTEXEC among the default tools: every JavaScript execution goes through puppeteer page or frame evaluate (or a service worker, only with --categoryExtensions). The Node side never evals agent code.",
+    "file:// is NOT blocked for navigation (url.js only rejects chrome:, chrome-untrusted:, chrome-extension:), so navigate_page/new_page + take_snapshot/evaluate_script can read host files. localhost, 127.0.0.0/8 and intranet hosts are not filtered either. The workspace-roots check (McpContext.validatePath) applies only to tool file-path parameters (upload_file, filePath outputs), not to URLs.",
+    "Default browser: launches the installed Chrome stable with a dedicated persistent profile at $HOME/.cache/chrome-devtools-mcp/chrome-profile[-<channel>] (browser.js:122-133). This is not the user's everyday profile, but it persists logins across sessions. It attaches to the user's real, logged-in browser only with --autoConnect (Chrome 144+ with remote debugging enabled by the user in chrome://inspect, browser.js:47-85), --browserUrl / -u, --wsEndpoint / -w (browser.js:38-46), or --userDataDir pointing at a real profile. --isolated uses a temporary profile. None of these removes SECRET, because file:// and localhost stay reachable.",
+    "No environment variables toggle tools or network policy. The only env reads in the non-bundled code are CI / CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS (telemetry off, mcp-options.js:288-291) and CHROME_DEVTOOLS_MCP_CRASH_ON_UNCAUGHT (bin/chrome-devtools-mcp-main.js:20). yargs .env() is not used, so every value condition is a CLI flag.",
+    "Outbound to fixed vendor endpoints only: Clearcut usage statistics (opt out with --no-usage-statistics) and CrUX lookups of trace URLs (opt out with --no-performance-crux). Per PREREG these are not SINK.",
+    "The DevTools frontend running inside the Node process can fetch http(s) resources that the page references, such as source maps, through McpContext.loadResource (McpContext.js:49-53, 611-632). The page, not the agent, picks those URLs, and they are not returned verbatim, so no label is added; with an allowlist or blocklist the same rules apply.",
+    "--redactNetworkHeaders (default false) redacts some sensitive headers in network output (mcp-options.js:204-208). It is partial and removes no label."
+  ]
+}

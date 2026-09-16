@@ -1,0 +1,38 @@
+{
+  "package": "learn.microsoft.com",
+  "version": "remote https://learn.microsoft.com/api/mcp, tools fetched 2026-09-16",
+  "source": "No server code exists (closed-source remote service). Evidence comes from the tool descriptions/schemas in adjudication/input/learn.microsoft.com.json, the official repo github.com/MicrosoftDocs/mcp (shallow clone at commit f8ffde18, 2026-09-10, in scratchpad adj-docs/msdocs-mcp/; it contains README, skills and a CLI client only), and Microsoft Learn product docs (https://learn.microsoft.com/en-us/training/support/mcp, mcp-developer-reference, mcp-faq, mcp-release-notes). Every claim below rests only on docs or tool descriptions. No tool was invoked against the live server.",
+  "tools": {
+    "microsoft_docs_search": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "[docs only] The query goes to a fixed Microsoft endpoint (not a SINK). Results are documented as first-party Microsoft documentation chunks (vendor-authored, not UNTRUSTED). No authentication and only public content (not SECRET).",
+      "evidence": "input/learn.microsoft.com.json microsoft_docs_search.description ('Search official Microsoft/Azure documentation ... extracted from Microsoft Learn and other official sources'); msdocs-mcp/README.md:19-20 ('this tool **only** accesses official 1st-party Microsoft documentation'); https://learn.microsoft.com/en-us/training/support/mcp ('The MCP server contains publicly available documentation'; 'There's no authentication required')"
+    },
+    "microsoft_code_sample_search": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "[docs only] The query goes to a fixed Microsoft endpoint (not a SINK). It returns code snippets from official Microsoft Learn documentation pages (vendor-authored). No auth and only public content.",
+      "evidence": "input/learn.microsoft.com.json microsoft_code_sample_search.description ('Search for code snippets and examples in official Microsoft Learn documentation'); msdocs-mcp/README.md:19-20,87; https://learn.microsoft.com/en-us/training/support/mcp"
+    },
+    "microsoft_docs_fetch": {
+      "labels": ["UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": true,
+      "rationale": "[docs only] The tool contract limits the agent-supplied URL to the microsoft.com domain and the fetch runs on Microsoft's servers. That makes it neither a SINK (no attacker-readable destination) nor SECRET (no reach into the user's network). But no doc says whether community-writable microsoft.com pages are rejected (Microsoft Q&A at learn.microsoft.com/answers, techcommunity.microsoft.com, answers.microsoft.com), so UNTRUSTED is kept by the least-restrictive default.",
+      "evidence": "input/learn.microsoft.com.json microsoft_docs_fetch.description ('## URL Requirements - The URL must be a valid HTML documentation webpage from the microsoft.com domain'); msdocs-mcp/README.md:19-20,86; https://learn.microsoft.com/en-us/training/support/mcp (remote streamable-http service, no auth). Enforcement of the domain rule and of 'documentation' page types is unverifiable without server code."
+    }
+  },
+  "value_conditions": [],
+  "notes": [
+    "Undetermined: (a) whether microsoft_docs_fetch actually enforces the microsoft.com restriction server-side; SINK is not labelled because the published tool contract states it, and this claim rests on that contract alone. (b) Whether community Q&A or forum pages under microsoft.com are accepted; UNTRUSTED is labelled by default. (c) Whether off-domain redirects are followed. A single live probe with a non-Microsoft URL would settle (a) and (c) but was not run, per the no-execution rule.",
+    "Microsoft Learn docs repos accept public GitHub PRs, but those are reviewed and merged by Microsoft, so they are treated as vendor-authored under the threat model.",
+    "Documented URL variants: ?maxTokenBudget=<n> only truncates search responses (msdocs-mcp/README.md:71-76) and removes no labels. /api/mcp/openai-compatible (README.md:66) and /api/mcp/smc (support.microsoft.com tools, per maintainer comment on github.com/MicrosoftDocs/mcp/issues/59) expose different tool sets that are not in this input and were not adjudicated.",
+    "No authentication, user data or credentials are involved (https://learn.microsoft.com/en-us/training/support/mcp: 'no authentication required'; 'publicly available documentation, not training or user profile information'), so SECRET cannot arise from any tool."
+  ]
+}

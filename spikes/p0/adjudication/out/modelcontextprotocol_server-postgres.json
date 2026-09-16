@@ -1,0 +1,26 @@
+{
+ "package": "@modelcontextprotocol/server-postgres",
+ "version": "0.6.2",
+ "source": "npm pack @modelcontextprotocol/server-postgres@0.6.2; read dist/index.js (single compiled file)",
+ "tools": {
+  "query": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Runs arbitrary SELECT against the user's Postgres DB (credentials in CLI connection string, may be localhost/intranet) and returns rows; wrapped in a Postgres READ ONLY transaction so it cannot write, hence no SINK.",
+   "evidence": "modelcontextprotocol-server-postgres-0.6.2/package/dist/index.js:85-108 (BEGIN TRANSACTION READ ONLY; client.query(sql); ROLLBACK)"
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "Single tool 'query'; no CLI flags, env toggles, or read/write modes exist. Connection string (incl. credentials + host) is argv[0]; DB reached with the user's own credentials => SECRET regardless of target.",
+  "Every call is wrapped in 'BEGIN TRANSACTION READ ONLY' ... 'ROLLBACK' (index.js:90,102), so no write/DDL and no attacker-readable delivery => not SINK. A read-only tx still executes attacker-injectable SQL-in-context but produces no outbound channel by itself.",
+  "Also exposes MCP resources (table schemas) but the input snapshot lists only the 'query' tool.",
+  "Primary threat model: rows in the user's own DB are not attacker-controlled, so no UNTRUSTED at default; secondary variant treats stored rows as UNTRUSTED (end users/collaborators write them)."
+ ]
+}

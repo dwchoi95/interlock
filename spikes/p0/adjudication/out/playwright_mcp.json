@@ -1,0 +1,349 @@
+{
+  "package": "@playwright/mcp",
+  "version": "0.0.81",
+  "source": "npm pack @playwright/mcp@0.0.81 plus its exact dependencies playwright@1.64.0-alpha-2026-09-14 and playwright-core@1.64.0-alpha-2026-09-14 (from `npm view @playwright/mcp@0.0.81 dependencies`), extracted with tar in scratchpad adj-browser/. Nothing was installed or run. @playwright/mcp/cli.js only calls playwright-core's tools.decorateMCPCommand. The real MCP implementation is the bundled module packages/playwright-core/src/tools/{backend,mcp}/* inside playwright-core/lib/coreBundle.js (readable, not minified). playwright/lib/mcp/* only contains the test-runner MCP, which this server does not use. Evidence paths are relative to adj-browser/, and PC = playwright-core-1.64.0-alpha-2026-09-14/package/lib/coreBundle.js.",
+  "tools": {
+    "browser_close": {
+      "labels": [
+        "UNTRUSTED"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Only marks the session for closing. The shared response builder still echoes the current tab header (page title and URL, which the page controls) whenever it changed.",
+      "evidence": "PC:66354-66368 (capability core, setClose); PC:66153-66157 (Page section added when a tab header changed); PC:68647-68649 (core* tools always enabled)"
+    },
+    "browser_resize": {
+      "labels": [
+        "UNTRUSTED"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Sets the viewport size. The response carries no page content except the tab header (title and URL, page-controlled) when it changed.",
+      "evidence": "PC:66370-66386; PC:66153-66157"
+    },
+    "browser_console_messages": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns the console output of the current page. That page can be attacker-controlled, or a localhost or intranet page that navigation is allowed to reach.",
+      "evidence": "PC:66426-66450 (tab2.consoleMessages returned via addResult); PC:65312-65323 + PC:65813-65820 (only file: is blocked, localhost and intranet are not)"
+    },
+    "browser_handle_dialog": {
+      "labels": [
+        "UNTRUSTED",
+        "SINK"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Passes agent-supplied promptText into the page's prompt() dialog, where page script can read it and send it anywhere. The response echoes modal state and the tab header, both page-controlled.",
+      "evidence": "PC:64536-64561 (dialog.accept(params2.promptText)); PC:66153-66159"
+    },
+    "browser_evaluate": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED",
+        "SINK"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Runs agent JavaScript through page.evaluate, confined to the browser page, so it is not HOSTEXEC. It can read the DOM of the current page (localhost, intranet or attacker) and return it, and fetch or navigate to any URL.",
+      "evidence": "PC:66785-66830 (locator.evaluate / tab.page.evaluate with eval of the agent expression, result returned)"
+    },
+    "browser_file_upload": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED",
+        "SINK"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Hands host files at agent-chosen paths to the page's file chooser, where page script can read or submit them. Paths are limited to the workspace root (first MCP client root, or cwd) and the output dir unless --allow-unrestricted-file-access is set. Returns a page snapshot.",
+      "evidence": "PC:64772-64797 (paths -> resolveClientFilename -> fileChooser.setFiles; setIncludeSnapshot); PC:65522-65527 + PC:65541-65553 (checkFile: workspace/output dir unless allowUnrestrictedFileAccess); PC:72485-72504 (workspace = first client root or process.cwd())"
+    },
+    "browser_drop": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED",
+        "SINK"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Drops host files (workspace-restricted by default) and/or agent-supplied MIME data onto a page element, where page script can read them. Returns a page snapshot.",
+      "evidence": "PC:64798-64826 (paths -> resolveClientFilename, data -> locator.drop; setIncludeSnapshot); PC:65541-65553"
+    },
+    "browser_find": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Searches the current page's aria snapshot inside the Node process and returns the matching page text.",
+      "evidence": "PC:66872-66957 (page.ariaSnapshot, snippets returned)"
+    },
+    "browser_fill_form": {
+      "labels": [
+        "UNTRUSTED",
+        "SINK"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Writes agent-supplied values into form fields of the current page, which may be attacker-controlled and can exfiltrate them. No snapshot is requested; only the tab header is echoed.",
+      "evidence": "PC:66968-67002 (locator.fill(secret.value)); PC:66153-66157"
+    },
+    "browser_press_key": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED",
+        "SINK"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Sends agent-chosen key events to the page, which page script can observe. Pressing Enter also returns a full page snapshot.",
+      "evidence": "PC:67015-67038 (keyboard.press; setIncludeSnapshot for Enter at 67030)"
+    },
+    "browser_type": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED",
+        "SINK"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Types agent-supplied text into a page element, which page script can read and send out. With submit or slowly it also returns a page snapshot.",
+      "evidence": "PC:67070-67100 (locator.fill / pressSequentially with agent text; setIncludeSnapshot at 67084, 67092)"
+    },
+    "browser_navigate": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED",
+        "SINK"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Navigates to any agent-chosen http(s) URL, including localhost and intranet hosts; only file: is blocked by default. It returns the page snapshot, so it both sends data out through the URL and reads non-public or attacker content back.",
+      "evidence": "PC:67307-67325 (capability core-navigation, checkUrlAndNavigate, setIncludeSnapshot); PC:65312-65323 (bare localhost gets http://); PC:65813-65820 (checkUrlAllowed blocks only file: unless allowUnrestrictedFileAccess)"
+    },
+    "browser_navigate_back": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Goes back in history, which is not an agent-chosen URL, and returns the page snapshot.",
+      "evidence": "PC:67325-67339 (page.goBack; setIncludeSnapshot)"
+    },
+    "browser_network_requests": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Lists the URLs and statuses of requests the current page made, including requests to localhost or intranet hosts and attacker-chosen URLs.",
+      "evidence": "PC:67518-67553"
+    },
+    "browser_network_request": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns the full request and response headers (cookies and authorization of the browser profile included) and textual response bodies of a captured request.",
+      "evidence": "PC:67558-67580 (renderRequestDetails / renderRequestPart); PC:67418-67420 (request and response headers); PC:67477-67481 (httpResponse.text() returned)"
+    },
+    "browser_run_code_unsafe": {
+      "labels": [
+        "HOSTEXEC",
+        "SECRET",
+        "UNTRUSTED",
+        "SINK"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Runs agent-supplied code in a Node vm context holding the live Playwright page object. vm is not a sandbox (e.g. page.constructor.constructor('return process')()), and the tool itself says it executes 'in the Playwright server process and is RCE-equivalent'. Its capability is 'core', so it is on by default and no flag removes it.",
+      "evidence": "PC:67857-67897 (capability core; vm.createContext({page}); vm.runInContext(code)); PC:68647-68649 (filteredTools keeps every capability starting with 'core'); playwright-mcp-0.0.81/package/README.md:1055-1057"
+    },
+    "browser_take_screenshot": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns an image of the current page (attacker, localhost or intranet) into context unless a filename is given or --image-responses=omit. It also writes the file into the workspace or output dir, which is a write, not a read.",
+      "evidence": "PC:67934-67968 (page.screenshot; registerImageResult when no filename); PC:66089-66091 (imageResponses omit/allow)"
+    },
+    "browser_snapshot": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns the accessibility-tree text of the current page, or writes it to a workspace file.",
+      "evidence": "PC:64585-64604 (setIncludeFullSnapshot); PC:65391-65414 (captureSnapshot -> page.ariaSnapshot)"
+    },
+    "browser_click": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Clicks a page element and returns the resulting page snapshot. It carries no agent-chosen data or destination; links and submits the page defines are the page's own.",
+      "evidence": "PC:64611-64641 (locator.click; setIncludeSnapshot at 64621)"
+    },
+    "browser_drag": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Drags between two page elements and returns the page snapshot.",
+      "evidence": "PC:64643-64667 (dragTo; setIncludeSnapshot at 64658)"
+    },
+    "browser_hover": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Hovers over an element and returns the page snapshot.",
+      "evidence": "PC:64669-64684 (locator.hover; setIncludeSnapshot at 64679)"
+    },
+    "browser_select_option": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED",
+        "SINK"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Selects agent-supplied option values in a page <select>, which page script can read, and returns the page snapshot.",
+      "evidence": "PC:64688-64703 (locator.selectOption(params2.values); setIncludeSnapshot at 64698)"
+    },
+    "browser_tabs": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED",
+        "SINK"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "action=new with a url does the same checkUrlAndNavigate as browser_navigate to an agent-chosen URL and returns a snapshot. list returns the titles and URLs of all tabs.",
+      "evidence": "PC:68036-68080 (capability core-tabs; checkUrlAndNavigate at 68058; renderTabsMarkdown)"
+    },
+    "browser_wait_for": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Waits for text in the page (the text is matched inside the page, not sent anywhere) and returns the page snapshot.",
+      "evidence": "PC:68412-68446 (getByText waitFor; setIncludeSnapshot at 68444)"
+    },
+    "browser_webmcp_list": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns the WebMCP tool names, descriptions and schemas that the page registered, all page-authored text (the tool itself flags it as untrusted).",
+      "evidence": "PC:64952-64970; PC:64926-64949 (renderListing: 'page-provided and untrusted')"
+    },
+    "browser_webmcp_call": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED",
+        "SINK"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Passes agent-supplied params to a page-registered JavaScript tool, which the page can send anywhere, and returns that page-provided output.",
+      "evidence": "PC:64971-65011 (frame.evaluate(callToolInPage, {name, inputJson}); output added as text)"
+    }
+  },
+  "value_conditions": [
+    {
+      "syntax": "--allowed-origins=<origin>[;<origin>...]  |  config file (--config / PLAYWRIGHT_MCP_CONFIG) network.allowedOrigins",
+      "kind": "flag",
+      "effect": "The browser context aborts every routed request (navigations and subresources) whose origin is not listed. If every listed origin is a fixed non-attacker host, this removes UNTRUSTED and SINK from the page-driven tools (browser_navigate, browser_tabs, browser_snapshot, browser_evaluate, input tools, ...). SECRET is also removed from them only if no localhost, intranet or file origin is listed. It does NOT remove anything from browser_run_code_unsafe (HOSTEXEC in the Node process, where routing does not apply), so the package union is unchanged. The official help text says the option 'does not serve as a security boundary and does not affect redirects', and context.route does not cover WebSockets (routeWebSocket is a separate API), so browser_evaluate keeps SINK under the least-restrictive default.",
+      "default": "Absent: all origins are allowed (no route installed).",
+      "evidence": "PC:65782-65792 (_setupRequestInterception: route '**' abort + allowed globs continue); PC:74091 (--allowed-origins help text); PC:72987 (env); playwright-core-1.64.0-alpha-2026-09-14/package/types/types.d.ts:10467-10476 (routeWebSocket is separate from route)"
+    },
+    {
+      "syntax": "PLAYWRIGHT_MCP_ALLOWED_ORIGINS=<origin>[;<origin>...]",
+      "kind": "env",
+      "effect": "Same as --allowed-origins (semicolon-separated; merged under CLI flags).",
+      "default": "Absent: all origins are allowed (no route installed).",
+      "evidence": "PC:65782-65792 (_setupRequestInterception: route '**' abort + allowed globs continue); PC:74091 (--allowed-origins help text); PC:72987 (env); playwright-core-1.64.0-alpha-2026-09-14/package/types/types.d.ts:10467-10476 (routeWebSocket is separate from route)"
+    },
+    {
+      "syntax": "--snapshot-mode=none  |  config file snapshot.mode=\"none\"",
+      "kind": "flag",
+      "effect": "Tools that call setIncludeSnapshot stop returning the page aria snapshot (browser_click, browser_hover, browser_drag, browser_select_option, browser_navigate, browser_navigate_back, browser_tabs new, browser_wait_for, browser_file_upload, browser_drop, browser_type submit/slowly, browser_press_key Enter). SECRET goes away for the ones that only read through that snapshot (click, hover, drag, navigate_back, wait_for); they keep UNTRUSTED through the tab header. browser_snapshot uses the explicit mode and is unaffected. Package union unchanged.",
+      "default": "Absent: \"full\" snapshots.",
+      "evidence": "PC:66031-66034 (setIncludeSnapshot uses config.snapshot.mode ?? 'full'); PC:66149 (ariaFormat none when mode none); PC:72967 (CLI mapping). README.md:448 lists env PLAYWRIGHT_MCP_SNAPSHOT_MODE, but configFromEnv (PC:72983-73035) never reads it, so there is no env form in code."
+    },
+    {
+      "syntax": "--image-responses=omit",
+      "kind": "flag",
+      "effect": "browser_take_screenshot no longer returns image bytes into context; it still returns the file link and the tab header. This removes SECRET from browser_take_screenshot only. Package union unchanged.",
+      "default": "Absent: \"allow\" (images returned).",
+      "evidence": "PC:66089-66091; PC:73015-73016"
+    },
+    {
+      "syntax": "PLAYWRIGHT_MCP_IMAGE_RESPONSES=omit",
+      "kind": "env",
+      "effect": "Same as --image-responses=omit.",
+      "default": "Absent: \"allow\" (images returned).",
+      "evidence": "PC:66089-66091; PC:73015-73016"
+    }
+  ],
+  "notes": [
+    "Tool gating: filteredTools keeps every tool whose capability starts with 'core' (core, core-navigation, core-tabs, core-input), plus the capabilities listed in --caps / PLAYWRIGHT_MCP_CAPS. --caps only ADDS tools (vision, pdf, devtools, network, storage, testing, config), and no flag or env removes a core tool. All 26 advertised tools are core, browser_run_code_unsafe included (PC:68647-68649, PC:67857-67859, PC:74091).",
+    "Verdict-relevant: browser_run_code_unsafe is default-on HOSTEXEC with no removal switch, so every configuration of @playwright/mcp 0.0.81 carries SECRET+UNTRUSTED+SINK by itself.",
+    "URL reach: checkUrlAndNavigate adds http:// to bare 'localhost...' and https:// to other bare hosts, then blocks only the file: protocol. localhost, 127.0.0.1, private IPs and intranet names are not filtered (PC:65312-65323, PC:65813-65820). file:// navigation and host file paths outside the workspace root are allowed only with --allow-unrestricted-file-access / PLAYWRIGHT_MCP_ALLOW_UNRESTRICTED_FILE_ACCESS=true|1. That switch only widens reach; the docs call the default restriction 'not a secure boundary' (PC:65541-65553, playwright-mcp README.md:411, config.d.ts:249-254).",
+    "--blocked-origins / PLAYWRIGHT_MCP_BLOCKED_ORIGINS is a blocklist (PC:65790-65793). It cannot restrict navigation to fixed hosts, so it removes no label, and the docs say it is not a security boundary.",
+    "Default browser profile: a persistent, dedicated Chrome (channel 'chrome') profile at <cache>/ms-playwright-mcp/mcp-chrome-<hash of workspace>. It is not the user's everyday Chrome profile, but logins made there persist across sessions (PC:73980-74020, PC:72830-72834 default channel chrome, README.md:464-480). The user's real browser/session is attached only with --extension (Playwright Extension relay into running Chrome/Edge, PC:73891-73894, PC:73821-73840), --cdp-endpoint (PC:73885-73887), --endpoint (remote), or --user-data-dir pointing at a real profile. --isolated uses an in-memory profile (--storage-state can seed cookies). None of these removes SECRET, because localhost and intranet stay reachable.",
+    "Host file writes: screenshot/snapshot/console/network/evaluate 'filename' parameters and downloads write under the workspace root or output dir (.playwright-mcp). These are writes, not SECRET (PC:65520-65540, PC:65221-65231).",
+    "--secrets redacts configured secret values from responses. The config docs call it 'a convenience and not a security feature' (config.d.ts:149-153). It removes no label.",
+    "The WebSocket-not-routed point is inferred from the public API split (route vs routeWebSocket) plus the official 'not a security boundary' wording; it was not traced inside the browser engine."
+  ]
+}
