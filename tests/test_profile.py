@@ -24,3 +24,7 @@ def test_rejects_unknown_label():
 
 def test_labels_frozen():
     assert LABELS == frozenset({"SECRET", "UNTRUSTED", "SINK", "HOSTEXEC"})
+
+def test_invalid_label_raises_at_construction():
+    with pytest.raises(ValueError):
+        ToolEffect(labels=["NETWORK"], evidence=["a.js:1"], rationale="x")

@@ -18,6 +18,9 @@ class ToolEffect:
     default_enabled: bool = True
     undetermined: bool = False
 
+    def __post_init__(self) -> None:
+        self.validate()
+
     def validate(self) -> "ToolEffect":
         unknown = set(self.labels) - LABELS
         if unknown:
