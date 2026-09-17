@@ -51,6 +51,15 @@ def test_estimate_cost_usd_matches_hand_computed_value_and_batch_halves_it():
     assert estimate_cost_usd(usage, batch=True) == round(expected * 0.5, 6)
 
 
+def test_estimate_cost_usd_hardcoded_figures():
+    usage = {"input_tokens": 1000, "output_tokens": 500,
+             "cache_creation_input_tokens": 200, "cache_read_input_tokens": 300}
+    assert estimate_cost_usd(usage) == 0.0189
+    assert estimate_cost_usd(usage, batch=True) == 0.00945
+    assert estimate_cost_usd({"output_tokens": 1_000_000}) == 25.0
+    assert estimate_cost_usd({"cache_read_input_tokens": 1_000_000}) == 0.5
+
+
 def test_custom_id_is_sanitised_and_stays_unique_after_truncation():
     cid = _custom_id("pypi", "awslabs.aws-documentation-mcp-server")
     assert re.fullmatch(r"[A-Za-z0-9_-]{1,64}", cid)
