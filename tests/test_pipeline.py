@@ -121,43 +121,124 @@ def test_invalid_label_names_package_and_tool_in_the_error(tmp_path):
     assert "read_file" in message
 
 
-def test_prepare_sources_skips_dependency_fetch_when_own_code_covers_tools(tmp_path):
-    cache_dir = tmp_path / "cache"
+def _seed_package(cache_dir, deps, own_code="module.exports = require('dep-code');\n"):
     root = cache_dir / "npm_pkg_1.0.0"
     (root / "src").mkdir(parents=True)
-    (root / "src" / "index.js").write_text("function browser_navigate() {}\n")
-    (root / "package.json").write_text(json.dumps({"dependencies": {"dep-code": "1.0.0"}}))
+    (root / "src" / "index.js").write_text(own_code)
+    (root / "package.json").write_text(json.dumps({"dependencies": deps}))
+    return root
+
+
+def fake_npm_pack(contents_by_package, resolved=None, calls=None):
+    """npm pack stand-in: writes a tarball of contents_by_package[name] and reports
+    resolved.get(name, requested) as the version, like `npm pack --json`."""
+    def run(cmd, **kw):
+        assert "install" not in cmd
+        assert cmd[:2] == ["npm", "pack"] and "--ignore-scripts" in cmd
+        spec = cmd[cmd.index("--") + 1]
+        if calls is not None:
+            calls.append(spec)
+        name, _, requested = spec.rpartition("@")
+        tgz = Path(kw["cwd"]) / "pkg.tgz"
+        with tarfile.open(tgz, "w:gz") as t:
+            for rel, data in contents_by_package[name].items():
+                info = tarfile.TarInfo(f"package/{rel}"); info.size = len(data)
+                t.addfile(info, io.BytesIO(data))
+        version = (resolved or {}).get(name, requested)
+        class R: returncode = 0; stdout = json.dumps([{"name": name, "version": version}]); stderr = ""
+        return R()
+    return run
+
+
+def test_prepare_sources_skips_dependency_fetch_when_own_code_covers_tools(tmp_path):
+    cache_dir = tmp_path / "cache"
+    root = _seed_package(cache_dir, {"dep-code": "1.0.0"}, own_code="function browser_navigate() {}\n")
 
     def run(cmd, **kw):
         raise AssertionError(f"must not fetch anything: {cmd}")  # root is already cached
 
     got_root, files, notes = prepare_sources("npm", "pkg", "1.0.0", cache_dir,
                                              ["browser_navigate"], run=run)
-    assert got_root == root
+    assert got_root == cache_dir / ".views" / "npm_pkg_1.0.0"
+    assert (got_root / "src" / "index.js").read_text() == "function browser_navigate() {}\n"
     assert notes == []
-    assert not (root / ".deps").exists()
+    assert not (root / ".deps").exists() and not (got_root / ".deps").exists()
 
 
 def test_prepare_sources_fetches_dependency_when_tool_missing_from_own_code(tmp_path):
     cache_dir = tmp_path / "cache"
-    root = cache_dir / "npm_pkg_1.0.0"
-    (root / "src").mkdir(parents=True)
-    (root / "src" / "index.js").write_text("module.exports = require('dep-code');\n")
-    (root / "package.json").write_text(json.dumps({"dependencies": {"dep-code": "1.0.0"}}))
-
-    def run(cmd, **kw):
-        assert "install" not in cmd
-        assert cmd[:2] == ["npm", "pack"]
-        tgz = Path(kw["cwd"]) / "pkg.tgz"
-        with tarfile.open(tgz, "w:gz") as t:
-            data = b"function browser_navigate() {}\n"
-            info = tarfile.TarInfo("package/lib/x.js"); info.size = len(data)
-            t.addfile(info, io.BytesIO(data))
-        class R: returncode = 0; stdout = "pkg.tgz\n"; stderr = ""
-        return R()
+    root = _seed_package(cache_dir, {"dep-code": "1.0.0"})
+    run = fake_npm_pack({"dep-code": {"lib/x.js": b"function browser_navigate() {}\n"}})
 
     got_root, files, notes = prepare_sources("npm", "pkg", "1.0.0", cache_dir,
                                              ["browser_navigate"], run=run)
-    assert got_root == root
-    assert notes == ["dependency sources included: dep-code"]
+    assert got_root != root
+    assert notes == ["dependency sources included: dep-code@1.0.0"]
+    assert (got_root / ".deps" / "dep-code" / "lib" / "x.js").exists()
     assert any(rel.startswith(".deps/") for rel, _ in files)
+    assert not (root / ".deps").exists(), "the cached package tree must stay pristine"
+
+
+def test_prepare_sources_notes_resolved_version_and_skipped_dependency(tmp_path):
+    cache_dir = tmp_path / "cache"
+    _seed_package(cache_dir, {"dep-code": "^1.2.0", "evil": "file:../x"})
+    calls = []
+    run = fake_npm_pack({"dep-code": {"lib/x.js": b"function browser_navigate() {}\n"}},
+                        resolved={"dep-code": "1.4.3"}, calls=calls)
+
+    got_root, _, notes = prepare_sources("npm", "pkg", "1.0.0", cache_dir, ["browser_navigate"], run=run)
+    assert calls == ["dep-code@^1.2.0"]
+    assert (cache_dir / "npm_dep-code_1.4.3" / "lib" / "x.js").exists()
+    assert sorted(p.name for p in cache_dir.glob("npm_dep-code_*")) == ["npm_dep-code_1.4.3"]
+    assert notes[0] == "dependency sources included: dep-code@1.4.3"
+    assert notes[1].startswith("dependency skipped: 'evil' (invalid npm version or range")
+    assert len(notes) == 2
+
+
+def test_prepare_sources_rebuilds_view_so_earlier_dependencies_do_not_leak(tmp_path):
+    cache_dir = tmp_path / "cache"
+    root = _seed_package(cache_dir, {"dep-a": "1.0.0", "dep-b": "1.0.0"}, own_code="module.exports = {};\n")
+    run = fake_npm_pack({"dep-a": {"lib/a.js": b"function tool_a() {}\n"},
+                         "dep-b": {"lib/b.js": b"function tool_b() {}\n"}})
+
+    view1, _, notes1 = prepare_sources("npm", "pkg", "1.0.0", cache_dir, ["tool_a"], run=run)
+    assert notes1 == ["dependency sources included: dep-a@1.0.0"]
+    assert (view1 / ".deps" / "dep-a").is_dir()
+    assert not (root / ".deps").exists()
+
+    view2, files2, notes2 = prepare_sources("npm", "pkg", "1.0.0", cache_dir, ["tool_b"], run=run)
+    assert notes2 == ["dependency sources included: dep-b@1.0.0"]
+    assert sorted(p.name for p in (view2 / ".deps").iterdir()) == ["dep-b"]
+    assert not any(rel.startswith(".deps/dep-a") for rel, _ in files2)
+    assert not (root / ".deps").exists()
+
+
+def test_prepare_sources_view_drops_legacy_deps_and_symlinks(tmp_path):
+    # A cache populated before per-run views may hold .deps copied in by an earlier run.
+    cache_dir = tmp_path / "cache"
+    root = _seed_package(cache_dir, {}, own_code="function tool_a() {}\n")
+    (root / ".deps" / "old-dep").mkdir(parents=True)
+    (root / ".deps" / "old-dep" / "x.js").write_text("function tool_a() {}\n")
+    (tmp_path / "outside.js").write_text("function tool_a() {}\n")
+    (root / "src" / "link.js").symlink_to(tmp_path / "outside.js")
+
+    view, files, _ = prepare_sources("npm", "pkg", "1.0.0", cache_dir, ["tool_a"], run=None)
+    assert not (view / ".deps").exists()
+    assert not (view / "src" / "link.js").exists() and not (view / "src" / "link.js").is_symlink()
+    assert [rel for rel, _ in files] == ["src/index.js"]
+
+
+def test_prepare_sources_refuses_view_outside_cache(tmp_path):
+    cache_dir = tmp_path / "cache"
+    _seed_package(cache_dir, {}, own_code="function t() {}\n")
+    outside = tmp_path / "outside" / "npm_pkg_1.0.0"
+    outside.mkdir(parents=True)
+    (outside / "keep.txt").write_text("precious\n")
+    (cache_dir / ".views").symlink_to(tmp_path / "outside")
+
+    def run(cmd, **kw):
+        raise AssertionError(f"must not fetch anything: {cmd}")
+
+    with pytest.raises(ValueError):
+        prepare_sources("npm", "pkg", "1.0.0", cache_dir, ["t"], run=run)
+    assert (outside / "keep.txt").read_text() == "precious\n"

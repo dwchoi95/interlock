@@ -280,8 +280,11 @@ def test_batch_manifest_carries_dependency_note_when_tool_missing_from_own_code(
 
     manifest = json.loads((tmp_path / "profiles" / "batch-manifest.json").read_text())
     entry = manifest["packages"][0]
-    assert entry["notes"] == ["dependency sources included: dep-code"]
-    assert (root / ".deps" / "dep-code" / "lib" / "x.js").exists()
+    assert entry["notes"] == ["dependency sources included: dep-code@1.0.0"]
+    view = Path(entry["root"])
+    assert view == cache_dir / ".views" / "npm_a_1.0.0"
+    assert (view / ".deps" / "dep-code" / "lib" / "x.js").exists()
+    assert not (root / ".deps").exists(), "the cached package tree must stay pristine"
 
 
 def test_resume_adds_manifest_notes_to_written_profile(tmp_path, monkeypatch):
@@ -296,7 +299,7 @@ def test_resume_adds_manifest_notes_to_written_profile(tmp_path, monkeypatch):
     out_dir.mkdir()
     manifest = {"batch_id": "batch_resumed_notes", "packages": [
         {"custom_id": "npm_a-deadbeef", "kind": "npm", "package": "a", "version": "1.0.0", "root": str(root),
-         "notes": ["dependency sources included: dep-code"]}]}
+         "notes": ["dependency sources included: dep-code@1.0.0"]}]}
     (out_dir / "batch-manifest.json").write_text(json.dumps(manifest))
 
     class FakeBatches:
@@ -330,4 +333,4 @@ def test_resume_adds_manifest_notes_to_written_profile(tmp_path, monkeypatch):
                "--surfaces", str(surfaces), "--cache", str(tmp_path / "cache"), "--out", str(out_dir)])
     assert rc == 0
     written = json.loads((out_dir / "npm_a_1.0.0.json").read_text())
-    assert written["notes"] == ["dependency sources included: dep-code"]
+    assert written["notes"] == ["dependency sources included: dep-code@1.0.0"]

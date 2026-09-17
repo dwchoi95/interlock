@@ -105,8 +105,8 @@ def test_single_line_citation_does_not_widen(tmp_path):
     assert check_citation(root, "src2/server.js:3", ["range_token"]) is False
 
 def test_check_tool_accepts_citation_into_copied_dependency_tree(tmp_path):
-    # A dependency's source copied under root/.deps by fetch_dependencies (Task 2's
-    # bounded dependency following) must verify just like the package's own tree —
+    # A dependency's source copied under the view's .deps by prepare_sources (bounded
+    # dependency following) must verify just like the package's own tree —
     # proves the containment rule accepts .deps/... rather than special-casing it.
     (tmp_path / ".deps" / "dep-a" / "lib").mkdir(parents=True)
     (tmp_path / ".deps" / "dep-a" / "lib" / "x.js").write_text(

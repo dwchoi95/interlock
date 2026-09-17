@@ -1,12 +1,12 @@
 """Turn a model judgement into a profile only the checked parts of which are trusted."""
 from __future__ import annotations
-import subprocess
+import os, shutil, subprocess
 from pathlib import Path
 from interlock.adjudicate import adjudicate
 from interlock.evidence import check_tool, classify_evidence
 from interlock.profile import Profile, ToolEffect
 from interlock.select import select_files
-from interlock.source import fetch_dependencies, fetch_source
+from interlock.source import cache_path, fetch_dependencies, fetch_source, slugify
 from interlock.surface import load_surface
 
 
@@ -66,8 +66,8 @@ def verify(raw: dict, surface: dict, root: Path) -> tuple[Profile, dict]:
 
 def _own_code_missing_names(root: Path, tool_names: list[str]) -> list[str]:
     """Tool names that occur in none of root's own non-documentation source files
-    (excludes root/.deps: a previously copied-in dependency doesn't count as "own code",
-    so a resumed/cached run still re-derives the same dependency note)."""
+    (excludes root/.deps: a dependency copied into a cached tree by a version of this code
+    from before per-run views doesn't count as "own code")."""
     found: set[str] = set()
     for p in sorted(root.rglob("*")):
         if not p.is_file():
@@ -83,21 +83,44 @@ def _own_code_missing_names(root: Path, tool_names: list[str]) -> list[str]:
     return sorted(name for name in tool_names if name not in found)
 
 
+def _copy_tree(src: Path, dst: Path) -> None:
+    """Copy src to dst, materialising no symlink (one in an untrusted tree could point
+    anywhere) and leaving out src's own top-level .deps (a stale copy-in, see above)."""
+    def ignore(d, names):
+        return [n for n in names if os.path.islink(os.path.join(d, n)) or (n == ".deps" and Path(d) == Path(src))]
+    shutil.copytree(src, dst, ignore=ignore)
+
+
 def prepare_sources(kind: str, package: str, version: str, cache_dir: Path, tool_names: list[str],
                     source_ref: str | None = None, run=subprocess.run) -> tuple[Path, list[tuple[str, str]], list[str]]:
-    """Fetch a package's source and, for npm, follow direct dependencies when a tool name
-    the model must judge appears nowhere in the package's own code (a thin wrapper package
-    typically implements its tools in a dependency instead)."""
-    root = fetch_source(kind, source_ref or package, version, cache_dir, run=run)
-    notes: list[str] = []
+    """Fetch a package's source and return (view, selected files, notes), where view is a
+    per-run copy of the cached tree at cache_dir/.views/<slug>, rebuilt from scratch every
+    call. For npm, when a tool name the model must judge appears nowhere in the package's
+    own code (a thin wrapper package typically implements its tools in a dependency), each
+    direct dependency kept is copied into the view under .deps/<sanitised name>/. Cached
+    trees are never modified, so nothing kept by an earlier run can reach this one."""
+    cached = fetch_source(kind, source_ref or package, version, cache_dir, run=run)
+    kept, skipped = [], []
     if kind == "npm":
-        missing = _own_code_missing_names(root, tool_names)
+        missing = _own_code_missing_names(cached, tool_names)
         if missing:
-            kept = fetch_dependencies(root, missing, cache_dir, run=run)
-            if kept:
-                notes.append(f"dependency sources included: {', '.join(kept)}")
-    files = select_files(root, tool_names)
-    return root, files, notes
+            kept, skipped = fetch_dependencies(cached, missing, cache_dir, run=run)
+    view = cache_path(cache_dir, f".views/{cached.name}")
+    if view.exists():
+        shutil.rmtree(view)
+    view.parent.mkdir(parents=True, exist_ok=True)
+    _copy_tree(cached, view)
+    included = []
+    for name, resolved, dep_root in kept:
+        dest = view / ".deps" / slugify(name)
+        if dest.exists():
+            skipped.append((name, "its directory name collides with another dependency's"))
+            continue
+        _copy_tree(dep_root, dest)
+        included.append(f"{name}@{resolved}")
+    notes = [f"dependency sources included: {', '.join(included)}"] if included else []
+    notes += [f"dependency skipped: {name!r:.120} ({reason})" for name, reason in skipped]
+    return view, select_files(view, tool_names), notes
 
 
 def build_profile(package: str, version: str | None, kind: str, surfaces_path: Path, cache_dir: Path, client,
