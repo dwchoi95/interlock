@@ -15,9 +15,9 @@ def test_profile_subcommand_writes_profile_and_stats(tmp_path, monkeypatch):
         class messages:
             @staticmethod
             def create(**kw):
-                class Block: type = "text"; text = json.dumps({"tools": {"read_file": {
+                class Block: type = "text"; text = json.dumps({"tools": [{"name": "read_file",
                     "labels": ["SECRET"], "evidence": ["src/s.js:1"], "rationale": "calls `readFileSync`",
-                    "default_enabled": True, "undetermined": False}}, "value_conditions": [], "notes": []})
+                    "default_enabled": True, "undetermined": False}], "value_conditions": [], "notes": []})
                 class Usage:
                     input_tokens = 1000
                     output_tokens = 200
@@ -149,9 +149,9 @@ def test_resume_skips_submission_and_writes_profiles_from_results(tmp_path, monk
             class S: processing_status = "ended"; request_counts = {"succeeded": 1}
             return S()
         def results(self, batch_id):
-            class Block: type = "text"; text = json.dumps({"tools": {"read_file": {
+            class Block: type = "text"; text = json.dumps({"tools": [{"name": "read_file",
                 "labels": ["SECRET"], "evidence": ["src/s.js:1"], "rationale": "calls `readFileSync`",
-                "default_enabled": True, "undetermined": False}}, "value_conditions": [], "notes": []})
+                "default_enabled": True, "undetermined": False}], "value_conditions": [], "notes": []})
             class Usage:
                 input_tokens = 800
                 output_tokens = 150

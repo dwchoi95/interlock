@@ -2,7 +2,7 @@
 from __future__ import annotations
 import argparse, hashlib, json, re, sys, time
 from pathlib import Path
-from interlock.adjudicate import batch_request, usage_dict, USAGE_FIELDS
+from interlock.adjudicate import batch_request, parse_effects, usage_dict, USAGE_FIELDS
 from interlock.pipeline import build_profile, verify
 from interlock.select import select_files
 from interlock.source import fetch_source
@@ -137,7 +137,7 @@ def cmd_batch(args) -> int:
             continue
         surface = load_surface(Path(args.surfaces), entry["package"], entry["version"])
         text = next(b.text for b in result.result.message.content if b.type == "text")
-        profile, stats = verify(json.loads(text), surface, Path(entry["root"]))
+        profile, stats = verify(parse_effects(text), surface, Path(entry["root"]))
         usage = usage_dict(result.result.message.usage)
         stats["usage"] = usage
         stats["cost_usd"] = estimate_cost_usd(usage, batch=True)

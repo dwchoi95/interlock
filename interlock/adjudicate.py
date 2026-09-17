@@ -35,17 +35,18 @@ EFFECT_SCHEMA = {
     "type": "object",
     "properties": {
         "tools": {
-            "type": "object",
-            "additionalProperties": {
+            "type": "array",
+            "items": {
                 "type": "object",
                 "properties": {
+                    "name": {"type": "string"},
                     "labels": {"type": "array", "items": {"type": "string", "enum": ["SECRET", "UNTRUSTED", "SINK", "HOSTEXEC"]}},
                     "evidence": {"type": "array", "items": {"type": "string"}},
                     "rationale": {"type": "string"},
                     "default_enabled": {"type": "boolean"},
                     "undetermined": {"type": "boolean"},
                 },
-                "required": ["labels", "evidence", "rationale", "default_enabled", "undetermined"],
+                "required": ["name", "labels", "evidence", "rationale", "default_enabled", "undetermined"],
                 "additionalProperties": False,
             },
         },
@@ -98,6 +99,21 @@ def _params(surface, source_files, model):
         output_config={"format": {"type": "json_schema", "schema": EFFECT_SCHEMA}},
     )
 
+def parse_effects(text: str) -> dict:
+    """Parse the model's JSON and return it with `tools` keyed by tool name, the shape verify() consumes."""
+    data = json.loads(text)
+    notes = list(data.get("notes", []))
+    tools: dict = {}
+    for item in data["tools"]:
+        name = item["name"]
+        if name in tools:
+            notes.append(f"duplicate judgement for tool {name} ignored")
+            continue
+        tools[name] = {k: v for k, v in item.items() if k != "name"}
+    data["tools"] = tools
+    data["notes"] = notes
+    return data
+
 def adjudicate(surface: dict, source_files: list[tuple[str, str]], client, model: str = "claude-opus-5",
               usage_out: dict | None = None) -> dict:
     response = client.messages.create(**_params(surface, source_files, model))
@@ -109,7 +125,7 @@ def adjudicate(surface: dict, source_files: list[tuple[str, str]], client, model
         )
     if usage_out is not None:
         usage_out.update(usage_dict(response.usage))
-    return json.loads(text)
+    return parse_effects(text)
 
 def batch_request(custom_id: str, surface: dict, source_files: list[tuple[str, str]], model: str = "claude-opus-5"):
     from anthropic.types.message_create_params import MessageCreateParamsNonStreaming
