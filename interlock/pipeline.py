@@ -11,7 +11,7 @@ from interlock.surface import load_surface
 
 def verify(raw: dict, surface: dict, root: Path) -> tuple[Profile, dict]:
     tools: dict[str, ToolEffect] = {}
-    stats = {"tools": len(surface["tools"]), "claims": 0, "verified": 0, "demoted": 0,
+    stats = {"tools": len(surface["tools"]), "claims": 0, "verified": 0, "verified_doc": 0, "demoted": 0,
               "cleared_verified": 0, "cleared_unverified": 0, "missing_tools": [], "unknown_tools": []}
     judged = raw.get("tools", {})
     surface_names = {t["name"] for t in surface["tools"]}
@@ -33,22 +33,29 @@ def verify(raw: dict, surface: dict, root: Path) -> tuple[Profile, dict]:
             raise ValueError(f"{surface['package']}@{surface['version']}: tool {name!r}: {e}") from e
         # Evidence is checked whether the model asserted labels or cleared the tool outright:
         # a clearance is itself a judgement, and an unverifiable one must not pass silently.
-        ok, reason = check_tool(root, effect, name)
+        # Documentation may raise an effect but never lower one, so a citation that only
+        # verifies against a README/CHANGELOG/etc counts separately from verified code,
+        # and can never justify clearing a tool.
+        ok, reason, evidence_class = check_tool(root, effect, name)
         if effect.labels:
             stats["claims"] += 1
-            if ok:
+            if ok and evidence_class == "code":
                 stats["verified"] += 1
+            elif ok and evidence_class == "doc":
+                stats["verified_doc"] += 1
+                effect.rationale = f"{effect.rationale} [evidence: documentation only]"
             else:
                 stats["demoted"] += 1
                 effect.undetermined = True
                 effect.rationale = f"{effect.rationale} [unverified: {reason}]"
         else:
-            if ok:
+            if ok and evidence_class == "code":
                 stats["cleared_verified"] += 1
             else:
                 stats["cleared_unverified"] += 1
                 effect.undetermined = True
-                effect.rationale = f"{effect.rationale} [unverified: {reason}]"
+                clear_reason = reason if not ok else "documentation cannot verify a clearance"
+                effect.rationale = f"{effect.rationale} [unverified: {clear_reason}]"
         tools[name] = effect
     profile = Profile(package=surface["package"], version=surface["version"], kind=surface["kind"],
                       source=str(root), tools=tools, value_conditions=raw.get("value_conditions", []),

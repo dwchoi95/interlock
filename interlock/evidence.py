@@ -7,6 +7,18 @@ from interlock.profile import ToolEffect
 CITATION = re.compile(r"([\w./@+-]+\.[A-Za-z0-9]+):(\d+)(?:\s*-\s*(\d+))?")
 WIDEN = 2
 
+DOC_SUFFIXES = {".md", ".markdown", ".rst", ".txt", ".adoc"}
+DOC_NAME_PREFIXES = ("readme", "changelog", "license")
+
+def classify_evidence(rel: str) -> str:
+    """"doc" for documentation (README/CHANGELOG/LICENSE or a doc suffix), else "code".
+    Free text may raise an effect but never lower one, so a citation into documentation
+    must never on its own justify clearing a tool or standing in for verified code."""
+    p = Path(rel)
+    if p.suffix.lower() in DOC_SUFFIXES or p.name.lower().startswith(DOC_NAME_PREFIXES):
+        return "doc"
+    return "code"
+
 def parse_citation(text: str) -> list[tuple[str, int, int]]:
     out = []
     for m in CITATION.finditer(text or ""):
@@ -48,19 +60,31 @@ def _span_text(root: Path, rel: str, start: int, end: int) -> str | None:
     lo, hi = max(0, start - 1 - widen), min(len(lines), end + widen)
     return "\n".join(lines[lo:hi])
 
-def check_citation(root: Path, citation: str, must_contain: list[str]) -> bool:
+def _verifying_classes(root: Path, citation: str, must_contain: list[str]) -> set[str]:
+    """Evidence classes ("code"/"doc") of every file:line reference within `citation`
+    whose span actually contains one of `must_contain`. A single evidence string may
+    hold several ';'-separated references; each is classified independently."""
+    classes: set[str] = set()
     for rel, start, end in parse_citation(citation):
         span = _span_text(root, rel, start, end)
         if span is not None and any(tok and tok in span for tok in must_contain):
-            return True
-    return False
+            classes.add(classify_evidence(rel))
+    return classes
 
-def check_tool(root: Path, effect: ToolEffect, tool_name: str) -> tuple[bool, str]:
+def check_citation(root: Path, citation: str, must_contain: list[str]) -> bool:
+    return bool(_verifying_classes(root, citation, must_contain))
+
+def check_tool(root: Path, effect: ToolEffect, tool_name: str) -> tuple[bool, str, str]:
+    """Re-check `effect`'s evidence. Returns (verified, reason, evidence_class):
+    evidence_class is "code" if a verifying citation is a code file, "doc" if only
+    documentation citations verify, "none" if nothing verifies."""
     citations = [c for c in effect.evidence if parse_citation(c)]
     if not citations:
-        return False, "no citation with a file:line reference"
+        return False, "no citation with a file:line reference", "none"
     tokens = [tool_name] + re.findall(r"`([^`]+)`", effect.rationale or "")
+    classes: set[str] = set()
     for c in citations:
-        if check_citation(root, c, tokens):
-            return True, "ok"
-    return False, "no cited span contains the tool name or a backticked identifier"
+        classes |= _verifying_classes(root, c, tokens)
+    if not classes:
+        return False, "no cited span contains the tool name or a backticked identifier", "none"
+    return True, "ok", "code" if "code" in classes else "doc"

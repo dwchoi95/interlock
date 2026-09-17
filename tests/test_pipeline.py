@@ -17,6 +17,7 @@ RAW = {"tools": {
 def tree(tmp_path):
     (tmp_path / "src").mkdir()
     (tmp_path / "src" / "s.js").write_text("fs.readFileSync(p)\n")
+    (tmp_path / "README.md").write_text("Reads files via `readFileSync`, as documented here.\n")
     return tmp_path
 
 def test_verified_claim_stays_determined(tmp_path):
@@ -63,10 +64,40 @@ def test_cleared_tool_is_verified_like_a_claim(tmp_path):
     assert profile.tools["vague_tool"].undetermined is True
     assert "[unverified:" in profile.tools["vague_tool"].rationale
 
+SURFACE_DOC = {"package": "a", "version": "1", "kind": "npm", "tools": [
+    {"name": "doc_claimed_tool", "description": "", "inputSchema": {}, "annotations": None},
+    {"name": "doc_cleared_tool", "description": "", "inputSchema": {}, "annotations": None}]}
+
+RAW_DOC = {"tools": {
+    "doc_claimed_tool": {"labels": ["SECRET"], "evidence": ["README.md:1"],
+                          "rationale": "calls `readFileSync` per the docs",
+                          "default_enabled": True, "undetermined": False},
+    "doc_cleared_tool": {"labels": [], "evidence": ["README.md:1"],
+                          "rationale": "no-op, see `readFileSync` docs",
+                          "default_enabled": True, "undetermined": False}},
+    "value_conditions": [], "notes": []}
+
+def test_doc_only_claim_counts_separately_and_keeps_labels(tmp_path):
+    profile, stats = verify(RAW_DOC, SURFACE_DOC, tree(tmp_path))
+    assert stats["verified_doc"] == 1
+    assert profile.tools["doc_claimed_tool"].labels == ["SECRET"]
+    assert profile.tools["doc_claimed_tool"].undetermined is False
+    assert "[evidence: documentation only]" in profile.tools["doc_claimed_tool"].rationale
+
+def test_doc_only_clear_cannot_lower_effect(tmp_path):
+    profile, stats = verify(RAW_DOC, SURFACE_DOC, tree(tmp_path))
+    assert stats["cleared_unverified"] == 1
+    assert profile.tools["doc_cleared_tool"].labels == []
+    assert profile.tools["doc_cleared_tool"].undetermined is True
+    assert "[unverified:" in profile.tools["doc_cleared_tool"].rationale
+
 def test_accounting_invariant_across_all_categories(tmp_path):
-    surface = {"package": "a", "version": "1", "kind": "npm", "tools": SURFACE["tools"] + SURFACE_CLEARED["tools"]}
-    raw = {"tools": {**RAW["tools"], **RAW_CLEARED["tools"]}, "value_conditions": [], "notes": []}
+    surface = {"package": "a", "version": "1", "kind": "npm",
+               "tools": SURFACE["tools"] + SURFACE_CLEARED["tools"] + SURFACE_DOC["tools"]}
+    raw = {"tools": {**RAW["tools"], **RAW_CLEARED["tools"], **RAW_DOC["tools"]},
+           "value_conditions": [], "notes": []}
     profile, stats = verify(raw, surface, tree(tmp_path))
+    assert stats["claims"] == stats["verified"] + stats["verified_doc"] + stats["demoted"]
     assert stats["tools"] == (stats["claims"] + stats["cleared_verified"]
                                + stats["cleared_unverified"] + len(stats["missing_tools"]))
 

@@ -1,5 +1,5 @@
 from pathlib import Path
-from interlock.evidence import parse_citation, check_citation, check_tool
+from interlock.evidence import parse_citation, check_citation, check_tool, classify_evidence
 from interlock.profile import ToolEffect
 
 def tree(tmp_path):
@@ -22,16 +22,48 @@ def test_check_citation_hit_and_miss(tmp_path):
 
 def test_check_tool_uses_tool_name_and_backticked_identifiers(tmp_path):
     root = tree(tmp_path)
-    ok, _ = check_tool(root, ToolEffect(labels=["SECRET"], evidence=["src/server.js:3"],
+    ok, _, cls = check_tool(root, ToolEffect(labels=["SECRET"], evidence=["src/server.js:3"],
                                         rationale="calls `readFileSync` on an agent path"), "read_file")
-    assert ok is True
-    bad, reason = check_tool(root, ToolEffect(labels=["SECRET"], evidence=["src/server.js:4"],
+    assert ok is True and cls == "code"
+    bad, reason, cls = check_tool(root, ToolEffect(labels=["SECRET"], evidence=["src/server.js:4"],
                                               rationale="calls `spawnSync`"), "read_file")
-    assert bad is False and "no cited span" in reason
+    assert bad is False and "no cited span" in reason and cls == "none"
 
 def test_check_tool_without_citation_is_unverified(tmp_path):
-    ok, reason = check_tool(tree(tmp_path), ToolEffect(labels=["SINK"], evidence=[], rationale="x"), "post")
-    assert ok is False and "no citation" in reason
+    ok, reason, cls = check_tool(tree(tmp_path), ToolEffect(labels=["SINK"], evidence=[], rationale="x"), "post")
+    assert ok is False and "no citation" in reason and cls == "none"
+
+def test_classify_evidence_doc_vs_code():
+    assert classify_evidence("README.md") == "doc"
+    assert classify_evidence("docs/guide.rst") == "doc"
+    assert classify_evidence("CHANGELOG") == "doc"
+    assert classify_evidence("src/server.ts") == "code"
+    assert classify_evidence("lib/coreBundle.js") == "code"
+
+def doc_tree(tmp_path):
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "server.js").write_text("function read_file(p) { return fs.readFileSync(p); }\n")
+    (tmp_path / "README.md").write_text("## read_file\nCalls `readFileSync` under the hood.\n")
+    return tmp_path
+
+def test_check_tool_evidence_class_doc_only(tmp_path):
+    root = doc_tree(tmp_path)
+    effect = ToolEffect(labels=["SECRET"], evidence=["README.md:2"], rationale="calls `readFileSync`")
+    ok, _, cls = check_tool(root, effect, "read_file")
+    assert ok is True and cls == "doc"
+
+def test_check_tool_evidence_class_code_when_code_citation_present_alongside_doc(tmp_path):
+    root = doc_tree(tmp_path)
+    effect = ToolEffect(labels=["SECRET"], evidence=["src/server.js:1", "README.md:2"],
+                        rationale="calls `readFileSync`")
+    ok, _, cls = check_tool(root, effect, "read_file")
+    assert ok is True and cls == "code"
+
+def test_check_tool_evidence_class_none_when_nothing_verifies(tmp_path):
+    root = doc_tree(tmp_path)
+    effect = ToolEffect(labels=["SECRET"], evidence=["README.md:1"], rationale="x")
+    ok, reason, cls = check_tool(root, effect, "other_tool")
+    assert ok is False and cls == "none"
 
 def test_check_citation_rejects_paths_that_escape_root(tmp_path, tmp_path_factory):
     root = tree(tmp_path)
