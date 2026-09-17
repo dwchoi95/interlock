@@ -85,8 +85,10 @@ def _line_end(text: str, x: int) -> int:
 def _excerpt(text: str, tool_names: list[str]) -> str:
     """Numbered full text if it fits MAX_FILE_CHARS; otherwise whole-line windows around
     tool-name hits, each line numbered with its true line number in the original file,
-    windows separated by a WINDOW_SEPARATOR line, capped at MAX_FILE_CHARS. A single line
-    longer than the window (a minified bundle) is emitted truncated rather than expanded."""
+    windows separated by a WINDOW_SEPARATOR line, capped at MAX_FILE_CHARS. A physical line
+    longer than the window (a minified bundle, a one-line embedded schema) is not expanded;
+    instead each occurrence on that line gets its own radius-clipped, truncation-marked
+    slice, so multiple tools' evidence on the same over-long line all survive."""
     numbered_full = _number_all(text)
     if len(numbered_full) <= MAX_FILE_CHARS:
         return numbered_full
@@ -110,15 +112,23 @@ def _excerpt(text: str, tool_names: list[str]) -> str:
         else:
             mergeable.append((_line_begin(text, ws), _line_end(text, we)))
 
+    # Two occurrences on the same over-long line whose ±radius spans overlap (closer together
+    # than 2*EXCERPT_RADIUS) collapse into one slice instead of two redundant, overlapping ones.
+    # Spans on different physical lines can never overlap here (line ranges are disjoint), so
+    # merging the whole list is safe and never merges across a line boundary.
     blocks = [(start, end, False) for start, end in _merge_windows(mergeable)]
-    blocks += [(start, end, True) for start, end in truncated]
+    blocks += [(start, end, True) for start, end in _merge_windows(truncated)]
     blocks.sort(key=lambda b: b[0])
 
     parts = []
     for start, end, is_truncated in blocks:
         line_no = text.count("\n", 0, start) + 1
         if is_truncated:
-            parts.append(_numbered_line(line_no, text[start:end] + " …[truncated]"))
+            line_start = _line_begin(text, start)
+            line_end = _line_end(text, start)
+            prefix = "…" if start > line_start else ""
+            suffix = " …[truncated]" if end < line_end else ""
+            parts.append(_numbered_line(line_no, prefix + text[start:end] + suffix))
         else:
             segment_lines = text[start:end].split("\n")
             parts.append("\n".join(_numbered_line(line_no + i, ln) for i, ln in enumerate(segment_lines)))

@@ -1,5 +1,5 @@
 from pathlib import Path
-from interlock.select import select_files, MAX_FILE_CHARS
+from interlock.select import select_files, MAX_FILE_CHARS, WINDOW_SEPARATOR
 
 def make(tmp_path, files):
     for rel, text in files.items():
@@ -55,6 +55,39 @@ def test_excerpts_single_line_minified_file_when_over_budget(tmp_path):
     result = out["bundle.min.js"]
     assert result.startswith("     1| ")
     assert "…[truncated]" in result
+    assert len(result) <= MAX_FILE_CHARS
+
+def test_single_line_file_emits_a_slice_per_occurrence_across_regions(tmp_path):
+    # One giant physical line (no newlines anywhere) with three different tools' evidence
+    # spread across it. Each must survive as its own numbered, truncation-marked slice.
+    tool_a, tool_b, tool_c = "tool_alpha", "tool_beta", "tool_gamma"
+    filler = "z" * 150_000
+    text = f"{tool_a}_START" + filler + f"{tool_b}_MID" + filler + f"{tool_c}_END"
+    root = make(tmp_path, {"bundle.min.js": text})
+
+    out = dict(select_files(root, [tool_a, tool_b, tool_c]))
+    result = out["bundle.min.js"]
+    assert f"{tool_a}_START" in result
+    assert f"{tool_b}_MID" in result
+    assert f"{tool_c}_END" in result
+
+    slices = result.split(f"\n{WINDOW_SEPARATOR}\n")
+    assert len(slices) == 3
+    for s in slices:
+        assert s.startswith("     1| ")
+    assert len(result) <= MAX_FILE_CHARS
+
+def test_merges_overlapping_slices_on_same_long_line(tmp_path):
+    # Two occurrences of the same tool name on one over-long line, closer together than
+    # 2*EXCERPT_RADIUS: their windows overlap and must collapse into a single slice.
+    tool = "shared_tool_name"
+    text = ("a" * 200_000) + tool + ("b" * 1000) + tool + ("c" * 200_000)
+    root = make(tmp_path, {"bundle.min.js": text})
+
+    out = dict(select_files(root, [tool]))
+    result = out["bundle.min.js"]
+    assert result.count(tool) == 2
+    assert WINDOW_SEPARATOR not in result
     assert len(result) <= MAX_FILE_CHARS
 
 def test_returned_total_never_exceeds_budget(tmp_path):
