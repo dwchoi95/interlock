@@ -37,6 +37,11 @@ def test_build_messages_caches_stable_prefix_and_lists_every_tool():
     body = json.dumps(msgs)
     assert "read_file" in body and "src/server.js" in body
 
+def test_build_messages_instructs_model_to_cite_line_numbers():
+    msgs = build_messages(SURFACE, FILES)
+    intro = msgs[0]["content"][0]["text"]
+    assert "Each source line is prefixed with its line number and a vertical bar; cite those numbers exactly." in intro
+
 def test_adjudicate_parses_structured_output():
     class FakeClient:
         class messages:

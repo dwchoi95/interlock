@@ -1,5 +1,5 @@
 from pathlib import Path
-from interlock.select import select_files
+from interlock.select import select_files, MAX_FILE_CHARS
 
 def make(tmp_path, files):
     for rel, text in files.items():
@@ -23,29 +23,46 @@ def test_respects_budget(tmp_path):
     out = select_files(root, ["read_file"], budget_bytes=3000)
     assert 0 < len(out) <= 3
 
-def test_excerpts_large_file_with_line_markers(tmp_path):
-    # Simulates a multi-megabyte minified bundle: occurrences of the tool name are
-    # spread near the start, middle and end, far apart from each other.
+def test_numbers_every_line_of_a_small_file(tmp_path):
+    tool = "read_file"
+    text = f'line one\nname: "{tool}"\nline three'
+    root = make(tmp_path, {"a.js": text})
+    out = dict(select_files(root, [tool]))
+    expected = "\n".join(f"{i:>6}| {line}" for i, line in enumerate(text.splitlines(), start=1))
+    assert out["a.js"] == expected
+
+def test_excerpt_of_large_file_has_true_line_numbers(tmp_path):
+    # Simulates a multi-megabyte minified bundle: the tool name occurs once, deep in the file.
     tool = "special_tool_name"
     line = "x" * 79  # 79 chars + "\n" = 80 chars per line
-    n_lines = 5000  # ~400,000 chars total, well over MAX_FILE_CHARS
+    n_lines = 5000  # ~400,000 chars total, well over MAX_FILE_CHARS once numbered
     lines = [line] * n_lines
-    lines[5] = f'name: "{tool}" START_REGION'
-    lines[2500] = f'name: "{tool}" MID_REGION'
-    lines[4995] = f'name: "{tool}" END_REGION'
+    lines[4499] = f'name: "{tool}" MARK'  # 0-indexed -> true line number 4500
     text = "\n".join(lines)
     root = make(tmp_path, {"bundle.js": text})
 
-    mid_pos = text.index(f'{tool}" MID_REGION')
-    window_start = max(0, mid_pos - 1500)
-    expected_line = text.count("\n", 0, window_start) + 1
-
     out = dict(select_files(root, [tool]))
     result = out["bundle.js"]
-    assert "START_REGION" in result
-    assert "MID_REGION" in result
-    assert "END_REGION" in result
-    assert f"[line {expected_line}]" in result
+    assert f"  4500| {lines[4499]}" in result
+
+def test_excerpts_single_line_minified_file_when_over_budget(tmp_path):
+    # A minified bundle with no newlines at all: one true line, far longer than any window.
+    tool = "special_tool_name"
+    text = ("x" * 200_000) + f'name:"{tool}"' + ("y" * 200_000)
+    root = make(tmp_path, {"bundle.min.js": text})
+
+    out = dict(select_files(root, [tool]))
+    result = out["bundle.min.js"]
+    assert result.startswith("     1| ")
+    assert "…[truncated]" in result
+    assert len(result) <= MAX_FILE_CHARS
+
+def test_returned_total_never_exceeds_budget(tmp_path):
+    tool = "read_file"
+    root = make(tmp_path, {f"f{i}.js": f'name: "{tool}"' + "z" * 5000 for i in range(20)})
+    budget = 12_000
+    out = select_files(root, [tool], budget_bytes=budget)
+    assert sum(len(text) for _, text in out) <= budget
 
 def test_anchors_test_marker_to_avoid_false_positives(tmp_path):
     tool = "read_file"

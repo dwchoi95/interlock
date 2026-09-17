@@ -84,7 +84,8 @@ def build_messages(surface: dict, source_files: list[tuple[str, str]]) -> list[d
         )
     return [{"role": "user", "content": [
         {"type": "text",
-         "text": f"Server {surface['package']}@{surface['version']} ({surface['kind']}). Source follows.\n\n{code}",
+         "text": f"Server {surface['package']}@{surface['version']} ({surface['kind']}). Source follows. "
+                 f"Each source line is prefixed with its line number and a vertical bar; cite those numbers exactly.\n\n{code}",
          "cache_control": {"type": "ephemeral"}},
         {"type": "text",
          "text": f"Advertised tools (judge every one of them):\n{tools}"},

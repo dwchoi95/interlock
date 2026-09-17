@@ -8,6 +8,7 @@ TEST_MARKERS = (".test.", ".spec.", "_test.")
 MAX_FILE_CHARS = 120_000
 EXCERPT_WINDOWS = 20
 EXCERPT_RADIUS = 1_500
+WINDOW_SEPARATOR = "   ..."
 # ponytail: bounded scan so a pathological file can't make position-finding O(n^2);
 # raise this if a real provider file has more genuine tool-name hits than this.
 MAX_POSITIONS_SCANNED = 20_000
@@ -61,20 +62,68 @@ def _merge_windows(spans: list[tuple[int, int]]) -> list[tuple[int, int]]:
     return merged
 
 
+def _numbered_line(n: int, content: str) -> str:
+    return f"{n:>6}| {content}"
+
+
+def _number_all(text: str) -> str:
+    """Every line of text, prefixed with its true 1-based line number."""
+    return "\n".join(_numbered_line(i, line) for i, line in enumerate(text.splitlines(), start=1))
+
+
+def _line_begin(text: str, x: int) -> int:
+    """Offset of the start of the line containing offset x."""
+    return text.rfind("\n", 0, x) + 1
+
+
+def _line_end(text: str, x: int) -> int:
+    """Offset of the end of the line containing offset x (the newline itself, or EOF)."""
+    idx = text.find("\n", x)
+    return len(text) if idx == -1 else idx
+
+
 def _excerpt(text: str, tool_names: list[str]) -> str:
-    """Full text if it fits the budget; otherwise windows around tool-name hits, each
-    labeled with its true starting line number in the original file, capped at MAX_FILE_CHARS."""
-    if len(text) <= MAX_FILE_CHARS:
-        return text
+    """Numbered full text if it fits MAX_FILE_CHARS; otherwise whole-line windows around
+    tool-name hits, each line numbered with its true line number in the original file,
+    windows separated by a WINDOW_SEPARATOR line, capped at MAX_FILE_CHARS. A single line
+    longer than the window (a minified bundle) is emitted truncated rather than expanded."""
+    numbered_full = _number_all(text)
+    if len(numbered_full) <= MAX_FILE_CHARS:
+        return numbered_full
+
     positions = _spread(_tool_positions(text, tool_names))
     if not positions:
-        return text[:MAX_FILE_CHARS]
-    spans = [(max(0, p - EXCERPT_RADIUS), min(len(text), p + EXCERPT_RADIUS)) for p in positions]
+        return numbered_full[:MAX_FILE_CHARS]
+
+    window_len = 2 * EXCERPT_RADIUS
+    mergeable: list[tuple[int, int]] = []
+    truncated: list[tuple[int, int]] = []
+    for p in positions:
+        ws = max(0, p - EXCERPT_RADIUS)
+        we = min(len(text), p + EXCERPT_RADIUS)
+        # Check the length of the physical line the hit is on, not the expanded window
+        # (expanding an ordinary window out to whole lines can overshoot window_len by a
+        # partial line at each edge; that's fine. What we're detecting here is a single
+        # minified line so long it swallows the window on its own.)
+        if _line_end(text, p) - _line_begin(text, p) > window_len:
+            truncated.append((ws, we))
+        else:
+            mergeable.append((_line_begin(text, ws), _line_end(text, we)))
+
+    blocks = [(start, end, False) for start, end in _merge_windows(mergeable)]
+    blocks += [(start, end, True) for start, end in truncated]
+    blocks.sort(key=lambda b: b[0])
+
     parts = []
-    for start, end in _merge_windows(spans):
+    for start, end, is_truncated in blocks:
         line_no = text.count("\n", 0, start) + 1
-        parts.append(f"... [line {line_no}] ...\n{text[start:end]}")
-    return "\n".join(parts)[:MAX_FILE_CHARS]
+        if is_truncated:
+            parts.append(_numbered_line(line_no, text[start:end] + " …[truncated]"))
+        else:
+            segment_lines = text[start:end].split("\n")
+            parts.append("\n".join(_numbered_line(line_no + i, ln) for i, ln in enumerate(segment_lines)))
+
+    return f"\n{WINDOW_SEPARATOR}\n".join(parts)[:MAX_FILE_CHARS]
 
 
 def select_files(root: Path, tool_names: list[str], budget_bytes: int = 400_000) -> list[tuple[str, str]]:
@@ -92,6 +141,7 @@ def select_files(root: Path, tool_names: list[str], budget_bytes: int = 400_000)
             continue
         is_doc = p.suffix.lower() == ".md"
         rel = str(p.relative_to(root))
+        # Ranking is computed on the original text; only the returned copy is numbered.
         scored.append((-distinct_hits, is_doc, len(text), rel, _excerpt(text, tool_names)))
     out, used = [], 0
     for _, _, _, rel, text in sorted(scored):
