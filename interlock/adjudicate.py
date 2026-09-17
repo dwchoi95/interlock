@@ -100,13 +100,28 @@ def _params(surface, source_files, model):
         output_config={"format": {"type": "json_schema", "schema": EFFECT_SCHEMA}},
     )
 
-def parse_effects(text: str) -> dict:
-    """Parse the model's JSON and return it with `tools` keyed by tool name, the shape verify() consumes."""
-    data = json.loads(text)
+def parse_effects(text: str, package: str = "<unknown>") -> dict:
+    """Parse the model's JSON and return it with `tools` keyed by tool name, the shape verify()
+    consumes. Raises ValueError naming `package` for any malformed shape - invalid JSON, a
+    top-level value that isn't an object, a missing or non-list `tools`, a non-object item, or
+    an item with a missing/non-string `name` - instead of a bare KeyError/TypeError/JSONDecodeError."""
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"{package}: invalid JSON from model: {e}") from e
+    if not isinstance(data, dict):
+        raise ValueError(f"{package}: expected a JSON object, got {type(data).__name__}")
+    tools_raw = data.get("tools")
+    if not isinstance(tools_raw, list):
+        raise ValueError(f"{package}: expected `tools` to be a list, got {type(tools_raw).__name__}")
     notes = list(data.get("notes", []))
     tools: dict = {}
-    for item in data["tools"]:
-        name = item["name"]
+    for i, item in enumerate(tools_raw):
+        if not isinstance(item, dict):
+            raise ValueError(f"{package}: tools[{i}] is not an object (got {type(item).__name__})")
+        name = item.get("name")
+        if not isinstance(name, str):
+            raise ValueError(f"{package}: tools[{i}] is missing a string `name`")
         if name in tools:
             notes.append(f"duplicate judgement for tool {name} ignored")
             continue
@@ -126,7 +141,7 @@ def adjudicate(surface: dict, source_files: list[tuple[str, str]], client, model
         )
     if usage_out is not None:
         usage_out.update(usage_dict(response.usage))
-    return parse_effects(text)
+    return parse_effects(text, surface["package"])
 
 def batch_request(custom_id: str, surface: dict, source_files: list[tuple[str, str]], model: str = "claude-opus-5"):
     from anthropic.types.message_create_params import MessageCreateParamsNonStreaming

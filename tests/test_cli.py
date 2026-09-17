@@ -1,6 +1,7 @@
 import json
 import re
 from pathlib import Path
+from types import SimpleNamespace
 from interlock.cli import main, _custom_id, estimate_cost_usd, PRICE_PER_MTOK
 
 def test_profile_subcommand_writes_profile_and_stats(tmp_path, monkeypatch):
@@ -77,6 +78,15 @@ def _seed_source(cache_dir, kind, package, version):
     (root / "s.js").write_text("fs.readFileSync(p)\n")
 
 
+def _batch_result(custom_id, text, usage=None):
+    usage = usage or {"input_tokens": 100, "output_tokens": 20,
+                       "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0}
+    block = SimpleNamespace(type="text", text=text)
+    message = SimpleNamespace(content=[block], usage=SimpleNamespace(**usage))
+    result = SimpleNamespace(type="succeeded", message=message)
+    return SimpleNamespace(custom_id=custom_id, result=result)
+
+
 def test_batch_writes_manifest_with_batch_id_and_one_entry_per_package(tmp_path, monkeypatch):
     surfaces = tmp_path / "surfaces.jsonl"
     rows = [
@@ -125,6 +135,55 @@ def test_batch_writes_manifest_with_batch_id_and_one_entry_per_package(tmp_path,
     manifest_ids = {e["custom_id"] for e in manifest["packages"]}
     request_ids = {r["custom_id"] for r in fake.messages.batches.created_requests}
     assert manifest_ids == request_ids
+
+
+def test_batch_continues_past_malformed_result_and_records_failure(tmp_path, monkeypatch):
+    surfaces = tmp_path / "surfaces.jsonl"
+    rows = [
+        {"kind": "npm", "pkg": "a", "version": "1.0.0", "published": "2026-01-01T00:00:00Z", "ok": True,
+         "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]},
+        {"kind": "npm", "pkg": "b", "version": "2.0.0", "published": "2026-01-01T00:00:00Z", "ok": True,
+         "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]},
+    ]
+    surfaces.write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+    _seed_source(tmp_path / "cache", "npm", "a", "1.0.0")
+    _seed_source(tmp_path / "cache", "npm", "b", "2.0.0")
+    packages = tmp_path / "packages.txt"
+    packages.write_text("npm:a\nnpm:b\n")
+
+    good_text = json.dumps({"tools": [{"name": "read_file", "labels": ["SECRET"], "evidence": ["src/s.js:1"],
+                                        "rationale": "calls `readFileSync`", "default_enabled": True, "undetermined": False}],
+                             "value_conditions": [], "notes": []})
+    cid_a, cid_b = _custom_id("npm", "a"), _custom_id("npm", "b")
+
+    class FakeBatches:
+        def create(self, **kw):
+            class B: id = "batch_mixed"
+            return B()
+        def retrieve(self, batch_id):
+            class S: processing_status = "ended"; request_counts = {"succeeded": 2}
+            return S()
+        def results(self, batch_id):
+            return [_batch_result(cid_a, good_text), _batch_result(cid_b, "{not valid json")]
+    class FakeMessages:
+        batches = FakeBatches()
+    class FakeClient:
+        messages = FakeMessages()
+
+    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+    rc = main(["batch", str(packages), "--surfaces", str(surfaces),
+               "--cache", str(tmp_path / "cache"), "--out", str(tmp_path / "profiles")])
+    assert rc == 0
+
+    assert (tmp_path / "profiles" / "npm_a_1.0.0.json").exists()
+    assert not (tmp_path / "profiles" / "npm_b_2.0.0.json").exists()
+    stats = [json.loads(l) for l in (tmp_path / "profiles" / "stats.jsonl").open()]
+    assert len(stats) == 1 and stats[0]["package"] == "a"
+
+    failures = json.loads((tmp_path / "profiles" / "batch-failures.json").read_text())
+    assert len(failures) == 1
+    assert failures[0]["package"] == "b" and failures[0]["custom_id"] == cid_b
+    assert "invalid JSON" in failures[0]["error"]
 
 
 def test_resume_skips_submission_and_writes_profiles_from_results(tmp_path, monkeypatch):

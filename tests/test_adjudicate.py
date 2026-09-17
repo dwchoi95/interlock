@@ -137,3 +137,24 @@ def test_parse_effects_keys_tools_by_name_and_drops_duplicates():
     assert out["tools"]["read_file"]["rationale"] == "r1"          # first occurrence kept
     assert out["tools"]["write_file"]["labels"] == ["SINK"]
     assert out["notes"] == ["pre-existing note", "duplicate judgement for tool read_file ignored"]
+
+def test_parse_effects_rejects_invalid_json():
+    with pytest.raises(ValueError, match="pkg-x"):
+        parse_effects("{not json", package="pkg-x")
+
+def test_parse_effects_rejects_missing_tools_key():
+    text = json.dumps({"value_conditions": [], "notes": []})
+    with pytest.raises(ValueError, match="pkg-x"):
+        parse_effects(text, package="pkg-x")
+
+def test_parse_effects_rejects_tools_as_dict():
+    text = json.dumps({"tools": {"read_file": {}}, "value_conditions": [], "notes": []})
+    with pytest.raises(ValueError, match="pkg-x"):
+        parse_effects(text, package="pkg-x")
+
+def test_parse_effects_rejects_item_missing_name():
+    text = json.dumps({"tools": [{"labels": ["SECRET"], "evidence": ["a:1"], "rationale": "r",
+                                   "default_enabled": True, "undetermined": False}],
+                        "value_conditions": [], "notes": []})
+    with pytest.raises(ValueError, match="pkg-x"):
+        parse_effects(text, package="pkg-x")

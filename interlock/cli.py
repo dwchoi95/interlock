@@ -127,6 +127,7 @@ def cmd_batch(args) -> int:
     written = 0
     totals = {f: 0 for f in USAGE_FIELDS}
     total_cost = 0.0
+    failures: list[dict] = []
     for result in client.messages.batches.results(batch_id):
         entry = entries.get(result.custom_id)
         if entry is None:
@@ -137,7 +138,12 @@ def cmd_batch(args) -> int:
             continue
         surface = load_surface(Path(args.surfaces), entry["package"], entry["version"])
         text = next(b.text for b in result.result.message.content if b.type == "text")
-        profile, stats = verify(parse_effects(text), surface, Path(entry["root"]))
+        try:
+            profile, stats = verify(parse_effects(text, entry["package"]), surface, Path(entry["root"]))
+        except ValueError as e:
+            print(f"{entry['package']}: {e}", file=sys.stderr)
+            failures.append({"package": entry["package"], "custom_id": result.custom_id, "error": str(e)})
+            continue
         usage = usage_dict(result.result.message.usage)
         stats["usage"] = usage
         stats["cost_usd"] = estimate_cost_usd(usage, batch=True)
@@ -148,7 +154,9 @@ def cmd_batch(args) -> int:
             totals[f] += usage[f]
         total_cost += stats["cost_usd"]
         print(f"{profile.package}@{profile.version}: {stats['verified']}/{stats['claims']} verified")
-    print(f"batch {batch_id}: {written} packages written, tokens "
+    (out_dir / "batch-failures.json").write_text(json.dumps(failures, indent=1))
+    failed_note = f", {len(failures)} failed ({', '.join(f['package'] for f in failures)})" if failures else ""
+    print(f"batch {batch_id}: {written} packages written{failed_note}, tokens "
           f"in={totals['input_tokens']} out={totals['output_tokens']} "
           f"cache_creation={totals['cache_creation_input_tokens']} cache_read={totals['cache_read_input_tokens']}, "
           f"cost_usd={total_cost:.4f}")
