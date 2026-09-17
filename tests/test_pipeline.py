@@ -1,6 +1,7 @@
+import io, json, tarfile
 from pathlib import Path
 import pytest
-from interlock.pipeline import verify
+from interlock.pipeline import prepare_sources, verify
 
 SURFACE = {"package": "a", "version": "1", "kind": "npm", "tools": [
     {"name": "read_file", "description": "", "inputSchema": {}, "annotations": None},
@@ -118,3 +119,45 @@ def test_invalid_label_names_package_and_tool_in_the_error(tmp_path):
     message = str(exc.value)
     assert SURFACE["package"] in message
     assert "read_file" in message
+
+
+def test_prepare_sources_skips_dependency_fetch_when_own_code_covers_tools(tmp_path):
+    cache_dir = tmp_path / "cache"
+    root = cache_dir / "npm_pkg_1.0.0"
+    (root / "src").mkdir(parents=True)
+    (root / "src" / "index.js").write_text("function browser_navigate() {}\n")
+    (root / "package.json").write_text(json.dumps({"dependencies": {"dep-code": "1.0.0"}}))
+
+    def run(cmd, **kw):
+        raise AssertionError(f"must not fetch anything: {cmd}")  # root is already cached
+
+    got_root, files, notes = prepare_sources("npm", "pkg", "1.0.0", cache_dir,
+                                             ["browser_navigate"], run=run)
+    assert got_root == root
+    assert notes == []
+    assert not (root / ".deps").exists()
+
+
+def test_prepare_sources_fetches_dependency_when_tool_missing_from_own_code(tmp_path):
+    cache_dir = tmp_path / "cache"
+    root = cache_dir / "npm_pkg_1.0.0"
+    (root / "src").mkdir(parents=True)
+    (root / "src" / "index.js").write_text("module.exports = require('dep-code');\n")
+    (root / "package.json").write_text(json.dumps({"dependencies": {"dep-code": "1.0.0"}}))
+
+    def run(cmd, **kw):
+        assert "install" not in cmd
+        assert cmd[:2] == ["npm", "pack"]
+        tgz = Path(kw["cwd"]) / "pkg.tgz"
+        with tarfile.open(tgz, "w:gz") as t:
+            data = b"function browser_navigate() {}\n"
+            info = tarfile.TarInfo("package/lib/x.js"); info.size = len(data)
+            t.addfile(info, io.BytesIO(data))
+        class R: returncode = 0; stdout = "pkg.tgz\n"; stderr = ""
+        return R()
+
+    got_root, files, notes = prepare_sources("npm", "pkg", "1.0.0", cache_dir,
+                                             ["browser_navigate"], run=run)
+    assert got_root == root
+    assert notes == ["dependency sources included: dep-code"]
+    assert any(rel.startswith(".deps/") for rel, _ in files)

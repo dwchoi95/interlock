@@ -237,3 +237,97 @@ def test_resume_skips_submission_and_writes_profiles_from_results(tmp_path, monk
                                   "cache_creation_input_tokens": 300, "cache_read_input_tokens": 400}
     assert stats[0]["cost_usd"] > 0
     assert stats[0]["batch_wall_seconds"] >= 0
+
+
+def test_batch_manifest_carries_dependency_note_when_tool_missing_from_own_code(tmp_path, monkeypatch):
+    surfaces = tmp_path / "surfaces.jsonl"
+    surfaces.write_text(json.dumps({"kind": "npm", "pkg": "a", "version": "1.0.0", "published": "2026-01-01T00:00:00Z",
+                                    "ok": True, "tools": [{"name": "browser_navigate", "description": "", "inputSchema": {}, "annotations": None}]}) + "\n")
+    cache_dir = tmp_path / "cache"
+    root = cache_dir / "npm_a_1.0.0"
+    (root / "src").mkdir(parents=True)
+    (root / "src" / "index.js").write_text("module.exports = require('dep-code');\n")
+    (root / "package.json").write_text(json.dumps({"dependencies": {"dep-code": "1.0.0"}}))
+    dep_root = cache_dir / "npm_dep-code_1.0.0"
+    (dep_root / "lib").mkdir(parents=True)
+    (dep_root / "lib" / "x.js").write_text("function browser_navigate() {}\n")
+    packages = tmp_path / "packages.txt"
+    packages.write_text("npm:a\n")
+
+    class FakeBatches:
+        def __init__(self):
+            self.created_requests = None
+        def create(self, **kw):
+            self.created_requests = kw["requests"]
+            class B: id = "batch_dep123"
+            return B()
+        def retrieve(self, batch_id):
+            class S: processing_status = "ended"; request_counts = {"succeeded": 1}
+            return S()
+        def results(self, batch_id):
+            return []
+    class FakeMessages:
+        def __init__(self):
+            self.batches = FakeBatches()
+    class FakeClient:
+        def __init__(self):
+            self.messages = FakeMessages()
+
+    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+    rc = main(["batch", str(packages), "--surfaces", str(surfaces),
+               "--cache", str(cache_dir), "--out", str(tmp_path / "profiles")])
+    assert rc == 0
+
+    manifest = json.loads((tmp_path / "profiles" / "batch-manifest.json").read_text())
+    entry = manifest["packages"][0]
+    assert entry["notes"] == ["dependency sources included: dep-code"]
+    assert (root / ".deps" / "dep-code" / "lib" / "x.js").exists()
+
+
+def test_resume_adds_manifest_notes_to_written_profile(tmp_path, monkeypatch):
+    surfaces = tmp_path / "surfaces.jsonl"
+    surfaces.write_text(json.dumps({"kind": "npm", "pkg": "a", "version": "1.0.0", "published": "2026-01-01T00:00:00Z",
+                                    "ok": True, "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]}) + "\n")
+    root = tmp_path / "cache" / "npm_a_1.0.0"
+    (root / "src").mkdir(parents=True)
+    (root / "src" / "s.js").write_text("fs.readFileSync(p)\n")
+
+    out_dir = tmp_path / "profiles"
+    out_dir.mkdir()
+    manifest = {"batch_id": "batch_resumed_notes", "packages": [
+        {"custom_id": "npm_a-deadbeef", "kind": "npm", "package": "a", "version": "1.0.0", "root": str(root),
+         "notes": ["dependency sources included: dep-code"]}]}
+    (out_dir / "batch-manifest.json").write_text(json.dumps(manifest))
+
+    class FakeBatches:
+        def create(self, **kw):
+            raise AssertionError("batches.create must not be called on resume")
+        def retrieve(self, batch_id):
+            assert batch_id == "batch_resumed_notes"
+            class S: processing_status = "ended"; request_counts = {"succeeded": 1}
+            return S()
+        def results(self, batch_id):
+            class Block: type = "text"; text = json.dumps({"tools": [{"name": "read_file",
+                "labels": ["SECRET"], "evidence": ["src/s.js:1"], "rationale": "calls `readFileSync`",
+                "default_enabled": True, "undetermined": False}], "value_conditions": [], "notes": []})
+            class Usage:
+                input_tokens = 100
+                output_tokens = 20
+                cache_creation_input_tokens = 0
+                cache_read_input_tokens = 0
+            class Message: content = [Block()]; usage = Usage()
+            class Result: type = "succeeded"; message = Message()
+            class R: custom_id = "npm_a-deadbeef"; result = Result()
+            return [R()]
+    class FakeMessages:
+        batches = FakeBatches()
+    class FakeClient:
+        messages = FakeMessages()
+
+    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+
+    rc = main(["batch", str(tmp_path / "unused.txt"), "--resume", "batch_resumed_notes",
+               "--surfaces", str(surfaces), "--cache", str(tmp_path / "cache"), "--out", str(out_dir)])
+    assert rc == 0
+    written = json.loads((out_dir / "npm_a_1.0.0.json").read_text())
+    assert written["notes"] == ["dependency sources included: dep-code"]

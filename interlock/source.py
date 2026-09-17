@@ -1,7 +1,8 @@
 """Fetch provider source for reading only. Nothing here executes provider code."""
 from __future__ import annotations
-import hashlib, shutil, stat, subprocess, tarfile, zipfile
+import hashlib, json, shutil, stat, subprocess, tarfile, zipfile
 from pathlib import Path
+from interlock.evidence import classify_evidence
 
 _METADATA_SUFFIXES = (".dist-info", ".data", ".egg-info")
 
@@ -76,6 +77,51 @@ def fetch_source(kind: str, package: str, version: str, cache_dir: Path, run=sub
         return dest
     finally:
         shutil.rmtree(work, ignore_errors=True)
+
+def _has_code_evidence(dep_root: Path, missing_names: list[str]) -> bool:
+    """True if some non-documentation file under dep_root contains one of missing_names."""
+    for p in sorted(dep_root.rglob("*")):
+        if not p.is_file() or classify_evidence(str(p.relative_to(dep_root))) == "doc":
+            continue
+        try:
+            text = p.read_text(errors="strict")
+        except (UnicodeDecodeError, ValueError):
+            continue
+        if any(name in text for name in missing_names):
+            return True
+    return False
+
+def fetch_dependencies(root: Path, missing_names: list[str], cache_dir: Path,
+                       run=subprocess.run, max_deps: int = 5) -> list[str]:
+    """Follow root's direct npm dependencies (no recursion) looking for tool names the
+    package's own source never mentions — a thin wrapper package (e.g. @playwright/mcp)
+    typically implements its tools in a dependency (playwright-core) instead. A kept
+    dependency's tree is copied (never symlinked, so the evidence checker's containment
+    rule accepts it) into root/.deps/<name>/. Returns the sorted names kept."""
+    root = Path(root)
+    try:
+        data = json.loads((root / "package.json").read_text())
+    except (OSError, ValueError):
+        return []
+    deps = data.get("dependencies")
+    if not isinstance(deps, dict):
+        return []
+    kept: list[str] = []
+    for name in sorted(deps):
+        if len(kept) >= max_deps:
+            break
+        try:
+            dep_root = fetch_source("npm", name, deps[name], cache_dir, run=run)
+        except Exception:
+            continue  # a dependency that fails to fetch is skipped, not fatal
+        if not _has_code_evidence(dep_root, missing_names):
+            continue
+        dest = root / ".deps" / name.replace("/", "__")
+        if not dest.exists():
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copytree(dep_root, dest, symlinks=False)
+        kept.append(name)
+    return sorted(kept)
 
 def source_digest(path: Path) -> str:
     h = hashlib.sha256()

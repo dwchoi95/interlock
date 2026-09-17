@@ -3,9 +3,7 @@ from __future__ import annotations
 import argparse, hashlib, json, re, sys, time
 from pathlib import Path
 from interlock.adjudicate import batch_request, parse_effects, usage_dict, USAGE_FIELDS
-from interlock.pipeline import build_profile, verify
-from interlock.select import select_files
-from interlock.source import fetch_source
+from interlock.pipeline import build_profile, prepare_sources, verify
 from interlock.surface import load_surface
 
 PRICE_PER_MTOK = {"claude-opus-5": {"input": 5.00, "output": 25.00}}
@@ -72,14 +70,14 @@ def _prepare_batch(specs: list[str], surfaces_path: Path, cache_dir: Path) -> tu
     for spec in specs:
         kind, package = _split(spec)
         surface = load_surface(surfaces_path, package)
-        root = fetch_source(kind, package, surface["version"], cache_dir)
-        files = select_files(root, [t["name"] for t in surface["tools"]])
+        root, files, notes = prepare_sources(kind, package, surface["version"], cache_dir,
+                                             [t["name"] for t in surface["tools"]])
         cid = _custom_id(kind, package)
         if cid in seen:
             raise ValueError(f"duplicate custom_id {cid!r} for {seen[cid]!r} and {spec!r}")
         seen[cid] = spec
         manifest_entries.append({"custom_id": cid, "kind": kind, "package": package,
-                                  "version": surface["version"], "root": str(root)})
+                                  "version": surface["version"], "root": str(root), "notes": notes})
         requests.append(batch_request(cid, surface, files))
     return requests, manifest_entries
 
@@ -144,6 +142,7 @@ def cmd_batch(args) -> int:
             print(f"{entry['package']}: {e}", file=sys.stderr)
             failures.append({"package": entry["package"], "custom_id": result.custom_id, "error": str(e)})
             continue
+        profile.notes = list(profile.notes) + entry.get("notes", [])
         usage = usage_dict(result.result.message.usage)
         stats["usage"] = usage
         stats["cost_usd"] = estimate_cost_usd(usage, batch=True)

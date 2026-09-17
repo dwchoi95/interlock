@@ -1,11 +1,12 @@
 """Turn a model judgement into a profile only the checked parts of which are trusted."""
 from __future__ import annotations
+import subprocess
 from pathlib import Path
 from interlock.adjudicate import adjudicate
-from interlock.evidence import check_tool
+from interlock.evidence import check_tool, classify_evidence
 from interlock.profile import Profile, ToolEffect
 from interlock.select import select_files
-from interlock.source import fetch_source
+from interlock.source import fetch_dependencies, fetch_source
 from interlock.surface import load_surface
 
 
@@ -63,10 +64,48 @@ def verify(raw: dict, surface: dict, root: Path) -> tuple[Profile, dict]:
     return profile, stats
 
 
+def _own_code_missing_names(root: Path, tool_names: list[str]) -> list[str]:
+    """Tool names that occur in none of root's own non-documentation source files
+    (excludes root/.deps: a previously copied-in dependency doesn't count as "own code",
+    so a resumed/cached run still re-derives the same dependency note)."""
+    found: set[str] = set()
+    for p in sorted(root.rglob("*")):
+        if not p.is_file():
+            continue
+        rel = p.relative_to(root)
+        if rel.parts[0] == ".deps" or classify_evidence(str(rel)) == "doc":
+            continue
+        try:
+            text = p.read_text(errors="strict")
+        except (UnicodeDecodeError, ValueError):
+            continue
+        found |= {name for name in tool_names if name not in found and name in text}
+    return sorted(name for name in tool_names if name not in found)
+
+
+def prepare_sources(kind: str, package: str, version: str, cache_dir: Path, tool_names: list[str],
+                    source_ref: str | None = None, run=subprocess.run) -> tuple[Path, list[tuple[str, str]], list[str]]:
+    """Fetch a package's source and, for npm, follow direct dependencies when a tool name
+    the model must judge appears nowhere in the package's own code (a thin wrapper package
+    typically implements its tools in a dependency instead)."""
+    root = fetch_source(kind, source_ref or package, version, cache_dir, run=run)
+    notes: list[str] = []
+    if kind == "npm":
+        missing = _own_code_missing_names(root, tool_names)
+        if missing:
+            kept = fetch_dependencies(root, missing, cache_dir, run=run)
+            if kept:
+                notes.append(f"dependency sources included: {', '.join(kept)}")
+    files = select_files(root, tool_names)
+    return root, files, notes
+
+
 def build_profile(package: str, version: str | None, kind: str, surfaces_path: Path, cache_dir: Path, client,
                   source_ref: str | None = None, usage_out: dict | None = None) -> tuple[Profile, dict]:
     surface = load_surface(surfaces_path, package, version)
-    root = fetch_source(kind, source_ref or package, surface["version"], cache_dir)
-    files = select_files(root, [t["name"] for t in surface["tools"]])
+    root, files, notes = prepare_sources(kind, package, surface["version"], cache_dir,
+                                         [t["name"] for t in surface["tools"]], source_ref=source_ref)
     raw = adjudicate(surface, files, client=client, usage_out=usage_out)
-    return verify(raw, surface, root)
+    profile, stats = verify(raw, surface, root)
+    profile.notes = list(profile.notes) + notes
+    return profile, stats
