@@ -13,10 +13,20 @@ def test_profile_subcommand_writes_profile_and_stats(tmp_path, monkeypatch):
     src.mkdir(parents=True)
     (src / "s.js").write_text("fs.readFileSync(p)\n")
 
+    class _FakeStream:
+        def __init__(self, response):
+            self._response = response
+        def __enter__(self):
+            return self
+        def __exit__(self, *exc):
+            return False
+        def get_final_message(self):
+            return self._response
+
     class FakeClient:
         class messages:
             @staticmethod
-            def create(**kw):
+            def stream(**kw):
                 class Block: type = "text"; text = json.dumps({"tools": [{"name": "read_file",
                     "labels": ["SECRET"], "evidence": ["src/s.js:1"], "rationale": "calls `readFileSync`",
                     "default_enabled": True, "undetermined": False}], "value_conditions": [], "notes": []})
@@ -25,8 +35,8 @@ def test_profile_subcommand_writes_profile_and_stats(tmp_path, monkeypatch):
                     output_tokens = 200
                     cache_creation_input_tokens = 0
                     cache_read_input_tokens = 0
-                class R: content = [Block()]; usage = Usage()
-                return R()
+                class R: content = [Block()]; usage = Usage(); stop_reason = "end_turn"
+                return _FakeStream(R())
     monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
 
     rc = main(["profile", "npm:a", "--surfaces", str(surfaces), "--cache", str(tmp_path / "cache"), "--out", str(tmp_path / "profiles")])
@@ -79,11 +89,11 @@ def _seed_source(cache_dir, kind, package, version):
     (root / "s.js").write_text("fs.readFileSync(p)\n")
 
 
-def _batch_result(custom_id, text, usage=None):
+def _batch_result(custom_id, text, usage=None, stop_reason="end_turn"):
     usage = usage or {"input_tokens": 100, "output_tokens": 20,
                        "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0}
     block = SimpleNamespace(type="text", text=text)
-    message = SimpleNamespace(content=[block], usage=SimpleNamespace(**usage))
+    message = SimpleNamespace(content=[block], usage=SimpleNamespace(**usage), stop_reason=stop_reason)
     result = SimpleNamespace(type="succeeded", message=message)
     return SimpleNamespace(custom_id=custom_id, result=result)
 
@@ -188,6 +198,58 @@ def test_batch_continues_past_malformed_result_and_records_failure(tmp_path, mon
     assert "invalid JSON" in failures[0]["message"]
 
 
+def test_batch_records_truncated_result_as_failure_and_keeps_going(tmp_path, monkeypatch):
+    surfaces = tmp_path / "surfaces.jsonl"
+    rows = [
+        {"kind": "npm", "pkg": "a", "version": "1.0.0", "published": "2026-01-01T00:00:00Z", "ok": True,
+         "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]},
+        {"kind": "npm", "pkg": "big", "version": "1.0.0", "published": "2026-01-01T00:00:00Z", "ok": True,
+         "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]},
+    ]
+    surfaces.write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+    _seed_source(tmp_path / "cache", "npm", "a", "1.0.0")
+    _seed_source(tmp_path / "cache", "npm", "big", "1.0.0")
+    packages = tmp_path / "packages.txt"
+    packages.write_text("npm:a\nnpm:big\n")
+
+    good_text = json.dumps({"tools": [{"name": "read_file", "labels": ["SECRET"], "evidence": ["src/s.js:1"],
+                                        "rationale": "calls `readFileSync`", "default_enabled": True, "undetermined": False}],
+                             "value_conditions": [], "notes": []})
+    # A response cut off mid-JSON by hitting max_tokens - must be reported as truncated,
+    # not as the "invalid JSON" error parsing the fragment would otherwise raise.
+    cid_a, cid_big = _custom_id("npm", "a"), _custom_id("npm", "big")
+
+    class FakeBatches:
+        def create(self, **kw):
+            class B: id = "batch_truncated"
+            return B()
+        def retrieve(self, batch_id):
+            class S: processing_status = "ended"; request_counts = {"succeeded": 1}
+            return S()
+        def results(self, batch_id):
+            return [_batch_result(cid_a, good_text),
+                    _batch_result(cid_big, '{"tools": [{"name": "read_fi', stop_reason="max_tokens")]
+    class FakeMessages:
+        batches = FakeBatches()
+    class FakeClient:
+        messages = FakeMessages()
+
+    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+    rc = main(["batch", str(packages), "--surfaces", str(surfaces),
+               "--cache", str(tmp_path / "cache"), "--out", str(tmp_path / "profiles")])
+    assert rc == 0
+
+    assert (tmp_path / "profiles" / "npm_a_1.0.0.json").exists()
+    assert not (tmp_path / "profiles" / "npm_big_1.0.0.json").exists()
+    stats = [json.loads(l) for l in (tmp_path / "profiles" / "stats.jsonl").open()]
+    assert len(stats) == 1 and stats[0]["package"] == "a"
+
+    failures = [json.loads(l) for l in (tmp_path / "profiles" / "batch-failures.jsonl").open()]
+    assert len(failures) == 1
+    assert failures[0]["package"] == "big" and failures[0]["custom_id"] == cid_big
+    assert "truncated" in failures[0]["message"]
+
+
 def test_batch_records_a_failure_for_every_bad_result_and_keeps_going(tmp_path, monkeypatch):
     # One result with no text block (would previously raise StopIteration and kill the run),
     # one non-"succeeded" result (errored), one result whose JSON makes verify() raise a
@@ -215,7 +277,8 @@ def test_batch_records_a_failure_for_every_bad_result_and_keeps_going(tmp_path, 
 
     def no_text_result(custom_id):
         message = SimpleNamespace(content=[], usage=SimpleNamespace(
-            input_tokens=0, output_tokens=0, cache_creation_input_tokens=0, cache_read_input_tokens=0))
+            input_tokens=0, output_tokens=0, cache_creation_input_tokens=0, cache_read_input_tokens=0),
+            stop_reason="end_turn")
         return SimpleNamespace(custom_id=custom_id, result=SimpleNamespace(type="succeeded", message=message))
 
     def errored_result(custom_id):
@@ -444,7 +507,7 @@ def test_resume_skips_submission_and_writes_profiles_from_results(tmp_path, monk
                 output_tokens = 150
                 cache_creation_input_tokens = 300
                 cache_read_input_tokens = 400
-            class Message: content = [Block()]; usage = Usage()
+            class Message: content = [Block()]; usage = Usage(); stop_reason = "end_turn"
             class Result: type = "succeeded"; message = Message()
             class R: custom_id = "npm_a-deadbeef"; result = Result()
             return [R()]
@@ -546,7 +609,7 @@ def test_resume_adds_manifest_notes_to_written_profile(tmp_path, monkeypatch):
                 output_tokens = 20
                 cache_creation_input_tokens = 0
                 cache_read_input_tokens = 0
-            class Message: content = [Block()]; usage = Usage()
+            class Message: content = [Block()]; usage = Usage(); stop_reason = "end_turn"
             class Result: type = "succeeded"; message = Message()
             class R: custom_id = "npm_a-deadbeef"; result = Result()
             return [R()]

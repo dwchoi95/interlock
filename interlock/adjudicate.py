@@ -67,6 +67,7 @@ EFFECT_SCHEMA = {
 }
 
 MAX_TOOLS_CHARS = 400_000
+MAX_OUTPUT_TOKENS = 64_000
 USAGE_FIELDS = ("input_tokens", "output_tokens", "cache_creation_input_tokens", "cache_read_input_tokens")
 
 def usage_dict(usage) -> dict:
@@ -94,7 +95,7 @@ def build_messages(surface: dict, source_files: list[tuple[str, str]]) -> list[d
 def _params(surface, source_files, model):
     return dict(
         model=model,
-        max_tokens=16000,
+        max_tokens=MAX_OUTPUT_TOKENS,
         system=[{"type": "text", "text": RUBRIC, "cache_control": {"type": "ephemeral"}}],
         messages=build_messages(surface, source_files),
         output_config={"format": {"type": "json_schema", "schema": EFFECT_SCHEMA}},
@@ -132,7 +133,13 @@ def parse_effects(text: str, package: str = "<unknown>") -> dict:
 
 def adjudicate(surface: dict, source_files: list[tuple[str, str]], client, model: str = "claude-opus-5",
               usage_out: dict | None = None) -> dict:
-    response = client.messages.create(**_params(surface, source_files, model))
+    # Stream: a non-streaming request with max_tokens this large risks the SDK's HTTP timeout.
+    with client.messages.stream(**_params(surface, source_files, model)) as stream:
+        response = stream.get_final_message()
+    if response.stop_reason == "max_tokens":
+        # Caught here, before parsing, so a truncated response is reported as what it is
+        # rather than surfacing as a confusing "invalid JSON" error out of parse_effects.
+        raise ValueError(f"{surface['package']}: output truncated at max_tokens={MAX_OUTPUT_TOKENS}")
     text = next((b.text for b in response.content if b.type == "text"), None)
     if text is None:
         raise ValueError(

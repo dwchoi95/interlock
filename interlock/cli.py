@@ -2,7 +2,7 @@
 from __future__ import annotations
 import argparse, hashlib, json, re, sys, time
 from pathlib import Path
-from interlock.adjudicate import batch_request, parse_effects, usage_dict, USAGE_FIELDS
+from interlock.adjudicate import batch_request, parse_effects, usage_dict, MAX_OUTPUT_TOKENS, USAGE_FIELDS
 from interlock.pipeline import build_profile, prepare_sources, verify
 from interlock.surface import load_surface
 
@@ -164,6 +164,10 @@ def cmd_batch(args) -> int:
                 continue
             if result.result.type != "succeeded":
                 raise RuntimeError(f"batch result type {result.result.type!r}, not succeeded")
+            if result.result.message.stop_reason == "max_tokens":
+                # Caught here, before parsing, so a truncated response is reported as what
+                # it is rather than surfacing as a confusing "invalid JSON" error.
+                raise ValueError(f"{entry['package']}: output truncated at max_tokens={MAX_OUTPUT_TOKENS}")
             surface = load_surface(Path(args.surfaces), entry["package"], entry["version"])
             text = next(b.text for b in result.result.message.content if b.type == "text")
             profile, stats = verify(parse_effects(text, entry["package"]), surface, Path(entry["root"]))

@@ -1,10 +1,24 @@
 import json
 import pytest
-from interlock.adjudicate import RUBRIC, EFFECT_SCHEMA, MAX_TOOLS_CHARS, build_messages, adjudicate, parse_effects
+from interlock.adjudicate import (RUBRIC, EFFECT_SCHEMA, MAX_TOOLS_CHARS, MAX_OUTPUT_TOKENS,
+                                   build_messages, adjudicate, parse_effects, _params)
 
 SURFACE = {"package": "a", "version": "1", "kind": "npm",
            "tools": [{"name": "read_file", "description": "d", "inputSchema": {"type": "object"}, "annotations": None}]}
 FILES = [("src/server.js", "fs.readFileSync(p)\n")]
+
+
+class _FakeStream:
+    """Mimics the anthropic SDK's `with client.messages.stream(...) as stream:` context
+    manager: __enter__ returns itself, get_final_message() returns the canned response."""
+    def __init__(self, response):
+        self._response = response
+    def __enter__(self):
+        return self
+    def __exit__(self, *exc):
+        return False
+    def get_final_message(self):
+        return self._response
 
 def test_rubric_carries_label_definitions():
     for label in ("SECRET", "UNTRUSTED", "SINK", "HOSTEXEC"):
@@ -46,7 +60,7 @@ def test_adjudicate_parses_structured_output():
     class FakeClient:
         class messages:
             @staticmethod
-            def create(**kw):
+            def stream(**kw):
                 assert kw["model"] == "claude-opus-5"
                 assert kw["output_config"]["format"]["type"] == "json_schema"
                 assert "thinking" not in kw
@@ -54,10 +68,16 @@ def test_adjudicate_parses_structured_output():
                     {"tools": [{"name": "read_file", "labels": ["SECRET"], "evidence": ["src/server.js:1"],
                                 "rationale": "calls `readFileSync`", "default_enabled": True, "undetermined": False}],
                      "value_conditions": [], "notes": []})
-                class R: content = [Block()]
-                return R()
+                class R: content = [Block()]; stop_reason = "end_turn"
+                return _FakeStream(R())
     out = adjudicate(SURFACE, FILES, client=FakeClient())
     assert out["tools"]["read_file"]["labels"] == ["SECRET"]
+
+def test_params_uses_max_output_tokens_and_omits_thinking():
+    params = _params(SURFACE, FILES, "claude-opus-5")
+    assert MAX_OUTPUT_TOKENS == 64_000
+    assert params["max_tokens"] == MAX_OUTPUT_TOKENS
+    assert "thinking" not in params
 
 def test_build_messages_rejects_tool_list_over_the_char_limit():
     tool = {"name": "t", "description": "x" * 1000, "inputSchema": {"type": "object"}, "annotations": None}
@@ -71,7 +91,7 @@ def test_adjudicate_fills_usage_out_from_response_usage():
     class FakeClient:
         class messages:
             @staticmethod
-            def create(**kw):
+            def stream(**kw):
                 class Block: type = "text"; text = json.dumps(
                     {"tools": [{"name": "read_file", "labels": ["SECRET"], "evidence": ["src/server.js:1"],
                                 "rationale": "calls `readFileSync`", "default_enabled": True, "undetermined": False}],
@@ -81,8 +101,8 @@ def test_adjudicate_fills_usage_out_from_response_usage():
                     output_tokens = 340
                     cache_creation_input_tokens = 500
                     cache_read_input_tokens = 0
-                class R: content = [Block()]; usage = Usage()
-                return R()
+                class R: content = [Block()]; usage = Usage(); stop_reason = "end_turn"
+                return _FakeStream(R())
     usage_out: dict = {}
     adjudicate(SURFACE, FILES, client=FakeClient(), usage_out=usage_out)
     assert usage_out == {"input_tokens": 1200, "output_tokens": 340,
@@ -92,7 +112,7 @@ def test_adjudicate_usage_out_defaults_missing_cache_fields_to_zero():
     class FakeClient:
         class messages:
             @staticmethod
-            def create(**kw):
+            def stream(**kw):
                 class Block: type = "text"; text = json.dumps(
                     {"tools": [{"name": "read_file", "labels": ["SECRET"], "evidence": ["src/server.js:1"],
                                 "rationale": "calls `readFileSync`", "default_enabled": True, "undetermined": False}],
@@ -101,8 +121,8 @@ def test_adjudicate_usage_out_defaults_missing_cache_fields_to_zero():
                     input_tokens = 100
                     output_tokens = 20
                     # no cache_creation_input_tokens / cache_read_input_tokens on this usage object
-                class R: content = [Block()]; usage = Usage()
-                return R()
+                class R: content = [Block()]; usage = Usage(); stop_reason = "end_turn"
+                return _FakeStream(R())
     usage_out: dict = {}
     adjudicate(SURFACE, FILES, client=FakeClient(), usage_out=usage_out)
     assert usage_out == {"input_tokens": 100, "output_tokens": 20,
@@ -112,13 +132,25 @@ def test_adjudicate_raises_valueerror_when_no_text_block():
     class FakeClient:
         class messages:
             @staticmethod
-            def create(**kw):
+            def stream(**kw):
                 class Block: type = "other"
                 class R:
                     content = [Block()]
                     stop_reason = "refusal"
-                return R()
+                return _FakeStream(R())
     with pytest.raises(ValueError, match="refusal") as excinfo:
+        adjudicate(SURFACE, FILES, client=FakeClient())
+    assert SURFACE["package"] in str(excinfo.value)
+
+def test_adjudicate_raises_valueerror_when_truncated_at_max_tokens():
+    class FakeClient:
+        class messages:
+            @staticmethod
+            def stream(**kw):
+                class Block: type = "text"; text = '{"tools": [{"name": "read_fi'   # cut off mid-JSON
+                class R: content = [Block()]; stop_reason = "max_tokens"
+                return _FakeStream(R())
+    with pytest.raises(ValueError, match="truncated") as excinfo:
         adjudicate(SURFACE, FILES, client=FakeClient())
     assert SURFACE["package"] in str(excinfo.value)
 
