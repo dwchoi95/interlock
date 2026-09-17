@@ -77,15 +77,20 @@ def _append_failures(out_dir: Path, batch_id: str | None, stage: str, failures: 
 def _prepare_batch(specs: list[str], surfaces_path: Path, cache_dir: Path) -> tuple[list, list[dict], list[dict]]:
     """Load each surface, fetch its source, and build the batch request plus a manifest
     entry recording enough to resume: custom_id, kind, package, version, resolved root.
-    A package whose surface lookup, source fetch or validation fails is recorded in the
-    returned failures list (package, custom_id=None, message) and excluded, so one bad
-    top-level package does not stop the rest of the batch from being submitted."""
+    A package whose surface lookup, source fetch, validation or request-building fails is
+    recorded in the returned failures list (package, custom_id, message) and excluded, so
+    one bad top-level package does not stop the rest of the batch from being submitted.
+    A manifest entry is added only once the request it describes has actually been built
+    and queued, so a package appears in the manifest if and only if it was submitted -
+    never a manifest entry with no matching request (e.g. batch_request's MAX_TOOLS_CHARS
+    guard raising after the entry would otherwise have been recorded)."""
     seen: dict[str, str] = {}
     manifest_entries = []
     requests = []
     failures = []
     for spec in specs:
         kind, package = _split(spec)
+        cid = None
         try:
             surface = load_surface(surfaces_path, package)
             root, files, notes = prepare_sources(kind, package, surface["version"], cache_dir,
@@ -94,12 +99,12 @@ def _prepare_batch(specs: list[str], surfaces_path: Path, cache_dir: Path) -> tu
             if cid in seen:
                 raise ValueError(f"duplicate custom_id {cid!r} for {seen[cid]!r} and {spec!r}")
             seen[cid] = spec
+            requests.append(batch_request(cid, surface, files))
             manifest_entries.append({"custom_id": cid, "kind": kind, "package": package,
                                       "version": surface["version"], "root": str(root), "notes": notes})
-            requests.append(batch_request(cid, surface, files))
         except Exception as e:
             print(f"{spec}: preparation failed: {e}", file=sys.stderr)
-            failures.append({"package": package, "custom_id": None, "message": str(e)})
+            failures.append({"package": package, "custom_id": cid, "message": str(e)})
     return requests, manifest_entries, failures
 
 def _poll(client, batch_id: str) -> None:

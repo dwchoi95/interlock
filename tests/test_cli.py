@@ -302,6 +302,68 @@ def test_batch_prepare_continues_past_one_invalid_package_name(tmp_path, monkeyp
     assert failures[0]["custom_id"] is None
 
 
+def test_batch_prepare_does_not_leave_a_manifest_entry_when_batch_request_fails(tmp_path, monkeypatch):
+    # batch_request (e.g. its MAX_TOOLS_CHARS guard) can raise after a custom_id has
+    # already been computed. The manifest must then list only the package that was
+    # actually queued, and the failure line must carry that computed custom_id rather
+    # than null, so the manifest and the failure log can always be matched up.
+    from interlock.adjudicate import batch_request as real_batch_request
+
+    surfaces = tmp_path / "surfaces.jsonl"
+    rows = [
+        {"kind": "npm", "pkg": "big", "version": "1.0.0", "published": "2026-01-01T00:00:00Z", "ok": True,
+         "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]},
+        {"kind": "npm", "pkg": "a", "version": "1.0.0", "published": "2026-01-01T00:00:00Z", "ok": True,
+         "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]},
+    ]
+    surfaces.write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+    _seed_source(tmp_path / "cache", "npm", "big", "1.0.0")
+    _seed_source(tmp_path / "cache", "npm", "a", "1.0.0")
+    packages = tmp_path / "packages.txt"
+    packages.write_text("npm:big\nnpm:a\n")
+
+    def flaky_batch_request(cid, surface, files):
+        if surface["package"] == "big":
+            raise ValueError("tools list too large")
+        return real_batch_request(cid, surface, files)
+    monkeypatch.setattr("interlock.cli.batch_request", flaky_batch_request)
+
+    class FakeBatches:
+        def __init__(self):
+            self.created_requests = None
+        def create(self, **kw):
+            self.created_requests = kw["requests"]
+            class B: id = "batch_ghost"
+            return B()
+        def retrieve(self, batch_id):
+            class S: processing_status = "ended"; request_counts = {"succeeded": 1}
+            return S()
+        def results(self, batch_id):
+            return []
+    class FakeMessages:
+        def __init__(self):
+            self.batches = FakeBatches()
+    class FakeClient:
+        def __init__(self):
+            self.messages = FakeMessages()
+
+    fake = FakeClient()
+    monkeypatch.setattr("interlock.cli.make_client", lambda: fake)
+    rc = main(["batch", str(packages), "--surfaces", str(surfaces),
+               "--cache", str(tmp_path / "cache"), "--out", str(tmp_path / "profiles")])
+    assert rc == 0
+
+    assert len(fake.messages.batches.created_requests) == 1
+    manifest = json.loads((tmp_path / "profiles" / "batch-manifest.json").read_text())
+    assert [e["package"] for e in manifest["packages"]] == ["a"]
+
+    failures = [json.loads(l) for l in (tmp_path / "profiles" / "batch-failures.jsonl").open()]
+    assert len(failures) == 1
+    assert failures[0]["package"] == "big"
+    assert failures[0]["custom_id"] == _custom_id("npm", "big")
+    assert failures[0]["stage"] == "prepare" and failures[0]["batch_id"] is None
+
+
 def test_batch_failures_file_appends_across_separate_runs(tmp_path, monkeypatch):
     surfaces = tmp_path / "surfaces.jsonl"
     rows = [
