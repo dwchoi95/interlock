@@ -46,3 +46,9 @@ Every package in the list is either profiled or recorded in `profiles/batch-fail
 ## Dry-run spend
 
 Four dry-runs, non-batch pricing: USD 0.2451 + 0.2648 + 0.4582 + 0.6911 = USD 1.66. This counts toward the pre-registered USD 300 ceiling.
+
+## D7. Execution mode and output budget (instrument; recorded before the gate was computed)
+
+Observation: the batch (`msgbatch_01N1jyzikYCL5wBGB47EE2Zc`) sat in processing for about nine hours; at the user's request it was cancelled, by which point 32 of 34 requests had completed. Collecting results wrote 30 packages. Two requests were cancelled before processing (`mcp-server-git`, `@modelcontextprotocol/server-postgres`), and two outputs were truncated JSON (`chrome-devtools-mcp`, 29 tools; `@azure/mcp`, 61 tools) because Claude Opus 5's adaptive thinking draws on the same `max_tokens=16000` budget as the answer.
+Change: the output budget was raised to 64,000 tokens, the synchronous path streams, and `stop_reason == "max_tokens"` is reported as truncation. The four failed packages were re-profiled synchronously with this setting. The 30 batch-profiled packages completed within the old budget and were not re-run.
+Consequence for comparability: 30 packages were profiled in batch mode with a 16,000-token budget and 4 synchronously with a 64,000-token budget, same model, rubric, schema and checker.
