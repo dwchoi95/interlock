@@ -1,7 +1,7 @@
 import io, json, tarfile
 from pathlib import Path
 import pytest
-from interlock.pipeline import prepare_sources, verify
+from interlock.pipeline import evidence_kind_counts, prepare_sources, verify
 from interlock.source import _slug
 
 SURFACE = {"package": "a", "version": "1", "kind": "npm", "tools": [
@@ -123,6 +123,19 @@ def test_invalid_label_names_package_and_tool_in_the_error(tmp_path):
     message = str(exc.value)
     assert SURFACE["package"] in message
     assert "read_file" in message
+
+def test_verify_raises_naming_the_package_when_root_is_missing(tmp_path):
+    # A missing root (stale batch manifest, cache wiped mid-run) must fail loudly, not be
+    # read as "nothing verifies" - that would demote every claim with no error anywhere (I1).
+    missing_root = tmp_path / "does-not-exist"
+    with pytest.raises(ValueError) as exc:
+        verify(RAW, SURFACE, missing_root)
+    assert SURFACE["package"] in str(exc.value)
+
+def test_evidence_kind_counts_splits_code_from_documentation():
+    files = [("src/index.js", "code"), ("README.md", "docs"), ("lib/x.py", "code")]
+    assert evidence_kind_counts(files) == (2, 1)
+    assert evidence_kind_counts([]) == (0, 0)
 
 
 def _seed_package(cache_dir, deps, own_code="module.exports = require('dep-code');\n"):

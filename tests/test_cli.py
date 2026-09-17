@@ -2,8 +2,8 @@ import json
 import re
 from pathlib import Path
 from types import SimpleNamespace
-from interlock.cli import main, _custom_id, estimate_cost_usd, PRICE_PER_MTOK
-from interlock.source import _slug
+from interlock.cli import main, _custom_id, _prepare_batch, estimate_cost_usd, PRICE_PER_MTOK
+from interlock.source import _slug, source_digest
 
 def test_profile_subcommand_writes_profile_and_stats(tmp_path, monkeypatch):
     surfaces = tmp_path / "surfaces.jsonl"
@@ -488,7 +488,8 @@ def test_resume_skips_submission_and_writes_profiles_from_results(tmp_path, monk
     out_dir = tmp_path / "profiles"
     out_dir.mkdir()
     manifest = {"batch_id": "batch_resumed", "packages": [
-        {"custom_id": "npm_a-deadbeef", "kind": "npm", "package": "a", "version": "1.0.0", "root": str(root)}]}
+        {"custom_id": "npm_a-deadbeef", "kind": "npm", "package": "a", "version": "1.0.0", "root": str(root),
+         "digest": source_digest(root)}]}
     (out_dir / "batch-manifest.json").write_text(json.dumps(manifest))
 
     class FakeBatches:
@@ -590,7 +591,7 @@ def test_resume_adds_manifest_notes_to_written_profile(tmp_path, monkeypatch):
     out_dir.mkdir()
     manifest = {"batch_id": "batch_resumed_notes", "packages": [
         {"custom_id": "npm_a-deadbeef", "kind": "npm", "package": "a", "version": "1.0.0", "root": str(root),
-         "notes": ["dependency sources included: dep-code@1.0.0"]}]}
+         "digest": source_digest(root), "notes": ["dependency sources included: dep-code@1.0.0"]}]}
     (out_dir / "batch-manifest.json").write_text(json.dumps(manifest))
 
     class FakeBatches:
@@ -625,3 +626,171 @@ def test_resume_adds_manifest_notes_to_written_profile(tmp_path, monkeypatch):
     assert rc == 0
     written = json.loads((out_dir / "npm_a_1.0.0.json").read_text())
     assert written["notes"] == ["dependency sources included: dep-code@1.0.0"]
+
+
+def test_manifest_entry_stores_absolute_root_and_digest(tmp_path, monkeypatch):
+    surfaces = tmp_path / "surfaces.jsonl"
+    surfaces.write_text(json.dumps({"kind": "npm", "pkg": "a", "version": "1.0.0", "published": "2026-01-01T00:00:00Z",
+                                    "ok": True, "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]}) + "\n")
+    cache_dir = tmp_path / "cache"
+    _seed_source(cache_dir, "npm", "a", "1.0.0")
+    monkeypatch.chdir(tmp_path)  # prove "root" doesn't depend on cwd at resume time
+
+    requests, entries, failures = _prepare_batch(["npm:a"], surfaces, Path("cache"))
+    assert failures == []
+    entry = entries[0]
+    root = Path(entry["root"])
+    assert root.is_absolute() and root == root.resolve()
+    assert entry["digest"] == source_digest(root)
+
+
+def test_resume_records_failure_when_root_missing_or_digest_stale(tmp_path, monkeypatch):
+    # A batch resumed from a different working directory, or after the cache was cleaned
+    # or rebuilt mid-run, must not silently re-verify against nothing or against the wrong
+    # tree - it must fail loudly for that one package while the rest of the batch is still
+    # written (I1).
+    surfaces = tmp_path / "surfaces.jsonl"
+    rows = [{"kind": "npm", "pkg": p, "version": "1.0.0", "published": "2026-01-01T00:00:00Z", "ok": True,
+             "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]}
+            for p in ("a", "gone", "stale")]
+    surfaces.write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+
+    good_root = tmp_path / "cache" / "npm_a_1.0.0"
+    (good_root / "src").mkdir(parents=True)
+    (good_root / "src" / "s.js").write_text("fs.readFileSync(p)\n")
+    good_digest = source_digest(good_root)
+
+    missing_root = tmp_path / "cache" / "npm_gone_1.0.0"  # never created
+
+    stale_root = tmp_path / "cache" / "npm_stale_1.0.0"
+    (stale_root / "src").mkdir(parents=True)
+    (stale_root / "src" / "s.js").write_text("fs.readFileSync(p)\n")
+    stale_digest = source_digest(stale_root)
+    (stale_root / "src" / "s.js").write_text("fs.readFileSync(p) // rebuilt differently\n")
+
+    out_dir = tmp_path / "profiles"
+    out_dir.mkdir()
+    good_text = json.dumps({"tools": [{"name": "read_file", "labels": ["SECRET"], "evidence": ["src/s.js:1"],
+                                        "rationale": "calls `readFileSync`", "default_enabled": True, "undetermined": False}],
+                             "value_conditions": [], "notes": []})
+    manifest = {"batch_id": "batch_stale", "packages": [
+        {"custom_id": "cid_a", "kind": "npm", "package": "a", "version": "1.0.0",
+         "root": str(good_root), "digest": good_digest},
+        {"custom_id": "cid_gone", "kind": "npm", "package": "gone", "version": "1.0.0",
+         "root": str(missing_root), "digest": "deadbeef"},
+        {"custom_id": "cid_stale", "kind": "npm", "package": "stale", "version": "1.0.0",
+         "root": str(stale_root), "digest": stale_digest},
+    ]}
+    (out_dir / "batch-manifest.json").write_text(json.dumps(manifest))
+
+    class FakeBatches:
+        def create(self, **kw):
+            raise AssertionError("batches.create must not be called on resume")
+        def retrieve(self, batch_id):
+            class S: processing_status = "ended"; request_counts = {"succeeded": 3}
+            return S()
+        def results(self, batch_id):
+            return [_batch_result("cid_a", good_text), _batch_result("cid_gone", good_text),
+                    _batch_result("cid_stale", good_text)]
+    class FakeMessages:
+        batches = FakeBatches()
+    class FakeClient:
+        messages = FakeMessages()
+
+    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+    rc = main(["batch", str(tmp_path / "unused.txt"), "--resume", "batch_stale",
+               "--surfaces", str(surfaces), "--cache", str(tmp_path / "cache"), "--out", str(out_dir)])
+    assert rc == 0
+
+    assert (out_dir / "npm_a_1.0.0.json").exists()
+    assert not (out_dir / "npm_gone_1.0.0.json").exists()
+    assert not (out_dir / "npm_stale_1.0.0.json").exists()
+
+    stats = [json.loads(l) for l in (out_dir / "stats.jsonl").open()]
+    assert len(stats) == 1 and stats[0]["package"] == "a"
+
+    failures = [json.loads(l) for l in (out_dir / "batch-failures.jsonl").open()]
+    assert {f["package"] for f in failures} == {"gone", "stale"}
+    assert all(f["stage"] == "result" and f["batch_id"] == "batch_stale" for f in failures)
+
+
+def test_profile_stats_carry_code_and_doc_files_shown_for_readme_only_selection(tmp_path, monkeypatch):
+    surfaces = tmp_path / "surfaces.jsonl"
+    surfaces.write_text(json.dumps({"kind": "npm", "pkg": "a", "version": "1.0.0", "published": "2026-01-01T00:00:00Z",
+                                    "ok": True, "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]}) + "\n")
+    root = tmp_path / "cache" / _slug("npm", "a", "1.0.0")
+    root.mkdir(parents=True)
+    (root / "README.md").write_text("The `read_file` tool is documented here as read_file.\n")
+
+    class _FakeStream:
+        def __init__(self, response):
+            self._response = response
+        def __enter__(self):
+            return self
+        def __exit__(self, *exc):
+            return False
+        def get_final_message(self):
+            return self._response
+
+    class FakeClient:
+        class messages:
+            @staticmethod
+            def stream(**kw):
+                class Block: type = "text"; text = json.dumps({"tools": [{"name": "read_file",
+                    "labels": [], "evidence": ["README.md:1"], "rationale": "documented as `read_file`",
+                    "default_enabled": True, "undetermined": False}], "value_conditions": [], "notes": []})
+                class Usage:
+                    input_tokens = 100; output_tokens = 20
+                    cache_creation_input_tokens = 0; cache_read_input_tokens = 0
+                class R: content = [Block()]; usage = Usage(); stop_reason = "end_turn"
+                return _FakeStream(R())
+    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+
+    rc = main(["profile", "npm:a", "--surfaces", str(surfaces), "--cache", str(tmp_path / "cache"), "--out", str(tmp_path / "profiles")])
+    assert rc == 0
+    stats = [json.loads(l) for l in (tmp_path / "profiles" / "stats.jsonl").open()]
+    assert stats[0]["code_files_shown"] == 0
+    assert stats[0]["doc_files_shown"] == 1
+
+
+def test_batch_manifest_and_stats_carry_code_and_doc_files_shown(tmp_path, monkeypatch):
+    surfaces = tmp_path / "surfaces.jsonl"
+    surfaces.write_text(json.dumps({"kind": "npm", "pkg": "a", "version": "1.0.0", "published": "2026-01-01T00:00:00Z",
+                                    "ok": True, "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]}) + "\n")
+    cache_dir = tmp_path / "cache"
+    root = cache_dir / _slug("npm", "a", "1.0.0")
+    root.mkdir(parents=True)
+    (root / "README.md").write_text("The `read_file` tool is documented here as read_file.\n")
+    packages = tmp_path / "packages.txt"
+    packages.write_text("npm:a\n")
+
+    good_text = json.dumps({"tools": [{"name": "read_file", "labels": [], "evidence": ["README.md:1"],
+                                        "rationale": "documented as `read_file`", "default_enabled": True, "undetermined": False}],
+                             "value_conditions": [], "notes": []})
+    cid_a = _custom_id("npm", "a")
+
+    class FakeBatches:
+        def create(self, **kw):
+            class B: id = "batch_docs"
+            return B()
+        def retrieve(self, batch_id):
+            class S: processing_status = "ended"; request_counts = {"succeeded": 1}
+            return S()
+        def results(self, batch_id):
+            return [_batch_result(cid_a, good_text)]
+    class FakeMessages:
+        batches = FakeBatches()
+    class FakeClient:
+        messages = FakeMessages()
+
+    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+    rc = main(["batch", str(packages), "--surfaces", str(surfaces),
+               "--cache", str(cache_dir), "--out", str(tmp_path / "profiles")])
+    assert rc == 0
+
+    manifest = json.loads((tmp_path / "profiles" / "batch-manifest.json").read_text())
+    entry = manifest["packages"][0]
+    assert entry["code_files_shown"] == 0 and entry["doc_files_shown"] == 1
+
+    stats = [json.loads(l) for l in (tmp_path / "profiles" / "stats.jsonl").open()]
+    assert stats[0]["code_files_shown"] == 0 and stats[0]["doc_files_shown"] == 1

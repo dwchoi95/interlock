@@ -11,6 +11,12 @@ from interlock.surface import load_surface
 
 
 def verify(raw: dict, surface: dict, root: Path) -> tuple[Profile, dict]:
+    root = Path(root)
+    if not root.is_dir():
+        # A missing root (a stale batch manifest, a cache wiped mid-run, a resume from
+        # elsewhere) must never be silently read as "nothing verifies" - that would demote
+        # every claim and mark every clear unverified with no error anywhere in the record.
+        raise ValueError(f"{surface['package']}@{surface['version']}: source root does not exist: {root}")
     tools: dict[str, ToolEffect] = {}
     stats = {"tools": len(surface["tools"]), "claims": 0, "verified": 0, "verified_doc": 0, "demoted": 0,
               "cleared_verified": 0, "cleared_unverified": 0, "missing_tools": [], "unknown_tools": []}
@@ -127,6 +133,17 @@ def prepare_sources(kind: str, package: str, version: str, cache_dir: Path, tool
     return view, select_files(view, tool_names), notes
 
 
+def evidence_kind_counts(files: list[tuple[str, str]]) -> tuple[int, int]:
+    """(code_files_shown, doc_files_shown): how many of the files selected for the model
+    are implementation vs documentation, by evidence.classify_evidence. Recorded, never
+    gated on - a package the model could only judge from a README (a thin wrapper whose
+    implementation lives elsewhere, or one with no reachable code at all) still runs; this
+    is what let the @notionhq/notion-mcp-server (0 files shown) and @azure/mcp (doc-only)
+    gaps be seen after the fact instead of passing unremarked."""
+    code = sum(1 for rel, _ in files if classify_evidence(rel) == "code")
+    return code, len(files) - code
+
+
 def build_profile(package: str, version: str | None, kind: str, surfaces_path: Path, cache_dir: Path, client,
                   source_ref: str | None = None, usage_out: dict | None = None) -> tuple[Profile, dict]:
     surface = load_surface(surfaces_path, package, version)
@@ -135,4 +152,5 @@ def build_profile(package: str, version: str | None, kind: str, surfaces_path: P
     raw = adjudicate(surface, files, client=client, usage_out=usage_out)
     profile, stats = verify(raw, surface, root)
     profile.notes = list(profile.notes) + notes
+    stats["code_files_shown"], stats["doc_files_shown"] = evidence_kind_counts(files)
     return profile, stats

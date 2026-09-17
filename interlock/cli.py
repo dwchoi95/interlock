@@ -3,7 +3,8 @@ from __future__ import annotations
 import argparse, hashlib, json, re, sys, time
 from pathlib import Path
 from interlock.adjudicate import batch_request, parse_effects, usage_dict, MAX_OUTPUT_TOKENS, USAGE_FIELDS
-from interlock.pipeline import build_profile, prepare_sources, verify
+from interlock.pipeline import build_profile, evidence_kind_counts, prepare_sources, verify
+from interlock.source import source_digest
 from interlock.surface import load_surface
 
 PRICE_PER_MTOK = {"claude-opus-5": {"input": 5.00, "output": 25.00}}
@@ -100,8 +101,16 @@ def _prepare_batch(specs: list[str], surfaces_path: Path, cache_dir: Path) -> tu
                 raise ValueError(f"duplicate custom_id {cid!r} for {seen[cid]!r} and {spec!r}")
             seen[cid] = spec
             requests.append(batch_request(cid, surface, files))
+            code_files_shown, doc_files_shown = evidence_kind_counts(files)
+            # An absolute root and a content digest, both recorded now while the view still
+            # exists: a resume that reads this manifest may run from a different working
+            # directory, long after the cache was rebuilt or cleaned, so "root" must not
+            # depend on cwd and a rebuilt-but-different tree at the same path must be caught
+            # rather than silently re-verified against the wrong source (I1).
             manifest_entries.append({"custom_id": cid, "kind": kind, "package": package,
-                                      "version": surface["version"], "root": str(root), "notes": notes})
+                                      "version": surface["version"], "root": str(Path(root).resolve()),
+                                      "digest": source_digest(root), "notes": notes,
+                                      "code_files_shown": code_files_shown, "doc_files_shown": doc_files_shown})
         except Exception as e:
             print(f"{spec}: preparation failed: {e}", file=sys.stderr)
             failures.append({"package": package, "custom_id": cid, "message": str(e)})
@@ -168,10 +177,22 @@ def cmd_batch(args) -> int:
                 # Caught here, before parsing, so a truncated response is reported as what
                 # it is rather than surfacing as a confusing "invalid JSON" error.
                 raise ValueError(f"{entry['package']}: output truncated at max_tokens={MAX_OUTPUT_TOKENS}")
+            root = Path(entry["root"])
+            if not root.is_dir():
+                raise ValueError(f"{entry['package']}: source root missing: {root}")
+            digest = source_digest(root)
+            if entry.get("digest") is not None and digest != entry["digest"]:
+                # The tree at this path is not the one the model actually saw (a rebuilt
+                # view, a same-path different-version fetch): re-verifying against it would
+                # silently check evidence against the wrong source, not against nothing (I1).
+                raise ValueError(f"{entry['package']}: source root changed since preparation "
+                                 f"(digest {entry['digest'][:12]} -> {digest[:12]})")
             surface = load_surface(Path(args.surfaces), entry["package"], entry["version"])
             text = next(b.text for b in result.result.message.content if b.type == "text")
-            profile, stats = verify(parse_effects(text, entry["package"]), surface, Path(entry["root"]))
+            profile, stats = verify(parse_effects(text, entry["package"]), surface, root)
             profile.notes = list(profile.notes) + entry.get("notes", [])
+            stats["code_files_shown"] = entry.get("code_files_shown")
+            stats["doc_files_shown"] = entry.get("doc_files_shown")
             usage = usage_dict(result.result.message.usage)
             stats["usage"] = usage
             stats["cost_usd"] = estimate_cost_usd(usage, batch=True)

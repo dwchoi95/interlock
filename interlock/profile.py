@@ -37,12 +37,20 @@ class Profile:
     value_conditions: list[dict] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
 
-    def union(self, enabled_only: bool = True) -> set[str]:
+    def union(self, enabled_only: bool = True, conservative: bool = True) -> set[str]:
+        """The reachable-effects union. `conservative` (the safe default) makes an
+        undetermined judgement count as HOSTEXEC for this computation only: the
+        recorded `labels` on the tool are never touched, so the profile itself stays
+        an honest record of what was actually determined, but a downstream consumer
+        computing "what can this tool surface reach" is not told less than it might
+        reach just because the model's clearance or claim could not be verified."""
         out: set[str] = set()
         for t in self.tools.values():
             if enabled_only and not t.default_enabled:
                 continue
             out |= expand(set(t.labels))
+            if conservative and t.undetermined:
+                out |= expand({"HOSTEXEC"})
         return out
 
     def to_json(self) -> str:
