@@ -66,6 +66,12 @@ EFFECT_SCHEMA = {
 }
 
 MAX_TOOLS_CHARS = 400_000
+USAGE_FIELDS = ("input_tokens", "output_tokens", "cache_creation_input_tokens", "cache_read_input_tokens")
+
+def usage_dict(usage) -> dict:
+    """The four token counts interlock tracks, read off an SDK usage object. A field the
+    object doesn't carry (e.g. no prompt caching used) counts as zero, not missing."""
+    return {f: getattr(usage, f, 0) or 0 for f in USAGE_FIELDS}
 
 def build_messages(surface: dict, source_files: list[tuple[str, str]]) -> list[dict]:
     code = "\n\n".join(f"===== {rel} =====\n{text}" for rel, text in source_files)
@@ -92,7 +98,8 @@ def _params(surface, source_files, model):
         output_config={"format": {"type": "json_schema", "schema": EFFECT_SCHEMA}},
     )
 
-def adjudicate(surface: dict, source_files: list[tuple[str, str]], client, model: str = "claude-opus-5") -> dict:
+def adjudicate(surface: dict, source_files: list[tuple[str, str]], client, model: str = "claude-opus-5",
+              usage_out: dict | None = None) -> dict:
     response = client.messages.create(**_params(surface, source_files, model))
     text = next((b.text for b in response.content if b.type == "text"), None)
     if text is None:
@@ -100,6 +107,8 @@ def adjudicate(surface: dict, source_files: list[tuple[str, str]], client, model
             f"{surface['package']}: no text block in response "
             f"(stop_reason={getattr(response, 'stop_reason', None)!r})"
         )
+    if usage_out is not None:
+        usage_out.update(usage_dict(response.usage))
     return json.loads(text)
 
 def batch_request(custom_id: str, surface: dict, source_files: list[tuple[str, str]], model: str = "claude-opus-5"):

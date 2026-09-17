@@ -2,11 +2,21 @@
 from __future__ import annotations
 import argparse, hashlib, json, re, sys, time
 from pathlib import Path
-from interlock.adjudicate import batch_request
+from interlock.adjudicate import batch_request, usage_dict, USAGE_FIELDS
 from interlock.pipeline import build_profile, verify
 from interlock.select import select_files
 from interlock.source import fetch_source
 from interlock.surface import load_surface
+
+PRICE_PER_MTOK = {"claude-opus-5": {"input": 5.00, "output": 25.00}}
+
+def estimate_cost_usd(usage: dict, model: str = "claude-opus-5", batch: bool = False) -> float:
+    p = PRICE_PER_MTOK[model]
+    dollars = (usage.get("input_tokens", 0) * p["input"]
+               + usage.get("cache_creation_input_tokens", 0) * p["input"] * 1.25
+               + usage.get("cache_read_input_tokens", 0) * p["input"] * 0.10
+               + usage.get("output_tokens", 0) * p["output"]) / 1_000_000
+    return round(dollars * (0.5 if batch else 1.0), 6)
 
 def make_client():
     import anthropic
@@ -25,11 +35,18 @@ def _write(out_dir: Path, profile, stats) -> None:
 
 def cmd_profile(args) -> int:
     kind, package = _split(args.package)
+    client = make_client()
+    usage_out: dict = {}
+    start = time.monotonic()
     profile, stats = build_profile(package, args.version, kind, Path(args.surfaces), Path(args.cache),
-                                   client=make_client(), source_ref=args.source_ref)
+                                   client=client, source_ref=args.source_ref, usage_out=usage_out)
+    stats["wall_seconds"] = time.monotonic() - start
+    stats["usage"] = usage_out
+    stats["cost_usd"] = estimate_cost_usd(usage_out, batch=False)
     _write(Path(args.out), profile, stats)
     print(f"{package}@{profile.version}: {stats['verified']}/{stats['claims']} claims verified, "
-          f"{stats['demoted']} demoted, {len(stats['missing_tools'])} tools unjudged")
+          f"{stats['demoted']} demoted, {len(stats['missing_tools'])} tools unjudged, "
+          f"${stats['cost_usd']:.4f}")
     return 0
 
 def _custom_id(kind: str, package: str) -> str:
@@ -103,8 +120,13 @@ def cmd_batch(args) -> int:
         batch_id = batch.id
         entries = {e["custom_id"]: e for e in manifest_entries}
 
+    poll_start = time.monotonic()
     _poll(client, batch_id)
+    batch_wall_seconds = time.monotonic() - poll_start
 
+    written = 0
+    totals = {f: 0 for f in USAGE_FIELDS}
+    total_cost = 0.0
     for result in client.messages.batches.results(batch_id):
         entry = entries.get(result.custom_id)
         if entry is None:
@@ -116,8 +138,20 @@ def cmd_batch(args) -> int:
         surface = load_surface(Path(args.surfaces), entry["package"], entry["version"])
         text = next(b.text for b in result.result.message.content if b.type == "text")
         profile, stats = verify(json.loads(text), surface, Path(entry["root"]))
+        usage = usage_dict(result.result.message.usage)
+        stats["usage"] = usage
+        stats["cost_usd"] = estimate_cost_usd(usage, batch=True)
+        stats["batch_wall_seconds"] = batch_wall_seconds
         _write(out_dir, profile, stats)
+        written += 1
+        for f in USAGE_FIELDS:
+            totals[f] += usage[f]
+        total_cost += stats["cost_usd"]
         print(f"{profile.package}@{profile.version}: {stats['verified']}/{stats['claims']} verified")
+    print(f"batch {batch_id}: {written} packages written, tokens "
+          f"in={totals['input_tokens']} out={totals['output_tokens']} "
+          f"cache_creation={totals['cache_creation_input_tokens']} cache_read={totals['cache_read_input_tokens']}, "
+          f"cost_usd={total_cost:.4f}")
     return 0
 
 def main(argv: list[str] | None = None) -> int:

@@ -1,7 +1,7 @@
 import json
 import re
 from pathlib import Path
-from interlock.cli import main, _custom_id
+from interlock.cli import main, _custom_id, estimate_cost_usd, PRICE_PER_MTOK
 
 def test_profile_subcommand_writes_profile_and_stats(tmp_path, monkeypatch):
     surfaces = tmp_path / "surfaces.jsonl"
@@ -18,7 +18,12 @@ def test_profile_subcommand_writes_profile_and_stats(tmp_path, monkeypatch):
                 class Block: type = "text"; text = json.dumps({"tools": {"read_file": {
                     "labels": ["SECRET"], "evidence": ["src/s.js:1"], "rationale": "calls `readFileSync`",
                     "default_enabled": True, "undetermined": False}}, "value_conditions": [], "notes": []})
-                class R: content = [Block()]
+                class Usage:
+                    input_tokens = 1000
+                    output_tokens = 200
+                    cache_creation_input_tokens = 0
+                    cache_read_input_tokens = 0
+                class R: content = [Block()]; usage = Usage()
                 return R()
     monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
 
@@ -28,6 +33,22 @@ def test_profile_subcommand_writes_profile_and_stats(tmp_path, monkeypatch):
     assert written["tools"]["read_file"]["labels"] == ["SECRET"]
     stats = [json.loads(l) for l in (tmp_path / "profiles" / "stats.jsonl").open()]
     assert stats[0]["verified"] == 1 and stats[0]["package"] == "a"
+    assert stats[0]["usage"] == {"input_tokens": 1000, "output_tokens": 200,
+                                  "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0}
+    assert stats[0]["cost_usd"] > 0
+    assert stats[0]["wall_seconds"] >= 0
+
+
+def test_estimate_cost_usd_matches_hand_computed_value_and_batch_halves_it():
+    usage = {"input_tokens": 1_000_000, "output_tokens": 1_000_000,
+             "cache_creation_input_tokens": 1_000_000, "cache_read_input_tokens": 1_000_000}
+    p = PRICE_PER_MTOK["claude-opus-5"]
+    expected = (usage["input_tokens"] * p["input"]
+                + usage["cache_creation_input_tokens"] * p["input"] * 1.25
+                + usage["cache_read_input_tokens"] * p["input"] * 0.10
+                + usage["output_tokens"] * p["output"]) / 1_000_000
+    assert estimate_cost_usd(usage) == round(expected, 6)
+    assert estimate_cost_usd(usage, batch=True) == round(expected * 0.5, 6)
 
 
 def test_custom_id_is_sanitised_and_stays_unique_after_truncation():
@@ -122,7 +143,12 @@ def test_resume_skips_submission_and_writes_profiles_from_results(tmp_path, monk
             class Block: type = "text"; text = json.dumps({"tools": {"read_file": {
                 "labels": ["SECRET"], "evidence": ["src/s.js:1"], "rationale": "calls `readFileSync`",
                 "default_enabled": True, "undetermined": False}}, "value_conditions": [], "notes": []})
-            class Message: content = [Block()]
+            class Usage:
+                input_tokens = 800
+                output_tokens = 150
+                cache_creation_input_tokens = 300
+                cache_read_input_tokens = 400
+            class Message: content = [Block()]; usage = Usage()
             class Result: type = "succeeded"; message = Message()
             class R: custom_id = "npm_a-deadbeef"; result = Result()
             return [R()]
@@ -138,3 +164,8 @@ def test_resume_skips_submission_and_writes_profiles_from_results(tmp_path, monk
     assert rc == 0
     written = json.loads((out_dir / "npm_a_1.0.0.json").read_text())
     assert written["tools"]["read_file"]["labels"] == ["SECRET"]
+    stats = [json.loads(l) for l in (out_dir / "stats.jsonl").open()]
+    assert stats[0]["usage"] == {"input_tokens": 800, "output_tokens": 150,
+                                  "cache_creation_input_tokens": 300, "cache_read_input_tokens": 400}
+    assert stats[0]["cost_usd"] > 0
+    assert stats[0]["batch_wall_seconds"] >= 0

@@ -57,9 +57,9 @@ def verify(raw: dict, surface: dict, root: Path) -> tuple[Profile, dict]:
 
 
 def build_profile(package: str, version: str | None, kind: str, surfaces_path: Path, cache_dir: Path, client,
-                  source_ref: str | None = None) -> tuple[Profile, dict]:
+                  source_ref: str | None = None, usage_out: dict | None = None) -> tuple[Profile, dict]:
     surface = load_surface(surfaces_path, package, version)
     root = fetch_source(kind, source_ref or package, surface["version"], cache_dir)
     files = select_files(root, [t["name"] for t in surface["tools"]])
-    raw = adjudicate(surface, files, client=client)
+    raw = adjudicate(surface, files, client=client, usage_out=usage_out)
     return verify(raw, surface, root)

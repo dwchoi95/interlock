@@ -48,6 +48,47 @@ def test_build_messages_rejects_tool_list_over_the_char_limit():
     with pytest.raises(ValueError, match="big-pkg"):
         build_messages(huge, FILES)
 
+def test_adjudicate_fills_usage_out_from_response_usage():
+    class FakeClient:
+        class messages:
+            @staticmethod
+            def create(**kw):
+                class Block: type = "text"; text = json.dumps(
+                    {"tools": {"read_file": {"labels": ["SECRET"], "evidence": ["src/server.js:1"],
+                                             "rationale": "calls `readFileSync`", "default_enabled": True}},
+                     "value_conditions": [], "notes": []})
+                class Usage:
+                    input_tokens = 1200
+                    output_tokens = 340
+                    cache_creation_input_tokens = 500
+                    cache_read_input_tokens = 0
+                class R: content = [Block()]; usage = Usage()
+                return R()
+    usage_out: dict = {}
+    adjudicate(SURFACE, FILES, client=FakeClient(), usage_out=usage_out)
+    assert usage_out == {"input_tokens": 1200, "output_tokens": 340,
+                          "cache_creation_input_tokens": 500, "cache_read_input_tokens": 0}
+
+def test_adjudicate_usage_out_defaults_missing_cache_fields_to_zero():
+    class FakeClient:
+        class messages:
+            @staticmethod
+            def create(**kw):
+                class Block: type = "text"; text = json.dumps(
+                    {"tools": {"read_file": {"labels": ["SECRET"], "evidence": ["src/server.js:1"],
+                                             "rationale": "calls `readFileSync`", "default_enabled": True}},
+                     "value_conditions": [], "notes": []})
+                class Usage:
+                    input_tokens = 100
+                    output_tokens = 20
+                    # no cache_creation_input_tokens / cache_read_input_tokens on this usage object
+                class R: content = [Block()]; usage = Usage()
+                return R()
+    usage_out: dict = {}
+    adjudicate(SURFACE, FILES, client=FakeClient(), usage_out=usage_out)
+    assert usage_out == {"input_tokens": 100, "output_tokens": 20,
+                          "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0}
+
 def test_adjudicate_raises_valueerror_when_no_text_block():
     class FakeClient:
         class messages:
