@@ -1,5 +1,5 @@
 from pathlib import Path
-from interlock.select import select_files, MAX_FILE_CHARS, WINDOW_SEPARATOR
+from interlock.select import is_candidate, select_files, MAX_FILE_CHARS, WINDOW_SEPARATOR
 
 def make(tmp_path, files):
     for rel, text in files.items():
@@ -112,6 +112,16 @@ def test_includes_snap_files(tmp_path):
     root = make(tmp_path, {"__toolsnaps__/read-file.snap": f'{{"name": "{tool}"}}'})
     picked = {rel for rel, _ in select_files(root, [tool])}
     assert picked == {"__toolsnaps__/read-file.snap"}
+
+def test_is_candidate_rejects_vendored_test_and_non_source_files(tmp_path):
+    root = tmp_path
+    rejected = ["x.test.js", "test/helper.js", "__tests__/a.js", "node_modules/y/index.js",
+                "index.d.ts", "bundle.js.map"]
+    accepted = ["src/server.ts", "lib/coreBundle.js"]
+    for rel in rejected:
+        assert is_candidate(root / rel, root) is False, rel
+    for rel in accepted:
+        assert is_candidate(root / rel, root) is True, rel
 
 def test_ranks_documentation_after_implementation(tmp_path):
     tools = ["read_file", "write_file", "list_dir"]

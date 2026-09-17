@@ -8,6 +8,7 @@ from __future__ import annotations
 import hashlib, json, re, shutil, stat, subprocess, tarfile, zipfile
 from pathlib import Path
 from interlock.evidence import classify_evidence
+from interlock.select import is_candidate
 
 _METADATA_SUFFIXES = (".dist-info", ".data", ".egg-info")
 _NPM_NAME = re.compile(r"(?:@[a-z0-9~-][a-z0-9._~-]*/)?[a-z0-9~-][a-z0-9._~-]*")
@@ -51,7 +52,14 @@ def slugify(text: str) -> str:
     return _UNSAFE.sub("_", text)
 
 def _slug(kind: str, package: str, version: str) -> str:
-    return slugify(f"{kind}_{package.lstrip('@')}_{version}")
+    """Cache slug for kind/package/version: a readable sanitised prefix followed by the
+    first 12 hex characters of sha256("kind:package:version") over the *unsanitised*
+    identity. Two different packages whose sanitised names collide (e.g. "@a/b" and
+    "a_b" both sanitise to "a_b") must never share a cache slug, or one could be judged
+    from the other's source; the prefix alone is not unique, only prefix+digest is."""
+    prefix = slugify(f"{kind}_{package.lstrip('@')}_{version}")
+    digest = hashlib.sha256(f"{kind}:{package}:{version}".encode()).hexdigest()[:12]
+    return f"{prefix}_{digest}"
 
 def cache_path(cache_dir: Path, name: str) -> Path:
     """cache_dir/name, or ValueError if that does not resolve strictly inside the resolved
@@ -162,9 +170,12 @@ def fetch_source(kind: str, package: str, version: str, cache_dir: Path, run=sub
     return _fetch(kind, package, version, cache_dir, run)[0]
 
 def _has_code_evidence(dep_root: Path, missing_names: list[str]) -> bool:
-    """True if some non-documentation file under dep_root contains one of missing_names."""
+    """True if some file under dep_root that select_files would actually consider (not
+    vendored, not a test file, not off the suffix allowlist) and that isn't documentation
+    contains one of missing_names — so a dependency is kept only when its match would
+    really reach the model as evidence."""
     for p in sorted(dep_root.rglob("*")):
-        if not p.is_file() or classify_evidence(str(p.relative_to(dep_root))) == "doc":
+        if not p.is_file() or not is_candidate(p, dep_root) or classify_evidence(str(p.relative_to(dep_root))) == "doc":
             continue
         try:
             text = p.read_text(errors="strict")

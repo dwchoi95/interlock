@@ -3,12 +3,13 @@ import re
 from pathlib import Path
 from types import SimpleNamespace
 from interlock.cli import main, _custom_id, estimate_cost_usd, PRICE_PER_MTOK
+from interlock.source import _slug
 
 def test_profile_subcommand_writes_profile_and_stats(tmp_path, monkeypatch):
     surfaces = tmp_path / "surfaces.jsonl"
     surfaces.write_text(json.dumps({"kind": "npm", "pkg": "a", "version": "1.0.0", "published": "2026-01-01T00:00:00Z",
                                     "ok": True, "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]}) + "\n")
-    src = tmp_path / "cache" / "npm_a_1.0.0" / "src"
+    src = tmp_path / "cache" / _slug("npm", "a", "1.0.0") / "src"
     src.mkdir(parents=True)
     (src / "s.js").write_text("fs.readFileSync(p)\n")
 
@@ -73,7 +74,7 @@ def test_custom_id_is_sanitised_and_stays_unique_after_truncation():
 
 
 def _seed_source(cache_dir, kind, package, version):
-    root = cache_dir / f"{kind}_{package}_{version}" / "src"
+    root = cache_dir / _slug(kind, package, version) / "src"
     root.mkdir(parents=True)
     (root / "s.js").write_text("fs.readFileSync(p)\n")
 
@@ -180,10 +181,175 @@ def test_batch_continues_past_malformed_result_and_records_failure(tmp_path, mon
     stats = [json.loads(l) for l in (tmp_path / "profiles" / "stats.jsonl").open()]
     assert len(stats) == 1 and stats[0]["package"] == "a"
 
-    failures = json.loads((tmp_path / "profiles" / "batch-failures.json").read_text())
+    failures = [json.loads(l) for l in (tmp_path / "profiles" / "batch-failures.jsonl").open()]
     assert len(failures) == 1
     assert failures[0]["package"] == "b" and failures[0]["custom_id"] == cid_b
-    assert "invalid JSON" in failures[0]["error"]
+    assert failures[0]["batch_id"] == "batch_mixed" and failures[0]["stage"] == "result"
+    assert "invalid JSON" in failures[0]["message"]
+
+
+def test_batch_records_a_failure_for_every_bad_result_and_keeps_going(tmp_path, monkeypatch):
+    # One result with no text block (would previously raise StopIteration and kill the run),
+    # one non-"succeeded" result (errored), one result whose JSON makes verify() raise a
+    # KeyError, and one good result: the good one is written and the other three are each
+    # recorded as a "result" failure, never stopping the batch (I3).
+    surfaces = tmp_path / "surfaces.jsonl"
+    rows = [{"kind": "npm", "pkg": p, "version": "1.0.0", "published": "2026-01-01T00:00:00Z", "ok": True,
+             "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]}
+            for p in ("a", "b", "c", "d")]
+    surfaces.write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+    for p in ("a", "b", "c", "d"):
+        _seed_source(tmp_path / "cache", "npm", p, "1.0.0")
+    packages = tmp_path / "packages.txt"
+    packages.write_text("npm:a\nnpm:b\nnpm:c\nnpm:d\n")
+
+    good_text = json.dumps({"tools": [{"name": "read_file", "labels": ["SECRET"], "evidence": ["src/s.js:1"],
+                                        "rationale": "calls `readFileSync`", "default_enabled": True, "undetermined": False}],
+                             "value_conditions": [], "notes": []})
+    # Missing "labels": parse_effects accepts it (only "name" is required), verify() then
+    # raises KeyError trying to read j["labels"] - a raise this fix must catch too.
+    keyerror_text = json.dumps({"tools": [{"name": "read_file", "evidence": ["src/s.js:1"],
+                                           "rationale": "x", "default_enabled": True, "undetermined": False}],
+                                "value_conditions": [], "notes": []})
+    cid_a, cid_b, cid_c, cid_d = (_custom_id("npm", p) for p in ("a", "b", "c", "d"))
+
+    def no_text_result(custom_id):
+        message = SimpleNamespace(content=[], usage=SimpleNamespace(
+            input_tokens=0, output_tokens=0, cache_creation_input_tokens=0, cache_read_input_tokens=0))
+        return SimpleNamespace(custom_id=custom_id, result=SimpleNamespace(type="succeeded", message=message))
+
+    def errored_result(custom_id):
+        return SimpleNamespace(custom_id=custom_id, result=SimpleNamespace(type="errored"))
+
+    class FakeBatches:
+        def create(self, **kw):
+            class B: id = "batch_hardening"
+            return B()
+        def retrieve(self, batch_id):
+            class S: processing_status = "ended"; request_counts = {"succeeded": 1}
+            return S()
+        def results(self, batch_id):
+            return [_batch_result(cid_a, good_text), no_text_result(cid_b),
+                    errored_result(cid_c), _batch_result(cid_d, keyerror_text)]
+    class FakeMessages:
+        batches = FakeBatches()
+    class FakeClient:
+        messages = FakeMessages()
+
+    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+    rc = main(["batch", str(packages), "--surfaces", str(surfaces),
+               "--cache", str(tmp_path / "cache"), "--out", str(tmp_path / "profiles")])
+    assert rc == 0
+
+    assert (tmp_path / "profiles" / "npm_a_1.0.0.json").exists()
+    for p in ("b", "c", "d"):
+        assert not (tmp_path / "profiles" / f"npm_{p}_1.0.0.json").exists()
+    stats = [json.loads(l) for l in (tmp_path / "profiles" / "stats.jsonl").open()]
+    assert len(stats) == 1 and stats[0]["package"] == "a"
+
+    failures = [json.loads(l) for l in (tmp_path / "profiles" / "batch-failures.jsonl").open()]
+    assert len(failures) == 3
+    assert all(f["stage"] == "result" and f["batch_id"] == "batch_hardening" for f in failures)
+    assert {f["custom_id"] for f in failures} == {cid_b, cid_c, cid_d}
+
+
+def test_batch_prepare_continues_past_one_invalid_package_name(tmp_path, monkeypatch):
+    surfaces = tmp_path / "surfaces.jsonl"
+    rows = [
+        {"kind": "npm", "pkg": "INVALID_NAME", "version": "1.0.0", "published": "2026-01-01T00:00:00Z", "ok": True,
+         "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]},
+        {"kind": "npm", "pkg": "a", "version": "1.0.0", "published": "2026-01-01T00:00:00Z", "ok": True,
+         "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]},
+    ]
+    surfaces.write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+    _seed_source(tmp_path / "cache", "npm", "a", "1.0.0")
+    packages = tmp_path / "packages.txt"
+    packages.write_text("npm:INVALID_NAME\nnpm:a\n")
+
+    class FakeBatches:
+        def __init__(self):
+            self.created_requests = None
+        def create(self, **kw):
+            self.created_requests = kw["requests"]
+            class B: id = "batch_prep_fail"
+            return B()
+        def retrieve(self, batch_id):
+            class S: processing_status = "ended"; request_counts = {"succeeded": 0}
+            return S()
+        def results(self, batch_id):
+            return []
+    class FakeMessages:
+        def __init__(self):
+            self.batches = FakeBatches()
+    class FakeClient:
+        def __init__(self):
+            self.messages = FakeMessages()
+
+    fake = FakeClient()
+    monkeypatch.setattr("interlock.cli.make_client", lambda: fake)
+    rc = main(["batch", str(packages), "--surfaces", str(surfaces),
+               "--cache", str(tmp_path / "cache"), "--out", str(tmp_path / "profiles")])
+    assert rc == 0
+
+    assert len(fake.messages.batches.created_requests) == 1
+    manifest = json.loads((tmp_path / "profiles" / "batch-manifest.json").read_text())
+    assert [e["package"] for e in manifest["packages"]] == ["a"]
+
+    failures = [json.loads(l) for l in (tmp_path / "profiles" / "batch-failures.jsonl").open()]
+    assert len(failures) == 1
+    assert failures[0]["package"] == "INVALID_NAME"
+    assert failures[0]["stage"] == "prepare" and failures[0]["batch_id"] is None
+    assert failures[0]["custom_id"] is None
+
+
+def test_batch_failures_file_appends_across_separate_runs(tmp_path, monkeypatch):
+    surfaces = tmp_path / "surfaces.jsonl"
+    rows = [
+        {"kind": "npm", "pkg": "a", "version": "1.0.0", "published": "2026-01-01T00:00:00Z", "ok": True,
+         "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]},
+        {"kind": "npm", "pkg": "b", "version": "2.0.0", "published": "2026-01-01T00:00:00Z", "ok": True,
+         "tools": [{"name": "read_file", "description": "", "inputSchema": {}, "annotations": None}]},
+    ]
+    surfaces.write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+    _seed_source(tmp_path / "cache", "npm", "a", "1.0.0")
+    _seed_source(tmp_path / "cache", "npm", "b", "2.0.0")
+    out_dir = tmp_path / "profiles"
+    cid_a, cid_b = _custom_id("npm", "a"), _custom_id("npm", "b")
+
+    def make_fake_client(batch_id, result):
+        class FakeBatches:
+            def create(self, **kw):
+                class B: id = batch_id
+                return B()
+            def retrieve(self, bid):
+                class S: processing_status = "ended"; request_counts = {"errored": 1}
+                return S()
+            def results(self, bid):
+                return [result]
+        class FakeMessages:
+            batches = FakeBatches()
+        class FakeClient:
+            messages = FakeMessages()
+        return FakeClient()
+
+    packages_a = tmp_path / "packages_a.txt"; packages_a.write_text("npm:a\n")
+    monkeypatch.setattr("interlock.cli.make_client", lambda: make_fake_client(
+        "batch_one", SimpleNamespace(custom_id=cid_a, result=SimpleNamespace(type="errored"))))
+    rc1 = main(["batch", str(packages_a), "--surfaces", str(surfaces),
+                "--cache", str(tmp_path / "cache"), "--out", str(out_dir)])
+    assert rc1 == 0
+
+    packages_b = tmp_path / "packages_b.txt"; packages_b.write_text("npm:b\n")
+    monkeypatch.setattr("interlock.cli.make_client", lambda: make_fake_client(
+        "batch_two", SimpleNamespace(custom_id=cid_b, result=SimpleNamespace(type="errored"))))
+    rc2 = main(["batch", str(packages_b), "--surfaces", str(surfaces),
+                "--cache", str(tmp_path / "cache"), "--out", str(out_dir)])
+    assert rc2 == 0
+
+    failures = [json.loads(l) for l in (out_dir / "batch-failures.jsonl").open()]
+    assert len(failures) == 2
+    assert {f["batch_id"] for f in failures} == {"batch_one", "batch_two"}
+    assert {f["custom_id"] for f in failures} == {cid_a, cid_b}
 
 
 def test_resume_skips_submission_and_writes_profiles_from_results(tmp_path, monkeypatch):
@@ -244,11 +410,11 @@ def test_batch_manifest_carries_dependency_note_when_tool_missing_from_own_code(
     surfaces.write_text(json.dumps({"kind": "npm", "pkg": "a", "version": "1.0.0", "published": "2026-01-01T00:00:00Z",
                                     "ok": True, "tools": [{"name": "browser_navigate", "description": "", "inputSchema": {}, "annotations": None}]}) + "\n")
     cache_dir = tmp_path / "cache"
-    root = cache_dir / "npm_a_1.0.0"
+    root = cache_dir / _slug("npm", "a", "1.0.0")
     (root / "src").mkdir(parents=True)
     (root / "src" / "index.js").write_text("module.exports = require('dep-code');\n")
     (root / "package.json").write_text(json.dumps({"dependencies": {"dep-code": "1.0.0"}}))
-    dep_root = cache_dir / "npm_dep-code_1.0.0"
+    dep_root = cache_dir / _slug("npm", "dep-code", "1.0.0")
     (dep_root / "lib").mkdir(parents=True)
     (dep_root / "lib" / "x.js").write_text("function browser_navigate() {}\n")
     packages = tmp_path / "packages.txt"
@@ -282,7 +448,7 @@ def test_batch_manifest_carries_dependency_note_when_tool_missing_from_own_code(
     entry = manifest["packages"][0]
     assert entry["notes"] == ["dependency sources included: dep-code@1.0.0"]
     view = Path(entry["root"])
-    assert view == cache_dir / ".views" / "npm_a_1.0.0"
+    assert view == cache_dir / ".views" / _slug("npm", "a", "1.0.0")
     assert (view / ".deps" / "dep-code" / "lib" / "x.js").exists()
     assert not (root / ".deps").exists(), "the cached package tree must stay pristine"
 

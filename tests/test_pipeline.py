@@ -2,6 +2,7 @@ import io, json, tarfile
 from pathlib import Path
 import pytest
 from interlock.pipeline import prepare_sources, verify
+from interlock.source import _slug
 
 SURFACE = {"package": "a", "version": "1", "kind": "npm", "tools": [
     {"name": "read_file", "description": "", "inputSchema": {}, "annotations": None},
@@ -82,7 +83,10 @@ def test_doc_only_claim_counts_separately_and_keeps_labels(tmp_path):
     profile, stats = verify(RAW_DOC, SURFACE_DOC, tree(tmp_path))
     assert stats["verified_doc"] == 1
     assert profile.tools["doc_claimed_tool"].labels == ["SECRET"]
-    assert profile.tools["doc_claimed_tool"].undetermined is False
+    # Documentation may raise an effect but must never lower one: a README-backed claim
+    # keeps its labels but is never treated as a settled (determined) judgement, or it
+    # would implicitly assert the tool has no *other* effect the docs don't mention.
+    assert profile.tools["doc_claimed_tool"].undetermined is True
     assert "[evidence: documentation only]" in profile.tools["doc_claimed_tool"].rationale
 
 def test_doc_only_clear_cannot_lower_effect(tmp_path):
@@ -122,7 +126,7 @@ def test_invalid_label_names_package_and_tool_in_the_error(tmp_path):
 
 
 def _seed_package(cache_dir, deps, own_code="module.exports = require('dep-code');\n"):
-    root = cache_dir / "npm_pkg_1.0.0"
+    root = cache_dir / _slug("npm", "pkg", "1.0.0")
     (root / "src").mkdir(parents=True)
     (root / "src" / "index.js").write_text(own_code)
     (root / "package.json").write_text(json.dumps({"dependencies": deps}))
@@ -159,7 +163,7 @@ def test_prepare_sources_skips_dependency_fetch_when_own_code_covers_tools(tmp_p
 
     got_root, files, notes = prepare_sources("npm", "pkg", "1.0.0", cache_dir,
                                              ["browser_navigate"], run=run)
-    assert got_root == cache_dir / ".views" / "npm_pkg_1.0.0"
+    assert got_root == cache_dir / ".views" / _slug("npm", "pkg", "1.0.0")
     assert (got_root / "src" / "index.js").read_text() == "function browser_navigate() {}\n"
     assert notes == []
     assert not (root / ".deps").exists() and not (got_root / ".deps").exists()
@@ -179,6 +183,35 @@ def test_prepare_sources_fetches_dependency_when_tool_missing_from_own_code(tmp_
     assert not (root / ".deps").exists(), "the cached package tree must stay pristine"
 
 
+def test_prepare_sources_treats_test_file_only_mention_as_missing(tmp_path):
+    # select_files would never surface src/tool.test.js as evidence (test-file rule), so a
+    # tool name that appears only there must not count as "found" in the package's own
+    # code either, or dependency following would wrongly be skipped (I2).
+    cache_dir = tmp_path / "cache"
+    root = _seed_package(cache_dir, {"dep-code": "1.0.0"}, own_code="module.exports = {};\n")
+    (root / "src" / "tool.test.js").write_text("function browser_navigate() {}\n")
+    run = fake_npm_pack({"dep-code": {"lib/x.js": b"function browser_navigate() {}\n"}})
+
+    got_root, files, notes = prepare_sources("npm", "pkg", "1.0.0", cache_dir,
+                                             ["browser_navigate"], run=run)
+    assert notes == ["dependency sources included: dep-code@1.0.0"]
+    assert (got_root / ".deps" / "dep-code" / "lib" / "x.js").exists()
+
+
+def test_prepare_sources_does_not_include_dependency_matching_only_in_its_test_folder(tmp_path):
+    # select_files would never surface a dependency's test/ folder, so a match only there
+    # must not earn the dependency one of the kept slots or a mention in notes (I2).
+    cache_dir = tmp_path / "cache"
+    root = _seed_package(cache_dir, {"dep-code": "1.0.0"})
+    run = fake_npm_pack({"dep-code": {"test/spec.js": b"function browser_navigate() {}\n",
+                                      "lib/y.js": b"module.exports = {};\n"}})
+
+    got_root, files, notes = prepare_sources("npm", "pkg", "1.0.0", cache_dir,
+                                             ["browser_navigate"], run=run)
+    assert notes == []
+    assert not (got_root / ".deps").exists()
+
+
 def test_prepare_sources_notes_resolved_version_and_skipped_dependency(tmp_path):
     cache_dir = tmp_path / "cache"
     _seed_package(cache_dir, {"dep-code": "^1.2.0", "evil": "file:../x"})
@@ -187,9 +220,10 @@ def test_prepare_sources_notes_resolved_version_and_skipped_dependency(tmp_path)
                         resolved={"dep-code": "1.4.3"}, calls=calls)
 
     got_root, _, notes = prepare_sources("npm", "pkg", "1.0.0", cache_dir, ["browser_navigate"], run=run)
+    dep_slug = _slug("npm", "dep-code", "1.4.3")
     assert calls == ["dep-code@^1.2.0"]
-    assert (cache_dir / "npm_dep-code_1.4.3" / "lib" / "x.js").exists()
-    assert sorted(p.name for p in cache_dir.glob("npm_dep-code_*")) == ["npm_dep-code_1.4.3"]
+    assert (cache_dir / dep_slug / "lib" / "x.js").exists()
+    assert sorted(p.name for p in cache_dir.glob("npm_dep-code_*")) == [dep_slug]
     assert notes[0] == "dependency sources included: dep-code@1.4.3"
     assert notes[1].startswith("dependency skipped: 'evil' (invalid npm version or range")
     assert len(notes) == 2

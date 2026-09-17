@@ -1,7 +1,7 @@
 import stat, subprocess, tarfile, zipfile, io, json
 from pathlib import Path
 import pytest
-from interlock.source import cache_path, fetch_dependencies, fetch_source, source_digest
+from interlock.source import cache_path, fetch_dependencies, fetch_source, source_digest, _slug
 
 def _npm_spec(cmd):
     # The spec is always the single argument after "--", so it can never be read as a flag.
@@ -217,6 +217,20 @@ def test_fetch_dependencies_keeps_only_code_evidence(tmp_path):
     assert skipped == []
     assert not (root / ".deps").exists(), "fetch_dependencies must not write into the package tree"
 
+def test_fetch_dependencies_does_not_keep_a_dependency_matching_only_in_its_test_folder(tmp_path):
+    # select_files would never surface a dependency's test/ folder, so a match only there
+    # must not justify keeping (and reporting) that dependency (I2).
+    root = tmp_path / "root"; root.mkdir()
+    (root / "package.json").write_text(json.dumps({"dependencies": {"dep-test-only": "1.0.0"}}))
+    runner = fake_npm_pack_runner({
+        "dep-test-only": {"test/spec.js": b"function browser_navigate() { return true; }\n",
+                          "lib/y.js": b"module.exports = {};\n"},
+    })
+    kept, skipped = fetch_dependencies(root, ["browser_navigate"], tmp_path / "cache", run=runner)
+    assert kept == []
+    assert skipped == []
+
+
 def test_fetch_dependencies_records_failing_fetch_as_skipped(tmp_path):
     root = tmp_path / "root"; root.mkdir()
     (root / "package.json").write_text(json.dumps(
@@ -247,8 +261,29 @@ def test_fetch_dependencies_caches_range_under_resolved_version(tmp_path):
                                   resolved={"dep-code": "1.4.3"})
     cache = tmp_path / "cache"
     kept, _ = fetch_dependencies(root, ["browser_navigate"], cache, run=runner)
-    assert kept == [("dep-code", "1.4.3", cache / "npm_dep-code_1.4.3")]
-    assert sorted(p.name for p in cache.iterdir()) == ["npm_dep-code_1.4.3"]
+    dep_slug = _slug("npm", "dep-code", "1.4.3")
+    assert kept == [("dep-code", "1.4.3", cache / dep_slug)]
+    assert sorted(p.name for p in cache.iterdir()) == [dep_slug]
+
+def test_fetch_source_gives_colliding_sanitised_names_different_cache_dirs(tmp_path):
+    # "@a/b" and "a_b" both sanitise to the same slug prefix ("a_b"); the cache slug must
+    # still differ, or one package's judgement could be read from the other's source.
+    def run(cmd, **kw):
+        name, _, version = _npm_spec(cmd).rpartition("@")
+        tgz = Path(kw["cwd"]) / "pkg.tgz"
+        with tarfile.open(tgz, "w:gz") as t:
+            data = f"module.exports = {json.dumps(name)};\n".encode()
+            info = tarfile.TarInfo("package/index.js"); info.size = len(data)
+            t.addfile(info, io.BytesIO(data))
+        class R: returncode = 0; stdout = _pack_json(name, version); stderr = ""
+        return R()
+
+    out_a = fetch_source("npm", "@a/b", "1.0.0", tmp_path, run=run)
+    out_b = fetch_source("npm", "a_b", "1.0.0", tmp_path, run=run)
+    assert out_a != out_b
+    assert (out_a / "index.js").read_text() == 'module.exports = "@a/b";\n'
+    assert (out_b / "index.js").read_text() == 'module.exports = "a_b";\n'
+
 
 def test_reviewer_repro_dependency_range_cannot_delete_outside_cache(tmp_path):
     # Default layout: cache at <repo>/.cache/sources, so "a/../../../victim" from a work

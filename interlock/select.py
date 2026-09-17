@@ -2,7 +2,7 @@
 from __future__ import annotations
 from pathlib import Path
 
-SKIP_DIRS = {"node_modules", ".git", "dist-types", "__pycache__", "fixtures", "testdata", "vendor"}
+SKIP_DIRS = {"node_modules", ".git", "dist-types", "__pycache__", "fixtures", "testdata", "vendor", "test", "__tests__"}
 SOURCE_SUFFIXES = {".js", ".mjs", ".cjs", ".ts", ".tsx", ".py", ".go", ".rs", ".java", ".rb", ".json", ".yaml", ".yml", ".md", ".snap"}
 TEST_MARKERS = (".test.", ".spec.", "_test.")
 MAX_FILE_CHARS = 120_000
@@ -18,9 +18,16 @@ def _is_test(name: str) -> bool:
     return name.startswith("test_") or any(m in name for m in TEST_MARKERS)
 
 
-def _is_candidate(p: Path, root: Path) -> bool:
+def is_candidate(p: Path, root: Path) -> bool:
+    """True if `p` (a file under `root`) is one select_files would ever consider: not
+    inside a skipped (vendored/test/build) directory, not a declaration-only `.d.ts`,
+    not itself a test file, and on the source suffix allowlist. Shared with
+    prepare_sources's missing-name detection and fetch_dependencies's keep decision so
+    detection and selection never disagree about which files count."""
     rel = p.relative_to(root)
     if any(part in SKIP_DIRS for part in rel.parts):
+        return False
+    if p.name.lower().endswith(".d.ts"):
         return False
     if p.suffix.lower() not in SOURCE_SUFFIXES:
         return False
@@ -140,7 +147,7 @@ def select_files(root: Path, tool_names: list[str], budget_bytes: int = 400_000)
     root = Path(root)
     scored: list[tuple[int, bool, int, str, str]] = []
     for p in sorted(root.rglob("*")):
-        if not p.is_file() or not _is_candidate(p, root):
+        if not p.is_file() or not is_candidate(p, root):
             continue
         try:
             text = p.read_text(errors="strict")

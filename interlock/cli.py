@@ -61,25 +61,46 @@ def _write_manifest(path: Path, entries: list[dict], batch_id: str | None) -> No
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({"batch_id": batch_id, "packages": entries}, indent=1))
 
-def _prepare_batch(specs: list[str], surfaces_path: Path, cache_dir: Path) -> tuple[list, list[dict]]:
+def _failures_path(out_dir: Path) -> Path:
+    return out_dir / "batch-failures.jsonl"
+
+def _append_failures(out_dir: Path, batch_id: str | None, stage: str, failures: list[dict]) -> None:
+    """Append one JSON object per line to <out>/batch-failures.jsonl, never overwriting
+    what an earlier run in the same output directory already recorded."""
+    if not failures:
+        return
+    out_dir.mkdir(parents=True, exist_ok=True)
+    with _failures_path(out_dir).open("a") as f:
+        for entry in failures:
+            f.write(json.dumps({"batch_id": batch_id, "stage": stage, **entry}) + "\n")
+
+def _prepare_batch(specs: list[str], surfaces_path: Path, cache_dir: Path) -> tuple[list, list[dict], list[dict]]:
     """Load each surface, fetch its source, and build the batch request plus a manifest
-    entry recording enough to resume: custom_id, kind, package, version, resolved root."""
+    entry recording enough to resume: custom_id, kind, package, version, resolved root.
+    A package whose surface lookup, source fetch or validation fails is recorded in the
+    returned failures list (package, custom_id=None, message) and excluded, so one bad
+    top-level package does not stop the rest of the batch from being submitted."""
     seen: dict[str, str] = {}
     manifest_entries = []
     requests = []
+    failures = []
     for spec in specs:
         kind, package = _split(spec)
-        surface = load_surface(surfaces_path, package)
-        root, files, notes = prepare_sources(kind, package, surface["version"], cache_dir,
-                                             [t["name"] for t in surface["tools"]])
-        cid = _custom_id(kind, package)
-        if cid in seen:
-            raise ValueError(f"duplicate custom_id {cid!r} for {seen[cid]!r} and {spec!r}")
-        seen[cid] = spec
-        manifest_entries.append({"custom_id": cid, "kind": kind, "package": package,
-                                  "version": surface["version"], "root": str(root), "notes": notes})
-        requests.append(batch_request(cid, surface, files))
-    return requests, manifest_entries
+        try:
+            surface = load_surface(surfaces_path, package)
+            root, files, notes = prepare_sources(kind, package, surface["version"], cache_dir,
+                                                 [t["name"] for t in surface["tools"]])
+            cid = _custom_id(kind, package)
+            if cid in seen:
+                raise ValueError(f"duplicate custom_id {cid!r} for {seen[cid]!r} and {spec!r}")
+            seen[cid] = spec
+            manifest_entries.append({"custom_id": cid, "kind": kind, "package": package,
+                                      "version": surface["version"], "root": str(root), "notes": notes})
+            requests.append(batch_request(cid, surface, files))
+        except Exception as e:
+            print(f"{spec}: preparation failed: {e}", file=sys.stderr)
+            failures.append({"package": package, "custom_id": None, "message": str(e)})
+    return requests, manifest_entries, failures
 
 def _poll(client, batch_id: str) -> None:
     """Poll until the batch ends, printing progress. Tolerates transient retrieve() errors
@@ -100,6 +121,7 @@ def cmd_batch(args) -> int:
     client = make_client()
     out_dir = Path(args.out)
     manifest_path = _manifest_path(out_dir)
+    prepare_failures: list[dict] = []
 
     if args.resume:
         manifest = json.loads(manifest_path.read_text())
@@ -110,11 +132,13 @@ def cmd_batch(args) -> int:
         entries = {e["custom_id"]: e for e in manifest["packages"]}
     else:
         specs = [l.strip() for l in Path(args.packages).read_text().splitlines() if l.strip() and not l.startswith("#")]
-        requests, manifest_entries = _prepare_batch(specs, Path(args.surfaces), Path(args.cache))
+        requests, manifest_entries, prepare_failures = _prepare_batch(specs, Path(args.surfaces), Path(args.cache))
         _write_manifest(manifest_path, manifest_entries, batch_id=None)
+        _append_failures(out_dir, None, "prepare", prepare_failures)
         batch = client.messages.batches.create(requests=requests)
         _write_manifest(manifest_path, manifest_entries, batch_id=batch.id)
-        print(f"batch {batch.id} with {len(requests)} requests")
+        prep_note = f", {len(prepare_failures)} package(s) failed preparation" if prepare_failures else ""
+        print(f"batch {batch.id} with {len(requests)} requests{prep_note}")
         batch_id = batch.id
         entries = {e["custom_id"]: e for e in manifest_entries}
 
@@ -127,34 +151,40 @@ def cmd_batch(args) -> int:
     total_cost = 0.0
     failures: list[dict] = []
     for result in client.messages.batches.results(batch_id):
-        entry = entries.get(result.custom_id)
-        if entry is None:
-            print(f"{result.custom_id}: not in manifest, skipping", file=sys.stderr)
-            continue
-        if result.result.type != "succeeded":
-            print(f"{result.custom_id}: {result.result.type}", file=sys.stderr)
-            continue
-        surface = load_surface(Path(args.surfaces), entry["package"], entry["version"])
-        text = next(b.text for b in result.result.message.content if b.type == "text")
+        entry = None
         try:
+            entry = entries.get(result.custom_id)
+            if entry is None:
+                print(f"{result.custom_id}: not in manifest, skipping", file=sys.stderr)
+                continue
+            if result.result.type != "succeeded":
+                raise RuntimeError(f"batch result type {result.result.type!r}, not succeeded")
+            surface = load_surface(Path(args.surfaces), entry["package"], entry["version"])
+            text = next(b.text for b in result.result.message.content if b.type == "text")
             profile, stats = verify(parse_effects(text, entry["package"]), surface, Path(entry["root"]))
-        except ValueError as e:
-            print(f"{entry['package']}: {e}", file=sys.stderr)
-            failures.append({"package": entry["package"], "custom_id": result.custom_id, "error": str(e)})
-            continue
-        profile.notes = list(profile.notes) + entry.get("notes", [])
-        usage = usage_dict(result.result.message.usage)
-        stats["usage"] = usage
-        stats["cost_usd"] = estimate_cost_usd(usage, batch=True)
-        stats["batch_wall_seconds"] = batch_wall_seconds
-        _write(out_dir, profile, stats)
-        written += 1
-        for f in USAGE_FIELDS:
-            totals[f] += usage[f]
-        total_cost += stats["cost_usd"]
-        print(f"{profile.package}@{profile.version}: {stats['verified']}/{stats['claims']} verified")
-    (out_dir / "batch-failures.json").write_text(json.dumps(failures, indent=1))
-    failed_note = f", {len(failures)} failed ({', '.join(f['package'] for f in failures)})" if failures else ""
+            profile.notes = list(profile.notes) + entry.get("notes", [])
+            usage = usage_dict(result.result.message.usage)
+            stats["usage"] = usage
+            stats["cost_usd"] = estimate_cost_usd(usage, batch=True)
+            stats["batch_wall_seconds"] = batch_wall_seconds
+            _write(out_dir, profile, stats)
+            written += 1
+            for f in USAGE_FIELDS:
+                totals[f] += usage[f]
+            total_cost += stats["cost_usd"]
+            print(f"{profile.package}@{profile.version}: {stats['verified']}/{stats['claims']} verified")
+        except Exception as e:
+            # Anything that can go wrong handling one result - no text block (StopIteration),
+            # a malformed model response (verify can raise ValueError/KeyError/TypeError), a
+            # non-"succeeded" result type (errored/canceled/expired) - is recorded as a
+            # failure for this one package, never lets a paid batch run stop halfway.
+            pkg = entry["package"] if entry is not None else None
+            print(f"{result.custom_id}: {e}", file=sys.stderr)
+            failures.append({"package": pkg, "custom_id": result.custom_id, "message": str(e)})
+    _append_failures(out_dir, batch_id, "result", failures)
+    all_failures = prepare_failures + failures
+    names = ", ".join(f["package"] for f in all_failures if f.get("package"))
+    failed_note = f", {len(all_failures)} failed" + (f" ({names})" if names else "") if all_failures else ""
     print(f"batch {batch_id}: {written} packages written{failed_note}, tokens "
           f"in={totals['input_tokens']} out={totals['output_tokens']} "
           f"cache_creation={totals['cache_creation_input_tokens']} cache_read={totals['cache_read_input_tokens']}, "

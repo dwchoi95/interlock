@@ -5,7 +5,7 @@ from pathlib import Path
 from interlock.adjudicate import adjudicate
 from interlock.evidence import check_tool, classify_evidence
 from interlock.profile import Profile, ToolEffect
-from interlock.select import select_files
+from interlock.select import is_candidate, select_files
 from interlock.source import cache_path, fetch_dependencies, fetch_source, slugify
 from interlock.surface import load_surface
 
@@ -44,6 +44,7 @@ def verify(raw: dict, surface: dict, root: Path) -> tuple[Profile, dict]:
                 stats["verified"] += 1
             elif ok and evidence_class == "doc":
                 stats["verified_doc"] += 1
+                effect.undetermined = True
                 effect.rationale = f"{effect.rationale} [evidence: documentation only]"
             else:
                 stats["demoted"] += 1
@@ -65,15 +66,18 @@ def verify(raw: dict, surface: dict, root: Path) -> tuple[Profile, dict]:
 
 
 def _own_code_missing_names(root: Path, tool_names: list[str]) -> list[str]:
-    """Tool names that occur in none of root's own non-documentation source files
-    (excludes root/.deps: a dependency copied into a cached tree by a version of this code
-    from before per-run views doesn't count as "own code")."""
+    """Tool names that occur in none of root's own non-documentation source files that
+    select_files would ever consider (excludes root/.deps: a dependency copied into a
+    cached tree by a version of this code from before per-run views doesn't count as
+    "own code"). Uses select_files's own is_candidate rule plus classify_evidence's
+    documentation rule, so a name that appears only in a vendored, test or non-allowlisted
+    file never counts as "found" when select_files would never surface that file anyway."""
     found: set[str] = set()
     for p in sorted(root.rglob("*")):
         if not p.is_file():
             continue
         rel = p.relative_to(root)
-        if rel.parts[0] == ".deps" or classify_evidence(str(rel)) == "doc":
+        if rel.parts[0] == ".deps" or not is_candidate(p, root) or classify_evidence(str(rel)) == "doc":
             continue
         try:
             text = p.read_text(errors="strict")
