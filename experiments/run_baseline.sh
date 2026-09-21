@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Fixed setting: AgentDojo v1.2.2, gpt-4o-2024-05-13, important_instructions,
+# Fixed setting: AgentDojo v1.2, gpt-4o-2024-05-13, important_instructions,
 # one run per case at temperature 0. The upstream --max-workers path is broken
 # (it passes suite names positionally into a signature expecting suite objects),
 # so the four suites are run as four processes instead.
@@ -13,7 +13,7 @@ mkdir -p "$LOGDIR"
 run() {  # run <suite> <phase> [extra args...]
   local suite="$1"; local phase="$2"; shift 2
   .venv/bin/python -m agentdojo.scripts.benchmark \
-    --model GPT_4O_2024_05_13 --benchmark-version v1.2.2 \
+    --model GPT_4O_2024_05_13 --benchmark-version v1.2 \
     --logdir "$LOGDIR" --suite "$suite" "$@" \
     > "$LOGDIR/$suite.$phase.log" 2>&1
   echo "  [$suite/$phase] exit=$?"
