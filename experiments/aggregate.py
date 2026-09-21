@@ -28,7 +28,12 @@ def collect(root: Path):
         try: d = json.loads(f.read_text())
         except Exception: continue
         if "utility" not in d: continue
-        (cases if d.get("injection_task_id") else benign).append(d)
+        if d.get("injection_task_id"):
+            cases.append(d)
+        elif not str(d.get("user_task_id", "")).startswith("injection_task"):
+            # AgentDojo also runs each injection task as a user task to check it is
+            # solvable at all; those records look like benign runs but are not user tasks.
+            benign.append(d)
     return benign, cases
 
 def report(label, benign, cases):
