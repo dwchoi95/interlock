@@ -3,12 +3,33 @@
 \usepackage{booktabs}
 \usepackage{amsmath}
 
+\newcommand{\methodname}{\textsc{Interlock}}
+
 \begin{document}
 
 \title{\textsc{Interlock}: Least-Privilege Tool Surfaces for LLM Agent Configurations}
 
 \begin{abstract}
+An LLM agent's authority is decided by a configuration file: the set of Model Context Protocol servers a user installs fixes which tools the model can see and call. Defences for this layer vet one artifact at a time, judge whether an installed combination is dangerous, or restrict the agent while it runs. None computes what the user is able to act on, namely which part of the surface they installed can be switched off without losing the work they installed it for. We mine 19,777 public agent configurations and derive, from each server's own source code with a file-and-line citation for every effect, what its advertised tools can reach. Of the 880 configurations built entirely from the 17 most frequently configured servers, 84.1\% can reach private data, attacker-controlled content and an attacker-readable destination in one session; in every one of them a single server already suffices, so cross-provider composition is never the operative factor, and the controls that would narrow the surface are unused where they exist and absent for the main offenders. We present \methodname{}, which computes a least-privilege tool surface for a configuration in three stages: trust-ranked effect summarisation, policy decision over the induced surface, and synthesis of a minimum-cost patch over the controls hosts and servers already expose, subject to the deployment's declared tasks. This paper implements and evaluates the first stage: over 34 servers and 433 advertised tools, 72.5\% of the model's effect claims survive deterministic re-checking against the cited source, 90.7\% among the servers whose implementation code is actually distributed, with no tool left unjudged, at a cost of USD 8.53. We identify the three structural limits where reading a published package cannot establish an effect, and we release the tool, the configuration corpus and the adjudicated summaries.
 \end{abstract}
+
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10002978.10003022</concept_id>
+<concept_desc>Security and privacy~Software and application security</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10011007.10011074</concept_id>
+<concept_desc>Software and its engineering~Software creation and management</concept_desc>
+<concept_significance>300</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Security and privacy~Software and application security}
+\ccsdesc[300]{Software and its engineering~Software creation and management}
 
 \keywords{LLM agents, Model Context Protocol, tool surface, least privilege, configuration analysis, information flow, prompt injection, empirical study}
 
@@ -31,9 +52,166 @@ The natural remedies fail for reasons the same measurement makes concrete. Remov
 
 We present \textsc{Interlock}, which computes a least-privilege tool surface for a given agent configuration in three stages. \emph{Summarize} derives a per-tool effect summary from evidence ranked by trust: the server's source code and the configuration's own arguments first, declared schemas and annotations next, and free-text descriptions never used to lower an effect, only to raise it, because descriptions are attacker-controlled. \emph{Decide} evaluates the deployer's flow policy over the surface induced by the configuration and returns the witnessing tools for each forbidden flow, distinguishing the flows a single provider completes from those that need several. \emph{Repair} synthesises a minimum-cost patch over the controls that hosts and servers actually expose --- per-tool deny entries, server mode and toolset flags, argument narrowing, and, as the most expensive option, server removal --- subject to preserving the tasks the deployment declares, and emits it as a configuration diff the user can apply. Because the surface changes when a provider updates, \textsc{Interlock} re-decides from cached summaries when the configuration or an advertised surface changes, and reports whether the previous patch still holds.
 
-We will evaluate \textsc{Interlock} on the configurations and servers of our measurement, against the controls users have today and against the strongest published alternatives. We ask whether the synthesised patch removes the forbidden flows that a dynamic harness can otherwise exploit, at what cost in declared-task success, how that trade-off compares with whole-server removal, with server read-only modes, and with run-time privilege enforcement under the same policy, and how much of the patch survives provider updates. We report \textbf{[A]}\% of trifecta-complete configurations repaired with \textbf{[B]}\% of declared tasks preserved, against \textbf{[C]}\% task preservation for the removal baseline.
+This paper implements and evaluates the first stage and specifies the other two. Over the 34 most frequently configured servers and their 433 advertised tools, 72.5\% of the model's label claims survive deterministic re-checking against the cited source, and 90.7\% do among the 27 servers whose implementation code is actually distributed in the package; no advertised tool is left unjudged, name hallucination is 2 of 433, and the whole run costs USD 8.53. The three servers that account for most of the loss fail for structural reasons we characterise --- a compiled binary downloaded at install time, tool names generated at start-up from an interface description, and a minified bundle --- which bound where effects can be read from a published package at all. For the decision and repair stages we plan to measure, on the same corpus, whether a synthesised patch removes flows that a dynamic harness can otherwise exploit, and at what cost in declared-task success, against whole-server removal, server modes alone, a heuristic deny list and run-time enforcement under the same policy.
 
-We claim three contributions. \emph{Observation:} prior work names the dangerous combination and observes that one server can hold it, but reports it over registries rather than deployments; we give the first measurement over real configurations, defining trifecta-completeness and capability bundling operationally and evaluating them on 19,777 public configurations with code-derived, evidence-carrying effect summaries for the 17 most-configured servers, which shows that 84.1\% of the analysable configurations are trifecta-complete, that a single provider suffices in every such case, and that the mitigations those providers offer are missing or unused. \emph{New technique:} we formulate least-privilege tool-surface synthesis for a configuration --- a minimum-cost patch over host and server controls subject to task preservation --- and present \textsc{Interlock}, whose technical contributions are trust-ranked effect summarisation that never trusts attacker-writable prose, witness-guided repair that re-decides after each candidate patch, and re-decision against cached summaries when a provider changes its surface. \emph{Evaluation:} we measure repair effectiveness and task preservation against removal, server modes and run-time enforcement, on real configurations executed with real servers, and we release the tool, the configuration corpus and the adjudicated effect summaries.
+We claim three contributions. \emph{Observation:} prior work names the dangerous combination and observes that one server can hold it, but reports it over registries rather than deployments; we give the first measurement over real configurations, defining trifecta-completeness and capability bundling operationally and evaluating them on 19,777 public configurations with code-derived, evidence-carrying effect summaries for the 17 most-configured servers, which shows that 84.1\% of the analysable configurations are trifecta-complete, that a single provider suffices in every such case, and that the mitigations those providers offer are missing or unused. \emph{New technique:} we formulate least-privilege tool-surface synthesis for a configuration --- a minimum-cost patch over host and server controls subject to task preservation --- and present \textsc{Interlock}, whose technical contributions are trust-ranked effect summarisation that never trusts attacker-writable prose, witness-guided repair that re-decides after each candidate patch, and re-decision against cached summaries when a provider changes its surface. \emph{Evaluation:} we implement and evaluate the effect-summarisation stage on 34 servers and 433 tools, reporting how much of a model's judgement survives deterministic re-checking (72.5\% overall, 90.7\% where implementation code is distributed) and characterising the three structural limits where it cannot; we specify the decision and repair stages and the utility-versus-security study that will evaluate them, and we release the tool, the configuration corpus and the adjudicated effect summaries.
+
+
+\section{Background and Threat Model}
+\label{sec:background}
+
+\subsection{Tool surfaces and who decides them}
+
+A host application --- an IDE assistant, a desktop agent, a coding agent --- starts each Model Context Protocol server named in a configuration file, asks it for its tool list, and places the returned names, descriptions and JSON schemas into the model's context. A server may be a local process started by a command line, a container, or a remote endpoint; a skill bundle may contribute further servers. The union of the advertised tools, for the session, is what we call the deployment's \emph{tool surface}. Three properties of this arrangement drive the rest of the paper. The surface is decided by the user's configuration rather than by any single provider. Every tool on it is callable, because tool choice is made by the model from the advertised text. And the surface is not fixed: hosts commonly launch servers from an unpinned package specification, so the code behind a tool can change between sessions without any action by the user.
+
+\subsection{Threat model}
+
+We assume an agent that follows instructions found in the content it reads, which is the assumption under which the lethal-trifecta framing~\cite{willison2025trifecta} and toxic-flow analysis~\cite{beurerkellner2025toxicflow} are stated, and which published attacks on this layer exploit~\cite{zhao2026parasites, zeng2026colluskill, liu2026sharelock}. The attacker controls arbitrary web hosts and content, and content in multi-writer or third-party sources: public issues, comments and repository content, community documentation and registries, search results. The attacker does not control the user's local files or the data held in the user's own accounts, and does not modify the installed servers. The attacker can read hosts they control and anything published publicly. Under these assumptions a deployment is dangerous when its surface reaches, in the same session, a source of private data, a source of attacker-controlled content, and a destination the attacker can read; we call such a surface \emph{trifecta-complete}, and a provider whose own tools suffice \emph{capability-bundling}.
+
+\section{How Dangerous Are Real Configurations?}
+\label{sec:measurement}
+
+\subsection{Study design}
+
+\begin{sloppypar}
+We measure the two properties defined above on configurations that people have actually written. We search public GitHub for the five configuration formats that current hosts read (\texttt{.mcp.json}, \texttt{.cursor/mcp.json}, \texttt{.vscode/mcp.json}, \texttt{claude\_desktop\_config.json}, and the \texttt{[mcp\_servers]} tables of \texttt{.codex/config.toml}), parse each file in memory, and keep only the identity and launch shape of each server; credentials are never stored. The search reports 85,065 matching files, of which 22,552 are retrievable under the API's per-query cap; 21,015 parse, and 19,777 remain after removing forks and duplicate server sets within a repository. Table~\ref{tab:corpus} summarises the corpus.
+\end{sloppypar}
+
+\begin{table}[t]
+\caption{Configuration corpus mined from public GitHub. Entries are server declarations; one configuration may declare several.}
+\label{tab:corpus}
+\begin{tabular}{lr}
+\toprule
+Configurations (deduplicated, non-fork) & 19,777 \\
+\quad declaring a single server & 10,532 \\
+\quad declaring two or more servers & 9,302 \\
+\midrule
+Server entries by kind: npm & 22,010 \\
+\quad remote endpoint & 14,250 \\
+\quad other command & 7,564 \\
+\quad local script & 7,284 \\
+\quad PyPI & 3,156 \\
+\quad container image & 1,507 \\
+\midrule
+Stdio entries launched without a version pin & 24,354 / 26,673 (91.3\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Deciding whether a configuration is trifecta-complete requires knowing what each advertised tool can reach. We therefore recover each server's advertised surface by running its \texttt{tools/list} handshake inside a container, and derive the effect of every tool of the 17 most frequently configured servers from the servers' own source code, recording a file-and-line citation for every effect and applying the mode flags and arguments that each configuration actually sets. Section~\ref{sec:approach} describes the procedure, which is the first stage of \methodname{}; Section~\ref{sec:eval} reports how reliable it is. For this section it is enough that each effect is traceable to a line of code that a reader can check.
+
+\subsection{Results}
+
+\emph{Most analysable configurations are trifecta-complete.} Of the 880 configurations composed entirely of the 17 adjudicated servers --- one in ten of the multi-server configurations we collected --- \textbf{84.1\%} (740) are trifecta-complete. Pushing every effect we could not settle from code to either extreme moves the figure only between 84.0\% and 85.6\%. A second variant of the threat model, in which records inside the user's own databases and workspaces are also treated as attacker-writable, leaves the figure unchanged at 84.1\%, because those servers already reach all three effects by other means.
+
+\emph{Composition is not what makes them dangerous.} In every one of the 740 trifecta-complete configurations, a single server is already capability-bundling. The number of configurations that require two or more servers to become trifecta-complete is zero. The share stays at or below 3.3\% when we withdraw the private-data effect that browser and fetch servers derive from reaching \texttt{file://}, localhost and intranet URLs, and reaches 19.1\% only when we additionally ignore a documented remote-code-execution tool and every local-URL effect, at which point most of the remaining cases rest on a credential-gated effect of one documentation server. Nine of the 17 servers are capability-bundling on their own, among them the browser-automation, code-hosting, database and component-registry servers that appear in thousands of configurations (Table~\ref{tab:drivers}).
+
+\begin{table}[t]
+\caption{Servers that make a configuration trifecta-complete by themselves, with the number of analysed configurations in which each appears.}
+\label{tab:drivers}
+\begin{tabular}{lrl}
+\toprule
+Server & Configs & Why it alone suffices \\
+\midrule
+\texttt{@playwright/mcp} & 359 & default tool runs agent code in the server process \\
+\texttt{github-mcp-server} & 183 & private repos, third-party issues, public writes \\
+\texttt{server-github} (archived) & 172 & same, with no mode flags at all \\
+\texttt{chrome-devtools-mcp} & 139 & navigates to \texttt{file://} and localhost, then exfiltrates \\
+\texttt{shadcn} & 121 & fetches agent-chosen URLs, reads local files \\
+\texttt{supabase} & 81 & user data in, agent-supplied code out \\
+\texttt{serena} (default context) & 28 & host shell execution \\
+\texttt{mcp-server-fetch} & 26 & no host restrictions on the URL \\
+\texttt{server-puppeteer} & 14 & agent-supplied launch options reach \texttt{spawn} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\emph{The controls that exist are unused, and for the main drivers they do not exist.} The code-hosting server offers a read-only mode; 3 of 189 entries set it, and 12 select a narrower toolset. The database server offers a read-only mode; 32 of 116 entries set it. The coding-agent server disables its shell tool in most of its named contexts, and 84 of 111 entries select such a context --- the one case where adoption is high. For the browser-automation server no flag removes the tool that executes code in its own process, and the archived code-hosting server, the component-registry server and the fetch server expose no restricting flag at all.
+
+\emph{The surface is not static.} Across 64 consecutive releases of one widely configured server, 45 changed the advertised surface and only 2 changed descriptions alone; a published benchmark reports that 54.6\% of initial tools were modified or deprecated across 9,273 versions of 515 servers~\cite{liu2026mcpevol}. Meanwhile 91.3\% of stdio entries name no version, so the code behind a tool changes without the user acting. Hash-based pinning reacts to all of this: replaying our corpus against recovered version histories produces about 23 change alerts per configuration over an 18-month window.
+
+\subsection{What this rules out}
+
+These numbers constrain the design space in three ways. Alerting is uninformative at this base rate: a set-level trifecta check flags 84\% of these configurations, which is a warning a user can only dismiss --- a vendor scanner states exactly this, that most agents possess all three characteristics and that it therefore analyses each component separately~\cite{snyk2026agentscan}. Removing servers is too coarse, since the servers that drive the verdict are the ones users installed on purpose. And severing cross-provider flows, the remedy implied by composition-oriented defences, would leave every one of the 740 configurations trifecta-complete. What remains is to narrow the surface \emph{inside} the providers a user keeps, which is what \methodname{} does.
+
+\section{Approach}
+\label{sec:approach}
+
+\subsection{Overview}
+
+\methodname{} takes a configuration, a flow policy and the deployment's declared tasks, and returns a patch over the controls that hosts and servers already expose. It proceeds in three stages. \emph{Summarize} derives a per-tool effect summary from evidence ranked by trust. \emph{Decide} evaluates the policy over the surface the configuration induces and returns the tools that witness each forbidden flow. \emph{Repair} searches for a minimum-cost patch --- per-tool deny entries, server mode and toolset flags, argument narrowing, and, as the most expensive option, server removal --- that removes the forbidden flows while keeping the declared tasks working. This paper implements and evaluates \emph{Summarize}; \emph{Decide} and \emph{Repair} are specified here and are the subject of ongoing work, and we mark every claim about them accordingly.
+
+\subsection{Summarize: trust-ranked effect summaries}
+
+The stage answers one question per advertised tool: which of SECRET, UNTRUSTED, SINK and HOSTEXEC can this tool reach, and what is the evidence? Evidence is ranked by how much an attacker controls it. The configuration's own arguments and the server's source code rank first, declared schemas and annotations second, and free-text descriptions are never allowed to lower an effect --- they may only raise one, because a description is written by the party being judged. HOSTEXEC implies the other three, since host code execution reaches whatever the host can reach.
+
+Summaries are produced by a language model that must cite \texttt{file:line} evidence for every claim, and are then filtered by a deterministic checker that re-reads the cited span in the fetched source. A claim whose citation does not resolve inside the fetched tree, or whose span does not contain the tool name or an identifier the rationale names, is kept but marked undetermined; the label survives, because an unverified claim must not lower an effect, but it no longer counts as verified. A tool the model does not judge at all is assigned HOSTEXEC, the least restrictive reading. A tool the model clears with no labels counts as cleared only when its evidence resolves in code: documentation cannot establish the \emph{absence} of an effect. This split is what makes the stage's output auditable rather than merely plausible, and Section~\ref{sec:eval} measures how much of it survives the checker.
+
+Two details matter in practice. The model is shown source with every line prefixed by its true line number, because without them cited lines drift with depth and correct judgements fail verification. And when a package's own code never mentions a tool name --- the case for wrapper packages whose implementation lives in a dependency --- the direct dependencies that do mention it are fetched and shown, with scripts disabled; provider code is never executed at any point in the pipeline.
+
+\subsection{Decide and Repair (planned)}
+
+\emph{Decide} will evaluate the deployer's policy over the surface induced by a configuration, after applying the value-level conditions that configuration sets --- read-only modes, toolset selections, path roots, origin allow-lists --- and return, for each forbidden flow, the tools that witness it. \emph{Repair} will search for a minimum-cost patch over the available controls subject to preserving the declared tasks, re-deciding after each candidate patch so that the result is verified rather than assumed, and will emit the patch as a configuration diff. We plan to evaluate both against whole-server removal, server modes alone, a name-based heuristic deny list, and run-time enforcement under the same policy, measuring benign utility, utility under attack and targeted attack success rate before and after the patch.
+
+\section{Evaluation of the Summarize Stage}
+\label{sec:eval}
+
+\subsection{Research question and setup}
+
+We ask one question here: \textbf{RQ1.} How much of a model's effect judgement survives deterministic re-checking against the provider's source, and for which providers does the procedure fail? We profile the 34 most frequently configured npm and PyPI servers whose advertised surface we could recover, 433 advertised tools in total, using Claude Opus~5 with a fixed rubric and a JSON schema, a 400\,KB per-package source budget, and the checker described in Section~\ref{sec:approach}. Each advertised tool falls into exactly one bucket: the model claimed labels for it and the citation resolved in code (\emph{verified}), resolved only in documentation (\emph{verified\_doc}), or did not resolve (\emph{demoted}); or the model cleared it, with (\emph{cleared verified}) or without (\emph{cleared unverified}) code evidence; or the model did not judge it (\emph{unjudged}). Judged names absent from the advertised surface are counted separately. Thresholds and definitions were registered before the run, and every change to the instrument found by the prescribed dry-runs was recorded before the run rather than afterwards.
+
+\subsection{Results}
+
+\begin{table}[t]
+\caption{Outcome of deterministic re-checking over 34 servers and 433 advertised tools.}
+\label{tab:summarize}
+\begin{tabular}{lrr}
+\toprule
+ & Count & Share \\
+\midrule
+Claims (labels asserted) & 335 & \\
+\quad verified in code & 243 & 72.5\% of claims \\
+\quad verified in documentation only & 11 & 3.3\% of claims \\
+\quad demoted (citation did not resolve) & 81 & 24.2\% of claims \\
+Cleared with code evidence & 65 & \\
+Cleared without code evidence & 33 & 7.6\% of tools \\
+Unjudged tools & 0 & 0.0\% of tools \\
+Judged names not in the surface & 2 & 0.5\% of tools \\
+\midrule
+Servers usable (claim rate $\geq$ 0.70, few clears, no unjudged) & 27 / 34 & 79.4\% \\
+Cost of the run (USD) & 8.53 & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:summarize} answers RQ1. Across all 34 servers, 72.5\% of label claims are verified in code; no tool goes unjudged, and name hallucination is negligible at 2 of 433. Three servers account for most of the loss, and each fails for a structural reason rather than a labelling error. One ships a launcher and downloads a compiled binary, so its implementation is not in the package at all and all 68 of its citations point at documentation. One generates its tool names at start-up from an interface description, so the names occur nowhere in its source and no source file could be selected. One implements its tools in a minified bundle, where 13 of 35 citations name the first line of the bundle while the cited identifiers sit elsewhere. Restricted to the 27 servers where implementation code was available to read, the verified-claim rate is \textbf{90.7\%} (243 of 268). The four further servers that fall outside the usable set are not failures of the procedure: every one of their tools was cleared, in three cases entirely on code evidence, and the registered usability rule treats a server with no asserted claims as not usable.
+
+\subsection{Threats to validity}
+
+\emph{Corpus.} GitHub's code search caps results per query and ranks rather than samples them, so the corpus is not a random sample of deployments; committed configurations may also differ from those people run. \emph{Adjudicated set.} Effects are derived for the 17 (measurement) and 34 (evaluation) most frequently configured servers, so the prevalence figures describe configurations built from popular servers, not the long tail. \emph{Threat model.} The prevalence figure is a property of the advertised surface under a worst-case agent; it does not assert that a deployment has been attacked or that an attack would succeed, and confirming exploitability is future work. \emph{Checker.} The checker is strict in one direction and loose in another: about 9 of 81 demotions cite spans that do contain the relevant identifier inside a longer expression that the token match misses, while 4 of 308 code-verified judgements rest on a token of four characters or fewer. \emph{Excerpts.} For large files the prompt shows windows around name occurrences, and 11 tool names present in large files were never shown, so the benefit we report from following dependencies is a lower bound. \emph{Single model.} All summaries come from one model at one date; we have not measured how much the rate varies across models or over time.
+
+\section{Related Work}
+\label{sec:related}
+
+\emph{Vetting one artifact.} Tool-poisoning detectors read advertised descriptions for hidden instructions, shadowed names and exfiltration endpoints~\cite{jain2026detecting}; trusted descriptions can be regenerated to remove the vector~\cite{ye2026trustdesc}; benchmarks quantify how often such attacks succeed on real servers~\cite{wang2026mcptox, yang2025mcpsecbench, liu2026manual}; static analysis finds taint-style bugs inside a server~\cite{sun2026viper}; behavioural audit watches tools as they run~\cite{tan2026sandscope}; and abstract interpretation computes a sound capability bound for a skill~\cite{bhardwaj2026formal}. These judge an artifact against its own manifest or code. Our input is a configuration that composes several artifacts, and our output is a change to that configuration.
+
+\emph{Judging a set.} The lethal-trifecta framing names the dangerous combination~\cite{willison2025trifecta}; toxic-flow analysis instantiates and scores tool sequences that would violate a policy~\cite{beurerkellner2025toxicflow}; compositional policies revoke a session once accumulated exposure would make the next call a violation~\cite{schneider2026compositional}; reachability over a skill-induced transition system is paired with a capability-restricting cut~\cite{xiong2026reachability}; and a registry-scale census reports that some servers hold all three capabilities at once~\cite{zhao2026parasites}. We share the property being judged and differ in population and output: we measure it over configurations people wrote rather than over registry artifacts, and we return a patch rather than a verdict or a session-scoped restriction.
+
+\emph{Constraining the agent at run time.} Control and data flow can be extracted from the trusted query so that untrusted data cannot affect program flow~\cite{debenedetti2025camel}; confidentiality and integrity labels can be tracked and enforced per call~\cite{costa2025fides}; per-call privilege policies enforce least privilege~\cite{shi2025progent}; plans can be checked across queries~\cite{girrens2026spa}; and guardrails can wrap the agent loop~\cite{murugan2026}. These decide per query or per call, require the host to be replaced or instrumented, and leave the installed surface untouched. \methodname{} is complementary: it narrows what a stock host advertises before any query runs, and a deployment can do both.
+
+\emph{Reducing privilege under a functional constraint.} Over-privilege in browser extensions is detected by comparing declared manifest permissions against the API calls the code makes~\cite{cheng2026percheck}, and program debloating reduces an artifact while a test suite must keep passing~\cite{heo2018effective, sharif2018trimmer}. Compositional analysis of inter-application permission leakage on Android analyses the installed set and re-checks it when applications are installed, updated or removed~\cite{bagheri2015covert, li2015iccta}. Our setting differs in what may be changed: the artifact belongs to a third party and is not ours to rewrite, so the reduction happens in the deployment's configuration, and the property to preserve belongs to the deployment rather than to the artifact.
+
+% To add once their bibliographic data is verified against the publisher record:
+% install-time joint analysis of a candidate skill against installed skills; offline tool-interface
+% reconstruction for per-step run-time filtering; task-independent admission of tools by answer-set
+% programming; least-privilege policy synthesis for serverless functions; policy repair validated on a
+% held-out request set; trace-directed debloating that expands beyond the observed tests; and the
+% empirical study of applications that consume MCP servers.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+Research on agent tool security has matured artifact by artifact, and the set-level question has been named and detected, yet the object a user can actually change --- the configuration --- has had no analysis of its own. We measured that configuration population and found that 84.1\% of the analysable configurations reach private data, attacker-controlled content and an attacker-readable destination in a single session, that a single server suffices in every such case, and that the narrowing controls which exist are largely unused and for the main offenders absent. We presented \methodname{}, which computes a least-privilege tool surface for a configuration, and implemented its first stage: effect summaries whose every claim is re-checked against the cited source, of which 72.5\% survive overall and 90.7\% survive where a package actually ships the code it runs. The practical reading is that the remedy for this layer belongs in the configuration, and that most of what a user installs can be judged from the code they already downloaded.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}
