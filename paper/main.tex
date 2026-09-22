@@ -292,21 +292,21 @@ Server & Configs & Why it alone suffices \\
 
 \subsubsection{Baselines}
 
-효과 요약 단계에 대해서는 같은 종류의 산출물, 곧 도구별 능력 판정을 내놓는 것들과 비교한다. \texttt{mcp-sec-audit}은 키워드와 정규식 규칙집으로 서버에서 능력 범주를 뽑는 정적 도구이고~\cite{huang2026auditing}, SandScope는 도구를 샌드박스에서 실행해 관찰된 흐름을 보고하는 동적 도구이며~\cite{tan2026sandscope}, 여기에 우리 파이프라인에서 소스를 빼고 이름과 설명과 스키마만 남긴 \emph{메타데이터만} 조건을 ablation으로 둔다. 마지막 조건은 임의로 만든 것이 아니라 권한 제한 시스템의 정책 생성기가 실제로 받는 입력과 같다.
-% For effect summarisation we compare against systems that produce the same kind of artifact, a per-tool capability judgement: \texttt{mcp-sec-audit}, a static tool that extracts capability categories from a server with a rulebook of keywords and regular expressions~\cite{huang2026auditing}; SandScope, a dynamic tool that executes a tool in a sandbox and reports the flows it observes~\cite{tan2026sandscope}; and a \emph{metadata-only} ablation of our own pipeline in which the source is withheld and only names, descriptions and schemas remain. The last condition is not arbitrary: it is the input a privilege-narrowing policy generator actually receives.
+표~\ref{tab:arms}의 네 가지와 비교한다. \emph{No Defense}~\cite{debenedetti2024agentdojo}는 방어를 두지 않은 에이전트로, 나머지 셋이 무엇을 줄였는지 재는 기준점이다. \emph{Tool Filter}~\cite{debenedetti2024agentdojo}는 AgentDojo가 함께 제공하는 방어로, 질의를 받으면 모델에게 그 작업에 필요한 도구만 고르게 한 뒤 나머지를 제거한다. \emph{Progent}~\cite{shi2025progent}는 사용자의 작업에서 도구 이름과 인자에 대한 기호 규칙을 LLM으로 생성해 호출마다 검사하고, 실행 중 새 정보가 들어오면 정책을 갱신한다. \emph{CaMeL}~\cite{debenedetti2025defeating}은 권한 있는 LLM이 신뢰된 질의를 제한된 프로그램으로 옮기고 격리된 LLM이 신뢰할 수 없는 데이터를 해석하며, 전용 인터프리터가 값마다 능력을 추적해 도구 호출 시점에 정책을 집행한다.
+% We compare against the four systems of Table~\ref{tab:arms}. \emph{No Defense}~\cite{debenedetti2024agentdojo} is an agent with no defence at all, the reference against which the other three are measured. \emph{Tool Filter}~\cite{debenedetti2024agentdojo} is the defence AgentDojo ships: given the query it asks the model to select only the tools the task needs and removes the rest. \emph{Progent}~\cite{shi2025progent} has an LLM generate symbolic rules over tool names and arguments from the user's task, checks every call against them, and updates the policy as new information arrives. \emph{CaMeL}~\cite{debenedetti2025defeating} has a privileged LLM turn the trusted query into a restricted program while a quarantined LLM interprets untrusted data, and a custom interpreter tracks a capability per value and enforces policies at the point a tool is called.
 
-판정과 수선 단계에 대해서는 표~\ref{tab:arms}의 네 가지와 비교한다. \emph{No Defense}는 방어를 두지 않은 에이전트로, 다른 셋이 무엇을 줄였는지 재는 기준점이다. \emph{Tool Filter}는 AgentDojo 자신이 함께 제공하는 방어로, 질의를 받으면 모델에게 그 작업에 필요한 도구만 고르게 한 뒤 나머지를 제거한다. \emph{Progent}는 사용자의 작업에서 도구 이름과 인자에 대한 기호 규칙을 LLM으로 생성해 호출마다 검사하고, 실행 중 새 정보가 들어오면 정책을 갱신한다. \emph{CaMeL}은 권한 있는 LLM이 신뢰된 질의를 제한된 프로그램으로 옮기고 격리된 LLM이 신뢰할 수 없는 데이터를 해석하며, 전용 인터프리터가 값마다 능력을 추적해 도구 호출 시점에 정책을 집행한다. Fides~\cite{costa2025securing}는 제외하는데, 공개된 저장소가 튜토리얼 노트북 하나여서 보고된 결과를 재현할 수 없기 때문이다. 조합 검사도 베이스라인으로 세우지 않는다. 판정만 내놓고 설정을 바꾸지 않으므로 공격이 막혔는지와 작업이 유지되었는지로 채점하는 자리에 놓일 수 없다.
-% For decision and repair we compare against the four systems of Table~\ref{tab:arms}. \emph{No Defense} is an agent with no defence at all, the reference against which the others are measured. \emph{Tool Filter} is the defence AgentDojo itself ships: given the query it asks the model to select only the tools the task needs and removes the rest. \emph{Progent} has an LLM generate symbolic rules over tool names and arguments from the user's task, checks every call against them, and updates the policy as new information arrives. \emph{CaMeL} has a privileged LLM turn the trusted query into a restricted program while a quarantined LLM interprets untrusted data, and a custom interpreter tracks a capability per value and enforces policies at the point a tool is called. We exclude Fides~\cite{costa2025securing}, whose public repository is a single tutorial notebook from which the reported results cannot be reproduced, and set-level analysis, which returns a verdict without changing the configuration and so cannot be scored on whether an attack was stopped and the task preserved.
+Fides~\cite{costa2025securing}는 제외한다. 공개된 저장소가 튜토리얼 노트북 하나여서 보고된 결과를 재현할 수 없기 때문이다. 조합 검사도 베이스라인으로 세우지 않는다. 판정만 내놓고 설정을 바꾸지 않으므로, 공격이 막혔는지와 작업이 유지되었는지로 채점하는 자리에 놓일 수 없다.
+% We exclude Fides~\cite{costa2025securing}, whose public repository is a single tutorial notebook from which the reported results cannot be reproduced, and set-level analysis, which returns a verdict without changing the configuration and so cannot be scored on whether an attack was stopped and the task preserved.
 
 \begin{table}[t]
-\caption{The four arms compared on the decision and repair stages.}
+\caption{The four arms compared.}
 \label{tab:arms}
 \small
 \begin{tabular}{lll}
 \toprule
 Arm & Mechanism & Enforcement point \\
 \midrule
-No Defense & none & --- \\
+No Defense~\cite{debenedetti2024agentdojo} & none & --- \\
 Tool Filter~\cite{debenedetti2024agentdojo} & model selects the tools the task needs & before the first call \\
 Progent~\cite{shi2025progent} & LLM-generated rules over names and arguments & every call \\
 CaMeL~\cite{debenedetti2025defeating} & capability tracking in a custom interpreter & every call \\
@@ -319,39 +319,27 @@ CaMeL~\cite{debenedetti2025defeating} & capability tracking in a custom interpre
 AgentDojo는 프롬프트 주입에 대한 에이전트 방어를 평가하는 환경으로, 우리가 비교하는 방어들이 모두 여기서 보고되었다~\cite{debenedetti2024agentdojo}. 네 개의 suite --- 업무용 메일과 일정과 드라이브를 다루는 workspace, 메신저를 다루는 slack, 예약을 다루는 travel, 계좌를 다루는 banking --- 에 사용자 과제 97개와 주입 과제 35개가 들어 있고, 하나의 \emph{보안 케이스}는 사용자 과제와 주입 과제를 짝지은 것이다. 공격자의 지시는 에이전트가 읽게 될 콘텐츠에 심기며, 성공 여부는 결정적 Python 함수가 판정한다. 언어 모델 심판을 쓰지 않는 이유를 저자들이 밝혀 두었고 우리도 따르는데, 공격이 충분히 성공적이면 평가 모델까지 탈취할 수 있기 때문이다.
 % AgentDojo is an environment for evaluating agent defences against prompt injection, and every defence we compare has reported results on it~\cite{debenedetti2024agentdojo}. Its four suites --- workspace for mail, calendar and drive, slack for messaging, travel for booking and banking for accounts --- hold 97 user tasks and 35 injection tasks, and a \emph{security case} is one user task paired with one injection task. The attacker's instruction is planted in content the agent will read, and success is decided by a deterministic Python function; the authors give their reason for not using a language-model judge, which we share, namely that a sufficiently successful attack could hijack the evaluating model as well.
 
-suite 버전은 v1.2로 고정한다. 그보다 뒤의 overlay를 쓰려면 베이스라인을 고쳐야 하기 때문인데, Progent가 함께 배포하는 AgentDojo 사본은 overlay가 v1.2에서 멈추고 그 뒤의 overlay는 사본에 없는 헬퍼를 참조하며, CaMeL은 아예 코드에서 v1.2를 상수로 불러온다. v1.2와 그 뒤 두 패치 버전은 사용자 과제와 주입 과제의 수가 같아 케이스 집합이 달라지지 않으므로, v1.2를 쓰면 어느 베이스라인도 수정하지 않을 수 있다.
-% We pin the suite version to v1.2. Using a later overlay would mean modifying a baseline: the copy of AgentDojo that Progent ships stops its overlays at v1.2 and the later ones reference helpers that copy does not have, while CaMeL loads v1.2 as a constant in its code. Since v1.2 and the two patch versions after it hold the same number of user and injection tasks, and therefore the same case set, pinning v1.2 leaves every baseline untouched.
-
 보안 케이스는 상위 AgentDojo의 949개가 아니라 \textbf{909개}를 쓴다. Progent가 travel suite의 주입 과제 두 개를 선호도 공격이라는 이유로 모든 실험에서 제외했고~\cite{shi2025progent}, 그 제외를 보고에서만이 아니라 함께 배포한 벤치마크 사본에서 수행했기 때문이다. 우리가 그 사본을 불러 확인한 결과 travel suite의 주입 과제는 일곱 개가 아니라 다섯 개이며, 따라서 케이스 수는 표~\ref{tab:cases}와 같이 949개가 아니라 909개다. Progent가 보고한 수치가 그 집합에서 나왔으므로, 네 arm을 같은 표에 올리려면 나머지도 같은 집합에서 재야 한다. 우리가 직접 실행하는 arm은 949개를 모두 돌리되 집계에서 해당 두 주입 과제를 빼는 방식으로 이를 맞추고, 949개 기준 값도 함께 보고해 제외가 결과를 얼마나 움직이는지 드러낸다.
 % We use \textbf{909} security cases rather than the 949 of upstream AgentDojo. Progent excludes two injection tasks of the travel suite from all its experiments as preference attacks~\cite{shi2025progent}, and performs that exclusion not only in its reporting but in the copy of the benchmark it ships: loading that copy shows five injection tasks in the travel suite rather than seven, so the case count is 909 rather than 949, as Table~\ref{tab:cases} sets out. Since the numbers Progent reports come from that set, putting the four arms in one table requires measuring the others on it too. The arms we run ourselves execute all 949 cases and exclude those two injection tasks at aggregation, and we report the 949-case figures alongside so that the effect of the exclusion is visible.
 
 \begin{table}[t]
-\caption{Security cases per suite. The travel suite loses two injection tasks, which Progent excludes as preference attacks.}
+\caption{The four suites of AgentDojo. Two injection tasks of the travel suite are excluded, so 909 of the 949 security cases are used.}
 \label{tab:cases}
 \small
-\begin{tabular}{lrrrr}
+\begin{tabular}{lrrrc}
 \toprule
-Suite & User tasks & Injection tasks & Cases & Used \\
+Suite & Tools & User tasks & Injection tasks & Security cases (used/total) \\
 \midrule
-workspace & 40 & 14 & 560 & 560 \\
-slack     & 21 &  5 & 105 & 105 \\
-travel    & 20 &  7 & 140 & 100 \\
-banking   & 16 &  9 & 144 & 144 \\
+workspace & 24 & 40 & 14 & 560 / 560 \\
+slack     & 11 & 21 &  5 & 105 / 105 \\
+travel    & 28 & 20 &  7 & 100 / 140 \\
+banking   & 11 & 16 &  9 & 144 / 144 \\
 \midrule
-Total     & 97 & 35 & 949 & \textbf{909} \\
+Total     & 74 & 97 & 35 & \textbf{909} / 949 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-공격은 AgentDojo의 \texttt{important\_instructions} 하나로 고정한다. 이 공격은 공격자의 지시를 사용자가 모델에게 보내는 급한 메시지처럼 꾸미되 실제 사용자 이름과 대상 모델의 이름을 넣는다. 네 arm 가운데 셋이 이 공격으로 보고했고, AgentDojo의 나머지 유출형 공격은 GPT-4o에서 성공률이 3--6\%에 그쳐 방어의 유무를 변별하지 못한다.
-% We fix the attack to AgentDojo's \texttt{important\_instructions}, which dresses the attacker's instruction as an urgent message from the user to the model, carrying the real user's name and the name of the target model. Three of the four arms report under this attack, and AgentDojo's other exfiltration attacks reach only 3--6\% success on GPT-4o, too low to separate a defence from its absence.
-
-% TODO(benchmark): describe the real-server benchmark once it is built. Planned shape: configurations
-% drawn from the public corpus by frequency rather than by our judgement; declared tasks derived from
-% each server's own documented purpose; an injection placed in an attacker-writable source the surface
-% reaches; and a canary string as the success oracle, so that exfiltration is decided by string match
-% rather than by a judge. The set must include scenarios in which no cut preserves the task, or the
-% results will overstate.
 
 \subsubsection{Evaluation Metrics}
 
@@ -363,11 +351,14 @@ Total     & 97 & 35 & 949 & \textbf{909} \\
 
 \subsubsection{Environments}
 
-모든 arm은 \texttt{gpt-4o-2024-05-13}으로 실행한다. 비교 대상들이 공통으로 사용한 모델이며, Progent는 에이전트와 정책 생성기 양쪽에 GPT-4o를 쓰므로 우리도 두 자리 모두 같은 스냅샷으로 맞춘다. CaMeL의 권한 있는 LLM과 격리된 LLM도 마찬가지다. 온도는 0이고 케이스당 실행은 1회인데, 이는 AgentDojo와 Progent, CaMeL이 모두 따르는 방식이다. 이들 가운데 반복 실행을 하는 것은 없으며, 논문들이 보고하는 구간은 반복 사이의 편차가 아니라 케이스 수에 대한 신뢰구간이다.
-% Every arm runs on \texttt{gpt-4o-2024-05-13}, the model the systems we compare against share. Progent uses GPT-4o for both the agent and the policy generator, so we pin both to the same snapshot, and likewise for CaMeL's privileged and quarantined LLMs. The temperature is 0 and each case is run once, as AgentDojo, Progent and CaMeL all do; none of them repeats a run, and the intervals their papers report are confidence intervals over cases rather than spread between repetitions.
+모델은 GPT-4o를 쓴다. 네 베이스라인이 공통으로 사용한 모델일 뿐 아니라, 그들이 사용한 모델 가운데 지금도 API로 이용할 수 있는 유일한 것이기 때문이다. Progent가 함께 보고한 Claude Sonnet~4와 Gemini~2.5 Flash, GPT-4.1, CaMeL이 사용한 Claude~3.5 Sonnet과 Gemini~2.5 Pro는 모두 제공자가 서비스를 종료해 재현할 수 없다. 이 때문에 모델 세대에 따른 차이를 보려면 새 모델을 우리가 골라야 하므로, 현재 이용 가능한 최신 모델인 GPT-5.6-sol과 Claude Opus~5를 추가한다. Progent는 에이전트와 정책 생성기 양쪽에, CaMeL은 권한 있는 LLM과 격리된 LLM 양쪽에 같은 모델을 쓰므로 우리도 그렇게 맞춘다.
+% We use GPT-4o. It is the model the four baselines share, and it is also the only model any of them used that is still available through an API: the Claude Sonnet~4, Gemini~2.5 Flash and GPT-4.1 that Progent additionally reports, and the Claude~3.5 Sonnet and Gemini~2.5 Pro that CaMeL uses, have all been retired by their providers and cannot be reproduced. Seeing how the defences move across model generations therefore requires choosing new models ourselves, so we add the current GPT-5.6-sol and Claude Opus~5. Progent uses one model for both the agent and the policy generator, and CaMeL one for both the privileged and the quarantined LLM, and we follow that.
 
-실험은 Apple M-시리즈 워크스테이션에서 수행했고, 모델 호출은 모두 제공자의 API를 통한다. 벤치마크와 각 베이스라인은 공개된 저장소를 고정된 리비전으로 받아 사용했으며, 우리가 그 체크아웃에 가한 수정은 두 가지뿐이다. AgentDojo에는 모델 식별자를 등록하는 세 줄을 더했고, CaMeL에는 지원하지 않는 상수를 만났을 때 오류 메시지를 만드는 과정에서 존재하지 않는 속성을 참조해 실행 전체가 중단되는 버그를 한 줄 고쳤다. 과제와 채점기, 공격, 정책 로직에는 손대지 않았다.
-% The experiments were conducted on an Apple M-series workstation, with all model calls made through the providers' APIs. The benchmark and each baseline were taken from their public repositories at pinned revisions, and we made only two changes to those checkouts: three lines registering model identifiers in AgentDojo, and a one-line fix in CaMeL where the handler for an unsupported constant referenced a non-existent attribute while formatting its error message, aborting the whole run. No task, checker, attack or policy logic was touched.
+온도와 실행 횟수는 베이스라인이 설정한 대로 따른다. AgentDojo와 Progent, CaMeL은 모두 온도를 0으로 두고 보안 케이스마다 한 번씩만 실행하며, 반복 실행을 하는 것은 없다. 이들 논문이 보고하는 구간도 반복 사이의 편차가 아니라 케이스 수에 대한 신뢰구간이다.
+% Temperature and the number of runs follow what the baselines set. AgentDojo, Progent and CaMeL all use a temperature of 0 and run each security case once; none of them repeats a run, and the intervals their papers report are confidence intervals over cases rather than spread between repetitions.
+
+실험은 macOS~26.6, Apple~M1 Ultra(20코어), 64\,GB 메모리 환경에서 수행했다. 모든 모델 호출은 제공자의 API를 거치므로 GPU는 사용하지 않는다. 벤치마크와 각 베이스라인은 공개 저장소를 고정된 리비전으로 받아 사용했고, 체크아웃에 가한 수정은 두 가지뿐이다. AgentDojo에는 모델 식별자를 등록하는 세 줄을 더했고, CaMeL에는 지원하지 않는 상수를 만났을 때 오류 메시지를 만들면서 존재하지 않는 속성을 참조해 실행 전체가 중단되는 버그를 한 줄 고쳤다. 과제와 채점기, 공격, 정책 로직에는 손대지 않았다.
+% The experiments were run on macOS~26.6 with an Apple~M1 Ultra (20 cores) and 64\,GB of memory. All model calls go through the providers' APIs, so no GPU is used. The benchmark and each baseline were taken from their public repositories at pinned revisions, and we made only two changes to those checkouts: three lines registering model identifiers in AgentDojo, and a one-line fix in CaMeL where the handler for an unsupported constant referenced a non-existent attribute while formatting its error message, aborting the whole run. No task, checker, attack or policy logic was touched.
 
 \subsection{RQ1: Effect Summarisation}
 
