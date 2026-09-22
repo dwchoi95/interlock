@@ -31,6 +31,8 @@ def main() -> None:
     p.add_argument("--no-taint", action="store_true", help="ablation: skip the destination taint check")
     p.add_argument("--strict", action="store_true",
                    help="also refuse a destination with no provenance at all (resists obfuscated injections)")
+    p.add_argument("--gate", action="store_true",
+                   help="keep disallowed WRITE tools visible and refuse calls to them, instead of removing them")
     p.add_argument("--user-tasks", nargs="*", default=None)
     a = p.parse_args()
 
@@ -39,11 +41,12 @@ def main() -> None:
     llm = OpenAILLM(client, a.model, None)
     elements = [SystemMessage(load_system_message(None)), InitQuery()]
     if not a.no_allowlist:
-        elements.append(WriteAllowList(effects, client, a.model))
-    elements += [llm, ToolsExecutionLoop([GuardedToolsExecutor(effects, taint=not a.no_taint, strict=a.strict), llm])]
+        elements.append(WriteAllowList(effects, client, a.model, prune=not a.gate))
+    elements += [llm, ToolsExecutionLoop([GuardedToolsExecutor(effects, taint=not a.no_taint, strict=a.strict,
+                                                               gate=a.gate), llm])]
     pipeline = AgentPipeline(elements)
-    pipeline.name = (f"{a.model}-guard" + ("" if a.no_allowlist else "-A") + ("" if a.no_taint else "-T")
-                     + ("-S" if a.strict else ""))
+    pipeline.name = (f"{a.model}-guard" + ("" if a.no_allowlist else ("-G" if a.gate else "-A"))
+                     + ("" if a.no_taint else "-T") + ("-S" if a.strict else ""))
 
     suite = get_suite("v1.2", a.suite)
     logdir = Path(a.logdir)
