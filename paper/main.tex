@@ -107,36 +107,36 @@
 \section{Preliminaries}
 \label{sec:prelim}
 
-\subsection{Privilege Narrowing based Securing}
+\subsection{Tool Surfaces and Their Effects}
+\label{sec:prelim:surface}
 
-호스트 애플리케이션 --- IDE 어시스턴트, 데스크톱 에이전트, 코딩 에이전트 --- 은 설정 파일에 명시된 각 Model Context Protocol 서버를 실행하고 도구 목록을 요청한 뒤, 반환된 이름과 설명, JSON 스키마를 모델의 컨텍스트에 넣는다. 서버는 명령줄로 실행되는 로컬 프로세스일 수도, 컨테이너일 수도, 원격 엔드포인트일 수도 있으며, 스킬 번들이 서버를 추가로 기여하기도 한다. 한 세션에서 광고된 도구들의 합집합을 우리는 그 배포의 \emph{tool surface}라 부른다. 이 구조의 세 가지 성질이 이후 논의를 이끈다. surface는 개별 제공자가 아니라 사용자의 설정이 결정한다. surface 위의 모든 도구는 호출 가능하다. 도구 선택은 광고된 텍스트를 읽은 모델이 하기 때문이다. 그리고 surface는 고정되어 있지 않다. 호스트는 대개 버전을 고정하지 않은 패키지 지정으로 서버를 실행하므로, 도구 뒤의 코드는 사용자가 아무 행동을 하지 않아도 세션 사이에 바뀔 수 있다.
-% A host application --- an IDE assistant, a desktop agent, a coding agent --- starts each Model Context Protocol server named in a configuration file, asks it for its tool list, and places the returned names, descriptions and JSON schemas into the model's context. A server may be a local process started by a command line, a container, or a remote endpoint; a skill bundle may contribute further servers. The union of the advertised tools, for the session, is what we call the deployment's \emph{tool surface}. Three properties of this arrangement drive the rest of the paper. The surface is decided by the user's configuration rather than by any single provider. Every tool on it is callable, because tool choice is made by the model from the advertised text. And the surface is not fixed: hosts commonly launch servers from an unpinned package specification, so the code behind a tool can change between sessions without any action by the user.
+호스트 애플리케이션 --- IDE 어시스턴트, 데스크톱 에이전트, 코딩 에이전트 --- 은 설정 파일에 명시된 각 Model Context Protocol 서버를 실행하고 \texttt{tools/list}로 도구 목록을 요청한 뒤, 반환된 이름과 설명, JSON 스키마를 모델의 컨텍스트에 넣는다. 한 세션에서 이렇게 모인 도구 전체를 그 배포의 \emph{tool surface}라 부른다. 이 구조의 세 가지 성질이 이후 논의를 이끈다. surface는 개별 제공자가 아니라 사용자의 설정이 결정한다. surface 위의 모든 도구는 호출 가능하다. 도구 선택은 광고된 텍스트를 읽은 모델이 하기 때문이다. 그리고 surface는 고정되어 있지 않다. 호스트는 대개 버전을 고정하지 않은 패키지 지정으로 서버를 실행하므로, 도구 뒤의 코드는 사용자가 아무 행동을 하지 않아도 세션 사이에 바뀔 수 있다.
+% A host application --- an IDE assistant, a desktop agent, a coding agent --- starts each Model Context Protocol server named in a configuration file, asks it for its tool list over \texttt{tools/list}, and places the returned names, descriptions and JSON schemas into the model's context. The tools thus assembled for one session are what we call the deployment's \emph{tool surface}. Three properties of this arrangement drive the rest of the paper. The surface is decided by the user's configuration rather than by any single provider. Every tool on it is callable, because tool choice is made by the model from the advertised text. And the surface is not fixed: hosts commonly launch servers from an unpinned package specification, so the code behind a tool can change between sessions without any action by the user.
 
-\label{sec:threatmodel}
+도구가 광고하는 것은 이름과 설명, 인자의 JSON 스키마, 그리고 선택적인 annotation이다. 이 가운데 무엇도 그 도구가 무엇에 닿는지를 말해 주지 않는다. 스키마는 인자의 모양만 정하고, 설명은 제공자가 자유롭게 쓴 산문이며, annotation에 대해서는 프로토콜 명세 자신이 신뢰된 서버에서 온 것이 아닌 한 믿지 말 것을 클라이언트에 요구한다. 본 논문은 도구가 닿는 대상을 네 가지 \emph{효과}로 나눈다.
+% What a tool advertises is a name, a description, a JSON schema for its arguments and optional annotations. None of these states what the tool reaches: a schema fixes the shape of the arguments, a description is prose the provider writes freely, and for annotations the protocol specification itself requires clients to treat them as untrusted unless they come from a trusted server. This paper divides what a tool reaches into four \emph{effects}.
 
-우리는 에이전트가 자신이 읽은 콘텐츠 안의 지시를 따른다고 가정한다. 이는 lethal trifecta 프레이밍~\cite{willison2025lethal}과 toxic-flow 분석~\cite{beurerkellner2025toxicflow}이 전제하는 가정이며, 이 층위에 대해 공개된 공격들이 실제로 악용하는 가정이다~\cite{zhao2026parasites, zeng2026colluskill, liu2026sharelock}. 공격자는 임의의 웹 호스트와 콘텐츠를 통제하고, 여러 사람이 쓸 수 있거나 제3자가 제공하는 출처의 콘텐츠 --- 공개 이슈와 댓글, 저장소 내용, 커뮤니티 문서와 레지스트리, 검색 결과 --- 도 통제한다. 공격자는 사용자의 로컬 파일이나 사용자 계정에 담긴 데이터를 통제하지 못하며, 설치된 서버를 수정하지도 못한다. 공격자는 자신이 통제하는 호스트와 공개된 모든 것을 읽을 수 있다. 이 가정 아래에서, 어떤 배포의 surface가 한 세션 안에서 비공개 데이터 출처, 공격자가 통제하는 콘텐츠 출처, 공격자가 읽을 수 있는 목적지에 모두 닿을 때 그 배포는 위험하다.
-% We assume an agent that follows instructions found in the content it reads, which is the assumption under which the lethal-trifecta framing~\cite{willison2025lethal} and toxic-flow analysis~\cite{beurerkellner2025toxicflow} are stated, and which published attacks on this layer exploit~\cite{zhao2026parasites, zeng2026colluskill, liu2026sharelock}. The attacker controls arbitrary web hosts and content, and content in multi-writer or third-party sources: public issues, comments and repository content, community documentation and registries, search results. The attacker does not control the user's local files or the data held in the user's own accounts, and does not modify the installed servers. The attacker can read hosts they control and anything published publicly. Under these assumptions a deployment is dangerous when its surface reaches, in the same session, a source of private data, a source of attacker-controlled content, and a destination the attacker can read.
+\begin{sloppypar}
+\begin{itemize}
+    \item \textbf{SECRET}: 사용자의 비공개 데이터를 읽는다. 그림~\ref{fig:example}의 \texttt{get\_file\_contents}가 비공개 저장소를 읽는 것이 여기 해당한다.
+    % \item \textbf{SECRET}: reads the user's private data, as \texttt{get\_file\_contents} reads a private repository in Figure~\ref{fig:example}.
+    \item \textbf{UNTRUSTED}: 공격자가 쓸 수 있는 콘텐츠를 컨텍스트로 들여온다. 같은 그림의 \texttt{list\_issues}가 그렇다.
+    % \item \textbf{UNTRUSTED}: brings content an attacker can write into the context, as \texttt{list\_issues} brings in the body of a public issue.
+    \item \textbf{SINK}: 공격자가 읽을 수 있는 곳에 쓴다. \texttt{add\_issue\_comment}가 공개 이슈에 코멘트를 남기는 것이 그렇다.
+    % \item \textbf{SINK}: writes where an attacker can read, as \texttt{add\_issue\_comment} leaves a comment on a public issue.
+    \item \textbf{HOSTEXEC}: 호스트에서 코드를 실행한다. 호스트가 닿을 수 있는 모든 것에 닿으므로 나머지 셋을 함의한다.
+    % \item \textbf{HOSTEXEC}: executes code on the host. It implies the other three, since it reaches everything the host can reach.
+\end{itemize}
+\end{sloppypar}
 
-\label{sec:prelim:baselines}
+우리는 에이전트가 자신이 읽은 콘텐츠 안의 지시를 따른다고 가정한다. 이는 lethal trifecta 프레이밍~\cite{willison2025lethal}과 toxic-flow 분석이 전제하는 가정이며, 이 층위에 대해 공개된 공격들이 실제로 악용하는 가정이다~\cite{zhao2026parasites, zeng2026colluskill, liu2026sharelock}. 공격자는 임의의 웹 호스트와 콘텐츠를 통제하고, 여러 사람이 쓸 수 있거나 제3자가 제공하는 출처의 콘텐츠 --- 공개 이슈와 댓글, 저장소 내용, 커뮤니티 문서와 레지스트리, 검색 결과 --- 도 통제한다. 공격자는 사용자의 로컬 파일이나 사용자 계정에 담긴 데이터를 통제하지 못하며, 설치된 서버를 수정하지도 못한다. 공격자는 자신이 통제하는 호스트와 공개된 모든 것을 읽을 수 있다. 이 가정 아래에서, 어떤 배포의 surface가 한 세션 안에서 SECRET과 UNTRUSTED와 SINK에 모두 닿을 때 그 배포는 위험하다.
+% We assume an agent that follows instructions found in the content it reads, the assumption under which the lethal-trifecta framing~\cite{willison2025lethal} and toxic-flow analysis are stated and which published attacks on this layer exploit~\cite{zhao2026parasites, zeng2026colluskill, liu2026sharelock}. The attacker controls arbitrary web hosts and content, and content in multi-writer or third-party sources: public issues, comments and repository content, community documentation and registries, search results. The attacker does not control the user's local files or the data held in the user's own accounts, and does not modify the installed servers. The attacker can read hosts they control and anything published publicly. Under these assumptions a deployment is dangerous when its surface reaches SECRET, UNTRUSTED and SINK in the same session.
 
-무엇을 꺼야 하는지에 관여하는 두 갈래, 곧 조합 검사와 권한 제한이 우리의 직접적인 비교 대상이다. 여기에 그 둘이 전제하는 라벨을 직접 뽑으려는 시도를 더해 방법론을 차례로 본다.
+\subsection{The Missing Effect Knowledge}
+\label{sec:prelim:limitation}
 
-% The two strands that bear on what to switch off --- set-level analysis and privilege narrowing --- are what we compare against directly. We go through their methodology in turn, together with the one attempt to extract the labels they presuppose.
-
-\noindent\textbf{Progent.} Progent는 권한을 도구 이름과 인자에 대한 기호 규칙의 집합으로 표현한다~\cite{shi2025progent}. 사용자의 질의가 주어지면 LLM이 작업 수행에 필요한 호출만 허용하고 불필요한 호출은 막는 초기 정책을 자동으로 생성하며, 실행 중 새 정보가 들어오면 정책을 갱신한다. 모든 도구 호출은 결정적 절차로 정책과 대조되고, 이 집행기는 LangChain이나 OpenAI Agents SDK 같은 에이전트 프레임워크 안에 통합된다. 정책 생성기가 입력으로 받는 것은 최초 질의와 사용 가능한 도구 집합이다.
-% \noindent\textbf{Progent.} Progent represents privilege as a set of symbolic rules over tool names and arguments~\cite{shi2025progent}. Given the user's query, an LLM automatically generates an initial policy that admits the calls the task needs and blocks the unnecessary ones, and updates that policy during execution as new information arrives. Every tool call is checked against the policy by a deterministic procedure, and the enforcer is integrated into agent frameworks such as LangChain and the OpenAI Agents SDK. What the policy generator receives as input is the initial query and the set of available tools.
-
-\noindent\textbf{CaMeL.} CaMeL은 신뢰된 질의에서 제어 흐름과 데이터 흐름을 먼저 뽑아낸다~\cite{debenedetti2025defeating}. 권한 있는 LLM이 질의를 제한된 프로그램으로 옮기고, 격리된 LLM이 신뢰할 수 없는 데이터를 해석하며, 전용 인터프리터가 값마다 능력(capability)을 추적해 도구가 호출되는 시점에 정책을 집행한다. 이로써 신뢰할 수 없는 데이터가 프로그램의 흐름에 영향을 주지 못한다. 정책은 임의의 로직을 담을 수 있도록 DSL 대신 Python 코드로 작성되며, 현재 구현에서는 CaMeL 엔진이 정의한다. 도구 또한 자기 기능에 따라 능력을 부여하는데, 어떤 주석을 어느 입도로 붙일지는 사용 사례마다 정해진다.
-% \noindent\textbf{CaMeL.} CaMeL first extracts the control and data flow from the trusted query~\cite{debenedetti2025defeating}. A privileged LLM turns the query into a restricted program, a quarantined LLM interprets untrusted data, and a custom interpreter tracks a capability per value and enforces policies at the point a tool is called, so that untrusted data cannot affect the program's flow. Policies are written in Python rather than a DSL so that arbitrary logic can be expressed, and in the current implementation they are defined by the CaMeL engine. Tools also assign capabilities according to their functionality, and the choice of annotations and their granularity is made per use case.
-
-\noindent\textbf{Fides.} Fides는 기밀성과 무결성 라벨을 실행 전반에 전파하는 플래너다~\cite{costa2025securing}. 라벨은 대화 이력의 메시지, 도구 인자, 도구 결과, 데이터저장소 변수에 붙고, 도구 결과 트리의 각 노드에 메타데이터 필드로 저장된다. 플래너는 이 라벨을 보고 다음 단계를 정하며, 필요하면 정보를 선택적으로 감춘다. 이 전파가 성립하려면 모든 도구가 자기 출력에 올바른 라벨을 붙여야 하는데, Fides는 신뢰할 수 없는 모든 도구에 신뢰된 wrapper를 둠으로써 이를 확보한다.
-% \noindent\textbf{Fides.} Fides is a planner that propagates confidentiality and integrity labels through the execution~\cite{costa2025securing}. Labels are attached to the messages of the conversation history, to tool arguments, to tool results and to datastore variables, and are stored in a metadata field on each node of a tool-result tree. The planner reads these labels to decide the next step and can selectively hide information. For the propagation to hold, every tool must label its outputs correctly, which Fides secures by giving every untrusted tool a trusted wrapper.
-
-\noindent\textbf{\texttt{mcp-sec-audit}.} 이 도구는 위 세 시스템이 전제하는 도구별 능력을 직접 뽑으려는 시도다~\cite{huang2026auditing}. TOML 규칙집에 능력군과 그 지표가 되는 키워드 및 정규식, 심각도 가중치를 적어 두고, 정적 파이프라인이 Python 소스와 MCP 도구 메타데이터 JSON을 훑어 \texttt{file\_read}, \texttt{file\_write}, \texttt{network\_outbound}, \texttt{command\_exec}, \texttt{env\_access} 같은 능력을 탐지한다. 선택적으로 Docker 샌드박스에서 도구를 실행하고 eBPF로 커널 이벤트를 수집하는 동적 파이프라인을 함께 돌린다. 산출물은 탐지된 능력의 신뢰도를 가중합한 위험 점수와, 그 능력에 대응하는 강화 권고다.
-% \noindent\textbf{\texttt{mcp-sec-audit}.} This tool is an attempt to extract directly the per-tool capabilities that the three systems above presuppose~\cite{huang2026auditing}. A TOML rulebook records capability families together with the keywords and regular expressions that indicate them and their severity weights, and a static pipeline scans Python source and MCP tool metadata JSON for capabilities such as \texttt{file\_read}, \texttt{file\_write}, \texttt{network\_outbound}, \texttt{command\_exec} and \texttt{env\_access}. A dynamic pipeline optionally runs the tool in a Docker sandbox and collects kernel events with eBPF. The output is a risk score, a weighted sum of the confidences of the detected capabilities, together with hardening advice matched to those capabilities.
-
-\noindent\textbf{조합 검사.} lethal trifecta 프레이밍은 비공개 데이터와 신뢰할 수 없는 콘텐츠, 그리고 외부 전송 --- 곧 공격자가 읽을 수 있는 목적지 --- 가 한 세션에 모이는 것을 위험으로 명명한다~\cite{willison2025lethal}. toxic-flow 분석은 도구 흐름, 곧 가능한 도구 사용 순서를 신뢰 수준과 민감도, 유출 지점 여부 같은 속성과 함께 모델링한다~\cite{beurerkellner2025toxicflow}. 조합 정책은 안전하지 않은 사슬이 시작되기 전에 조합을 차단하고, 누적된 노출로 다음 호출이 위반이 되면 세션을 취소한다~\cite{schneider2026securing}. 개별 검사와 달리 이들은 도구 하나가 아니라 조합을 판정하며, 그림~\ref{fig:example}의 유출 경로를 정확히 지목할 수 있다. 다만 이들은 도구의 능력 라벨을 \emph{입력으로 받는다}. 라벨을 어디서 얻는지는 두 문헌 모두 명시하지 않으며, 평가 규모는 도구 32개에 정책 16개다. 서버 하나가 도구 26개를 광고하는 환경에서는 그 출처가 문제가 되지만, 도구 32개 규모에서는 사람이 붙여도 되는 일이다.
-% \noindent\textbf{Set-level analysis.} The lethal-trifecta framing names as dangerous the presence of private data, untrusted content and external communication in one session~\cite{willison2025lethal}. Toxic-flow analysis models tool flows --- the potential sequences of tool uses --- together with properties such as level of trust, sensitivity and whether a tool can act as an exfiltration sink~\cite{beurerkellner2025toxicflow}. Compositional policies block unsafe combinations before a chain starts and revoke the session once accumulated exposure would make the next call a violation~\cite{schneider2026securing}. Unlike per-artifact vetting, these judge a combination rather than an individual tool, and they can name the leak path of Figure~\ref{fig:example} exactly. They do, however, \emph{take} the tools' capability labels as input. Neither reports where those labels come from, and the evaluation scale is 32 tools with 16 policies. Where a single server advertises 26 tools the provenance of the labels matters; at 32 tools it is work a person can do by hand.
+에이전트의 권한을 좁히는 연구는 어떤 도구를 허용할지 정하기 위해 각 도구가 무엇에 닿는지를 알아야 한다. 그런데 표~\ref{tab:baselines}가 보이듯 어느 연구도 그것을 스스로 확정하지 않는다. Progent의 정책 생성기가 받는 것은 제공자가 쓴 이름과 설명과 스키마이고~\cite{shi2025progent}, CaMeL의 능력 표시는 사용 사례마다 사람이 정하며 저자들은 이를 한계로 적고 자동화를 향후 과제로 남긴다~\cite{debenedetti2025defeating}. Fides는 아예 가정으로 명시해, 신뢰할 수 없는 모든 도구에 신뢰된 wrapper를 두어 ``모든 도구가 자기 출력에 올바로 라벨을 붙인다고 가정할 수 있게'' 한다~\cite{costa2025securing}. 조합을 판정하는 연구도 같은 라벨을 입력으로 받을 뿐 생산하지 않는다~\cite{beurerkellner2025toxicflow, schneider2026securing}.
+% Work that narrows an agent's privilege has to know what each tool reaches in order to decide which tools to admit, yet as Table~\ref{tab:baselines} shows, none of it establishes that for itself. What Progent's policy generator receives are the names, descriptions and schemas the provider wrote~\cite{shi2025progent}; CaMeL's capability annotations are chosen by hand per use case, which its authors record as a limitation and leave to future work~\cite{debenedetti2025defeating}; and Fides states the matter as an assumption outright, giving every untrusted tool a trusted wrapper so that it ``can assume that all tools label their outputs correctly''~\cite{costa2025securing}. Set-level analyses likewise take the same labels as input without producing them~\cite{beurerkellner2025toxicflow, schneider2026securing}.
 
 \begin{table}[t]
 \caption{Where each system obtains what a tool does, and what it returns.}
@@ -157,29 +157,53 @@ Set-level~\cite{beurerkellner2025toxicflow, schneider2026securing} & taken as in
 \end{tabular}
 \end{table}
 
-\subsection{Limitation}
-\label{sec:prelim:limitation}
+이 전제가 깨지는 조건은 이들의 평가에 들어 있지 않다. 네 시스템이 모두 사용한 AgentDojo의 도구를 우리가 측정한 결과가 표~\ref{tab:adtools}다. 도구 74개의 구현은 중앙값 4줄인 반면 설명은 중앙값 26단어로, \emph{설명이 구현보다 길다}. 파일시스템이나 네트워크, 프로세스, 환경 변수에 닿는 도구는 하나도 없다. \texttt{read\_file}은 사전 조회이고, \texttt{get\_webpage}는 네트워크로 나가지 않으며, \texttt{download\_file}은 어떤 파일도 쓰지 않는다. 설명과 구현을 같은 저자가 같은 파일에 쓰므로 도구가 무엇에 닿는지는 설명이 말하는 그대로이고, 코드에서 더 알아낼 것이 없다. 즉 이 환경에서는 전제가 구조적으로 참이며, 전제가 틀렸을 때 무슨 일이 일어나는지를 이 평가는 드러낼 수 없다.
+% The condition under which that presupposition breaks is absent from their evaluations. Table~\ref{tab:adtools} reports our measurement of the AgentDojo tools all four systems use. The implementations of its 74 tools have a median of 4 lines while their descriptions have a median of 26 words --- \emph{the description is longer than the implementation} --- and not one tool reaches the filesystem, the network, a process or an environment variable. \texttt{read\_file} is a dictionary lookup, \texttt{get\_webpage} makes no network request, and \texttt{download\_file} writes no file. Because the description and the implementation are written by the same author in the same file, what a tool reaches is exactly what its description says and there is nothing further to learn from the code. In that environment the presupposition is true by construction, and the evaluation cannot show what happens when it is false.
 
-표~\ref{tab:baselines}가 비교 대상을 정리한다. 앞의 세 시스템은 도구 단위로 권한을 좁히지만, 각 도구가 무엇에 닿는지를 스스로 확정하지는 않는다. Progent의 정책 생성기가 보는 것은 제공자가 쓴 이름과 설명과 스키마이고, CaMeL의 능력 주석은 사용 사례마다 사람이 정하며, Fides는 신뢰된 wrapper를 통해 모든 도구가 올바로 라벨을 붙인다고 가정한다. 그런데 \S\ref{sec:threatmodel}의 위협 모델에서 그 이름과 설명은 공격자가 쓸 수 있는 글이고, 프로토콜 명세 자신도 신뢰된 서버에서 온 것이 아닌 한 도구 annotation을 믿지 말라고 클라이언트에 요구한다. 사람이 손으로 붙이는 주석은 서버 수와 버전 수에 비례해 늘어나는데, 공개 벤치마크는 서버 515개의 버전 9,273개에 걸쳐 초기 도구의 54.6\%가 수정되거나 폐기되었다고 보고한다~\cite{liu2026mcpevol}.
-% Table~\ref{tab:baselines} summarises the systems we compare against. The first three narrow privilege at the granularity of a tool but do not themselves establish what each tool reaches: what Progent's policy generator sees are the names, descriptions and schemas the provider wrote; CaMeL's capability annotations are chosen by hand per use case; and Fides assumes, through trusted wrappers, that every tool labels its outputs correctly. Under the threat model of \S\ref{sec:threatmodel}, however, those names and descriptions are attacker-writable prose, and the protocol specification itself requires clients to treat tool annotations as untrusted unless they come from a trusted server. Hand-written annotations grow with the number of servers and versions, and a published benchmark reports that 54.6\% of initial tools were modified or deprecated across 9,273 versions of 515 servers~\cite{liu2026mcpevol}.
+\begin{table}[t]
+\caption{The tools of AgentDojo, which every system in Table~\ref{tab:baselines} is evaluated on. No tool reaches the filesystem, the network, a process or an environment variable, and the median description is longer than the median implementation.}
+\label{tab:adtools}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Suite & Tools & Implementation (median lines) & Description (median words) & Reaching outside \\
+\midrule
+workspace & 24 & 1 & 30 & 0 \\
+slack     & 11 & 5 & 18 & 0 \\
+travel    & 28 & 5 & 26 & 0 \\
+banking   & 11 & 4 & 19 & 0 \\
+\midrule
+Total     & 74 & 4 & 26 & \textbf{0} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-더구나 세 시스템의 평가는 실제 MCP 서버가 아니라 벤치마크 안에 정의된 가상 도구 모음 위에서 이루어진다. 그런 환경에서는 도구의 설명과 구현을 같은 저자가 같은 파일에 쓰므로, 도구가 무엇을 하는지 안다는 전제가 구조적으로 참이다. 다시 말해 전제가 깨지는 조건이 평가에 들어 있지 않다.
-% Moreover, the three systems are evaluated on simulated tool suites defined inside a benchmark rather than on real MCP servers. In such a setting the description and the implementation of a tool are written by the same author in the same file, so the presupposition that one knows what a tool does holds by construction; the condition under which it breaks is simply absent from the evaluation.
+실제 서버에 대해 그 지식을 공급하려는 시도는 우리가 아는 한 하나뿐이다. \texttt{mcp-sec-audit}은 키워드와 정규식 규칙집으로 능력 범주를 뽑는데, 저자들이 보고한 탐지율이 Python 서버 2개 중 2개인 반면 JavaScript 서버는 7개 중 0개다~\cite{huang2026auditing}. 그런데 사람들이 실제로 선언하는 서버는 대부분 npm이다. 공개 설정에서 수집한 표~\ref{tab:corpus}의 코퍼스에서 npm 항목은 22,010개인 반면 PyPI는 3,156개다. 즉 이 도구는 문제가 실제로 존재하는 생태계에서 작동하지 않는다.
+% To our knowledge one attempt supplies that knowledge for real servers. \texttt{mcp-sec-audit} extracts capability categories with a rulebook of keywords and regular expressions, and its authors report detecting 2 of 2 on Python servers against 0 of 7 on JavaScript ones~\cite{huang2026auditing}. Yet the servers people actually declare are mostly npm: in the corpus of Table~\ref{tab:corpus}, collected from public configurations, there are 22,010 npm entries against 3,156 PyPI ones. The tool does not work on the ecosystem where the problem actually lives.
 
-그 전제를 실제 서버에 대해 채워 주려는 시도는 우리가 아는 한 \texttt{mcp-sec-audit} 하나뿐이며, 저자들이 세 가지 한계를 스스로 보고한다. 첫째, 정적 분석기가 Python과 JSON 메타데이터만 지원해 JavaScript 서버 7개 중 0개를 탐지한다. 그런데 사람들이 실제로 선언하는 서버는 대부분 npm이다(표~\ref{tab:corpus}에서 npm 항목 22,010개, PyPI 3,156개). 둘째, 패턴 기반 탐지는 위험한 키워드와 우연히 일치하는 정상 코드에 오탐하고 난독화되거나 간접적으로 호출되는 경우를 놓친다. 셋째, 산출물이 위험 점수와 일반적인 권고여서, 저자들의 표현대로 ``배포 가능한 설정을 생성하지 않는다''. 그리고 어느 경우에도 판정을 코드로 되짚는 장치는 없다.
-% To our knowledge only \texttt{mcp-sec-audit} attempts to supply that presupposition for real servers, and its authors report three limitations of their own. First, the static analyser supports only Python and JSON metadata, so it detects 0 of 7 JavaScript servers, while the servers people actually declare are mostly npm (22,010 npm entries against 3,156 PyPI ones in Table~\ref{tab:corpus}). Second, pattern-based detection raises false positives on benign code that happens to match a risky keyword and misses obfuscated or indirect invocations. Third, its output is a risk score and generic advice, so in the authors' words it ``does not generate deployment-ready configurations''. In no case is there a mechanism that traces a judgement back to code.
+\begin{table}[t]
+\caption{Configuration corpus mined from public GitHub. Entries are server declarations; one configuration may declare several.}
+\label{tab:corpus}
+\begin{tabular}{lr}
+\toprule
+Configurations (deduplicated, non-fork) & 19,777 \\
+\quad declaring a single server & 10,532 \\
+\quad declaring two or more servers & 9,302 \\
+\midrule
+Server entries by kind: npm & 22,010 \\
+\quad remote endpoint & 14,250 \\
+\quad other command & 7,564 \\
+\quad local script & 7,284 \\
+\quad PyPI & 3,156 \\
+\quad container image & 1,507 \\
+\midrule
+Stdio entries launched without a version pin & 24,354 / 26,673 (91.3\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-그림~\ref{fig:example}의 설정에 이 한계들이 어떻게 드러나는지 보면 분명해진다. \emph{개별 검사}는 아무것도 지목하지 않는다. 세 도구 가운데 설명에 숨은 지시가 있거나 구현에 taint 결함이 있는 것이 없기 때문이다. \emph{조합 검사}는 유출 경로를 정확히 지목할 수 있지만 판정에서 멈춘다. 설정을 바꾸지도, 어느 도구를 꺼야 하는지 말하지도 않는다. 게다가 그 판정조차 \stepnum{3}이 신뢰할 수 없는 콘텐츠를 들여오고 \stepnum{4}가 비공개 데이터에 닿으며 \stepnum{5}가 공격자가 읽을 수 있는 곳에 쓴다는 것을 먼저 받아야 가능한데, 그 정보가 바로 아무도 만들지 않는 것이다. 행위까지 가는 것은 \emph{권한 제한}뿐인데, 세 시스템 모두 같은 자리에서 멈춘다. Progent가 이 작업에 필요한 호출만 허용하는 정책을 쓰려면 \stepnum{4}가 비공개 저장소를 읽는다는 것을 알아야 하는데, 그것을 도구 이름과 설명에서 읽어야 한다. Fides가 라벨을 전파하려면 이 서버의 26개 도구에 신뢰된 wrapper가 있어야 하고, CaMeL이라면 그 26개에 능력 주석을 사람이 붙여야 한다.
-% How these limitations play out on the configuration of Figure~\ref{fig:example} makes them concrete. \emph{Per-artifact vetting} flags nothing, because none of the three tools carries a hidden instruction in its description or a taint defect in its implementation. \emph{Set-level analysis} can name the leak path exactly but stops at a verdict: it neither changes the configuration nor says which tool to switch off. And even that verdict requires being told first that \stepnum{3} brings in untrusted content, that \stepnum{4} reaches private data and that \stepnum{5} writes where the attacker can read --- precisely what nobody produces. Only \emph{privilege narrowing} goes as far as acting, and its three systems stop at the same place: for Progent to write a policy admitting only the calls this task needs, it must know that \stepnum{4} reads a private repository, and it has to read that off the tool's name and description; for Fides to propagate labels, this server's 26 tools need trusted wrappers; and for CaMeL, a person must annotate those 26 tools with capabilities.
-
-그 정보가 주어졌다고 해도 문제가 남는다. 이 경로는 세 도구 가운데 어느 하나만 꺼도 끊어지므로, 경로를 지목하는 것만으로는 무엇을 꺼야 할지가 정해지지 않는다. \stepnum{6}의 선언된 작업이 열린 이슈를 정리해 요약을 코멘트로 남기는 것이라면, \stepnum{3}은 이슈를 읽는 도구이고 \stepnum{5}는 요약을 남기는 도구여서 둘 다 끌 수 없다. 저장소 파일을 읽는 \stepnum{4}만이 끌 수 있는 도구다. 무엇을 끌지는 위험의 성질이 아니라 배포가 선언한 작업이 정하며, 이것은 탐지 문제가 아니라 작업 보존 제약 아래의 선택 문제다. 위 어느 시스템도 이 제약을 명시적으로 다루지 않는다. 끝으로 Progent와 CaMeL, Fides는 판정을 실행 시점에 내리므로 판정이 옳더라도 사용자에게 남는 산출물이 없다. 같은 설정을 내일 다시 열면 같은 판정을 처음부터 다시 만들어야 하고, 제공자가 도구를 추가해도 어제의 판정이 무효가 되었다는 사실은 어디에도 기록되지 않는다.
-% Even given that, a question remains. The path is broken by switching off any one of its three tools, so naming it does not by itself say what to switch off. If the declared task in \stepnum{6} is to triage the open issues and comment a summary, then \stepnum{3} is the tool that reads the issues and \stepnum{5} is the tool that leaves the summary, so neither can go; \stepnum{4}, which reads repository files, is the only one that may. Which tool to switch off is decided by the deployment's declared task rather than by the nature of the danger, and that is not a detection problem but a choice under a task-preservation constraint, which none of the systems above addresses explicitly. Finally, Progent, CaMeL and Fides decide at run time, so even a correct decision leaves the user with no artifact: opening the same configuration tomorrow means deriving the same decision from scratch, and when a provider adds a tool, nothing records that yesterday's decision has been invalidated.
-
-이 논문의 목표는 실제 MCP 서버의 도구마다 무엇에 닿는지를, 제공자가 쓴 글이 아니라 배포된 코드에서, 독자가 되짚을 수 있는 형태로 회수하는 것이다. 이 산출물은 위 세 시스템이 사람 손으로 채우거나 가정으로 두던 자리를 대신할 수 있고, 설정 시점에 직접 쓰일 수도 있다.
-% The goal of this paper is to recover, for each tool of a real MCP server, what that tool reaches --- from the code that is distributed rather than from prose the provider wrote, and in a form a reader can trace. Such an artifact can stand in for what the three systems above fill in by hand or leave as an assumption, and it can also be used directly at configuration time.
-
-두 가지가 어렵다. 첫째, 공개된 패키지를 전부 정적 분석으로 따라가는 것은 규모가 맞지 않는다. 서버는 TypeScript와 Python, Go, Rust 등으로 작성되고, 번들이나 minify된 형태로, 또는 바이너리를 내려받는 실행기로 배포되며, 얇은 wrapper가 실제 구현을 의존성에 두기도 한다. \texttt{mcp-sec-audit}이 JavaScript에서 멈춘 지점이 바로 여기다. 둘째, 언어 모델에 코드를 읽히면 규모 문제는 사라지지만 그 판정을 무엇으로 믿을지가 남는다. 모델은 읽지 않은 것을 그럴듯하게 서술할 수 있고, 판정 대상이 바로 공격자가 쓸 수 있는 텍스트를 포함하고 있다. 따라서 목표는 판정을 얻는 것만이 아니라, 얻은 판정 가운데 코드로 뒷받침되는 부분과 그렇지 않은 부분을 기계적으로 가르는 것까지를 포함한다.
-% Two things make this hard. First, following every published package by static analysis does not scale: servers are written in TypeScript, Python, Go and Rust, are shipped bundled, minified or as launchers that download a binary, and thin wrappers leave the real implementation in a dependency --- which is exactly where \texttt{mcp-sec-audit} stops on JavaScript. Second, handing the code to a language model removes the scale problem but leaves the question of what makes its judgement trustworthy: a model can describe plausibly what it has not read, and the object being judged contains the very text an attacker can write. The goal therefore includes not only obtaining judgements but mechanically separating the part of them that is backed by code from the part that is not.
+효과를 코드에서 직접 회수하는 것이 남은 길인데, 여기에 두 가지 어려움이 있다. 첫째, 공개된 패키지를 전부 정적 분석으로 따라가는 것은 규모가 맞지 않는다. 서버는 TypeScript와 Python, Go, Rust 등으로 작성되고, 번들이나 minify된 형태로, 또는 바이너리를 내려받는 실행기로 배포되며, 얇은 wrapper가 실제 구현을 의존성에 두기도 한다. \texttt{mcp-sec-audit}이 JavaScript에서 멈춘 지점이 바로 여기다. 둘째, 언어 모델에 코드를 읽히면 규모 문제는 사라지지만 그 판정을 무엇으로 믿을지가 남는다. 모델은 읽지 않은 것을 그럴듯하게 서술할 수 있고, 판정 대상 자체가 공격자가 쓸 수 있는 텍스트를 포함한다.
+% Recovering the effects from code is what remains, and two things make it hard. First, following every published package by static analysis does not scale: servers are written in TypeScript, Python, Go and Rust, are shipped bundled, minified or as launchers that download a binary, and thin wrappers leave the real implementation in a dependency --- which is exactly where \texttt{mcp-sec-audit} stops on JavaScript. Second, handing the code to a language model removes the scale problem but leaves the question of what makes its judgement trustworthy: a model can describe plausibly what it has not read, and the object being judged itself contains text an attacker can write.
 
 \section{Our Approach}
 \label{sec:approach}
@@ -191,8 +215,8 @@ Set-level~\cite{beurerkellner2025toxicflow, schneider2026securing} & taken as in
 
 \subsection{Summarize: Trust-ranked Effect Summaries}
 
-이 단계는 광고된 도구마다 하나의 질문에 답한다. 이 도구는 SECRET, UNTRUSTED, SINK, HOSTEXEC 가운데 무엇에 닿을 수 있으며 그 증거는 무엇인가. 증거는 공격자가 얼마나 통제할 수 있는지에 따라 순위가 매겨진다. 설정 자신의 인자와 서버의 소스 코드가 1순위, 선언된 스키마와 annotation이 2순위이며, 자유 서술 설명은 효과를 낮추는 데 결코 쓰이지 않는다. 올리는 데만 쓸 수 있는데, 설명은 판정 대상인 당사자가 작성하기 때문이다. HOSTEXEC은 나머지 셋을 함의한다. 호스트에서의 코드 실행은 호스트가 닿을 수 있는 모든 것에 닿기 때문이다.
-% The stage answers one question per advertised tool: which of SECRET, UNTRUSTED, SINK and HOSTEXEC can this tool reach, and what is the evidence? Evidence is ranked by how much an attacker controls it. The configuration's own arguments and the server's source code rank first, declared schemas and annotations second, and free-text descriptions are never allowed to lower an effect --- they may only raise one, because a description is written by the party being judged. HOSTEXEC implies the other three, since host code execution reaches whatever the host can reach.
+이 단계는 광고된 도구마다 하나의 질문에 답한다. 이 도구는 \S\ref{sec:prelim:surface}의 네 효과 가운데 무엇에 닿을 수 있으며 그 증거는 무엇인가. 증거는 공격자가 얼마나 통제할 수 있는지에 따라 순위가 매겨진다. 설정 자신의 인자와 서버의 소스 코드가 1순위, 선언된 스키마와 annotation이 2순위이며, 자유 서술 설명은 효과를 낮추는 데 결코 쓰이지 않는다. 올리는 데만 쓸 수 있는데, 설명은 판정 대상인 당사자가 작성하기 때문이다. HOSTEXEC은 나머지 셋을 함의한다. 호스트에서의 코드 실행은 호스트가 닿을 수 있는 모든 것에 닿기 때문이다.
+% The stage answers one question per advertised tool: which of the four effects of \S\ref{sec:prelim:surface} can this tool reach, and what is the evidence? Evidence is ranked by how much an attacker controls it. The configuration's own arguments and the server's source code rank first, declared schemas and annotations second, and free-text descriptions are never allowed to lower an effect --- they may only raise one, because a description is written by the party being judged. HOSTEXEC implies the other three, since host code execution reaches whatever the host can reach.
 
 요약은 언어 모델이 생성하되 모든 주장에 \texttt{file:line} 증거를 인용해야 하며, 이후 결정적 검사기가 가져온 소스에서 인용된 구간을 다시 읽어 걸러낸다. 인용이 가져온 트리 안에서 해석되지 않거나, 그 구간에 도구 이름이나 근거 설명이 지목한 식별자가 없으면, 그 주장은 유지되되 미확인으로 표시된다. 미확인 주장이 효과를 낮춰서는 안 되므로 라벨은 살아남지만, 검증된 것으로는 세지 않는다. 모델이 아예 판정하지 않은 도구에는 가장 보수적인 값인 HOSTEXEC을 부여한다. 모델이 라벨 없이 무해하다고 판정한 도구는 그 증거가 코드에서 해석될 때만 무해로 센다. 문서는 효과의 \emph{부재}를 입증할 수 없기 때문이다. 이 구분이 이 단계의 출력을 그럴듯한 것이 아니라 감사 가능한 것으로 만들며, 5절은 그중 얼마가 검사기를 통과하는지 측정한다.
 % Summaries are produced by a language model that must cite \texttt{file:line} evidence for every claim, and are then filtered by a deterministic checker that re-reads the cited span in the fetched source. A claim whose citation does not resolve inside the fetched tree, or whose span does not contain the tool name or an identifier the rationale names, is kept but marked undetermined; the label survives, because an unverified claim must not lower an effect, but it no longer counts as verified. A tool the model does not judge at all is assigned HOSTEXEC, the least restrictive reading. A tool the model clears with no labels counts as cleared only when its evidence resolves in code: documentation cannot establish the \emph{absence} of an effect. This split is what makes the stage's output auditable rather than merely plausible, and Section~\ref{sec:eval} measures how much of it survives the checker.
@@ -230,26 +254,7 @@ Set-level~\cite{beurerkellner2025toxicflow, schneider2026securing} & taken as in
 효과 요약 단계는 AgentDojo가 아니라 실제 MCP 서버를 대상으로 평가한다. 어떤 서버를 읽을 것인지는 저자의 판단이 아니라 공개 설정에 등장하는 빈도로 정하며, 이를 위해 현재 호스트들이 읽는 설정 형식 다섯 가지를 공개 GitHub에서 검색해 표~\ref{tab:corpus}의 코퍼스를 수집하였다. 각 파일은 메모리에서 파싱해 서버의 식별자와 실행 형태만 보관하며 자격증명은 저장하지 않는다. 이 코퍼스에서 가장 자주 선언되는 서버 34개와 그 도구 433개가 평가 대상이다.
 % The summarisation stage is evaluated not on AgentDojo but on real MCP servers. Which servers to read is decided by how often they appear in public configurations rather than by the authors' judgement, so we search public GitHub for the five configuration formats current hosts read and collect the corpus of Table~\ref{tab:corpus}, parsing each file in memory and keeping only the identity and launch shape of each server; credentials are never stored. The 34 most frequently declared servers in that corpus and their 433 tools are the subjects.
 
-\begin{table}[t]
-\caption{Configuration corpus mined from public GitHub. Entries are server declarations; one configuration may declare several.}
-\label{tab:corpus}
-\begin{tabular}{lr}
-\toprule
-Configurations (deduplicated, non-fork) & 19,777 \\
-\quad declaring a single server & 10,532 \\
-\quad declaring two or more servers & 9,302 \\
-\midrule
-Server entries by kind: npm & 22,010 \\
-\quad remote endpoint & 14,250 \\
-\quad other command & 7,564 \\
-\quad local script & 7,284 \\
-\quad PyPI & 3,156 \\
-\quad container image & 1,507 \\
-\midrule
-Stdio entries launched without a version pin & 24,354 / 26,673 (91.3\%) \\
-\bottomrule
-\end{tabular}
-\end{table}
+
 
 
 \begin{table}[t]
