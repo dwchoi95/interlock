@@ -2,13 +2,15 @@
 # The effect-typed guard under the fixed setting: AgentDojo v1.2, gpt-4o-2024-05-13,
 # important_instructions, one run per case at temperature 0. Four suites run as
 # four processes per phase, as run_baseline.sh does.
-#   ./experiments/run_guard.sh <label> [--no-allowlist] [--no-taint]
+#   [EFFECTS=experiments/effects/agentdojo.v4.json] ./experiments/run_guard.sh <label> [--no-allowlist] [--no-taint]
 set -uo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 set -a; . "$ROOT/.env"; set +a
 LABEL="$1"; shift
 LOGDIR="$ROOT/results/$LABEL"; mkdir -p "$LOGDIR"
-EFFECTS="$ROOT/experiments/effects/agentdojo.json"
+EFFECTS="${EFFECTS:-$ROOT/experiments/effects/agentdojo.json}"
+[ "${EFFECTS#/}" = "$EFFECTS" ] && EFFECTS="$ROOT/$EFFECTS"   # relative paths are relative to the repo
+echo "### effects: $EFFECTS"
 PY="$ROOT/baselines/agentdojo/.venv/bin/python"
 cd "$ROOT/experiments"
 run() {  # run <suite> <phase> [extra args...]
