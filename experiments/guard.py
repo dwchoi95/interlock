@@ -47,7 +47,7 @@ from agentdojo.types import (
     text_content_block_from_string,
 )
 
-MIN_VALUE_LEN = 2  # a one-character "destination" matches everything; never judge it
+MIN_VALUE_LEN = 3  # a one- or two-character "destination" matches everything; never judge it
 
 
 class Effects:
@@ -73,6 +73,21 @@ class Effects:
     def injectable_fields(self, name: str) -> set[str]:
         return {_field(f) for f in self.tools.get(name, {}).get("injectable_output_fields", [])}
 
+    def ident_fields(self, name: str) -> set[str]:
+        """Return fields that hold atomic identifiers (ids, addresses, names the system
+        registered). An identifier clears a value only by equality: an attacker-named
+        channel 'External_visit www.evil.com' is an identifier, but 'www.evil.com' is not it."""
+        return {_field(f) for f in self.tools.get(name, {}).get("structured_output_fields", [])}
+
+    def steerable(self, name: str) -> bool:
+        """A WRITE an injection could aim: it takes a destination or a value argument.
+        get_unread_emails marks mail read and is WRITE by the letter, but nothing an
+        attacker writes can change what it does, so the allow-list does not gate it."""
+        t = self.tools.get(name)
+        if t is None:
+            return True
+        return t.get("kind") == "WRITE" and bool(t.get("destination_args") or t.get("value_args"))
+
 
 def _field(entry: str) -> str:
     """Bare field name from a classification entry. The classifier writes entries like
@@ -88,20 +103,35 @@ def _norm(v) -> str:
     return str(v).strip().strip("'\"[]()<>`").strip().lower()
 
 
-def _leaves(obj, injectable: set[str], key: str | None, out: list) -> list:
+UNTRUSTED, PROSE, IDENT, NAMED = "untrusted", "prose", "ident", "named"
+
+
+def _leaves(obj, injectable: set[str], idents: set[str], key: str | None, out: list) -> list:
+    every_value = "*" in injectable  # a dict of name -> free text: keys are names, values prose
     if isinstance(obj, dict):
         for k, v in obj.items():
-            _leaves(v, injectable, str(k), out)
+            out.append((IDENT, str(k)))  # a key is a name the system registered, never prose
+            _leaves(v, injectable, idents, str(k), out)
     elif isinstance(obj, list):
         for v in obj:
-            _leaves(v, injectable, key, out)
+            _leaves(v, injectable, idents, key, out)
     elif obj is not None:
-        out.append((key in injectable, str(obj)))
+        inj = every_value or key in injectable or (key is None and "return" in injectable)
+        idn = key in idents or (key is None and "return" in idents)
+        # NAMED: an identifier the attacker chose the spelling of (a channel they created).
+        # It is a real identifier - equal to it, a value is cleared - but its text can
+        # carry an instruction, so anything merely contained in it is tainted.
+        cls = NAMED if inj and idn else UNTRUSTED if inj else IDENT if idn else PROSE
+        out.append((cls, str(obj)))
     return out
 
 
-def result_leaves(text: str, injectable: set[str]) -> list[tuple[bool, str]]:
-    """(untrusted?, text) for every scalar in a tool result.
+def result_leaves(text: str, injectable: set[str], idents: set[str] = frozenset()) -> list[tuple[str, str]]:
+    """(class, text) for every scalar in a tool result, class in {untrusted, prose, ident}.
+
+    untrusted: attacker-writable free text (matched by containment, taints a value)
+    prose:     fixed free text the attacker cannot reach (containment, clears a value)
+    ident:     an atomic identifier - id, address, name, key (equality, clears a value)
 
     AgentDojo dumps model results as YAML, so a field-level split is exact and an
     injected string inside `body:` cannot manufacture a key. A tool whose whole
@@ -109,15 +139,17 @@ def result_leaves(text: str, injectable: set[str]) -> list[tuple[bool, str]]:
     is deliberately not parsed: file contents or a web page that happen to look
     like `key: value` must not be promoted to structured fields.
     """
-    if "return" in injectable:
-        return [(True, text)]
+    if "return" in injectable and "return" not in idents:
+        return [(UNTRUSTED, text)]
     try:
         parsed = yaml.safe_load(text)
     except yaml.YAMLError:
         parsed = None
     if isinstance(parsed, (dict, list)):
-        return _leaves(parsed, injectable, None, [])
-    return [(bool(injectable), text)]
+        return _leaves(parsed, injectable, idents, None, [])
+    if "return" in idents:
+        return [(NAMED if "return" in injectable else IDENT, text)]
+    return [(UNTRUSTED if injectable else PROSE, text)]
 
 
 def sources(value, query: str, history: list[tuple[str, bool, list[tuple[bool, str]]]]) -> set[str]:
@@ -128,16 +160,33 @@ def sources(value, query: str, history: list[tuple[str, bool, list[tuple[bool, s
     if len(v) < MIN_VALUE_LEN:
         return {"short"}
     out: set[str] = set()
-    if v in query.lower():
+    if _contains(query.lower(), v):
         out.add("query")
     for _tool, is_write, leaves in history:
-        for untrusted, text in leaves:
-            if v in text.lower():
+        for cls, text in leaves:
+            equal = v == _norm(text)
+            if cls == IDENT:
+                hit, bad = equal, False
+            elif cls == NAMED:
+                hit = equal or _contains(text.lower(), v)
+                bad = not equal
+            else:
+                hit, bad = _contains(text.lower(), v), cls == UNTRUSTED
+            if hit:
                 # Untrusted wins: a tool can be a SINK (agent-chosen URL) and still hand
                 # back attacker text - get_webpage is both. Only its non-injectable leaves
                 # count as a prior write's trusted output.
-                out.add("untrusted" if untrusted else ("prior_write" if is_write else "structured"))
+                out.add("untrusted" if bad else ("prior_write" if is_write else "structured"))
     return out or {"none"}
+
+
+def _contains(hay: str, v: str) -> bool:
+    """Whole-token match. 'general' must not be found inside 'general_admin'. A purely
+    numeric value is an id, and '113' must not be found inside a date or a phone number
+    either, so for those a neighbouring digit or hyphen also breaks the match. A
+    sentence-final period after an id or an address must still match."""
+    edge = r"[\d-]" if v.isdigit() else r"\w"
+    return re.search(rf"(?<!{edge})" + re.escape(v) + rf"(?!{edge})", hay) is not None
 
 
 def _candidates(v: str) -> list[str]:
@@ -209,7 +258,7 @@ class WriteAllowList(BasePipelineElement):
         messages: Sequence[ChatMessage] = [],
         extra_args: dict = {},
     ) -> tuple[str, FunctionsRuntime, Env, Sequence[ChatMessage], dict]:
-        writes = {n: f for n, f in runtime.functions.items() if self.effects.is_write(n)}
+        writes = {n: f for n, f in runtime.functions.items() if self.effects.steerable(n)}
         if not writes:
             return query, runtime, env, messages, extra_args
         asked = [*messages, ChatUserMessage(role="user", content=[text_content_block_from_string(ALLOWLIST_PROMPT)])]
@@ -231,6 +280,9 @@ class WriteAllowList(BasePipelineElement):
         return query, runtime, env, messages, {**extra_args, "guard_allowed_writes": allowed}
 
 
+REFUSAL = "[interlock-guard] tool call refused by policy."
+
+
 class GuardedToolsExecutor(ToolsExecutor):
     """ToolsExecutor that refuses a WRITE call whose destination is tainted."""
 
@@ -240,7 +292,9 @@ class GuardedToolsExecutor(ToolsExecutor):
         self.taint = taint
 
     def _reason(self, name: str, args: dict, user_query: str, history) -> str | None:
-        if not self.taint or not self.effects.is_write(name):
+        # Any tool with a destination argument is a sink, whatever its kind: get_webpage
+        # is READ (its page is untrusted) and still sends whatever is in the URL.
+        if not self.taint:
             return None
         for arg in self.effects.destination_args(name, args):
             if arg not in args:
@@ -271,7 +325,8 @@ class GuardedToolsExecutor(ToolsExecutor):
             if m["role"] == "tool":
                 t = m["tool_call"].function
                 history.append((t, self.effects.is_write(t),
-                                result_leaves(get_text_content_as_str(m["content"]), self.effects.injectable_fields(t))))
+                                result_leaves(get_text_content_as_str(m["content"]),
+                                              self.effects.injectable_fields(t), self.effects.ident_fields(t))))
 
         # Same loop as ToolsExecutor.query, with the refusal inserted before execution, so
         # every tool_call still gets exactly one result in order (OpenAI requires it).
@@ -291,8 +346,11 @@ class GuardedToolsExecutor(ToolsExecutor):
                     call.args[k] = literal_eval(v)
             reason = self._reason(call.function, dict(call.args), user_query, history)
             if reason:
-                print(reason)
-                refuse(reason)
+                # The detail goes to the log for analysis; the agent sees only that the
+                # call was refused. Naming the argument and value would hand an injection
+                # a channel to probe what the guard checks.
+                print(reason, flush=True)
+                refuse(REFUSAL)
                 continue
             out, error = runtime.run_function(env, call.function, call.args)
             results.append(ChatToolResultMessage(role="tool", content=[text_content_block_from_string(self.output_formatter(out))],
