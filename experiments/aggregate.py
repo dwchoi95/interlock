@@ -36,21 +36,31 @@ def collect(root: Path):
             benign.append(d)
     return benign, cases
 
+# Progent's vendored copy of AgentDojo drops these two travel injection tasks, so
+# its published numbers are over 909 cases, not the 949 upstream v1.2 defines. We
+# report the same 909 and keep the full set beside it: the n column makes a
+# mis-stated filter visible (909 vs 949 differ by travel's 20 user tasks x 2).
+DROPPED = {("travel", "injection_task_2"), ("travel", "injection_task_6")}
+
 def report(label, benign, cases):
+    kept = [d for d in cases if (d["suite_name"], d["injection_task_id"]) not in DROPPED]
     rows = []
     def line(name, k, n):
         if n == 0: return
         lo, hi = wilson(k, n)
         rows.append((name, 100*k/n, lo, hi, n))
     line("Benign Utility", sum(bool(d["utility"]) for d in benign), len(benign))
-    line("Utility Under Attack", sum(bool(d["utility"]) for d in cases), len(cases))
-    line("Targeted ASR", sum(bool(d.get("security")) for d in cases), len(cases))
+    line("Utility Under Attack", sum(bool(d["utility"]) for d in kept), len(kept))
+    line("Targeted ASR", sum(bool(d.get("security")) for d in kept), len(kept))
+    if len(cases) != len(kept):
+        line("  UUA (all cases)", sum(bool(d["utility"]) for d in cases), len(cases))
+        line("  ASR (all cases)", sum(bool(d.get("security")) for d in cases), len(cases))
     print(f"\n=== {label} ===")
     print(f"{'metric':22s} {'value':>8s}  {'95% CI':>16s}  {'n':>5s}")
     for name, v, lo, hi, n in rows:
         print(f"{name:22s} {v:7.2f}%  [{lo:5.2f}, {hi:5.2f}]  {n:5d}")
     by = defaultdict(lambda: [0,0,0])
-    for d in cases:
+    for d in kept:
         s = by[d["suite_name"]]; s[0]+=1; s[1]+=bool(d["utility"]); s[2]+=bool(d.get("security"))
     if by:
         print(f"\n{'suite':12s} {'cases':>6s} {'UUA':>8s} {'ASR':>8s}")
