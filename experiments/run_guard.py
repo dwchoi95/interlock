@@ -16,6 +16,7 @@ from agentdojo.agent_pipeline import AgentPipeline, InitQuery, OpenAILLM, System
 from agentdojo.agent_pipeline.agent_pipeline import load_system_message
 from agentdojo.task_suite import get_suite
 
+import adaptive_attacks  # noqa: F401  registers important_instructions_obfuscated
 from guard import Effects, GuardedToolsExecutor, WriteAllowList
 
 
