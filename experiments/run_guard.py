@@ -28,6 +28,8 @@ def main() -> None:
     p.add_argument("--effects", required=True)
     p.add_argument("--no-allowlist", action="store_true", help="ablation: skip the WRITE allow-list")
     p.add_argument("--no-taint", action="store_true", help="ablation: skip the destination taint check")
+    p.add_argument("--strict", action="store_true",
+                   help="also refuse a destination with no provenance at all (resists obfuscated injections)")
     p.add_argument("--user-tasks", nargs="*", default=None)
     a = p.parse_args()
 
@@ -37,9 +39,10 @@ def main() -> None:
     elements = [SystemMessage(load_system_message(None)), InitQuery()]
     if not a.no_allowlist:
         elements.append(WriteAllowList(effects, client, a.model))
-    elements += [llm, ToolsExecutionLoop([GuardedToolsExecutor(effects, taint=not a.no_taint), llm])]
+    elements += [llm, ToolsExecutionLoop([GuardedToolsExecutor(effects, taint=not a.no_taint, strict=a.strict), llm])]
     pipeline = AgentPipeline(elements)
-    pipeline.name = f"{a.model}-guard" + ("" if a.no_allowlist else "-A") + ("" if a.no_taint else "-T")
+    pipeline.name = (f"{a.model}-guard" + ("" if a.no_allowlist else "-A") + ("" if a.no_taint else "-T")
+                     + ("-S" if a.strict else ""))
 
     suite = get_suite("v1.2", a.suite)
     logdir = Path(a.logdir)

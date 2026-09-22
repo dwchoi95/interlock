@@ -68,17 +68,17 @@ def tainted(src: set[str]) -> bool:
     return src == {"untrusted"}
 
 
-def tainted_strict(src: set[str]) -> bool:
-    return tainted(src) or src == {"none"}
+from guard import tainted_strict  # noqa: E402  (length-aware: short ids exempt)
 
 
 RULES = {
     "R0": lambda c, gt: False,
     "W-oracle": lambda c, gt: c["steerable"] and c["tool"] not in gt,
     "T": lambda c, gt: any(tainted(s) for _, _, s in c["dests"]),
-    "T-strict": lambda c, gt: any(tainted_strict(s) for _, _, s in c["dests"]),
+    "T-strict": lambda c, gt: any(tainted_strict(s, v) for _, v, s in c["dests"]),
 }
 RULES["T+W-oracle"] = lambda c, gt: RULES["T"](c, gt) or RULES["W-oracle"](c, gt)
+RULES["T-strict+W-oracle"] = lambda c, gt: RULES["T-strict"](c, gt) or RULES["W-oracle"](c, gt)
 
 
 def load_runs():

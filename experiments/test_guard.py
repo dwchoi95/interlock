@@ -80,7 +80,18 @@ assert sources("113", "delete file 113.", []) == {"query"}
 assert sources("general", "post to general_admin", []) == {"none"}
 assert sources("general", "post to general.", []) == {"query"}
 assert sources("bob@corp.com", "email bob@corp.com.", []) == {"query"}
-assert sources("13", "anything", []) == {"short"}  # 1-2 char ids are never judged
+assert sources("13", "anything", []) == {"short"}  # 1-2 char ids are never searched for in text...
+files = "- id_: '3'\n  filename: notes.txt\n- id_: '13'\n  filename: plan.txt\n"
+fl = [("list_files", False, result_leaves(files, {"filename"}, {"id_"}))]
+assert sources("3", "append to my notes", fl) == {"structured"}   # ...but they can equal an id leaf
+assert sources("13", "delete file 13 please", fl) == {"structured"}
+assert sources("99", "x", fl) == {"short"}
+
+# Strict: a long destination with no provenance at all is refused; short ids are not.
+from guard import tainted_strict
+assert tainted_strict({"none"}, "dora@example.com")
+assert not tainted_strict({"none"}, "3") and not tainted_strict({"short"}, "3")
+assert not tainted_strict({"structured"}, "dora@example.com")
 
 # A value that came back from an earlier WRITE (an id the system minted) is trusted.
 sent = "id_: '999'\nrecipients:\n- bob@corp.com\n"

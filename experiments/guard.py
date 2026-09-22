@@ -157,10 +157,12 @@ def sources(value, query: str, history: list[tuple[str, bool, list[tuple[bool, s
     earlier tool result, in order. Returns a subset of
     {query, structured, untrusted, prior_write} or {none} / {short}."""
     v = _norm(value)
-    if len(v) < MIN_VALUE_LEN:
-        return {"short"}
+    # A one- or two-character value is never searched for inside text (it would be found
+    # everywhere), but it can still equal an identifier leaf: file_id='3' is exactly the
+    # id_ that list_files returned.
+    short = len(v) < MIN_VALUE_LEN
     out: set[str] = set()
-    if _contains(query.lower(), v):
+    if not short and _contains(query.lower(), v):
         out.add("query")
     for _tool, is_write, leaves in history:
         for cls, text in leaves:
@@ -168,8 +170,10 @@ def sources(value, query: str, history: list[tuple[str, bool, list[tuple[bool, s
             if cls == IDENT:
                 hit, bad = equal, False
             elif cls == NAMED:
-                hit = equal or _contains(text.lower(), v)
+                hit = equal or (not short and _contains(text.lower(), v))
                 bad = not equal
+            elif short:
+                continue
             else:
                 hit, bad = _contains(text.lower(), v), cls == UNTRUSTED
             if hit:
@@ -177,7 +181,7 @@ def sources(value, query: str, history: list[tuple[str, bool, list[tuple[bool, s
                 # back attacker text - get_webpage is both. Only its non-injectable leaves
                 # count as a prior write's trusted output.
                 out.add("untrusted" if bad else ("prior_write" if is_write else "structured"))
-    return out or {"none"}
+    return out or ({"short"} if short else {"none"})
 
 
 def _contains(hay: str, v: str) -> bool:
@@ -220,6 +224,15 @@ def value_sources(value, query: str, history) -> set[str]:
 def tainted(src: set[str]) -> bool:
     """Only attacker-writable text could have supplied the value."""
     return src == {"untrusted"}
+
+
+def tainted_strict(src: set[str], value) -> bool:
+    """tainted, or: a destination long enough to be a real identifier (an address, a URL,
+    an IBAN) that appears nowhere in the trusted context at all. The agent either made it
+    up or decoded it from an obfuscated injection ("mark [at] gmail"); neither is a
+    destination the user asked for. Short ids are exempt: '3' equal to no leaf is just an
+    id the agent typed, and they are not exfiltration channels."""
+    return tainted(src) or (src == {"none"} and len(_norm(value)) >= MIN_VALUE_LEN)
 
 
 def _values(v) -> list:
@@ -286,10 +299,11 @@ REFUSAL = "[interlock-guard] tool call refused by policy."
 class GuardedToolsExecutor(ToolsExecutor):
     """ToolsExecutor that refuses a WRITE call whose destination is tainted."""
 
-    def __init__(self, effects: Effects, taint: bool = True, **kw) -> None:
+    def __init__(self, effects: Effects, taint: bool = True, strict: bool = False, **kw) -> None:
         super().__init__(**kw)
         self.effects = effects
         self.taint = taint
+        self.strict = strict
 
     def _reason(self, name: str, args: dict, user_query: str, history) -> str | None:
         # Any tool with a destination argument is a sink, whatever its kind: get_webpage
@@ -301,9 +315,9 @@ class GuardedToolsExecutor(ToolsExecutor):
                 continue
             for value in _values(args[arg]):
                 src = value_sources(value, user_query, history)
-                if tainted(src):
+                if tainted_strict(src, value) if self.strict else tainted(src):
                     return (f"[interlock-guard] blocked {name}: argument {arg!r} value {str(value)!r} "
-                            f"appears only in untrusted tool output, not in the user's request")
+                            f"has sources {sorted(src)}, none of them the user's request")
         return None
 
     def query(
