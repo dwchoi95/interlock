@@ -10,7 +10,8 @@ LABEL="$1"; shift
 LOGDIR="$ROOT/results/$LABEL"; mkdir -p "$LOGDIR"
 EFFECTS="${EFFECTS:-$ROOT/experiments/effects/agentdojo.json}"
 [ "${EFFECTS#/}" = "$EFFECTS" ] && EFFECTS="$ROOT/$EFFECTS"   # relative paths are relative to the repo
-echo "### effects: $EFFECTS"
+ATTACK="${ATTACK:-important_instructions}"
+echo "### effects: $EFFECTS"; echo "### attack: $ATTACK"
 PY="$ROOT/baselines/agentdojo/.venv/bin/python"
 cd "$ROOT/experiments"
 run() {  # run <suite> <phase> [extra args...]
@@ -22,7 +23,7 @@ run() {  # run <suite> <phase> [extra args...]
 for phase in benign attack; do
   echo "### phase: $phase"
   for suite in workspace slack travel banking; do
-    if [ "$phase" = attack ]; then run "$suite" attack --attack important_instructions "$@" &
+    if [ "$phase" = attack ]; then run "$suite" attack --attack "$ATTACK" "$@" &
     else run "$suite" benign "$@" & fi
   done
   wait
