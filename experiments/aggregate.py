@@ -68,9 +68,25 @@ def report(label, benign, cases):
             n, u, sec = by[k]
             print(f"{k:12s} {n:6d} {100*u/n:7.2f}% {100*sec/n:7.2f}%")
 
+SUITES = {"workspace", "slack", "travel", "banking"}
+
+def arms(p: Path):
+    """Yield each pipeline directory under p.
+
+    AgentDojo writes <logdir>/<pipeline>/<suite>/<user task>/..., so the arm is the
+    directory whose children are suite names. CaMeL puts two pipelines side by side
+    (+camel and +camel+secpol); collapsing a root into one report would average them
+    together and inflate the benign denominator.
+    """
+    if any((p / s).is_dir() for s in SUITES):
+        yield p
+    else:
+        for c in sorted(x for x in p.iterdir() if x.is_dir()):
+            yield from arms(c)
+
 if __name__ == "__main__":
     for root in (sys.argv[1:] or ["results"]):
         p = Path(root)
-        for d in ([p] if any(p.rglob("*.json")) and p.name != "runs" else sorted(x for x in p.iterdir() if x.is_dir())):
-            b, c = collect(d)
-            if b or c: report(d.name, b, c)
+        for arm in arms(p):
+            b, c = collect(arm)
+            if b or c: report(root.rstrip("/") if arm == p else f"{root.rstrip('/')}:{arm.name}", b, c)
