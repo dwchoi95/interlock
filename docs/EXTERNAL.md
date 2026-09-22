@@ -30,3 +30,11 @@ v1.2.2 suite overlays into its vendored copy was reverted with `git checkout`;
 the experiments run at v1.2, which the copy supports as shipped.
 
 `baselines/CaMeL` — none.
+
+`baselines/CaMeL` — one line in `src/camel/interpreter/interpreter.py`. The
+branch that handles an unsupported constant (bytes, complex, Ellipsis) builds a
+`NotImplementedError` whose message reads `type(node.value).__type__`; that
+attribute does not exist, so constructing the error raises `AttributeError` and
+kills the whole benchmark run instead of returning the handled error the branch
+clearly intends. Changed to `__name__`, which the same file already uses for
+this pattern elsewhere. No decision logic, policy or metric is affected.
