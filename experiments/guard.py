@@ -21,6 +21,7 @@ Summarize stage produces.
 from __future__ import annotations
 
 import json
+import re
 from ast import literal_eval
 from collections.abc import Sequence
 from pathlib import Path
@@ -70,7 +71,15 @@ class Effects:
         return list(args)  # unclassified: every argument is a destination
 
     def injectable_fields(self, name: str) -> set[str]:
-        return set(self.tools.get(name, {}).get("injectable_output_fields", []))
+        return {_field(f) for f in self.tools.get(name, {}).get("injectable_output_fields", [])}
+
+
+def _field(entry: str) -> str:
+    """Bare field name from a classification entry. The classifier writes entries like
+    "Message.body (seed bodies are fixed, but ...)" or "return (str: full page ...)";
+    only the leading token matters, and a Type. prefix is dropped."""
+    tok = entry.strip().split()[0].split("(")[0].strip(",;:")
+    return tok.rsplit(".", 1)[-1]
 
 
 # ---- provenance -------------------------------------------------------------
@@ -124,8 +133,39 @@ def sources(value, query: str, history: list[tuple[str, bool, list[tuple[bool, s
     for _tool, is_write, leaves in history:
         for untrusted, text in leaves:
             if v in text.lower():
-                out.add("prior_write" if is_write else ("untrusted" if untrusted else "structured"))
+                # Untrusted wins: a tool can be a SINK (agent-chosen URL) and still hand
+                # back attacker text - get_webpage is both. Only its non-injectable leaves
+                # count as a prior write's trusted output.
+                out.add("untrusted" if untrusted else ("prior_write" if is_write else "structured"))
     return out or {"none"}
+
+
+def _candidates(v: str) -> list[str]:
+    """The value and its progressively stripped forms. An injected "www.evil.com" comes
+    back from the agent as "http://www.evil.com/", which is not a substring of the text it
+    was read from; matching on the stripped forms and the bare host closes that gap."""
+    out = [v]
+    s = re.sub(r"^(https?://|mailto:)", "", v).rstrip("/")
+    if s != v:
+        out.append(s)
+    if s.startswith("www."):
+        out.append(s[4:])
+    host = s.split("/")[0].split("?")[0]
+    if host and host not in out:
+        out.append(host)
+    return out
+
+
+def value_sources(value, query: str, history) -> set[str]:
+    """Sources of a destination value in any canonical form. Any trusted source for any
+    form clears the value; failing that, any untrusted source for any form taints it."""
+    merged: set[str] = set()
+    for c in _candidates(_norm(value)):
+        merged |= sources(c, query, history)
+    merged -= {"none", "short"}
+    if merged & {"query", "structured", "prior_write"}:
+        return merged
+    return merged or {"none"}
 
 
 def tainted(src: set[str]) -> bool:
@@ -206,7 +246,7 @@ class GuardedToolsExecutor(ToolsExecutor):
             if arg not in args:
                 continue
             for value in _values(args[arg]):
-                src = sources(value, user_query, history)
+                src = value_sources(value, user_query, history)
                 if tainted(src):
                     return (f"[interlock-guard] blocked {name}: argument {arg!r} value {str(value)!r} "
                             f"appears only in untrusted tool output, not in the user's request")
