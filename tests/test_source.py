@@ -1,7 +1,7 @@
 import stat, subprocess, tarfile, zipfile, io, json
 from pathlib import Path
 import pytest
-from interlock.source import cache_path, fetch_dependencies, fetch_source, source_digest, _slug
+from src.source import cache_path, fetch_dependencies, fetch_source, source_digest, _slug
 
 def _npm_spec(cmd):
     # The spec is always the single argument after "--", so it can never be read as a flag.

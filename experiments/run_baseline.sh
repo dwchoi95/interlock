@@ -5,10 +5,10 @@
 # so the four suites are run as four processes instead.
 set -uo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$ROOT/benchmark/agentdojo"
+cd "$ROOT/baselines/agentdojo"
 set -a; . "$ROOT/.env"; set +a
 LABEL="$1"; shift
-LOGDIR="$ROOT/experiments/runs/$LABEL"
+LOGDIR="$ROOT/results/$LABEL"
 mkdir -p "$LOGDIR"
 run() {  # run <suite> <phase> [extra args...]
   local suite="$1"; local phase="$2"; shift 2

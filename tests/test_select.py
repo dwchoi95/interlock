@@ -1,5 +1,5 @@
 from pathlib import Path
-from interlock.select import is_candidate, select_files, MAX_FILE_CHARS, WINDOW_SEPARATOR
+from src.select import is_candidate, select_files, MAX_FILE_CHARS, WINDOW_SEPARATOR
 
 def make(tmp_path, files):
     for rel, text in files.items():

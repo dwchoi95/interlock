@@ -2,10 +2,10 @@
 from __future__ import annotations
 import argparse, hashlib, json, re, sys, time
 from pathlib import Path
-from interlock.adjudicate import batch_request, parse_effects, usage_dict, MAX_OUTPUT_TOKENS, USAGE_FIELDS
-from interlock.pipeline import build_profile, evidence_kind_counts, prepare_sources, verify
-from interlock.source import source_digest
-from interlock.surface import load_surface
+from src.adjudicate import batch_request, parse_effects, usage_dict, MAX_OUTPUT_TOKENS, USAGE_FIELDS
+from src.pipeline import build_profile, evidence_kind_counts, prepare_sources, verify
+from src.source import source_digest
+from src.surface import load_surface
 
 PRICE_PER_MTOK = {"claude-opus-5": {"input": 5.00, "output": 25.00}}
 

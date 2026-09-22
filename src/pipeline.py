@@ -2,12 +2,12 @@
 from __future__ import annotations
 import os, shutil, subprocess
 from pathlib import Path
-from interlock.adjudicate import adjudicate
-from interlock.evidence import check_tool, classify_evidence
-from interlock.profile import Profile, ToolEffect
-from interlock.select import is_candidate, select_files
-from interlock.source import cache_path, fetch_dependencies, fetch_source, slugify
-from interlock.surface import load_surface
+from src.adjudicate import adjudicate
+from src.evidence import check_tool, classify_evidence
+from src.profile import Profile, ToolEffect
+from src.select import is_candidate, select_files
+from src.source import cache_path, fetch_dependencies, fetch_source, slugify
+from src.surface import load_surface
 
 
 def verify(raw: dict, surface: dict, root: Path) -> tuple[Profile, dict]:

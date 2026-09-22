@@ -2,8 +2,8 @@ import json
 import re
 from pathlib import Path
 from types import SimpleNamespace
-from interlock.cli import main, _custom_id, _prepare_batch, estimate_cost_usd, PRICE_PER_MTOK
-from interlock.source import _slug, source_digest
+from src.cli import main, _custom_id, _prepare_batch, estimate_cost_usd, PRICE_PER_MTOK
+from src.source import _slug, source_digest
 
 def test_profile_subcommand_writes_profile_and_stats(tmp_path, monkeypatch):
     surfaces = tmp_path / "surfaces.jsonl"
@@ -37,7 +37,7 @@ def test_profile_subcommand_writes_profile_and_stats(tmp_path, monkeypatch):
                     cache_read_input_tokens = 0
                 class R: content = [Block()]; usage = Usage(); stop_reason = "end_turn"
                 return _FakeStream(R())
-    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+    monkeypatch.setattr("src.cli.make_client", lambda: FakeClient())
 
     rc = main(["profile", "npm:a", "--surfaces", str(surfaces), "--cache", str(tmp_path / "cache"), "--out", str(tmp_path / "profiles")])
     assert rc == 0
@@ -132,7 +132,7 @@ def test_batch_writes_manifest_with_batch_id_and_one_entry_per_package(tmp_path,
             self.messages = FakeMessages()
 
     fake = FakeClient()
-    monkeypatch.setattr("interlock.cli.make_client", lambda: fake)
+    monkeypatch.setattr("src.cli.make_client", lambda: fake)
     rc = main(["batch", str(packages), "--surfaces", str(surfaces),
                "--cache", str(tmp_path / "cache"), "--out", str(tmp_path / "profiles")])
     assert rc == 0
@@ -181,7 +181,7 @@ def test_batch_continues_past_malformed_result_and_records_failure(tmp_path, mon
     class FakeClient:
         messages = FakeMessages()
 
-    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+    monkeypatch.setattr("src.cli.make_client", lambda: FakeClient())
     rc = main(["batch", str(packages), "--surfaces", str(surfaces),
                "--cache", str(tmp_path / "cache"), "--out", str(tmp_path / "profiles")])
     assert rc == 0
@@ -234,7 +234,7 @@ def test_batch_records_truncated_result_as_failure_and_keeps_going(tmp_path, mon
     class FakeClient:
         messages = FakeMessages()
 
-    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+    monkeypatch.setattr("src.cli.make_client", lambda: FakeClient())
     rc = main(["batch", str(packages), "--surfaces", str(surfaces),
                "--cache", str(tmp_path / "cache"), "--out", str(tmp_path / "profiles")])
     assert rc == 0
@@ -299,7 +299,7 @@ def test_batch_records_a_failure_for_every_bad_result_and_keeps_going(tmp_path, 
     class FakeClient:
         messages = FakeMessages()
 
-    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+    monkeypatch.setattr("src.cli.make_client", lambda: FakeClient())
     rc = main(["batch", str(packages), "--surfaces", str(surfaces),
                "--cache", str(tmp_path / "cache"), "--out", str(tmp_path / "profiles")])
     assert rc == 0
@@ -349,7 +349,7 @@ def test_batch_prepare_continues_past_one_invalid_package_name(tmp_path, monkeyp
             self.messages = FakeMessages()
 
     fake = FakeClient()
-    monkeypatch.setattr("interlock.cli.make_client", lambda: fake)
+    monkeypatch.setattr("src.cli.make_client", lambda: fake)
     rc = main(["batch", str(packages), "--surfaces", str(surfaces),
                "--cache", str(tmp_path / "cache"), "--out", str(tmp_path / "profiles")])
     assert rc == 0
@@ -370,7 +370,7 @@ def test_batch_prepare_does_not_leave_a_manifest_entry_when_batch_request_fails(
     # already been computed. The manifest must then list only the package that was
     # actually queued, and the failure line must carry that computed custom_id rather
     # than null, so the manifest and the failure log can always be matched up.
-    from interlock.adjudicate import batch_request as real_batch_request
+    from src.adjudicate import batch_request as real_batch_request
 
     surfaces = tmp_path / "surfaces.jsonl"
     rows = [
@@ -389,7 +389,7 @@ def test_batch_prepare_does_not_leave_a_manifest_entry_when_batch_request_fails(
         if surface["package"] == "big":
             raise ValueError("tools list too large")
         return real_batch_request(cid, surface, files)
-    monkeypatch.setattr("interlock.cli.batch_request", flaky_batch_request)
+    monkeypatch.setattr("src.cli.batch_request", flaky_batch_request)
 
     class FakeBatches:
         def __init__(self):
@@ -411,7 +411,7 @@ def test_batch_prepare_does_not_leave_a_manifest_entry_when_batch_request_fails(
             self.messages = FakeMessages()
 
     fake = FakeClient()
-    monkeypatch.setattr("interlock.cli.make_client", lambda: fake)
+    monkeypatch.setattr("src.cli.make_client", lambda: fake)
     rc = main(["batch", str(packages), "--surfaces", str(surfaces),
                "--cache", str(tmp_path / "cache"), "--out", str(tmp_path / "profiles")])
     assert rc == 0
@@ -458,14 +458,14 @@ def test_batch_failures_file_appends_across_separate_runs(tmp_path, monkeypatch)
         return FakeClient()
 
     packages_a = tmp_path / "packages_a.txt"; packages_a.write_text("npm:a\n")
-    monkeypatch.setattr("interlock.cli.make_client", lambda: make_fake_client(
+    monkeypatch.setattr("src.cli.make_client", lambda: make_fake_client(
         "batch_one", SimpleNamespace(custom_id=cid_a, result=SimpleNamespace(type="errored"))))
     rc1 = main(["batch", str(packages_a), "--surfaces", str(surfaces),
                 "--cache", str(tmp_path / "cache"), "--out", str(out_dir)])
     assert rc1 == 0
 
     packages_b = tmp_path / "packages_b.txt"; packages_b.write_text("npm:b\n")
-    monkeypatch.setattr("interlock.cli.make_client", lambda: make_fake_client(
+    monkeypatch.setattr("src.cli.make_client", lambda: make_fake_client(
         "batch_two", SimpleNamespace(custom_id=cid_b, result=SimpleNamespace(type="errored"))))
     rc2 = main(["batch", str(packages_b), "--surfaces", str(surfaces),
                 "--cache", str(tmp_path / "cache"), "--out", str(out_dir)])
@@ -517,7 +517,7 @@ def test_resume_skips_submission_and_writes_profiles_from_results(tmp_path, monk
     class FakeClient:
         messages = FakeMessages()
 
-    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+    monkeypatch.setattr("src.cli.make_client", lambda: FakeClient())
 
     rc = main(["batch", str(tmp_path / "unused.txt"), "--resume", "batch_resumed",
                "--surfaces", str(surfaces), "--cache", str(tmp_path / "cache"), "--out", str(out_dir)])
@@ -565,7 +565,7 @@ def test_batch_manifest_carries_dependency_note_when_tool_missing_from_own_code(
         def __init__(self):
             self.messages = FakeMessages()
 
-    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+    monkeypatch.setattr("src.cli.make_client", lambda: FakeClient())
     rc = main(["batch", str(packages), "--surfaces", str(surfaces),
                "--cache", str(cache_dir), "--out", str(tmp_path / "profiles")])
     assert rc == 0
@@ -619,7 +619,7 @@ def test_resume_adds_manifest_notes_to_written_profile(tmp_path, monkeypatch):
     class FakeClient:
         messages = FakeMessages()
 
-    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+    monkeypatch.setattr("src.cli.make_client", lambda: FakeClient())
 
     rc = main(["batch", str(tmp_path / "unused.txt"), "--resume", "batch_resumed_notes",
                "--surfaces", str(surfaces), "--cache", str(tmp_path / "cache"), "--out", str(out_dir)])
@@ -697,7 +697,7 @@ def test_resume_records_failure_when_root_missing_or_digest_stale(tmp_path, monk
     class FakeClient:
         messages = FakeMessages()
 
-    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+    monkeypatch.setattr("src.cli.make_client", lambda: FakeClient())
     rc = main(["batch", str(tmp_path / "unused.txt"), "--resume", "batch_stale",
                "--surfaces", str(surfaces), "--cache", str(tmp_path / "cache"), "--out", str(out_dir)])
     assert rc == 0
@@ -744,7 +744,7 @@ def test_profile_stats_carry_code_and_doc_files_shown_for_readme_only_selection(
                     cache_creation_input_tokens = 0; cache_read_input_tokens = 0
                 class R: content = [Block()]; usage = Usage(); stop_reason = "end_turn"
                 return _FakeStream(R())
-    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+    monkeypatch.setattr("src.cli.make_client", lambda: FakeClient())
 
     rc = main(["profile", "npm:a", "--surfaces", str(surfaces), "--cache", str(tmp_path / "cache"), "--out", str(tmp_path / "profiles")])
     assert rc == 0
@@ -783,7 +783,7 @@ def test_batch_manifest_and_stats_carry_code_and_doc_files_shown(tmp_path, monke
     class FakeClient:
         messages = FakeMessages()
 
-    monkeypatch.setattr("interlock.cli.make_client", lambda: FakeClient())
+    monkeypatch.setattr("src.cli.make_client", lambda: FakeClient())
     rc = main(["batch", str(packages), "--surfaces", str(surfaces),
                "--cache", str(cache_dir), "--out", str(tmp_path / "profiles")])
     assert rc == 0

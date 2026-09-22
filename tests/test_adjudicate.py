@@ -1,6 +1,6 @@
 import json
 import pytest
-from interlock.adjudicate import (RUBRIC, EFFECT_SCHEMA, MAX_TOOLS_CHARS, MAX_OUTPUT_TOKENS,
+from src.adjudicate import (RUBRIC, EFFECT_SCHEMA, MAX_TOOLS_CHARS, MAX_OUTPUT_TOKENS,
                                    build_messages, adjudicate, parse_effects, _params)
 
 SURFACE = {"package": "a", "version": "1", "kind": "npm",

@@ -1,8 +1,8 @@
 import io, json, tarfile
 from pathlib import Path
 import pytest
-from interlock.pipeline import evidence_kind_counts, prepare_sources, verify
-from interlock.source import _slug
+from src.pipeline import evidence_kind_counts, prepare_sources, verify
+from src.source import _slug
 
 SURFACE = {"package": "a", "version": "1", "kind": "npm", "tools": [
     {"name": "read_file", "description": "", "inputSchema": {}, "annotations": None},

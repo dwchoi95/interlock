@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 import pytest
-from interlock.profile import expand
+from src.profile import expand
 
 P1 = Path("spikes/p0/adjudication/out")
 EXPECTED_UNION = {

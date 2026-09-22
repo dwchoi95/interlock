@@ -1,5 +1,5 @@
 import pytest
-from interlock.profile import LABELS, Profile, ToolEffect, expand
+from src.profile import LABELS, Profile, ToolEffect, expand
 
 def test_hostexec_expands_to_all_three():
     assert expand({"HOSTEXEC"}) == {"HOSTEXEC", "SECRET", "UNTRUSTED", "SINK"}

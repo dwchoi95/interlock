@@ -1,6 +1,6 @@
 from pathlib import Path
-from interlock.evidence import parse_citation, check_citation, check_tool, classify_evidence
-from interlock.profile import ToolEffect
+from src.evidence import parse_citation, check_citation, check_tool, classify_evidence
+from src.profile import ToolEffect
 
 def tree(tmp_path):
     (tmp_path / "src").mkdir()

@@ -7,8 +7,8 @@ is proven to stay inside the cache directory before anything is created or delet
 from __future__ import annotations
 import hashlib, json, re, shutil, stat, subprocess, tarfile, zipfile
 from pathlib import Path
-from interlock.evidence import classify_evidence
-from interlock.select import is_candidate
+from src.evidence import classify_evidence
+from src.select import is_candidate
 
 _METADATA_SUFFIXES = (".dist-info", ".data", ".egg-info")
 _NPM_NAME = re.compile(r"(?:@[a-z0-9~-][a-z0-9._~-]*/)?[a-z0-9~-][a-z0-9._~-]*")

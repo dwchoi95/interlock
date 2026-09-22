@@ -1,6 +1,6 @@
 import json
 import pytest
-from interlock.surface import load_surface, latest_version
+from src.surface import load_surface, latest_version
 
 def fixture(tmp_path):
     p = tmp_path / "surfaces.jsonl"

@@ -2,7 +2,7 @@
 from __future__ import annotations
 import re
 from pathlib import Path
-from interlock.profile import ToolEffect
+from src.profile import ToolEffect
 
 CITATION = re.compile(r"([\w./@+-]+\.[A-Za-z0-9]+):(\d+)(?:\s*-\s*(\d+))?")
 WIDEN = 2

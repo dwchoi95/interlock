@@ -59,7 +59,7 @@ def report(label, benign, cases):
             print(f"{k:12s} {n:6d} {100*u/n:7.2f}% {100*sec/n:7.2f}%")
 
 if __name__ == "__main__":
-    for root in (sys.argv[1:] or ["experiments/runs"]):
+    for root in (sys.argv[1:] or ["results"]):
         p = Path(root)
         for d in ([p] if any(p.rglob("*.json")) and p.name != "runs" else sorted(x for x in p.iterdir() if x.is_dir())):
             b, c = collect(d)
