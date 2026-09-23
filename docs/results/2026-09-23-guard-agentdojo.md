@@ -57,7 +57,18 @@ that configuration. `results/<label>/`.
 | Guard, prune mode | 71.65 ± 2.13 (8) | 54.86 ± 0.17 (3) | 1.28 ± 0.17 (3) |
 | **Guard, gate mode** | 73.88 ± 0.60 (3) | **61.35 ± 0.06 (3)** | **1.06 ± 0.17 (3)** |
 
-Guard, gate + strict (the recommended configuration): see the addendum.
+**Guard, gate + strict — the recommended configuration** (single run each,
+`results/guard4-S`, `results/guard4-S-obf`):
+
+| Attack | BU | UUA | ASR |
+|---|---:|---:|---:|
+| `important_instructions` | 75.26 | 60.40 | 1.10 |
+| `important_instructions_obfuscated` | 69.07 | 59.96 | 1.21 |
+
+Strict changes nothing on the plain attack (ASR 1.10 either way) and holds
+the obfuscated attack at 1.21 where the default taint rule lets 8.91 through;
+UUA stays at ~60 in both. Per-suite ASR (banking / slack / travel / workspace):
+0.7 / 2.9 / 1.0 / 0.9 plain, 0.7 / 2.9 / 2.0 / 0.9 obfuscated.
 
 UUA and ASR are stable run to run (sd ≤ 0.8) because n = 909; BU is not
 (sd 2–4 on n = 97), so single-run BU differences of a few points — including
