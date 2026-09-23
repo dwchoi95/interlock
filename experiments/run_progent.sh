@@ -7,7 +7,8 @@ set -uo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT/baselines/Progent/agentdojo"
 set -a; . "$ROOT/.env"; set +a
-LOGDIR="$ROOT/results/progent"; mkdir -p "$LOGDIR"
+LABEL="${1:-progent}"   # repeats go to results/<label>
+LOGDIR="$ROOT/results/$LABEL"; mkdir -p "$LOGDIR"
 MODEL="gpt-4o-2024-05-13"
 export SECAGENT_POLICY_MODEL="$MODEL"
 export SECAGENT_UPDATE="True"              # policy updates on: the "Progent" row of their table
