@@ -79,9 +79,13 @@ UUA advantage is >3 of Progent's sd and its ASR is a third; BU is comparable.
 
 | | BU | UUA | ASR |
 |---|---:|---:|---:|
-| allow-list only | 76.29 | 54.13 | 12.54 |
-| taint only | 75.26 | 56.44 | 7.48 |
-| both | 69.07–73.20 | 55.0 | 1.1–1.4 |
+| allow-list only (`results/guard2-A`) | 76.29 | 54.13 | 12.54 |
+| taint only (`results/guard3-T`) | 75.26 | 56.44 | 7.48 |
+| both (`results/guard3`, the first prune-mode run) | 69.07 | 55.01 | 1.43 |
+
+CaMeL without its hand-written policies (`results/camel.benign.log`, the
+`+camel` pipeline): BU 38.14 (37/97), single run; with policies 22.68. The
+paper's §2.2 quotes both.
 
 The two rules are complementary: each alone leaves 7–13% of attacks, the
 pair leaves about 1%.
