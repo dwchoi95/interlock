@@ -1,0 +1,96 @@
+{
+ "kind": "npm",
+ "notes": [
+  "The advertised `offset` parameter for `brave_web_search` is defined in the input schema, and `performWebSearch` supports an `offset` argument, but the call handler destructures only `query` and `count` and calls `performWebSearch(query, count)`, so the advertised `offset` is not actually used by the handler. Evidence: dist/index.js:23-27, dist/index.js:107-112, dist/index.js:229-230."
+ ],
+ "package": "@modelcontextprotocol/server-brave-search",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-brave-search_0.6.2_59d26596a22e",
+ "tools": {
+  "brave_local_search": {
+   "attacker_named_fields": [
+    "Name",
+    "Address",
+    "Phone",
+    "Title",
+    "URL"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:32-57",
+    "dist/index.js:132-160",
+    "dist/index.js:162-194",
+    "dist/index.js:196-212",
+    "dist/index.js:236-244",
+    "dist/index.js:215-217"
+   ],
+   "identifier_output_fields": [
+    "Name",
+    "Address",
+    "Phone",
+    "Title",
+    "URL"
+   ],
+   "injectable_output_fields": [
+    "Name",
+    "Address",
+    "Phone",
+    "Rating",
+    "Price Range",
+    "Hours",
+    "Description",
+    "Title",
+    "URL",
+    "content[].text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`brave_local_search` is advertised unconditionally in `ListTools` and calls fixed Brave Search API endpoints for location lookup, POI details, and descriptions. It returns public local/business data such as `poi.name`, address, phone, hours, rating, price range, and description; if no local IDs are found, it falls back to `performWebSearch`. Public local listings and fallback web results can contain attacker-controllable content, so the output is UNTRUSTED. The tool only contacts fixed Brave API hosts, not an agent-chosen or attacker-readable destination, so it is not a SINK. It does not read local/private user data and does not execute host code.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "brave_web_search": {
+   "attacker_named_fields": [
+    "Title",
+    "URL"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:5-30",
+    "dist/index.js:107-130",
+    "dist/index.js:225-233",
+    "dist/index.js:215-217"
+   ],
+   "identifier_output_fields": [
+    "Title",
+    "URL"
+   ],
+   "injectable_output_fields": [
+    "Title",
+    "Description",
+    "URL",
+    "content[].text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`brave_web_search` is advertised unconditionally in `ListTools` and calls Brave's fixed web search endpoint. It sets the user-supplied `query` as Brave API parameter `q`, fetches from `https://api.search.brave.com/res/v1/web/search`, and returns web result `title`, `description`, and `url` as text. Public web search results can include attacker-controlled pages and snippets, so the output is UNTRUSTED. The destination is a fixed Brave API host, not an agent-chosen or attacker-readable destination, so it is not a SINK. It does not read local/private user data and does not execute host code.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "unset in the environment unless configured by the user/deployment",
+   "effect": "Required for the server to start. If unset, the process prints an error and exits before serving any tools; when set, both advertised tools are listed unconditionally.",
+   "evidence": "dist/index.js:68-72",
+   "kind": "environment variable",
+   "syntax": "process.env.BRAVE_API_KEY"
+  }
+ ],
+ "version": "0.6.2"
+}

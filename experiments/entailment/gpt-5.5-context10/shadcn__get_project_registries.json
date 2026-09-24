@@ -1,0 +1,16 @@
+{
+ "package": "shadcn",
+ "tool": "get_project_registries",
+ "claimed": [
+  "SECRET"
+ ],
+ "HOSTEXEC": "not_supported",
+ "SECRET": "supported",
+ "SINK": "not_supported",
+ "UNTRUSTED": "insufficient",
+ "reason": "The get_project_registries case calls l(process.cwd()), and the tool description says it gets configured registry names from components.json, then returns those registry keys to the caller; that establishes returning local project configuration data from the host, i.e. SECRET. The cited lines only construct suggested command strings with u(...); they do not show executing arbitrary code, so HOSTEXEC is not supported. They do not show sending agent-supplied data to an attacker-readable destination, so SINK is not supported. Although project configuration could be attacker-controlled in some scenarios, these lines alone do not establish that the returned registry names are attacker-controllable, so UNTRUSTED is insufficient.",
+ "usage": {
+  "input_tokens": 4112,
+  "output_tokens": 1207
+ }
+}

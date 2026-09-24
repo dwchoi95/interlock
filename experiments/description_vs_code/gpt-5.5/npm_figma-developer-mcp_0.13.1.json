@@ -1,0 +1,66 @@
+{
+ "tools": {
+  "get_figma_data": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads Figma SaaS data: `Get comprehensive Figma file data including layout, content, visuals, and component information`, selected by `fileKey` and optional `nodeId`. Figma files may be private data reachable with the user's credentials, so the returned file data is SECRET. The returned `layout, content, visuals, and component information` can also be authored by collaborators or come from third-party/community Figma files, so it is UNTRUSTED. It does not advertise sending data to an agent-chosen attacker-readable destination or executing code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "fileKey",
+    "nodeId"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "download_figma_images": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool fetches Figma image assets: `Download SVG and PNG images used in a Figma file based on the IDs of image or icon nodes` and saves them: `Images will be saved relative to the server's image directory`. Those images may come from private Figma files reachable with the user's credentials, so the tool can handle SECRET data; they may also be authored by collaborators or third-party/community file owners, so they are UNTRUSTED. The text emphasizes saving to a local `image directory` and does not advertise an attacker-readable destination, arbitrary URL request, or code execution. Because no output schema is provided, it is not fully settled whether downloaded image contents are returned into the agent context versus only saved, so labels are kept conservatively.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "fileKey",
+    "nodes",
+    "nodeId",
+    "imageRef",
+    "gifRef",
+    "fileName",
+    "localPath"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "`download_figma_images` is WRITE because it `Download[s]` assets and `saved` them, and `The directory is created if missing`.",
+  "A query to Figma by `fileKey` is treated as a fixed-vendor request rather than a SINK; no tool advertises sending data to an agent-chosen URL or host."
+ ],
+ "usage": {
+  "input_tokens": 1930,
+  "output_tokens": 2591,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

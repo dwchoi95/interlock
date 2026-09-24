@@ -1,0 +1,251 @@
+{
+ "tools": {
+  "browser_navigate": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Navigate to a URL` and the schema accepts a caller supplied `url` described as `The URL to navigate to`. A URL can name an attacker-controlled host and can carry agent-supplied data in its path or query, so this can make a request to an agent-chosen attacker-readable destination. No public-only or host restriction is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_go_back": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Go back to the previous page`. Browser history may contain an attacker-controlled URL previously chosen by the agent, so going back may send a request to that attacker-readable destination. The description does not settle whether a network request is always made, so the least restrictive reading keeps SINK.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_go_forward": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Go forward to the next page`. Browser history may contain an attacker-controlled URL previously chosen by the agent, so going forward may send a request to that attacker-readable destination. The description does not settle whether a network request is always made, so the least restrictive reading keeps SINK.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_snapshot": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool will `Capture accessibility snapshot of the current page`. The current page can be an authenticated, local, intranet, or file page, so the snapshot may return non-public page contents into the agent context. The current page can also be an attacker-controlled web page, so returned page text is attacker-controllable. It is advertised to be used for `getting references to elements`, so element refs are identifiers for later calls; human-readable element text in the snapshot can be authored by the page attacker.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "element"
+   ],
+   "identifier_output_fields": [
+    "ref",
+    "element"
+   ],
+   "attacker_named_fields": [
+    "element"
+   ]
+  },
+  "browser_click": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Perform click on a web page` on a target identified by `element` and `ref`. A click on an attacker-controlled page can activate links, buttons, or form submissions and thereby send data already placed in the page to an attacker-readable destination. The advertised text does not explicitly enumerate link/form behavior, so the least restrictive reading keeps SINK.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "element",
+    "ref"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_hover": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Hover over element on page` on a target identified by `element` and `ref`. On an attacker-controlled web page, hover handlers can send page state or previously entered agent-supplied data to an attacker-readable destination. The description does not explicitly state what scripts or network effects a hover can trigger, so the least restrictive reading keeps SINK.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "element",
+    "ref"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_type": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Type text into editable element`; the `text` argument is `Text to type into the element`, and `submit` controls `Whether to submit entered text (press Enter after)`. If the editable element is on an attacker-controlled page, the page can read the typed text and the submit action can send it to an attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "element",
+    "ref"
+   ],
+   "value_args": [
+    "text"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_select_option": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Select an option in a dropdown`; `values` is the `Array of values to select in the dropdown`. On an attacker-controlled page, changing a dropdown can be observed by page script or submitted later, sending the selected agent-supplied values to an attacker-readable destination. The description does not explicitly state event/network behavior, so the least restrictive reading keeps SINK.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "element",
+    "ref"
+   ],
+   "value_args": [
+    "values"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_press_key": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Press a key on the keyboard`, and `key` may be `a character to generate` such as `a`. Keystrokes go to the currently focused page element; on an attacker-controlled page they can input data or press Enter to submit existing data to an attacker-readable destination. The current focus/destination is not declared in the schema, so this is partly undetermined and the least restrictive reading keeps SINK.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "key"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_wait": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool only says `Wait for a specified time in seconds`, with `time` as `The time to wait in seconds`. It does not itself advertise returning page content, contacting an agent-chosen host, or sending/storing agent-supplied content.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_get_console_logs": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Get the console logs from the browser`. Console logs from an authenticated, local, intranet, or file page may contain non-public data, so this can return SECRET data. Console logs from an attacker-controlled page can be authored by the attacker, so the returned logs are UNTRUSTED.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_screenshot": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Take a screenshot of the current page`. The current page can be authenticated, local, intranet, or file content, so the screenshot may return non-public data. The current page can also be attacker-controlled web content, so the screenshot can contain attacker-authored content.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No source code or output schemas were provided. Output fields are inferred only from the advertised descriptions, especially the snapshot description saying it provides references to elements."
+ ],
+ "usage": {
+  "input_tokens": 2088,
+  "output_tokens": 6328,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

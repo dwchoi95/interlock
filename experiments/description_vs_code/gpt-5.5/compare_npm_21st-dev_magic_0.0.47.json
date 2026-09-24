@@ -1,0 +1,82 @@
+[
+ {
+  "tool": "21st_magic_component_builder",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "searchQuery",
+   "absolutePathToCurrentFile",
+   "absolutePathToProjectDirectory"
+  ],
+  "annotations": {},
+  "rationale_code": "`execute` reads any local path the agent supplies via `getContentOfFile(absolutePathToCurrentFile)` (create-ui.js:36) and posts it to the 21st.dev endpoint `/api/create-ui-variation`; the returned/selected component code (`componentData.code`, create-ui.js:64) comes from 21st.dev's community compone"
+ },
+ {
+  "tool": "logo_search",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "queries"
+  ],
+  "annotations": {},
+  "rationale_code": "`fetchLogos` queries the third-party `https://api.svgl.app` registry with the agent-supplied `queries` (logo-search.js:42) and then `fetchSVGContent` fetches whatever URL the registry response names in `logo.route` (logo-search.js:167-169); that community-published SVG/JSX markup and `logo.url` are "
+ },
+ {
+  "tool": "21st_magic_component_inspiration",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "searchQuery"
+  ],
+  "annotations": {},
+  "rationale_code": "`execute` posts `searchQuery`/`message` to the fixed vendor route `/api/fetch-ui` and returns `data.text` verbatim (fetch-ui.js:28). That text is component data/previews from the publicly writable 21st.dev component registry, i.e. third-party content an attacker can publish and steer via search term"
+ },
+ {
+  "tool": "21st_magic_component_refiner",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "absolutePathToRefiningFile"
+  ],
+  "annotations": {},
+  "rationale_code": "`execute` reads any absolute host path given as `absolutePathToRefiningFile` through `getContentOfFile` (refine-ui.js:27) and sends it as `fileContent` to `/api/refine-ui`; the response `data.text` is a redesigned version of that file returned into the agent's context (refine-ui.js:34), so private h"
+ }
+]

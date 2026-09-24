@@ -1,0 +1,62 @@
+[
+ {
+  "tool": "execute_sql",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SINK"
+  ],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "sql"
+  ],
+  "annotations": {
+   "title": "Execute SQL (sqlite)",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`createExecuteSqlToolHandler` runs any agent-supplied SQL string through `connector.executeSQL` against the configured database (reached with the user's DSN credentials, possibly through an SSH tunnel to an intranet host) and returns the rows straight into the agent context (`toStatementsPayload` ->"
+ },
+ {
+  "tool": "search_objects",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "object_type",
+   "pattern",
+   "schema",
+   "table"
+  ],
+  "annotations": {
+   "title": "Search Database Objects (sqlite)",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`createSearchDatabaseObjectsToolHandler` enumerates schemas, tables, views, columns, indexes and stored-procedure definitions from the user's database (`connector.getTableSchema`, `connector.getStoredProcedureDetail`, and a `SELECT COUNT(*)` via `getTableRowCount`) and returns them to the agent, i.e"
+ }
+]

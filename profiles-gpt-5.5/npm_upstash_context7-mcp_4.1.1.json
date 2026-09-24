@@ -1,0 +1,111 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Both advertised tools are registered in `createMcpServer` without a feature flag or disabled-by-default toolset.",
+  "Although the tools are annotated read-only, the enforcement `kind` is WRITE here because the tool arguments are sent out of the agent context to the Context7 API as request parameters. The destination is fixed, so no `destination_args` are recorded and no SINK label is applied."
+ ],
+ "package": "@upstash/context7-mcp",
+ "source": ".cache/sources/.views/npm_upstash_context7-mcp_4.1.1_2dbb1fce0840",
+ "tools": {
+  "query-docs": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:233",
+    "dist/index.js:240-256",
+    "dist/index.js:259-264",
+    "dist/lib/api.js:134-141",
+    "dist/lib/api.js:148-155",
+    "README.md:56",
+    "README.md:1728"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`query-docs` is registered unconditionally and calls `fetchLibraryContext({ query, libraryId }, ctx)`. `fetchLibraryContext` sends `query` and `libraryId` to the Context7 API with generated headers and returns the upstream documentation text as `content[].text`. It is UNTRUSTED because the documentation corpus is described as community-contributed and may contain attacker-authored project content. It is SECRET when credentials are configured because API keys are documented as enabling private repository access, and the tool can return those credential-scoped docs. It is not a SINK because the upstream is fixed by the server code rather than chosen by the agent. No host execution is present.",
+   "undetermined": false,
+   "value_args": [
+    "query",
+    "libraryId"
+   ]
+  },
+  "resolve-library-id": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:155",
+    "dist/index.js:190-206",
+    "dist/index.js:220-228",
+    "dist/lib/api.js:104-111",
+    "dist/lib/api.js:118-119",
+    "README.md:56",
+    "README.md:1728"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`resolve-library-id` is registered unconditionally and calls `searchLibraries(query, libraryName, ctx)`. `searchLibraries` sends the caller's `query` and `libraryName` to the Context7 API with generated headers derived from the client context, and the returned JSON is formatted into `content[].text`. It is UNTRUSTED because Context7 projects/docs are described as community-contributed, so library names/descriptions/IDs in returned results may be attacker-controllable. It is SECRET when credentials are configured because the README states API keys enable access to private repositories, and the tool returns credential-scoped search results into the agent context. It is not a SINK under the stated rule because the destination is the fixed Context7 upstream, not an agent-chosen URL/host. No host code execution is present.",
+   "undetermined": false,
+   "value_args": [
+    "query",
+    "libraryName"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "absent",
+   "effect": "In stdio mode, supplies `stdioApiKey`; when this flag and `CONTEXT7_API_KEY` are absent, credential-backed/private-repository SECRET access is not available by default. The flag is disallowed with `--transport http`.",
+   "evidence": "dist/index.js:36-40, dist/index.js:55-58, dist/index.js:530",
+   "kind": "flag",
+   "syntax": "--api-key <key>"
+  },
+  {
+   "default": "absent",
+   "effect": "In stdio mode, supplies `stdioApiKey` if `--api-key` is not set; absence removes credential-backed/private-repository SECRET access for stdio by default.",
+   "evidence": "dist/index.js:530, README.md:1460-1468",
+   "kind": "environment variable",
+   "syntax": "CONTEXT7_API_KEY=<key>"
+  },
+  {
+   "default": "absent",
+   "effect": "In HTTP mode, these headers supply `apiKey` in request context; absent headers mean unauthenticated `/mcp` requests can still run but without credential-backed/private-repository SECRET access, except on auth-required routes/clients.",
+   "evidence": "dist/index.js:303-319, dist/index.js:390-393",
+   "kind": "HTTP header",
+   "syntax": "Authorization: Bearer <key> | Authorization: <key> | X-Context7-API-Key: <key> | Context7-API-Key: <key> | X-API-Key: <key> | context7_api_key: <key> | x_api_key: <key>"
+  },
+  {
+   "default": "/mcp is used for normal MCP traffic; /mcp/oauth is only used when selected by the client",
+   "effect": "Requires authentication; without an accepted API key/JWT the request is rejected before tool execution. Authenticated calls may have credential-backed/private-repository SECRET access.",
+   "evidence": "dist/index.js:28-33, dist/index.js:353-389, dist/index.js:418-420",
+   "kind": "URL path",
+   "syntax": "POST/GET/\u2026 /mcp/oauth"
+  },
+  {
+   "default": "stdio",
+   "effect": "Selects stdio or HTTP transport. Both transports create the same server and register the same tools, so this does not remove tools or labels; default is stdio.",
+   "evidence": "dist/index.js:36-39, dist/index.js:51, dist/index.js:333-337, dist/index.js:536-549",
+   "kind": "flag",
+   "syntax": "--transport <stdio|http>"
+  }
+ ],
+ "version": "4.1.1"
+}

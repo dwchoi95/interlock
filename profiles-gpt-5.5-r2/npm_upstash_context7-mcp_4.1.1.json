@@ -1,0 +1,99 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Neither tool is a SINK: the code sends requests only to fixed Context7 API endpoints, not to an agent-chosen URL or host.",
+  "Neither tool provides HOSTEXEC: no advertised tool executes host code."
+ ],
+ "package": "@upstash/context7-mcp",
+ "source": ".cache/sources/.views/npm_upstash_context7-mcp_4.1.1_2dbb1fce0840",
+ "tools": {
+  "query-docs": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:233-256",
+    "dist/index.js:259-264",
+    "dist/lib/api.js:134-155",
+    "dist/lib/api.js:136-139",
+    "README.md:56",
+    "README.md:1728"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`query-docs` calls `fetchLibraryContext({ query, libraryId }, ctx)`, which sends the call arguments as query parameters to the fixed Context7 `/v2/context` endpoint and returns the response body as MCP `content[].text`. The returned documentation is UNTRUSTED because Context7 projects/documentation are community-contributed. It is also SECRET when used with a Context7 API key because the README states API keys enable access to private repositories, so documentation returned by the API can be non-public data reached with the user's credentials.",
+   "undetermined": false,
+   "value_args": [
+    "libraryId",
+    "query"
+   ]
+  },
+  "resolve-library-id": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:155-206",
+    "dist/index.js:220-228",
+    "dist/lib/api.js:104-119",
+    "dist/lib/api.js:106-109",
+    "README.md:56",
+    "README.md:1728"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`resolve-library-id` calls `searchLibraries(query, libraryName, ctx)`, which sends the call arguments as query parameters to the fixed Context7 `/v2/libs/search` endpoint and returns formatted API results as MCP `content[].text`. The results are UNTRUSTED because Context7 projects/documentation are community-contributed and can include attacker-controlled package names, descriptions, and library IDs. It is also SECRET when used with a Context7 API key because the README states API keys enable access to private repositories, so search results can include non-public SaaS data reached with the user's credentials.",
+   "undetermined": false,
+   "value_args": [
+    "query",
+    "libraryName"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "No API key unless configured by CLI flag or environment variable.",
+   "effect": "Supplying a Context7 API key enables the SECRET reach to private repositories; with neither the flag nor environment variable set, that private-repository SECRET reach is absent, though public/community documentation remains UNTRUSTED. The tools are still registered either way.",
+   "evidence": "dist/index.js:40, dist/index.js:530, README.md:56",
+   "kind": "label-condition",
+   "syntax": "Stdio credentials: --api-key <key> or CONTEXT7_API_KEY"
+  },
+  {
+   "default": "The `/mcp` route does not require an API key by default; `/mcp/oauth` and some plugin requests require authentication before tool handling.",
+   "effect": "Supplying one of these headers sets `apiKey` for Context7 API calls and enables SECRET reach to private repositories; without these headers, that private-repository SECRET reach is absent on unauthenticated `/mcp`, though public/community documentation remains UNTRUSTED. The tools are still registered either way.",
+   "evidence": "dist/index.js:28-33, dist/index.js:312-319, dist/index.js:390-398, README.md:56",
+   "kind": "label-condition",
+   "syntax": "HTTP credentials: Authorization: Bearer <token> (or raw Authorization), X-Context7-API-Key, Context7-API-Key, X-API-Key, context7_api_key, or x_api_key"
+  },
+  {
+   "default": "stdio",
+   "effect": "Does not remove either advertised tool. Both HTTP and stdio paths call `createMcpServer`, which registers `resolve-library-id` and `query-docs`.",
+   "evidence": "dist/index.js:38, dist/index.js:333-337, dist/index.js:536-549",
+   "kind": "tool-availability",
+   "syntax": "--transport <stdio|http>"
+  }
+ ],
+ "version": "4.1.1"
+}

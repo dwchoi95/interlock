@@ -1,0 +1,119 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Only the 7 tools in the advertised list were judged. The n8n_* management tools (dist/mcp/tools-n8n-manager.js) and the credential/audit/test tools are not in the advertised set; if enabled they would add SECRET (credential and execution data), SINK (n8n_test_workflow posts agent-chosen payloads/headers to agent-chosen webhook paths) and arguably HOSTEXEC (deploying Code nodes into an n8n instance) reach.",
+  "No advertised tool performs an outbound request to an agent-chosen host; template and node data are read from the packaged SQLite database (dist/mcp/server.js:2005-2017, 3040-3044), so no SINK label applies anywhere.",
+  "Resource reads (ui:// and skill:// URIs, dist/mcp/server.js:674-699) return only package-bundled HTML/skill text and are not tools."
+ ],
+ "package": "n8n-mcp",
+ "source": ".cache/sources/.views/npm_n8n-mcp_2.57.1_932d1ac80569",
+ "tools": {
+  "get_node": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/mcp/server.js:1031-1043",
+    "dist/mcp/server.js:2012-2059",
+    "dist/mcp/server.js:2341-2345"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`getNodeDocumentation` returns the `documentation`/`description`/`ai_documentation_summary` columns for any node type, and `handleInfoMode` with `includeExamples` returns template-derived example configs (same path as `getNodeEssentials`). Node docs/descriptions cover community npm nodes and template examples, i.e. third-party content, so returned text is attacker-influenceable. Purely local reads of packaged data - no user-private data, no egress, no exec.",
+   "undetermined": false
+  },
+  "get_template": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/mcp/server.js:1091-1095",
+    "dist/mcp/server.js:3040-3048",
+    "dist/mcp/tool-docs/templates/get-template.js:19"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`getTemplate` returns the complete workflow JSON (nodes, parameters, code, URLs, author text) of a template from the community template library documented as '2,700+ curated workflows' submitted by third parties. Arbitrary community-authored text and node parameters land in the agent context, so UNTRUSTED. Read is local/packaged, not user-private, and nothing is sent outward.",
+   "undetermined": false
+  },
+  "search_nodes": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/mcp/server.js:1022-1030",
+    "dist/mcp/server.js:2262-2276",
+    "dist/mcp/tools.js:60-65"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`searchNodes` reads the bundled node database, which explicitly includes community/npm-published nodes (`source: 'community'|'verified'` filter in the schema, `isCommunity`/`authorName`/`npmDownloads` fields per dist/mcp/tool-docs/discovery/search-nodes.js:32) and, with `includeExamples`, returns `parameters`/`use_cases`/`template_name` mined from n8n.io community templates. That is third-party multi-writer registry content flowing into the agent context, so it is attacker-influenceable. The data is package-shipped, not user-private, so no SECRET; no outbound request with agent-chosen destination, so no SINK.",
+   "undetermined": false
+  },
+  "search_templates": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/mcp/server.js:1096-1129",
+    "dist/mcp/server.js:3023-3038",
+    "dist/mcp/server.js:3126-3146"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "All search modes (`listNodeTemplates`, `getTemplatesForTask`, `searchTemplatesByMetadata`, `searchTemplates`, `getWorkflowPatterns`) return community template records - names, descriptions, author names and URLs - which are third-party authored content and therefore attacker-influenceable text in the agent's context.",
+   "undetermined": false
+  },
+  "tools_documentation": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/mcp/server.js:2998-3003",
+    "dist/mcp/tools-documentation.js:9-19"
+   ],
+   "labels": [],
+   "rationale": "`getToolsDocumentation` only returns static strings compiled into the package (`toolsDocumentation` map and the hardcoded code-node guides). No host files, no credentials, no network egress, no execution.",
+   "undetermined": false
+  },
+  "validate_node": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/mcp/server.js:1044-1090",
+    "dist/mcp/server.js:2960-2997",
+    "dist/mcp/server.js:702-739"
+   ],
+   "labels": [],
+   "rationale": "`validateNodeMinimal`/`validateNodeConfig` only compare agent-supplied `config` against the local node property schema and return errors/warnings; `sanitizeValidationResult` reduces output to structured verdict fields. No network call, no credentialed read, no execution. Property display names echoed from the node DB are a marginal third-party channel but are metadata about the agent's own input rather than retrieved content.",
+   "undetermined": false
+  },
+  "validate_workflow": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/mcp/server.js:1131-1133",
+    "dist/mcp/server.js:740-770"
+   ],
+   "labels": [],
+   "rationale": "`validateWorkflow` validates the agent-supplied workflow object against the local node repository and returns a sanitized verdict (`valid`, `errors`, `warnings`, `summary`). Expressions are parsed, not executed; no network egress, no credentialed or host-file read.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "unset - all advertised tools callable",
+   "effect": "Any listed tool name is rejected at execution time, removing its reach entirely.",
+   "evidence": "dist/mcp/server.js:1007-1010",
+   "kind": "env var",
+   "syntax": "DISABLED_TOOLS=\"tool_a,tool_b\" (environment variable)"
+  },
+  {
+   "default": "unset - only the 7 documentation/validation tools are advertised",
+   "effect": "Enables the separate n8n management toolset (n8n_create_workflow, n8n_test_workflow, n8n_manage_credentials, n8n_executions, etc.), which reaches the user's n8n instance over the network. None of those tools appear in the advertised list judged here.",
+   "evidence": "dist/mcp/tools-documentation.js:180",
+   "kind": "env var",
+   "syntax": "N8N_API_URL=... and N8N_API_KEY=... (environment variables)"
+  },
+  {
+   "default": "empty - no additional tools registered",
+   "effect": "Registers extra tools whose handlers run before the built-in switch; their reach is defined by the host embedding the server, not by this source.",
+   "evidence": "dist/mcp/server.js:99-100",
+   "kind": "code flag",
+   "syntax": "additionalTools / generateWorkflowHandler constructor options"
+  }
+ ],
+ "version": "2.57.1"
+}

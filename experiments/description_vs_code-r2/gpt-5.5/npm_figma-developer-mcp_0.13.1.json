@@ -1,0 +1,57 @@
+{
+ "tools": {
+  "get_figma_data": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can return Figma SaaS file data: `Get comprehensive Figma file data including layout, content, visuals, and component information` for `The key of the Figma file to fetch`. The advertised text does not say the file must be public or single-author, so under the least-restrictive reading it can return non-public Figma data reachable by the user's configured access, and it can also return attacker-authored/collaborative/public Figma content such as `content`, `visuals`, and `component information`. It does not advertise contacting an agent-chosen host, writing anywhere, or executing code.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "nodeId",
+    "imageRef",
+    "gifRef",
+    "filenameSuffix"
+   ],
+   "attacker_named_fields": []
+  },
+  "download_figma_images": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Download[s] SVG and PNG images used in a Figma file` and says `Images will be saved relative to the server's image directory`; it changes local filesystem state but does not advertise returning the downloaded image contents into the agent context. The destination of the local write is chosen by `localPath` and each `fileName`: `The directory to save images in` and `The local name for saving the fetched file`. It fetches from a Figma file identified by `fileKey`, not an agent-chosen URL or host, so it is not a SINK as advertised. No arbitrary host execution is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "localPath",
+    "fileName"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No output schemas are advertised. Field classifications therefore use only the advertised descriptions, including the input descriptions that say values such as `imageRef`, `gifRef`, and `filenameSuffix` are present in the Figma data."
+ ],
+ "usage": {
+  "input_tokens": 2054,
+  "output_tokens": 4089,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

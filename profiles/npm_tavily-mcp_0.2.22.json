@@ -1,0 +1,105 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All five tools are unconditionally registered in the single ListTools handler (build/index.js:101-378); there is no toolset gating, so every tool is default-enabled.",
+  "No filesystem, shell, or local network access anywhere in the file \u2014 only axios POST/GET to the five fixed api.tavily.com endpoints (build/index.js:20-26), hence no HOSTEXEC and no SECRET labels.",
+  "The Authorization header carries TAVILY_API_KEY (build/index.js:49) but the key is never echoed back into tool results, so it is not a SECRET exposure."
+ ],
+ "package": "tavily-mcp",
+ "source": ".cache/sources/.views/npm_tavily-mcp_0.2.22_01f43efe7174",
+ "tools": {
+  "tavily_crawl": {
+   "default_enabled": true,
+   "evidence": [
+    "build/index.js:567-571",
+    "build/index.js:419-432",
+    "build/index.js:875-886"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`crawl` sends the agent-chosen root `url` (plus free-text `instructions`) to Tavily's crawl endpoint; `formatCrawlResults` returns crawled page URLs and raw content, i.e. attacker-controlled web content (UNTRUSTED). The agent-chosen URL is requested by the crawler, so arbitrary data can be encoded into a URL on an attacker-controlled host (SINK). Crawling happens on Tavily's infrastructure, so no user-private data is reached.",
+   "undetermined": false
+  },
+  "tavily_extract": {
+   "default_enabled": true,
+   "evidence": [
+    "build/index.js:560-564",
+    "build/index.js:410",
+    "build/index.js:845-847"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`extract` forwards the agent-supplied `urls` array to Tavily, which fetches those pages and returns their raw content via `formatResults` \u2014 arbitrary attacker-controlled page text enters the agent context (UNTRUSTED). Because the fetched URL is fully agent-chosen, the agent can embed data in the path/query of a host the attacker controls and that host observes the request, making this an exfiltration channel (SINK). The fetch is performed server-side by Tavily, so `file://`/user-localhost content is not reachable \u2014 not SECRET.",
+   "undetermined": false
+  },
+  "tavily_map": {
+   "default_enabled": true,
+   "evidence": [
+    "build/index.js:574-578",
+    "build/index.js:440-449",
+    "build/index.js:890-898"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`map` passes the agent-chosen `url` and `instructions` to Tavily's map endpoint, which fetches the site and returns discovered links; `formatMapResults` puts those attacker-controllable URLs in context (UNTRUSTED), and the agent-chosen URL fetch on an attacker-owned host is an outbound channel the attacker can read (SINK).",
+   "undetermined": false
+  },
+  "tavily_research": {
+   "default_enabled": true,
+   "evidence": [
+    "build/index.js:587-591",
+    "build/index.js:606-612",
+    "build/index.js:900-905"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`research` posts the agent-supplied free-text `input` to the fixed `https://api.tavily.com/research` endpoint and polls/streams back a synthesised report built from multiple web sources; `formatResearchResults` returns that web-derived text (UNTRUSTED). The remote research agent browses the open web driven by agent-controlled `input`, so it can plausibly be steered to request an attacker-chosen URL carrying exfiltrated data; the code gives no restriction on the research task, so the SINK label is kept (undetermined).",
+   "undetermined": true
+  },
+  "tavily_search": {
+   "default_enabled": true,
+   "evidence": [
+    "build/index.js:556",
+    "build/index.js:839-851",
+    "build/index.js:106"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`search` POSTs the query to the fixed endpoint `https://api.tavily.com/search` (build/index.js:21,556) and `formatResults` returns titles, URLs, snippets and optional `raw_content` scraped from arbitrary web pages straight into the agent context \u2014 attacker-controlled content. The request goes only to a fixed vendor endpoint (no agent-chosen host), and `include_domains`/`exclude_domains` only filter results, so it is not a SINK; nothing local or credentialed is read, so not SECRET.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "Key is read from env; keyless mode is used when absent",
+   "effect": "Server runs in keyless mode; requests omit `api_key` and the API is expected to reject crawl/map/research with a recoverable envelope explaining a key is required, which is rendered as text (isKeylessEnvelope/formatKeylessEnvelope). The tools remain advertised in ListTools, so labels are unchanged for search/extract and only effectively degraded for the others by the remote API.",
+   "evidence": "build/index.js:12-13, build/index.js:54-56, build/index.js:479-486",
+   "kind": "env",
+   "syntax": "TAVILY_API_KEY unset"
+  },
+  {
+   "default": "unset \u2192 empty object, no overrides",
+   "effect": "JSON object whose keys overwrite matching tavily_search parameters (e.g. can force include_raw_content or domain filters); does not remove any tool or label.",
+   "evidence": "build/index.js:80-90, build/index.js:535-539",
+   "kind": "env",
+   "syntax": "DEFAULT_PARAMETERS='{\"search_depth\":\"basic\",\"include_raw_content\":true}'"
+  },
+  {
+   "default": "false \u2192 server starts normally",
+   "effect": "Prints tool descriptions to stdout and exits without starting the server (no tools callable).",
+   "evidence": "build/index.js:937-951",
+   "kind": "cli-flag",
+   "syntax": "--list-tools"
+  }
+ ],
+ "version": "0.2.22"
+}

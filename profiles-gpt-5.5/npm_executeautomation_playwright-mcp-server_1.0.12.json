@@ -1,0 +1,749 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All advertised tools are included in the exported `tools` list with no feature flag shown: `dist/tools.js:537-542`.",
+  "Most browser/API tool implementations are imported from modules whose source was not provided here, so those tools are marked `undetermined` where exact execute behavior or return shape is not settled by the shown code."
+ ],
+ "package": "@executeautomation/playwright-mcp-server",
+ "source": ".cache/sources/.views/npm_executeautomation_playwright-mcp-server_1.0.12_a40617f5e11c",
+ "tools": {
+  "clear_codegen_session": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "sessionId"
+   ],
+   "evidence": [
+    "dist/tools.js:62-73",
+    "dist/tools/codegen/index.js:174-179"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "The handler deletes/clears an in-memory codegen session selected by `sessionId` and returns success; no external destination is shown.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "end_codegen_session": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "sessionId"
+   ],
+   "evidence": [
+    "dist/tools.js:34-45",
+    "dist/tools/codegen/index.js:79-119",
+    "dist/tools/codegen/generator.js:18-29",
+    "dist/tools/codegen/generator.js:145-152"
+   ],
+   "identifier_output_fields": [
+    "filePath",
+    "outputDirectory"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "`endCodegenSession.handler` selects a recorded session by `sessionId`, generates test code, writes it with `fs.writeFile` to a path derived from the session options, and returns paths/test code. This is a local write, not an attacker-readable destination by itself.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_codegen_session": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools.js:48-59",
+    "dist/tools/codegen/index.js:153-158"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "The handler returns the in-memory codegen session selected by `sessionId`; no network or host file read is shown. Exact session shape is in `ActionRecorder`, which was not included.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "playwright_assert_response": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools.js:368-376",
+    "dist/toolHandler.js:529-530"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The advertised tool waits for and validates a previously captured HTTP response body. That response may be from attacker-authored web content or from non-public localhost/intranet pages. The concrete implementation and exact returned fields are not included, so the least-restrictive reading keeps the return-data labels.",
+   "undetermined": true,
+   "value_args": [
+    "value"
+   ]
+  },
+  "playwright_click": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "selector"
+   ],
+   "evidence": [
+    "dist/tools.js:111-119",
+    "dist/toolHandler.js:511-512"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Clicking an element in the current browser page can trigger navigation, form submission, or other requests to the page's host, including an attacker-chosen page. The concrete `ClickTool` implementation is not included.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "playwright_click_and_switch_tab": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "selector"
+   ],
+   "evidence": [
+    "dist/tools.js:484-491",
+    "dist/toolHandler.js:559-560"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Clicking a link can navigate/open a new tab and send requests to the linked host, including an attacker-controlled host. The concrete implementation is not included.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "playwright_close": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools.js:259-265",
+    "dist/toolHandler.js:415-443"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "The handler closes the local browser instance and returns a fixed status string. It does not expose secrets or contact an attacker destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "playwright_console_logs": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools.js:205-229",
+    "dist/toolHandler.js:66-90",
+    "dist/toolHandler.js:509-510",
+    "dist/toolHandler.js:627-628"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Console messages are registered from page `console` and `pageerror` events, and the tool is advertised to retrieve them. Page scripts and errors can be attacker-authored; logs may also contain non-public data from localhost/intranet/file pages. Exact execute output shape is not included.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "playwright_custom_user_agent": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools.js:380-388",
+    "dist/toolHandler.js:459-470",
+    "dist/toolHandler.js:531-532"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "The handler passes `userAgent` into browser settings and a new context can be created with that user agent. This stores browser configuration; no immediate external request or page-content return is shown. The concrete tool implementation is not included.",
+   "undetermined": true,
+   "value_args": [
+    "userAgent"
+   ]
+  },
+  "playwright_delete": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "dist/tools.js:339-352",
+    "dist/toolHandler.js:319-322",
+    "dist/toolHandler.js:484-487",
+    "dist/toolHandler.js:546-547"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The tool sends DELETE to agent-chosen `url`, possibly with token/headers; returned responses can be attacker-controlled or non-public localhost/intranet data. The concrete request implementation is not included.",
+   "undetermined": true,
+   "value_args": [
+    "token",
+    "headers"
+   ]
+  },
+  "playwright_drag": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "sourceSelector",
+    "targetSelector"
+   ],
+   "evidence": [
+    "dist/tools.js:436-445",
+    "dist/toolHandler.js:553-554"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Dragging elements in the current page can trigger page JavaScript and network/state changes on an attacker-controlled site. The concrete implementation is not included.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "playwright_evaluate": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "script"
+   ],
+   "evidence": [
+    "dist/tools.js:194-202",
+    "dist/toolHandler.js:525-526"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The tool executes agent-supplied browser JavaScript. Such script can read page data and return it, including non-public localhost/intranet/file page data, and can send data to arbitrary network destinations from the page. If run on attacker-authored pages, returned data can be attacker-controlled. This is browser-page execution, not host code execution. The concrete implementation is not included.",
+   "undetermined": true,
+   "value_args": [
+    "script"
+   ]
+  },
+  "playwright_expect_response": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "id"
+   ],
+   "evidence": [
+    "dist/tools.js:356-365",
+    "dist/toolHandler.js:527-528"
+   ],
+   "identifier_output_fields": [
+    "id"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "The advertised tool registers a pending wait for a response matching `url` under `id` but does not itself contact a new URL or return the response body. The concrete implementation is not included.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "playwright_fill": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "selector"
+   ],
+   "evidence": [
+    "dist/tools.js:147-156",
+    "dist/toolHandler.js:517-518"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The advertised tool fills agent-supplied `value` into a page element; an attacker-controlled page can read or submit it. The concrete implementation is not included.",
+   "undetermined": true,
+   "value_args": [
+    "value"
+   ]
+  },
+  "playwright_get": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "dist/tools.js:268-282",
+    "dist/toolHandler.js:319-322",
+    "dist/toolHandler.js:484-487",
+    "dist/toolHandler.js:538-539"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The tool performs HTTP GET to agent-chosen `url`; the handler creates a Playwright request context with `baseURL: url`. Responses from attacker hosts are untrusted, and responses from localhost/intranet URLs can be non-public. The concrete request implementation is not included.",
+   "undetermined": true,
+   "value_args": [
+    "token",
+    "headers"
+   ]
+  },
+  "playwright_get_visible_html": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools.js:400-415",
+    "dist/toolHandler.js:535-536"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The advertised tool returns HTML from the current page. Page HTML can be attacker-authored, or non-public content from file, localhost, or intranet pages reached by the browser. The concrete implementation is not included.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "playwright_get_visible_text": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools.js:391-397",
+    "dist/toolHandler.js:533-534"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The advertised tool returns visible text from the current page. Current page text can be attacker-authored, or can be non-public content from file, localhost, or intranet pages reached by the browser. The concrete implementation is not included.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "playwright_go_back": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools.js:418-424",
+    "dist/toolHandler.js:549-550"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Browser history navigation can issue requests to previously visited hosts, including attacker-chosen hosts from earlier navigation. The concrete implementation is not included.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "playwright_go_forward": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools.js:427-433",
+    "dist/toolHandler.js:551-552"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Browser history navigation can issue requests to previously visited hosts, including attacker-chosen hosts from earlier navigation. The concrete implementation is not included.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "playwright_hover": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "selector"
+   ],
+   "evidence": [
+    "dist/tools.js:171-179",
+    "dist/toolHandler.js:521-522"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Hovering can trigger page JavaScript and network requests on an attacker-controlled current page. The concrete implementation is not included.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "playwright_iframe_click": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "iframeSelector",
+    "selector"
+   ],
+   "evidence": [
+    "dist/tools.js:122-131",
+    "dist/toolHandler.js:513-514"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Clicking inside an iframe can trigger requests or state changes in the framed page, which can be attacker-controlled. The concrete implementation is not included.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "playwright_iframe_fill": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "iframeSelector",
+    "selector"
+   ],
+   "evidence": [
+    "dist/tools.js:134-144",
+    "dist/toolHandler.js:515-516"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The advertised tool fills `value` into an iframe element; that agent-supplied value can be submitted or observed by an attacker-controlled page/frame. The concrete implementation is not included.",
+   "undetermined": true,
+   "value_args": [
+    "value"
+   ]
+  },
+  "playwright_navigate": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "dist/tools.js:76-90",
+    "dist/toolHandler.js:459-471",
+    "dist/toolHandler.js:501-502"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The advertised `url` is an agent-chosen URL, and the handler creates a Playwright browser/page then dispatches to `navigationTool.execute`. A browser navigation sends a request to that chosen host. The concrete `NavigationTool` implementation is not included.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "playwright_patch": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "dist/tools.js:321-336",
+    "dist/toolHandler.js:319-322",
+    "dist/toolHandler.js:484-487",
+    "dist/toolHandler.js:544-545"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The tool PATCHes agent-supplied `value`/headers/token to agent-chosen `url`; returned responses can be attacker-controlled or non-public localhost/intranet data. The concrete request implementation is not included.",
+   "undetermined": true,
+   "value_args": [
+    "value",
+    "token",
+    "headers"
+   ]
+  },
+  "playwright_post": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "dist/tools.js:285-300",
+    "dist/toolHandler.js:319-322",
+    "dist/toolHandler.js:484-487",
+    "dist/toolHandler.js:540-541"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The tool POSTs agent-supplied `value`/headers/token to agent-chosen `url`; returned responses can be attacker-controlled or non-public localhost/intranet data. The concrete request implementation is not included.",
+   "undetermined": true,
+   "value_args": [
+    "value",
+    "token",
+    "headers"
+   ]
+  },
+  "playwright_press_key": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "selector"
+   ],
+   "evidence": [
+    "dist/tools.js:448-456",
+    "dist/toolHandler.js:555-556"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Key presses in the current page can enter/submit data or trigger requests to the current site, which may be attacker-controlled. The concrete implementation is not included.",
+   "undetermined": true,
+   "value_args": [
+    "key"
+   ]
+  },
+  "playwright_put": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "dist/tools.js:303-318",
+    "dist/toolHandler.js:319-322",
+    "dist/toolHandler.js:484-487",
+    "dist/toolHandler.js:542-543"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The tool PUTs agent-supplied `value`/headers/token to agent-chosen `url`; returned responses can be attacker-controlled or non-public localhost/intranet data. The concrete request implementation is not included.",
+   "undetermined": true,
+   "value_args": [
+    "value",
+    "token",
+    "headers"
+   ]
+  },
+  "playwright_resize": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools.js:232-256",
+    "dist/toolHandler.js:505-506"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "The advertised tool changes browser viewport/device emulation settings. No return of page data or network send is shown. The concrete `ResizeTool` implementation is not included.",
+   "undetermined": true,
+   "value_args": [
+    "device",
+    "width",
+    "height",
+    "orientation"
+   ]
+  },
+  "playwright_save_as_pdf": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "outputPath",
+    "filename"
+   ],
+   "evidence": [
+    "dist/tools.js:460-480",
+    "dist/toolHandler.js:557-558"
+   ],
+   "identifier_output_fields": [
+    "outputPath",
+    "filename"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "The advertised tool saves the current page as a local PDF at `outputPath`/`filename`. A local filesystem write is not an attacker-readable sink under the stated threat model, and no return of page content is shown. The concrete implementation is not included.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "playwright_screenshot": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "name",
+    "downloadsDir"
+   ],
+   "evidence": [
+    "dist/tools.js:93-108",
+    "dist/toolHandler.js:503-504",
+    "dist/toolHandler.js:633-634"
+   ],
+   "identifier_output_fields": [
+    "name"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool is advertised to screenshot the current page/element. Current page pixels may be attacker-authored web content or non-public `file://`, localhost, or intranet content reached by the browser. The screenshot implementation is imported but not included, so exact return fields are undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "playwright_select": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "selector"
+   ],
+   "evidence": [
+    "dist/tools.js:159-168",
+    "dist/toolHandler.js:519-520"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The advertised tool selects agent-supplied `value` in the current page, which can be observed/submitted by the current site. The concrete implementation is not included.",
+   "undetermined": true,
+   "value_args": [
+    "value"
+   ]
+  },
+  "playwright_upload_file": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "selector"
+   ],
+   "evidence": [
+    "dist/tools.js:182-190",
+    "dist/toolHandler.js:523-524"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The advertised tool uploads a local `filePath` to a file input in the current page; if the page is attacker-controlled, this can deliver that file to an attacker-readable destination. The concrete implementation is not included.",
+   "undetermined": true,
+   "value_args": [
+    "filePath"
+   ]
+  },
+  "start_codegen_session": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools.js:5-31",
+    "dist/tools/codegen/index.js:31-58"
+   ],
+   "identifier_output_fields": [
+    "sessionId",
+    "options.outputPath",
+    "options.testNamePrefix"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "`startCodegenSession.handler` normalizes `options.outputPath`, creates that directory with `fs.mkdir`, starts an in-memory session, and returns `sessionId` plus options. It writes local filesystem/session state but does not return host file contents or contact an attacker host. [dropped destination_args not in the input schema: options.outputPath] [dropped value_args not in the input schema: options.testNamePrefix]",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [],
+ "version": "1.0.12"
+}

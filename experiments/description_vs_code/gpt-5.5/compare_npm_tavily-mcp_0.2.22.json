@@ -1,0 +1,113 @@
+[
+ {
+  "tool": "tavily_search",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "include_domains",
+   "exclude_domains"
+  ],
+  "annotations": {},
+  "rationale_code": "`search` POSTs the query to the fixed endpoint `https://api.tavily.com/search` (build/index.js:21,556) and `formatResults` returns titles, URLs, snippets and optional `raw_content` scraped from arbitrary web pages straight into the agent context \u2014 attacker-controlled content. The request goes only t"
+ },
+ {
+  "tool": "tavily_extract",
+  "code": [
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "urls"
+  ],
+  "annotations": {},
+  "rationale_code": "`extract` forwards the agent-supplied `urls` array to Tavily, which fetches those pages and returns their raw content via `formatResults` \u2014 arbitrary attacker-controlled page text enters the agent context (UNTRUSTED). Because the fetched URL is fully agent-chosen, the agent can embed data in the pat"
+ },
+ {
+  "tool": "tavily_crawl",
+  "code": [
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url",
+   "select_paths",
+   "select_domains"
+  ],
+  "annotations": {},
+  "rationale_code": "`crawl` sends the agent-chosen root `url` (plus free-text `instructions`) to Tavily's crawl endpoint; `formatCrawlResults` returns crawled page URLs and raw content, i.e. attacker-controlled web content (UNTRUSTED). The agent-chosen URL is requested by the crawler, so arbitrary data can be encoded i"
+ },
+ {
+  "tool": "tavily_map",
+  "code": [
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url",
+   "select_paths",
+   "select_domains"
+  ],
+  "annotations": {},
+  "rationale_code": "`map` passes the agent-chosen `url` and `instructions` to Tavily's map endpoint, which fetches the site and returns discovered links; `formatMapResults` puts those attacker-controllable URLs in context (UNTRUSTED), and the agent-chosen URL fetch on an attacker-owned host is an outbound channel the a"
+ },
+ {
+  "tool": "tavily_research",
+  "code": [
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SINK"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`research` posts the agent-supplied free-text `input` to the fixed `https://api.tavily.com/research` endpoint and polls/streams back a synthesised report built from multiple web sources; `formatResearchResults` returns that web-derived text (UNTRUSTED). The remote research agent browses the open web"
+ }
+]

@@ -1,0 +1,562 @@
+[
+ {
+  "tool": "create_or_update_file",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "path",
+   "branch",
+   "sha"
+  ],
+  "annotations": {},
+  "rationale_code": "`files.createOrUpdateFile` writes agent-supplied `content` and `message` to an agent-chosen `owner`/`repo`/`branch`; the repository may be public, so arbitrary agent data lands in an attacker-readable location."
+ },
+ {
+  "tool": "search_repositories",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "query"
+  ],
+  "annotations": {},
+  "rationale_code": "`repository.searchRepositories` runs a GitHub search with the user's PAT, so results can include private repositories the token can read (SECRET), and repository names/descriptions/READMEs in results are attacker-authored public content (UNTRUSTED)."
+ },
+ {
+  "tool": "create_repository",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "name"
+  ],
+  "annotations": {},
+  "rationale_code": "`repository.createRepository` creates a repository from agent-supplied `name`/`description` with `private` optional; a public repo in the user's account makes that agent-chosen text publicly readable, a low-bandwidth but real exfiltration channel."
+ },
+ {
+  "tool": "get_file_contents",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "path",
+   "branch"
+  ],
+  "annotations": {},
+  "rationale_code": "`files.getFileContents` reads any path of any repo with the user's credentials, returning private repository file contents (SECRET) and, for attacker-owned public repos, attacker-controlled text (UNTRUSTED)."
+ },
+ {
+  "tool": "push_files",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "branch",
+   "files"
+  ],
+  "annotations": {},
+  "rationale_code": "`files.pushFiles` commits an agent-supplied array of file paths/contents to an agent-chosen repo and branch, which may be a public repository readable by the attacker."
+ },
+ {
+  "tool": "create_issue",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "assignees",
+   "milestone",
+   "labels"
+  ],
+  "annotations": {},
+  "rationale_code": "`issues.createIssue` posts agent-supplied `title`/`body` into any repository, including public ones where the issue is world-readable."
+ },
+ {
+  "tool": "create_pull_request",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "head",
+   "base"
+  ],
+  "annotations": {},
+  "rationale_code": "`pulls.createPullRequest` publishes an agent-supplied `title`/`body` to an agent-chosen repository; on a public repo this is attacker-readable output."
+ },
+ {
+  "tool": "fork_repository",
+  "code": [],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "organization"
+  ],
+  "annotations": {},
+  "rationale_code": "`repository.forkRepository` copies a repo into the user's account or an org; it carries no agent-authored payload to a public destination and returns only fork metadata. It can echo metadata of a repo the user can read privately, which is why this is marked undetermined rather than asserting no reac"
+ },
+ {
+  "tool": "create_branch",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "branch",
+   "from_branch"
+  ],
+  "annotations": {},
+  "rationale_code": "`branches.createBranchFromRef` creates an agent-named ref in an agent-chosen repository; on a public repo the branch name is publicly visible, so agent-supplied text reaches an attacker-readable destination (narrow channel, hence undetermined)."
+ },
+ {
+  "tool": "list_commits",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "sha"
+  ],
+  "annotations": {},
+  "rationale_code": "`commits.listCommits` returns commit history of any repo with the user's token: private-repo history (SECRET) and attacker-authored commit messages/author fields from public repos (UNTRUSTED)."
+ },
+ {
+  "tool": "list_issues",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "labels",
+   "since",
+   "sort",
+   "state",
+   "direction"
+  ],
+  "annotations": {},
+  "rationale_code": "`issues.listIssues` reads issues from private repos with the user's PAT (SECRET) and from public repos where issue titles/bodies are written by arbitrary third parties (UNTRUSTED)."
+ },
+ {
+  "tool": "update_issue",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "issue_number",
+   "assignees",
+   "milestone",
+   "labels",
+   "state"
+  ],
+  "annotations": {},
+  "rationale_code": "`issues.updateIssue` writes agent-supplied `title`/`body`/labels onto an issue in an agent-chosen repository, which may be public and attacker-readable."
+ },
+ {
+  "tool": "add_issue_comment",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "issue_number"
+  ],
+  "annotations": {},
+  "rationale_code": "`issues.addIssueComment` posts an agent-supplied `body` as a comment on any issue, including issues in public repos the attacker can read."
+ },
+ {
+  "tool": "search_code",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "q"
+  ],
+  "annotations": {},
+  "rationale_code": "`search.searchCode` searches with the user's token, so hits can include private repositories' code (SECRET), and public code fragments are attacker-authored (UNTRUSTED)."
+ },
+ {
+  "tool": "search_issues",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "q"
+  ],
+  "annotations": {},
+  "rationale_code": "`search.searchIssues` returns issue/PR titles and bodies; scoped queries can surface private repo issues via the user's PAT (SECRET), and public issue text is fully attacker-controllable (UNTRUSTED)."
+ },
+ {
+  "tool": "search_users",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "q"
+  ],
+  "annotations": {},
+  "rationale_code": "`search.searchUsers` returns public profile data (names, bios, logins) that any attacker can set on their own account; no non-public data is exposed."
+ },
+ {
+  "tool": "get_issue",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "issue_number"
+  ],
+  "annotations": {},
+  "rationale_code": "`issues.getIssue` fetches an issue from any repo: private-repo issues read with the user's credentials (SECRET) and public issue bodies authored by attackers (UNTRUSTED)."
+ },
+ {
+  "tool": "get_pull_request",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "pull_number"
+  ],
+  "annotations": {},
+  "rationale_code": "`pulls.getPullRequest` returns PR details for any repo, covering private repository data (SECRET) and attacker-written PR titles/bodies in public repos (UNTRUSTED)."
+ },
+ {
+  "tool": "list_pull_requests",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "state",
+   "head",
+   "base",
+   "sort",
+   "direction"
+  ],
+  "annotations": {},
+  "rationale_code": "`pulls.listPullRequests` lists PRs of an agent-chosen repo, exposing private repo data (SECRET) and third-party-authored PR text from public repos (UNTRUSTED)."
+ },
+ {
+  "tool": "create_pull_request_review",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "pull_number",
+   "commit_id",
+   "comments"
+  ],
+  "annotations": {},
+  "rationale_code": "`pulls.createPullRequestReview` publishes an agent-supplied review `body` plus per-line comment bodies on any PR, including PRs in public repos readable by the attacker."
+ },
+ {
+  "tool": "merge_pull_request",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "pull_number",
+   "merge_method"
+  ],
+  "annotations": {},
+  "rationale_code": "`pulls.mergePullRequest` writes agent-supplied `commit_title`/`commit_message` into the repository history of an agent-chosen repo, which may be public."
+ },
+ {
+  "tool": "get_pull_request_files",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "pull_number"
+  ],
+  "annotations": {},
+  "rationale_code": "`pulls.getPullRequestFiles` returns changed files with patch contents: private-repo diffs via the user's PAT (SECRET) and attacker-supplied diff content from public-repo PRs (UNTRUSTED)."
+ },
+ {
+  "tool": "get_pull_request_status",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "pull_number"
+  ],
+  "annotations": {},
+  "rationale_code": "`pulls.getPullRequestStatus` returns combined check statuses of any PR, including private repo check data (SECRET); status contexts/descriptions/target URLs on public PRs come from third-party apps an attacker can influence (UNTRUSTED)."
+ },
+ {
+  "tool": "update_pull_request_branch",
+  "code": [],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "pull_number",
+   "expected_head_sha"
+  ],
+  "annotations": {},
+  "rationale_code": "`pulls.updatePullRequestBranch` only triggers a base-branch merge and returns `{success:true}`; it neither returns repository content nor carries agent-authored text to a readable destination."
+ },
+ {
+  "tool": "get_pull_request_comments",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "pull_number"
+  ],
+  "annotations": {},
+  "rationale_code": "`pulls.getPullRequestComments` returns review comments: private repo discussion read with the user's token (SECRET) and public PR comments written by arbitrary parties (UNTRUSTED)."
+ },
+ {
+  "tool": "get_pull_request_reviews",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "pull_number"
+  ],
+  "annotations": {},
+  "rationale_code": "`pulls.getPullRequestReviews` returns review bodies and states, private-repo reviews via the user's PAT (SECRET) and attacker-authored review text on public PRs (UNTRUSTED)."
+ }
+]

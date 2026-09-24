@@ -1,0 +1,41 @@
+{
+ "kind": "npm",
+ "notes": [
+  "The server exits unless a database URL is supplied on the command line, but `query` is not gated by a feature flag or disabled-by-default toolset once the server is running."
+ ],
+ "package": "@modelcontextprotocol/server-postgres",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-postgres_0.6.2_8e160ec0e0e2",
+ "tools": {
+  "query": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "sql"
+   ],
+   "evidence": [
+    "dist/index.js:20",
+    "dist/index.js:24-25",
+    "dist/index.js:69-83",
+    "dist/index.js:87-93"
+   ],
+   "identifier_output_fields": [
+    "content[].text"
+   ],
+   "injectable_output_fields": [
+    "content[].text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool is advertised as `query` with input argument `sql`, and the handler passes that argument directly to PostgreSQL via `client.query(sql)`, then returns `JSON.stringify(result.rows, null, 2)` in `content[].text`. Because the server connects to the configured PostgreSQL database using `databaseUrl`, query results can expose non-public database contents reachable with those credentials, so it is SECRET. The returned rows may also contain attacker-authored content if the connected database includes multi-writer or third-party data; the source does not constrain the database contents, so UNTRUSTED is kept under the least-restrictive reading. Although the code starts `BEGIN TRANSACTION READ ONLY`, it does not parse or restrict the supplied SQL before execution; whether state-changing SQL is possible depends on PostgreSQL behavior, permissions, and accepted statements, so the enforcement kind is treated as WRITE conservatively, with `sql` deciding the affected database objects/records and carrying any stored values. The source only shows SQL being sent to the configured database endpoint, not to an agent-chosen attacker-readable host, so SINK is not labeled.",
+   "undetermined": true,
+   "value_args": [
+    "sql"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "0.6.2"
+}

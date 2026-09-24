@@ -1,0 +1,129 @@
+{
+ "kind": "npm",
+ "notes": [
+  "No advertised tool takes a URL or arbitrary host/recipient, and none shells out, so no SINK or HOSTEXEC labels apply to this core tool set. The non-advertised `autopilot_commit`/`autopilot_finalize` tools (only under TASK_MASTER_TOOLS=all/custom) perform git operations and would need separate judgement.",
+  "Indirect flow worth noting: research-derived or PRD-derived text is persisted into tasks.json by parse_prd/expand_task/update_subtask, after which get_tasks/get_task/next_task can echo it back. Those read tools are not labelled UNTRUSTED here because the store is the user's own file, but an earlier research-enabled write can taint it.",
+  "Sources are minified/truncated bundles; tool bodies for get_task and the core service methods (`tasks.list`, `mn`, `Jt`, `on`) are not fully visible, which is why several tools are marked undetermined with labels kept."
+ ],
+ "package": "task-master-ai",
+ "source": ".cache/sources/.views/npm_task-master-ai_0.42.0_1156fbe9deef",
+ "tools": {
+  "expand_task": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/mcp-server.js:44"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`kn` registers `expand_task`, resolving `tasksJsonPath` via `T({projectRoot,file})` and a complexity report path, then calling `Jt(...)` which returns task/subtask content from the user's local project store (SECRET). The `research` flag routes generation through the research (web-search) role, so returned subtasks can embed attacker-controlled web content (UNTRUSTED). Provider calls target configured vendor endpoints, not agent-chosen hosts.",
+   "undetermined": true
+  },
+  "get_task": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/mcp-server.js:44"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`get_task` is registered from the tool registry `$` (mapped to `Nt`) and per its schema/description returns detailed task content for the given ids from the user's project store. Implementation body is not visible in the provided excerpt, so the read-of-local-data reading is kept.",
+   "undetermined": true
+  },
+  "get_tasks": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/mcp-server.js:36",
+    "dist/mcp-server.js:44"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`jt` registers `get_tasks`, which calls `n.tasks.list({tag,filter,includeSubtasks})` with the user's project root/credentials and returns the full task objects (titles, details, test strategies) into the agent context \u2014 non-public local/account data. No outbound agent-chosen destination, no exec.",
+   "undetermined": false
+  },
+  "next_task": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/mcp-server.js:44"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`Fn` registers `next_task`; it resolves `tasksJsonPath` via `de(e,n)` and a complexity report path from agent-supplied `file`/`complexityReport` and returns the found task data, i.e. local project file content, into context.",
+   "undetermined": false
+  },
+  "parse_prd": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/mcp-server.js:44"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`In` registers `parse_prd`; `input` is an agent-chosen absolute path to any file which is read and its derived content returned as generated tasks (`on({...e,tag:a},...)`), so arbitrary local file content reaches the agent context (SECRET). With `research:true` the research role (Perplexity online model) is used, mixing attacker-controllable web search content into the generated tasks (UNTRUSTED). It writes tasks.json locally, not to any attacker-readable destination.",
+   "undetermined": true
+  },
+  "set_task_status": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/mcp-server.js:36"
+   ],
+   "labels": [],
+   "rationale": "`Lt` registers `set_task_status`; it only calls `n.tasks.updateStatus(r,i,o)` and returns old/new status strings. It mutates the local task store but delivers nothing to an attacker-readable destination, returns no substantive private content, and executes no code.",
+   "undetermined": false
+  },
+  "update_subtask": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/mcp-server.js:44"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`Jn` registers `update_subtask`, calling `mn({tasksJsonPath,id,prompt,research,...})` and returning the operation result which includes the updated subtask content read from the user's local tasks file (SECRET). With `research:true` (documented as 'Use Perplexity AI for research-backed updates', AGENTS.md:426-431) the generated text is derived from live web search results, i.e. attacker-controllable content flowing back into context (UNTRUSTED). The AI call itself goes to the configured provider endpoint, not an agent-chosen host, so it is not a SINK. Result payload shape of `mn` is not fully visible, so labels are kept.",
+   "undetermined": true
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "core \u2014 `nr()` returns 'core' when TASK_MASTER_TOOLS is unset or blank",
+   "effect": "Only the 7 core tools are registered: get_tasks, next_task, get_task, set_task_status, update_subtask, parse_prd, expand_task. This is exactly the advertised set, so all 7 are enabled by default; higher-risk tools (research, autopilot_commit, initialize_project, etc.) are NOT registered.",
+   "evidence": "dist/mcp-server.js:44",
+   "kind": "env var",
+   "syntax": "TASK_MASTER_TOOLS=core|lean (default when unset)"
+  },
+  {
+   "default": "not set (core)",
+   "effect": "Adds initialize_project, analyze_project_complexity, expand_all, add_subtask, remove_task, add_task, complexity_report on top of core (`er`).",
+   "evidence": "dist/mcp-server.js:44",
+   "kind": "env var",
+   "syntax": "TASK_MASTER_TOOLS=standard"
+  },
+  {
+   "default": "not set (core)",
+   "effect": "Registers every key of the registry `$`, including `research`, `autopilot_*` (git branch/commit workflow) and `models`/`rules` tools that are not advertised here.",
+   "evidence": "dist/mcp-server.js:44",
+   "kind": "env var",
+   "syntax": "TASK_MASTER_TOOLS=all"
+  },
+  {
+   "default": "not set (core)",
+   "effect": "Only the named tools are registered; unknown names are warned and, if none resolve, all tools are loaded as fallback.",
+   "evidence": "dist/mcp-server.js:44",
+   "kind": "env var (custom list)",
+   "syntax": "TASK_MASTER_TOOLS=\"get_tasks,next_task,...\""
+  },
+  {
+   "default": "false for expand_task/parse_prd (`.default(!1)` / optional); optional for update_subtask",
+   "effect": "Skips the research/web-search model role, removing the path by which live web content (attacker-controllable) enters generated task text; the UNTRUSTED label applies only when the agent sets research:true.",
+   "evidence": "dist/mcp-server.js:44",
+   "kind": "tool parameter",
+   "syntax": "research: false (schema default for expand_task; omitted for parse_prd/update_subtask)"
+  }
+ ],
+ "version": "0.42.0"
+}

@@ -1,0 +1,103 @@
+{
+ "tools": {
+  "browser_eval": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The advertised tool says it `does NOT drive the browser itself` and only `points you at agent-browser` and `tells you how to install it`; the later shell/browser actions are described as something `You then run ... directly`, not as MCP tool reach. Therefore the tool itself is only informational and is not judged as HOSTEXEC, SINK, SECRET, or UNTRUSTED.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "nextjs_docs": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool is tied to local project state: it finds documentation for `THIS project`, uses the installed package at `node_modules/next/dist/docs/`, accepts `project_path`, and returns the `path it returns`. Even though it says it `does NOT fetch documentation`, returning local project/package path/version guidance exposes non-public host/project metadata, so SECRET applies.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "topic",
+    "project_path"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "path"
+   ],
+   "attacker_named_fields": []
+  },
+  "nextjs_index": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Discover[s] all running Next.js development servers` and returns local runtime details including `Server port, PID, and URL` plus `available MCP tools`. Running localhost/dev-server process information and tool metadata are non-public host/runtime data, so SECRET applies. The description does not indicate attacker-authored returned text or delivery to attacker-readable destinations.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "port"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "port",
+    "PID",
+    "URL",
+    "toolName"
+   ],
+   "attacker_named_fields": []
+  },
+  "nextjs_call": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Call a specific MCP tool on a running Next.js development server`, including tools for `Error diagnostics`, `Route information`, `Build status`, and `Cache management`, and `And more (varies by Next.js version)`. Those calls can expose local dev-server/project/runtime data, so SECRET applies. The exact downstream tools and outputs are not settled by the advertisement; runtime diagnostics/errors may include text originating from the running application or third-party/multi-writer data, so under the least-restrictive reading UNTRUSTED is kept and `undetermined` is true. The description confirms state-changing reach via `Cache management (clear caches)`, making the tool WRITE. It does not advertise arbitrary host code execution or an attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "port",
+    "toolName",
+    "args"
+   ],
+   "value_args": [
+    "args"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "The input schema for `nextjs_call` declares `args` as a string, while the description says the `args` parameter must be an object. The enforcement fields use only the declared argument name `args`."
+ ],
+ "usage": {
+  "input_tokens": 2364,
+  "output_tokens": 5360,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

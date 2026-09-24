@@ -1,0 +1,204 @@
+{
+ "tools": {
+  "slack_list_channels": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Lists Slack workspace channels: `List public or pre-defined channels in the workspace with pagination`. Because this reaches workspace data using the user's/server's Slack credentials, channel listings may be non-public or account-specific, so SECRET. Channel names/topics/purposes can be created or edited by workspace participants; the description says `public or pre-defined channels in the workspace`, so the returned channel metadata is multi-writer Slack content and UNTRUSTED. The exact returned fields are not advertised, so output-field classifications are undetermined; least restrictive reading keeps labels.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "slack_post_message": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Posts agent-supplied content to Slack: `Post a new message to a Slack channel`. This is a WRITE and a SINK because `channel_id` selects the Slack channel destination and `text` is sent/stored there; Slack channel messages may be read by other workspace members. No returned data is specified.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "channel_id"
+   ],
+   "value_args": [
+    "text"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "slack_reply_to_thread": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Sends agent-supplied content into a Slack thread: `Reply to a specific message thread in Slack`. This is a WRITE and SINK because `channel_id` and `thread_ts` select the channel/thread destination, and `text` is the reply content sent/stored for Slack readers. No returned data is specified.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "channel_id",
+    "thread_ts"
+   ],
+   "value_args": [
+    "text"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "slack_add_reaction": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Changes Slack state by adding an emoji to a selected message: `Add a reaction emoji to a message`. It is a WRITE and SINK because `channel_id` and `timestamp` decide which Slack message is acted on, and `reaction` is the value being sent/stored as the reaction name, visible to Slack readers. No returned data is specified.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "channel_id",
+    "timestamp"
+   ],
+   "value_args": [
+    "reaction"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "slack_get_channel_history": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves Slack messages: `Get recent messages from a channel`. Messages in the user's workspace/channel can be non-public SaaS data reached with Slack credentials, so SECRET. Channel messages are authored by other workspace users and may contain attacker-controlled/injected content in a multi-writer source, so UNTRUSTED. `channel_id` decides the channel read. Returned message bodies and related user/timestamp identifiers are not enumerated by the advertised schema, so field classifications are undetermined; least restrictive reading keeps labels.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "channel_id"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "slack_get_thread_replies": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves Slack thread messages: `Get all replies in a message thread`. Thread replies in Slack may be private/account workspace data reached with credentials, so SECRET. Replies are authored by other Slack users in a multi-writer source, so they are UNTRUSTED. `channel_id` and `thread_ts` decide the thread read. Returned fields are not specified, so output-field classifications are undetermined; least restrictive reading keeps labels.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "channel_id",
+    "thread_ts"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "slack_get_users": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves Slack workspace users and profiles: `Get a list of all users in the workspace with their basic profile information`. Workspace membership/profile information is SaaS data reached with credentials and may be non-public, so SECRET. Basic profile information such as names/profile fields can be set by workspace users, making it attacker-controllable in a multi-user workspace and UNTRUSTED. Returned fields are not specified in the tool schema, so field classifications are undetermined; least restrictive reading keeps labels.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "slack_get_user_profile": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves detailed Slack profile data: `Get detailed profile information for a specific user`. Detailed profile information is SaaS/account workspace data reached with credentials and may be non-public, so SECRET. Profile fields can be authored by the user whose profile is fetched, an outside workspace participant relative to the current user, so UNTRUSTED. `user_id` decides which user's record is read. Returned fields are not advertised, so output-field classifications are undetermined; least restrictive reading keeps labels.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "user_id"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "notes": [],
+ "usage": {
+  "input_tokens": 1716,
+  "output_tokens": 1294,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

@@ -1,0 +1,33 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Only the advertised `query` tool is assessed here. The server also exposes MCP resources for table schemas, but those were not in the advertised tools list."
+ ],
+ "package": "@modelcontextprotocol/server-postgres",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-postgres_0.6.2_8e160ec0e0e2",
+ "tools": {
+  "query": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:20-26",
+    "dist/index.js:69-82",
+    "dist/index.js:87-93"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "The server connects to the PostgreSQL database URL supplied at startup using `pg.Pool` (`databaseUrl` / `connectionString`) and the `query` tool executes the caller-supplied `sql` against that database. It returns `JSON.stringify(result.rows, null, 2)` in `content[].text`, so it can disclose non-public database contents reachable with the configured database credentials. The code starts `BEGIN TRANSACTION READ ONLY` and rolls back, so the advertised tool is treated as a read-only database read, not a write sink.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [],
+ "version": "0.6.2"
+}

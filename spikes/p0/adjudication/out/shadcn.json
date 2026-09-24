@@ -1,0 +1,74 @@
+{
+  "package": "shadcn",
+  "version": "4.21.0",
+  "source": "npm pack shadcn@4.21.0, tar xzf (not installed/run) in scratchpad adj-docs/shadcn-4.21.0/package/. dist is minified, so readable source was taken from a sparse git clone of github.com/shadcn-ui/ui at tag shadcn@4.21.0 (commit 7c9eaba1) into adj-docs/shadcn-src/. Key strings were cross-checked against dist: MCP handlers at dist/chunk-TWAHNSYO.js:28-41; registry, fetcher and GitHub code at dist/chunk-B2MD6U5O.js:6,11,26,34,96; `mcp` subcommand at dist/index.js:124. Source paths below are relative to adj-docs/shadcn-src/packages/shadcn/src/.",
+  "tools": {
+    "get_project_registries": {
+      "labels": ["SECRET"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Reads the host project's components.json and package.json and returns the configured registry names verbatim. That is non-public host-file content, though low-sensitivity. No network access and no attacker-controlled input.",
+      "evidence": "mcp/index.ts:202-242; mcp/utils.ts:14-22; registry/api.ts:212-266 (explorer.load components.json / package.json from cwd)"
+    },
+    "list_items_in_registries": {
+      "labels": ["SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "The agent-supplied `registries` entries are used as-is. A URL entry is fetched with type/limit/offset appended (SINK), and owner/repo entries are read from GitHub. Returned item names and descriptions come from third-party or attacker-hosted registries (UNTRUSTED). Configured private registries (auth headers/params expanded from env and .env files) and private GitHub repos (via GH_TOKEN/GITHUB_TOKEN or gh CLI credentials after an anonymous 404) return non-public items (SECRET).",
+      "evidence": "mcp/index.ts:325-370; registry/search.ts:24-35 (explicit registries returned unfiltered), :128-132 (getRegistry per registry); registry/api.ts:73-100,112-116 (isUrl(name) => fetchRegistry(url+search params)), :120-123 (GitHub source), :134-153 (configured @namespace with headers); registry/fetcher.ts:26-60 and registry/proxy.ts:93-131 (no host/IP restriction); registry/builder.ts:84-102 + registry/env.ts:3-8 (header/param env expansion); commands/mcp.ts:98-102 + utils/env-loader.ts:15-31 (.env files loaded into process.env); registry/github.ts:233-272 + registry/github-auth.ts:68-69 + registry/github-cli.ts:11,228-253 (authenticated GitHub fallback)"
+    },
+    "search_items_in_registries": {
+      "labels": ["SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Same fetch path as list_items_in_registries, plus the agent's `query` is sent as ?q= to the agent-chosen registry URL (SINK). It returns third-party registry item metadata (UNTRUSTED) and private configured or GitHub registry items when credentials exist (SECRET).",
+      "evidence": "mcp/index.ts:244-323; registry/search.ts:114-132 (query forwarded in searchParams); registry/api.ts:83-85 (q=query), :112-116; registry/builder.ts:84-102; registry/github.ts:233-272"
+    },
+    "view_items_in_registries": {
+      "labels": ["SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Each agent-supplied item can be a URL (fetched, SINK), an owner/repo/item GitHub address (read with user GitHub credentials if private), an @namespace item from a configured (possibly private) registry, or a local *.json path with ~ expansion (host file read; only schema-valid registry-item fields are returned). Output is item name, description, type and dependencies from third-party or attacker registries (UNTRUSTED) or private/host sources (SECRET).",
+      "evidence": "mcp/index.ts:400-436; registry/api.ts:190-199; registry/resolver.ts:91-128 (github => fetchGitHubRegistryItem; isLocalFile => fetchRegistryLocal; isUrl => fetchRegistry(item)); registry/utils.ts:264-275 (isLocalFile = endsWith .json && !isUrl); registry/fetcher.ts:143-156 (readFile of agent path, homedir expansion); mcp/utils.ts:117-136 (returned fields, no file content); registry/github.ts:233-272"
+    },
+    "get_item_examples_from_registries": {
+      "labels": ["SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Searches agent-chosen registries (URL fetch with ?q=, SINK), then fetches the matching items and returns their full file contents (UNTRUSTED code from third-party or attacker registries). Private configured or GitHub registries return non-public source code (SECRET).",
+      "evidence": "mcp/index.ts:438-505 (searchRegistries then getRegistryItems on result addCommandArgument); mcp/utils.ts:139-167 (file.content emitted verbatim); registry/search.ts:317-378 (item address built from registry URL/GitHub/namespace); registry/api.ts:112-116; registry/resolver.ts:91-128"
+    },
+    "get_add_command_for_items": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Only builds and returns a string such as 'npx shadcn@latest add <items>'. The only host access is detecting the package runner from lockfiles in cwd. Nothing is executed, fetched or written.",
+      "evidence": "mcp/index.ts:507-522; mcp/utils.ts:9-12; utils/get-package-manager.ts:5-17,51-63 (@antfu/ni detect => npx | pnpm dlx | bunx)"
+    },
+    "get_audit_checklist": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns a static checklist string with no I/O.",
+      "evidence": "mcp/index.ts:524-543"
+    }
+  },
+  "value_conditions": [],
+  "notes": [
+    "Registry access is NOT limited to components.json. For list/search/examples, an explicit `registries` argument is used unfiltered (registry/search.ts:28-30), and it may be any URL (registry/api.ts:112-116) or GitHub owner/repo (api.ts:120-123). Only bare @namespace names must be configured (api.ts:125-141, builder.ts:42-46). For view_items, items may be URLs, GitHub addresses or local *.json paths (resolver.ts:95-110).",
+    "No private-IP or localhost restriction on registry fetches (registry/proxy.ts:93-131). Localhost or intranet JSON is returned only if it parses as a registry or registry item, so intranet SSRF leakage is small; JSON error message/detail fields do appear in errors (fetcher.ts:62-110).",
+    "Secret headers from components.json are bound to the exact configured URL (api.ts:147-151, context.ts:34-49) and stripped on cross-origin redirects (proxy.ts:114-123), so an agent-chosen URL does not receive configured registry tokens. Env expansion (${VAR}) applies only to config-defined URLs, headers and params, not to agent-supplied URLs (builder.ts:58-102 vs fetcher.ts:38, builder.ts:155-168).",
+    "No HOSTEXEC. The server never runs install or add. The only subprocess is `gh api --hostname github.com repos/<owner>/<repo>/contents/<encoded path>?ref=<validated sha>` for authenticated GitHub reads (registry/github-cli.ts:228-253, 276-288), with owner/repo/ref validated (registry/address.ts:5-11,167-181). get_add_command_for_items returns a command the agent could run through a separate shell tool, which is outside this server.",
+    "SECRET on the registry tools depends on the environment: private registries in components.json with credentials from env or .env files (loaded by `shadcn mcp` from cwd: commands/mcp.ts:100), GH_TOKEN/GITHUB_TOKEN or a logged-in gh CLI with private registry repos, or local *.json files. None of these is visible in the MCP config, so the least-restrictive default applies.",
+    "Registry content: the builtin @shadcn registry (REGISTRY_URL https://ui.shadcn.com/r, registry/constants.ts:5-6,44-46) is vendor-authored, but the tools accept arbitrary third-party URLs and GitHub repos, so UNTRUSTED holds regardless of project config.",
+    "No flags, env vars or toolsets remove tools or labels. The subcommand accepts only -c/--cwd (commands/mcp.ts:94-96; dist/index.js:124). REGISTRY_URL only changes the builtin base. `shadcn mcp init` is a CLI setup command, not an MCP tool.",
+    "list_items_in_registries parses an undocumented `cwd` argument (mcp/index.ts:331) but never uses it; config is always read from process.cwd() (:344)."
+  ]
+}

@@ -1,0 +1,809 @@
+{
+ "tools": {
+  "create_or_update_file": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Creates or updates data in an agent-chosen GitHub repository: `Create or update a single file in a GitHub repository`, with destination fields `owner`, `repo`, `path`, and `branch`, and stored/sent content `content` plus commit `message`. If the repository is public or attacker-readable, this is a public-repository write. Repository visibility is not settled by the text, so SINK is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "owner",
+    "repo",
+    "path",
+    "branch",
+    "sha"
+   ],
+   "value_args": [
+    "content",
+    "message"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "owner",
+    "repo",
+    "path",
+    "branch",
+    "sha"
+   ],
+   "attacker_named_fields": []
+  },
+  "search_repositories": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Search for GitHub repositories` can return public repository data whose names/descriptions are attacker-controlled, so UNTRUSTED. The text does not say results are limited to public repositories; with GitHub credentials it may also return private repositories accessible to the user, so SECRET is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "owner",
+    "repo",
+    "name",
+    "full_name",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "owner",
+    "name",
+    "full_name",
+    "url"
+   ]
+  },
+  "create_repository": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Creates a repository in the user's account: `Create a new GitHub repository in your account`. Because `private` is only an option, the tool can create a public repository containing agent-supplied `name` and `description`, making it an attacker-readable write.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "name"
+   ],
+   "value_args": [
+    "description"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "get_file_contents": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Reads `the contents of a file or directory from a GitHub repository`. Public or multi-writer repository file contents can be attacker-authored, so UNTRUSTED. The text does not restrict reads to public repositories; private repositories reachable with the user's credentials may be read, so SECRET is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "path",
+    "name",
+    "sha",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "path",
+    "name"
+   ]
+  },
+  "push_files": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Pushes agent-supplied files to an agent-selected repository and branch: `Push multiple files to a GitHub repository in a single commit`, with `files` containing paths and content and `message` as the commit message. If the selected repository is public or attacker-readable, this is a public-repository write. Repository visibility is not settled, so SINK is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "owner",
+    "repo",
+    "branch",
+    "files.path"
+   ],
+   "value_args": [
+    "files.content",
+    "message"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "owner",
+    "repo",
+    "branch",
+    "files.path",
+    "sha"
+   ],
+   "attacker_named_fields": []
+  },
+  "create_issue": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Creates an issue in an agent-chosen repository: `Create a new issue in a GitHub repository`, storing agent-supplied `title` and `body`. Public GitHub issues are attacker-readable, and the text does not limit this to private repositories.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "owner",
+    "repo",
+    "assignees",
+    "milestone",
+    "labels"
+   ],
+   "value_args": [
+    "title",
+    "body"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "issue_number",
+    "url",
+    "title"
+   ],
+   "attacker_named_fields": []
+  },
+  "create_pull_request": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Creates a pull request in an agent-chosen repository: `Create a new pull request in a GitHub repository`, with public/stored `title` and `body`. If the repository is public or otherwise attacker-readable this delivers agent-supplied data to that destination; the text does not settle visibility.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "owner",
+    "repo",
+    "head",
+    "base"
+   ],
+   "value_args": [
+    "title",
+    "body"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "pull_number",
+    "url",
+    "title",
+    "head",
+    "base"
+   ],
+   "attacker_named_fields": []
+  },
+  "fork_repository": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Fork a GitHub repository to your account or specified organization` changes GitHub state and can create an attacker-readable public fork. The advertised text does not limit the fork destination or visibility, so SINK is kept even though no separate body/content argument is advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "owner",
+    "repo",
+    "organization"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "owner",
+    "repo",
+    "organization",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "create_branch": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Creates an agent-named branch in an agent-chosen repository: `Create a new branch in a GitHub repository`. A branch name written to a public repository is attacker-readable. The text does not limit repositories to private ones, so SINK is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "owner",
+    "repo",
+    "branch",
+    "from_branch"
+   ],
+   "value_args": [
+    "branch"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "owner",
+    "repo",
+    "branch",
+    "sha"
+   ],
+   "attacker_named_fields": []
+  },
+  "list_commits": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Get list of commits of a branch in a GitHub repository` returns commit data. Public commit messages, authors, branch names, and metadata can be attacker-authored, so UNTRUSTED. The text does not restrict the repository to public data; private commit history reachable with the user's credentials may be returned, so SECRET is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "sha",
+    "author",
+    "committer",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "author",
+    "committer"
+   ]
+  },
+  "list_issues": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`List issues in a GitHub repository with filtering options` returns issue titles/bodies/comments metadata that may be authored by public users, so UNTRUSTED. The text does not say the repository must be public; private issues accessible to the user may be returned, so SECRET is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "body",
+    "return"
+   ],
+   "identifier_output_fields": [
+    "owner",
+    "repo",
+    "issue_number",
+    "title",
+    "user",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "user"
+   ]
+  },
+  "update_issue": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Updates an issue in an agent-chosen repository: `Update an existing issue in a GitHub repository`, including agent-supplied `title`, `body`, labels, assignees, milestone, or state. If the repository/issue is public or attacker-readable, this is a public issue write. The text does not settle visibility.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "owner",
+    "repo",
+    "issue_number",
+    "assignees",
+    "milestone",
+    "labels"
+   ],
+   "value_args": [
+    "title",
+    "body",
+    "labels",
+    "state"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "owner",
+    "repo",
+    "issue_number",
+    "url",
+    "title"
+   ],
+   "attacker_named_fields": []
+  },
+  "add_issue_comment": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Adds agent-supplied `body` text to an issue selected by `owner`, `repo`, and `issue_number`: `Add a comment to an existing issue`. Public issue comments are attacker-readable; the text does not restrict this to private destinations.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "owner",
+    "repo",
+    "issue_number"
+   ],
+   "value_args": [
+    "body"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "owner",
+    "repo",
+    "issue_number",
+    "comment_id",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "search_code": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Search for code across GitHub repositories` can return public code, paths, and repository metadata controlled by attackers, so UNTRUSTED. The text does not say search is limited to public code; authenticated GitHub code search can include private repositories accessible to the user, so SECRET is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "owner",
+    "repo",
+    "path",
+    "name",
+    "sha",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "owner",
+    "repo",
+    "path",
+    "name",
+    "url"
+   ]
+  },
+  "search_issues": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Search for issues and pull requests across GitHub repositories` returns issue/PR text that public users can author, so UNTRUSTED. The text does not limit the search to public repositories; it may include private issues/PRs reachable with the user's credentials, so SECRET is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "owner",
+    "repo",
+    "issue_number",
+    "pull_number",
+    "title",
+    "user",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "user"
+   ]
+  },
+  "search_users": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Search for users on GitHub` returns user profile identifiers/names from GitHub. Public GitHub users can choose their own usernames/profile text, so the result is attacker-controllable. The description does not indicate access to non-public account data, so SECRET is not assigned.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "user",
+    "login",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "user",
+    "login",
+    "name",
+    "url"
+   ]
+  },
+  "get_issue": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Get details of a specific issue in a GitHub repository` returns issue details such as user-authored title/body/comments metadata, so public issues are UNTRUSTED. The text does not restrict the repository to public data; private issue details reachable with user credentials may be returned, so SECRET is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "body",
+    "return"
+   ],
+   "identifier_output_fields": [
+    "owner",
+    "repo",
+    "issue_number",
+    "title",
+    "user",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "user"
+   ]
+  },
+  "get_pull_request": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Get details of a specific pull request` returns PR details such as title/body/head branch and author, which can be supplied by external contributors in public repositories, so UNTRUSTED. The text does not limit access to public repositories; private PR data reachable with credentials may be returned, so SECRET is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "body",
+    "return"
+   ],
+   "identifier_output_fields": [
+    "owner",
+    "repo",
+    "pull_number",
+    "title",
+    "user",
+    "head",
+    "base",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "user",
+    "head"
+   ]
+  },
+  "list_pull_requests": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`List and filter repository pull requests` returns PR titles, authors, branches, and metadata that may be attacker-authored in public repositories, so UNTRUSTED. The description does not restrict the repository to public data; private PRs reachable with the user's credentials may be returned, so SECRET is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "body",
+    "return"
+   ],
+   "identifier_output_fields": [
+    "owner",
+    "repo",
+    "pull_number",
+    "title",
+    "user",
+    "head",
+    "base",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "user",
+    "head"
+   ]
+  },
+  "create_pull_request_review": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Creates a review/comment on a PR: `Create a review on a pull request`, with `body` and review `comments` text posted to an agent-selected repository and PR. Public PR reviews are attacker-readable; the text does not restrict this to private repositories.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "owner",
+    "repo",
+    "pull_number",
+    "commit_id",
+    "comments.path",
+    "comments.position",
+    "comments.line"
+   ],
+   "value_args": [
+    "body",
+    "event",
+    "comments.body"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "owner",
+    "repo",
+    "pull_number",
+    "review_id",
+    "comment_id",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "merge_pull_request": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Merge a pull request` changes repository state and may write agent-supplied `commit_title` and `commit_message` into a public repository history. The destination PR is selected by `owner`, `repo`, and `pull_number`; repository visibility is not settled, so SINK is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "owner",
+    "repo",
+    "pull_number",
+    "merge_method"
+   ],
+   "value_args": [
+    "commit_title",
+    "commit_message"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "owner",
+    "repo",
+    "pull_number",
+    "sha",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "get_pull_request_files": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Get the list of files changed in a pull request` returns filenames/paths and possibly patch data supplied by PR contributors, so public PRs are UNTRUSTED. The text does not restrict reads to public repositories; private changed-file data reachable with credentials may be returned, so SECRET is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "filename",
+    "path",
+    "sha",
+    "status",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "filename",
+    "path"
+   ]
+  },
+  "get_pull_request_status": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Get the combined status of all status checks for a pull request` returns status/check context, descriptions, and URLs that can be produced by third-party CI or checks on public PRs, so UNTRUSTED. The text does not restrict to public repositories; private check status data may be returned with user credentials, so SECRET is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "context",
+    "description",
+    "target_url",
+    "return"
+   ],
+   "identifier_output_fields": [
+    "state",
+    "context",
+    "target_url",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "context",
+    "target_url"
+   ]
+  },
+  "update_pull_request_branch": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Update a pull request branch with the latest changes from the base branch` changes a PR branch selected by `owner`, `repo`, and `pull_number`. If the PR branch/repository is public or attacker-readable, this is a repository write. The text does not settle visibility or branch ownership, so SINK is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "owner",
+    "repo",
+    "pull_number",
+    "expected_head_sha"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "owner",
+    "repo",
+    "pull_number",
+    "sha",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "get_pull_request_comments": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Get the review comments on a pull request` returns review-comment bodies and authors that external contributors can write in public repositories, so UNTRUSTED. The text does not restrict the repository to public data; private PR comments reachable with credentials may be returned, so SECRET is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "body",
+    "return"
+   ],
+   "identifier_output_fields": [
+    "comment_id",
+    "user",
+    "path",
+    "commit_id",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "user",
+    "path"
+   ]
+  },
+  "get_pull_request_reviews": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Get the reviews on a pull request` returns review bodies, states, and reviewers that can be authored by public contributors or third parties, so UNTRUSTED. The text does not restrict to public repositories; private review data reachable with user credentials may be returned, so SECRET is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "body",
+    "return"
+   ],
+   "identifier_output_fields": [
+    "review_id",
+    "user",
+    "commit_id",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "user"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No tool is advertised as disabled by default, so default_enabled is true for all tools.",
+  "No source code or output schemas were provided. Output-field names are therefore conservative semantic names inferred from the advertised GitHub operation descriptions; where visibility or exact returned fields are not settled, undetermined is set and the less restrictive label is kept."
+ ],
+ "usage": {
+  "input_tokens": 4787,
+  "output_tokens": 7991,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

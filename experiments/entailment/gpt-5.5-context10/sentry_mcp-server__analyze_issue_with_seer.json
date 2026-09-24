@@ -1,0 +1,18 @@
+{
+ "package": "@sentry/mcp-server",
+ "tool": "analyze_issue_with_seer",
+ "claimed": [
+  "SECRET",
+  "SINK",
+  "UNTRUSTED"
+ ],
+ "HOSTEXEC": "not_supported",
+ "SECRET": "supported",
+ "SINK": "not_supported",
+ "UNTRUSTED": "insufficient",
+ "reason": "The cited lines show the handler creating an API service from the request context and fetching Sentry issue/autofix data with organization and issue identifiers, so they support SECRET because SaaS issue data reachable via the user's context/credentials is brought into the tool context. The lines do not show arbitrary host code execution. They also do not establish a SINK: the shown network/API calls are to the configured Sentry API service, and the cited allowlist comment suggests restricted vendor regions rather than agent-chosen attacker-readable destinations; the optional instruction is not shown being sent anywhere. UNTRUSTED is not settled by these lines alone: Sentry issue contents might include attacker-controlled data in practice, but the cited code does not establish that the returned content is attacker-controllable.",
+ "usage": {
+  "input_tokens": 2199,
+  "output_tokens": 1225
+ }
+}

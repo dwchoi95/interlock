@@ -1,0 +1,74 @@
+{
+ "kind": "npm",
+ "notes": [
+  "`fileKey`, `nodeId`, and `depth` select records at the fixed Figma API endpoint; for a READ tool they are not listed as `destination_args` because they do not choose an agent-controlled host.",
+  "Telemetry may be sent to PostHog by default, but it is to a fixed vendor endpoint and is not one of the advertised tools' destinations under the requested SINK definition."
+ ],
+ "package": "figma-developer-mcp",
+ "source": ".cache/sources/.views/npm_figma-developer-mcp_0.13.1_200858b8332d",
+ "tools": {
+  "download_figma_images": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "localPath"
+   ],
+   "evidence": [
+    "dist/chunk-E7X4SVMG.js:12: `downloadImages()` obtains image-fill URLs via `getImageFillUrls()` and render URLs via `getNodeRenderUrls()` using authenticated Figma API requests.",
+    "dist/chunk-E7X4SVMG.js:9: `W()` imports `downloadFigmaImage`, downloads the image URL to a local file, reads image/SVG dimensions, and may crop/overwrite the downloaded file.",
+    "dist/chunk-E7X4SVMG.js:14: `Bt()` validates `localPath`, resolves it to `g`, then calls `Ze()` to perform downloads.",
+    "dist/chunk-E7X4SVMG.js:16: `Bt()` returns text containing the resolved download directory `g`, downloaded basenames, dimensions, crop status, and CSS variables derived from the downloaded image dimensions."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool uses the user's Figma credentials to fetch image data from Figma and returns metadata derived from those images, including dimensions, plus the resolved local output path, so it can expose non-public SaaS-derived data and local path information (`SECRET`). The image data and resulting dimensions can come from Figma files controlled by collaborators or third parties, and the returned filenames can be influenced through tool inputs commonly derived from Figma data, so returned content is treated as `UNTRUSTED`. The tool writes downloaded image files locally, making it `WRITE`, but the code does not show delivery to an attacker-readable destination or an agent-chosen network host, so it is not labeled `SINK`. The exact implementations of imported `downloadFigmaImage` and path resolver `he` are not included, so the precise filesystem behavior is partially undetermined. [dropped destination_args not in the input schema: nodes.fileName, nodes.filenameSuffix]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_figma_data": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-E7X4SVMG.js:12: `X.getAuthHeaders()` uses the configured Figma PAT/OAuth token and `requestWithSize()` fetches `https://api.figma.com/v1${t}`; `getRawFile()` and `getRawNode()` read `/files/${t}` and `/files/${t}/nodes?...`.",
+    "dist/chunk-E7X4SVMG.js:13: `qt()` calls `Xe()` with the supplied `fileKey`/`nodeId` and returns `{content:[{type:\"text\",text:g.formatted}]}`.",
+    "dist/chunk-E7X4SVMG.js:1: the formatter includes Figma-authored fields such as `metadata.name`, node `name`, node `id`, `componentId`, and `text` in the returned text."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool reads Figma file or node data through the user's configured or per-request Figma credentials and returns the formatted file contents to the agent, so it can expose non-public SaaS data (`SECRET`). Figma document text, node names, component metadata, and similar design content can be authored by collaborators or third parties and is returned in the tool result, so it is also `UNTRUSTED`. It only calls the fixed Figma API host, so it is not a `SINK` under the fixed-vendor-endpoint rule.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "false",
+   "effect": "Removes/not-registers the `download_figma_images` tool. Default is false, so the tool is registered by default.",
+   "evidence": "dist/chunk-E7X4SVMG.js:8 reads `skipImageDownloads` from CLI/env with default `!1`; dist/bin.js:2 defines the `skipImageDownloads` flag; dist/chunk-E7X4SVMG.js:17 registers `download_figma_images` only when `!o.skipImageDownloads`.",
+   "kind": "tool_registration",
+   "syntax": "--skipImageDownloads or SKIP_IMAGE_DOWNLOADS=true"
+  }
+ ],
+ "version": "0.13.1"
+}

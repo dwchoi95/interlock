@@ -1,0 +1,597 @@
+[
+ {
+  "tool": "API-get-user",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "user_id"
+  ],
+  "annotations": {
+   "title": "Get User",
+   "readOnlyHint": true
+  },
+  "rationale_code": "The server is an OpenAPI proxy onto api.notion.com authenticated with the operator's Notion integration token; `API-get-user` returns a workspace member record (name, email, avatar) that is private account data, so it pulls non-public data into the agent context. No source lines were supplied with t"
+ },
+ {
+  "tool": "API-get-users",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "start_cursor"
+  ],
+  "annotations": {
+   "title": "Get Users",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Lists every member of the authenticated workspace (`start_cursor`/`page_size` pagination), i.e. private directory data reached with the user's Notion credentials. Source was not included, so labelling is from the advertised operation and left undetermined. [unverified: no citation with a file:line r"
+ },
+ {
+  "tool": "API-get-self",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Get Self",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Returns the identity tied to the configured Notion token (bot user, owner, workspace name) \u2014 non-public information about the user's account/credential. No source lines available, so undetermined. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-post-search",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "start_cursor"
+  ],
+  "annotations": {
+   "title": "Post Search",
+   "destructiveHint": true
+  },
+  "rationale_code": "Searches all pages and data sources shared with the integration and returns their titles/objects \u2014 private workspace content. The request goes to the fixed Notion API endpoint, so it is not a SINK. Source not provided; undetermined. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-get-block-children",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "block_id",
+   "start_cursor"
+  ],
+  "annotations": {
+   "title": "Get Block Children",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Reads the block content of a page in the user's workspace with the user's token, returning private data. Content originates in the user's own account, so UNTRUSTED is not raised. Source not provided; undetermined. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-patch-block-children",
+  "code": [],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "block_id",
+   "after"
+  ],
+  "annotations": {
+   "title": "Patch Block Children",
+   "destructiveHint": true
+  },
+  "rationale_code": "Writes agent-supplied blocks into a page inside the user's own Notion workspace via the fixed api.notion.com endpoint. The destination is private account data, not an attacker-readable location, and no host code execution or credential read-back is involved, so no label. Marked undetermined because "
+ },
+ {
+  "tool": "API-retrieve-a-block",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "block_id"
+  ],
+  "annotations": {
+   "title": "Retrieve A Block",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Returns a single block's content from the user's workspace using the user's credential \u2014 non-public data into context. Source not provided; undetermined. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-update-a-block",
+  "code": [],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "block_id"
+  ],
+  "annotations": {
+   "title": "Update A Block",
+   "destructiveHint": true
+  },
+  "rationale_code": "Mutates/archives a block in the user's private workspace through the fixed vendor endpoint; destructive but not an attacker-readable destination and no secret read-back is the tool's purpose. Undetermined because no source lines were provided. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-delete-a-block",
+  "code": [],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "block_id"
+  ],
+  "annotations": {
+   "title": "Delete A Block",
+   "destructiveHint": true
+  },
+  "rationale_code": "Deletes content in the user's own workspace via the fixed Notion endpoint \u2014 destructive, but no exfiltration channel, secret retrieval or host execution. Undetermined: source not supplied. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-retrieve-a-page",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "page_id",
+   "filter_properties"
+  ],
+  "annotations": {
+   "title": "Retrieve A Page",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Returns page properties from the user's Notion workspace reached with the user's integration token \u2014 non-public data. Source not provided; undetermined. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-patch-page",
+  "code": [],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "page_id"
+  ],
+  "annotations": {
+   "title": "Patch Page",
+   "destructiveHint": true
+  },
+  "rationale_code": "Updates properties of a page in the user's private workspace. The `cover`/`icon` fields accept an agent-chosen external URL, but the fetch would be performed by Notion's servers for an image, not a general agent-controlled request carrying data; kept unlabelled. Undetermined because the source was n"
+ },
+ {
+  "tool": "API-post-page",
+  "code": [],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "parent"
+  ],
+  "annotations": {
+   "title": "Post Page",
+   "destructiveHint": true
+  },
+  "rationale_code": "Creates a page inside the user's own workspace via api.notion.com. Written content lands in private account data, not a public repo/issue/gist, so no SINK. Undetermined: no source lines were provided to confirm the request target. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-retrieve-a-page-property",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "page_id",
+   "property_id",
+   "start_cursor"
+  ],
+  "annotations": {
+   "title": "Retrieve A Page Property",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Reads an individual property value from a private page using the user's credential \u2014 non-public data into the agent context. Source not provided; undetermined. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-retrieve-a-comment",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "block_id",
+   "start_cursor"
+  ],
+  "annotations": {
+   "title": "Retrieve A Comment",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Returns comment threads on a page: private workspace data (SECRET). Comment threads are a multi-writer surface \u2014 guests, external collaborators and other integrations can post into them, and comment bodies are returned verbatim to the agent \u2014 so attacker-controllable text can plausibly arrive here; "
+ },
+ {
+  "tool": "API-create-a-comment",
+  "code": [],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "parent"
+  ],
+  "annotations": {
+   "title": "Create A Comment",
+   "destructiveHint": true
+  },
+  "rationale_code": "Posts agent-supplied text as a comment on a page in the user's own workspace. Unless that page is published to the web (not something this tool does), the destination is not attacker-readable, so no SINK. Undetermined: source not supplied, and a page shared publicly would make this an exfiltration c"
+ },
+ {
+  "tool": "API-query-data-source",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "data_source_id",
+   "filter_properties",
+   "start_cursor"
+  ],
+  "annotations": {
+   "title": "Query Data Source",
+   "destructiveHint": true
+  },
+  "rationale_code": "Runs a filtered query against a Notion database the integration can see and returns the rows \u2014 private account data. The query goes to the fixed Notion endpoint, so it is not a SINK despite the destructive hint. Source not provided; undetermined. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-retrieve-a-data-source",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "data_source_id"
+  ],
+  "annotations": {
+   "title": "Retrieve A Data Source",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Returns the schema/title/description of a private Notion data source using the user's token \u2014 non-public data. Source not provided; undetermined. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-update-a-data-source",
+  "code": [],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "data_source_id"
+  ],
+  "annotations": {
+   "title": "Update A Data Source",
+   "destructiveHint": true
+  },
+  "rationale_code": "Mutates the schema of a database inside the user's workspace through the vendor endpoint; no attacker-readable destination, no secret return as its purpose, no host execution. Undetermined: source not supplied. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-create-a-data-source",
+  "code": [],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "parent"
+  ],
+  "annotations": {
+   "title": "Create A Data Source",
+   "destructiveHint": true
+  },
+  "rationale_code": "Creates a database under a page in the user's own workspace \u2014 a private write target, so no SINK. Undetermined because the server source was not included. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-list-data-source-templates",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "data_source_id",
+   "start_cursor"
+  ],
+  "annotations": {
+   "title": "List Data Source Templates",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Lists template pages belonging to a private database, returning workspace content reached with the user's credential. Source not provided; undetermined. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-retrieve-a-database",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "database_id"
+  ],
+  "annotations": {
+   "title": "Retrieve A Database",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Returns a private database object (title, data sources, parent) from the user's workspace. Source not provided; undetermined. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-move-page",
+  "code": [],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "page_id",
+   "parent"
+  ],
+  "annotations": {
+   "title": "Move Page",
+   "destructiveHint": true
+  },
+  "rationale_code": "Re-parents a page within the user's own workspace via the fixed Notion API; destructive but no exfiltration path, secret read-back or host execution. Undetermined: no source lines supplied. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-retrieve-page-markdown",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "page_id"
+  ],
+  "annotations": {
+   "title": "Retrieve Page Markdown",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Dumps the full content of a private Notion page (optionally including meeting-note transcripts) into the agent context using the user's integration token \u2014 clearly non-public data. Source not provided; undetermined. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-update-page-markdown",
+  "code": [],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "page_id",
+   "type",
+   "replace_content",
+   "update_content",
+   "insert_content",
+   "replace_content_range"
+  ],
+  "annotations": {
+   "title": "Update Page Markdown",
+   "destructiveHint": true
+  },
+  "rationale_code": "Overwrites or find-and-replaces the whole content of a page in the user's own workspace (and can delete child pages with `allow_deleting_content`). Highly destructive, but the write target is private account data rather than an attacker-readable destination, so no SINK. Undetermined: the server sour"
+ }
+]

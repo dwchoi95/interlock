@@ -1,0 +1,359 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All advertised tools are included in `snapshotTools` and passed to `createServerWithTools` without a flag or capability gate (dist/index.js:714-727, dist/index.js:729-734).",
+  "The browser-extension side of the WebSocket protocol is not included in the provided source. For tools whose effects depend on browser/page behavior, `undetermined` is true and labels are kept on the least-restrictive reading."
+ ],
+ "package": "@browsermcp/mcp",
+ "source": ".cache/sources/.views/npm_browsermcp_mcp_0.1.3_efad870ca57d",
+ "tools": {
+  "browser_click": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "element",
+    "ref"
+   ],
+   "evidence": [
+    "dist/index.js:261-266",
+    "dist/index.js:558-567",
+    "dist/index.js:568-575",
+    "dist/index.js:379-393",
+    "dist/index.js:125-130",
+    "dist/index.js:36-38",
+    "dist/index.js:71-72"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`browser_click` sends the parsed `element`/`ref` target to the browser as `browser_click` and then returns an accessibility snapshot. The post-click snapshot can expose private/authenticated page content (`SECRET`) or attacker-authored page content (`UNTRUSTED`). Clicking a chosen page element can submit or trigger delivery of agent-prepared page state to the current web page/site, so it is treated as a `SINK`; `element` and `ref` identify the target. The browser extension behavior is not included, so exact event and network behavior is undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "browser_get_console_logs": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:353-357",
+    "dist/index.js:506-517",
+    "dist/index.js:518-520",
+    "dist/index.js:125-130",
+    "dist/index.js:36-38",
+    "dist/index.js:71-72"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`browser_get_console_logs` requests `browser_get_console_logs` from the connected browser, JSON-stringifies each log, joins them, and returns the result as text. Console logs may contain private data from authenticated pages (`SECRET`) and can also be authored by attacker-controlled pages (`UNTRUSTED`). The extension-side implementation is not included, so exact log scope is undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "browser_go_back": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:423-432",
+    "dist/index.js:379-393",
+    "dist/index.js:125-130",
+    "dist/index.js:36-38",
+    "dist/index.js:71-72"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`browser_go_back` sends `browser_go_back` to the connected browser and returns `captureAriaSnapshot`, whose text contains the page URL, title, and accessibility snapshot. Browser history pages may be private/authenticated (`SECRET`) or attacker-authored web pages (`UNTRUSTED`). There is no call-time destination argument. The extension-side behavior is not present, so exact browser reach is undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "browser_go_forward": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:444-453",
+    "dist/index.js:379-393",
+    "dist/index.js:125-130",
+    "dist/index.js:36-38",
+    "dist/index.js:71-72"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`browser_go_forward` sends `browser_go_forward` to the connected browser and returns `captureAriaSnapshot`, including page URL, title, and page snapshot. Forward-history pages may contain non-public user data (`SECRET`) or attacker-controlled page text (`UNTRUSTED`). There is no call-time destination argument. The extension implementation is absent, so exact reach is undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "browser_hover": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "element",
+    "ref"
+   ],
+   "evidence": [
+    "dist/index.js:261-266",
+    "dist/index.js:600-609",
+    "dist/index.js:610-617",
+    "dist/index.js:379-393",
+    "dist/index.js:125-130",
+    "dist/index.js:36-38",
+    "dist/index.js:71-72"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`browser_hover` sends a target `element`/`ref` to the browser and returns an accessibility snapshot. The returned current page information can contain private/authenticated content (`SECRET`) or attacker-authored web content (`UNTRUSTED`). `element` and `ref` select the element affected by the hover. The extension-side implementation is absent, so exact browser/page effects are undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "browser_navigate": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "dist/index.js:267-272",
+    "dist/index.js:407-411",
+    "dist/index.js:379-393",
+    "dist/index.js:125-130",
+    "dist/index.js:36-38",
+    "dist/index.js:71-72"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`browser_navigate` parses an agent-supplied `url` and sends it to the connected browser over the WebSocket as `browser_navigate`, then returns `captureAriaSnapshot`. The snapshot includes page URL, title, and accessibility snapshot text, so navigating the user's browser can return authenticated/private browser content (`SECRET`) or attacker-controlled web content (`UNTRUSTED`). The `url` argument selects an agent-chosen destination and causes browser navigation/request, so it is a `SINK`. The browser extension implementation is not included, so exact URL schemes and browser reach are not settled; labels are kept on the least-restrictive reading.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "browser_press_key": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:291-298",
+    "dist/index.js:484-492",
+    "dist/index.js:493-498",
+    "dist/index.js:125-130",
+    "dist/index.js:36-38",
+    "dist/index.js:71-72"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`browser_press_key` sends the agent-supplied `key` to the connected browser as `browser_press_key`. A focused attacker-controlled page can observe typed key input or use keys such as Enter to submit page state, so `key` is content delivered to a browser/page destination and the tool is a `SINK`. The tool only returns a local status string echoing the key, not browser page content. The extension-side implementation is absent, so exact key handling is undetermined.",
+   "undetermined": true,
+   "value_args": [
+    "key"
+   ]
+  },
+  "browser_screenshot": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:348-351",
+    "dist/index.js:523-533",
+    "dist/index.js:534-540",
+    "dist/index.js:125-130",
+    "dist/index.js:36-38",
+    "dist/index.js:71-72"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`browser_screenshot` requests `browser_screenshot` from the connected browser and returns the resulting PNG image data. A screenshot of the current tab can include private/authenticated content (`SECRET`) or attacker-controlled page pixels (`UNTRUSTED`). The extension implementation is not included, so exact capture scope is undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "browser_select_option": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "element",
+    "ref"
+   ],
+   "evidence": [
+    "dist/index.js:339-346",
+    "dist/index.js:642-651",
+    "dist/index.js:652-659",
+    "dist/index.js:379-393",
+    "dist/index.js:125-130",
+    "dist/index.js:36-38",
+    "dist/index.js:71-72"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`browser_select_option` sends parsed `element`, `ref`, and `values` to the browser as `browser_select_option`, then returns an accessibility snapshot. The returned page state can contain private/authenticated content (`SECRET`) or attacker-authored content (`UNTRUSTED`). The selected `values` are agent-supplied data delivered into the current page and observable by attacker-controlled pages, so the tool is a `SINK`; `element`/`ref` select the destination control. The extension-side implementation is absent, so exact behavior is undetermined.",
+   "undetermined": true,
+   "value_args": [
+    "values"
+   ]
+  },
+  "browser_snapshot": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:548-555",
+    "dist/index.js:379-393",
+    "dist/index.js:125-130",
+    "dist/index.js:36-38",
+    "dist/index.js:71-72"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`browser_snapshot` returns `captureAriaSnapshot`, which gets `getUrl`, `getTitle`, and `browser_snapshot` from the connected browser and embeds them in returned text. The current page can be authenticated/private (`SECRET`) or attacker-controlled (`UNTRUSTED`). The returned snapshot can contain later-usable page URLs and element references. The extension-side implementation is not included, so exact page reach is undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "browser_type": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "element",
+    "ref"
+   ],
+   "evidence": [
+    "dist/index.js:331-337",
+    "dist/index.js:621-630",
+    "dist/index.js:631-638",
+    "dist/index.js:379-393",
+    "dist/index.js:125-130",
+    "dist/index.js:36-38",
+    "dist/index.js:71-72"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`browser_type` sends parsed `element`, `ref`, `text`, and `submit` to the browser as `browser_type`, then returns an accessibility snapshot. The snapshot can reveal private/authenticated page content (`SECRET`) or attacker-controlled page content (`UNTRUSTED`). The `text` argument is agent-supplied content entered into a web page and may be read by an attacker-controlled page or submitted when `submit` is true, so this is a `SINK`; `element`/`ref` select where the content goes. The extension implementation is not present, so exact browser behavior is undetermined.",
+   "undetermined": true,
+   "value_args": [
+    "text"
+   ]
+  },
+  "browser_wait": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:284-289",
+    "dist/index.js:465-473",
+    "dist/index.js:474-479"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "`browser_wait` parses `time`, sends a wait command, and returns only a fixed status string containing the supplied time. It does not return browser/page content and has no call-time destination argument.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [],
+ "version": "0.1.3"
+}

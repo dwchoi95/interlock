@@ -1,0 +1,262 @@
+{
+ "kind": "npm",
+ "notes": [
+  "The prompt stated \"Source follows\" but no source lines were actually included, so no file:line citations could be produced; every tool is marked undetermined and evidence points at the advertised tool descriptors that were supplied.",
+  "All 24 tools are thin OpenAPI-proxy operations over api.notion.com authenticated with a single operator-configured Notion token (typically NOTION_TOKEN / OPENAPI_MCP_HEADERS in this package). Because the endpoint host is fixed by the spec and not agent-chosen, write operations are not treated as SINKs; if the shipped code lets a caller override the base URL or headers per request, the write tools would become SINKs \u2014 this could not be checked without the source.",
+  "Notion content read back by the read tools is data in the user's own account, so UNTRUSTED was not raised for page/block/database reads. API-retrieve-a-comment is the exception: comment threads are a multi-writer surface (guests, external collaborators, other integrations) and are returned verbatim.",
+  "Potential secondary channels that could not be inspected without source: `cover`/`icon` external URLs on API-patch-page and API-post-page (fetched by Notion's servers), and `link` targets inside richTextRequest. These were not counted as SINKs.",
+  "No tool in the advertised set fetches an arbitrary user-supplied URL or executes code, so no HOSTEXEC label was assigned; a general \"fetch\"/URL tool present in some Notion MCP builds is absent from this list.",
+  "No flag- or toolset-gated tools were identifiable from the advertised list, so default_enabled is true for all; this could change if the source gates tools behind an env var or toolset selection."
+ ],
+ "package": "@notionhq/notion-mcp-server",
+ "source": ".cache/sources/.views/npm_notionhq_notion-mcp-server_2.5.1_dadffe599b8f",
+ "tools": {
+  "API-create-a-comment": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-create-a-comment\", description \"Notion | Create comment\", inputs `parent.page_id`, `rich_text`"
+   ],
+   "labels": [],
+   "rationale": "Posts agent-supplied text as a comment on a page in the user's own workspace. Unless that page is published to the web (not something this tool does), the destination is not attacker-readable, so no SINK. Undetermined: source not supplied, and a page shared publicly would make this an exfiltration channel. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-create-a-data-source": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-create-a-data-source\", description \"Notion | Create a data source\", inputs `parent`, `properties`, `title`"
+   ],
+   "labels": [],
+   "rationale": "Creates a database under a page in the user's own workspace \u2014 a private write target, so no SINK. Undetermined because the server source was not included. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-delete-a-block": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-delete-a-block\", description \"Notion | Delete a block\", input `block_id`"
+   ],
+   "labels": [],
+   "rationale": "Deletes content in the user's own workspace via the fixed Notion endpoint \u2014 destructive, but no exfiltration channel, secret retrieval or host execution. Undetermined: source not supplied. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-get-block-children": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-get-block-children\", description \"Notion | Retrieve block children\", input `block_id`"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Reads the block content of a page in the user's workspace with the user's token, returning private data. Content originates in the user's own account, so UNTRUSTED is not raised. Source not provided; undetermined. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-get-self": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-get-self\", description \"Notion | Retrieve your token's bot user\""
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Returns the identity tied to the configured Notion token (bot user, owner, workspace name) \u2014 non-public information about the user's account/credential. No source lines available, so undetermined. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-get-user": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-get-user\", description \"Notion | Retrieve a user\", input `user_id`"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "The server is an OpenAPI proxy onto api.notion.com authenticated with the operator's Notion integration token; `API-get-user` returns a workspace member record (name, email, avatar) that is private account data, so it pulls non-public data into the agent context. No source lines were supplied with this prompt, so the reading is taken from the advertised operation and kept at the least restrictive (labelled) reading. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-get-users": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-get-users\", description \"Notion | List all users\""
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Lists every member of the authenticated workspace (`start_cursor`/`page_size` pagination), i.e. private directory data reached with the user's Notion credentials. Source was not included, so labelling is from the advertised operation and left undetermined. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-list-data-source-templates": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-list-data-source-templates\", description \"Notion | List templates in a data source\", input `data_source_id`"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Lists template pages belonging to a private database, returning workspace content reached with the user's credential. Source not provided; undetermined. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-move-page": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-move-page\", description \"Notion | Move a page\", inputs `page_id`, `parent`"
+   ],
+   "labels": [],
+   "rationale": "Re-parents a page within the user's own workspace via the fixed Notion API; destructive but no exfiltration path, secret read-back or host execution. Undetermined: no source lines supplied. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-patch-block-children": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-patch-block-children\", description \"Notion | Append block children\", inputs `block_id`, `children`"
+   ],
+   "labels": [],
+   "rationale": "Writes agent-supplied blocks into a page inside the user's own Notion workspace via the fixed api.notion.com endpoint. The destination is private account data, not an attacker-readable location, and no host code execution or credential read-back is involved, so no label. Marked undetermined because the server source was not supplied and a base-URL/header override could redirect the request. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-patch-page": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-patch-page\", description \"Notion | Update page properties\", input `cover.external.url`"
+   ],
+   "labels": [],
+   "rationale": "Updates properties of a page in the user's private workspace. The `cover`/`icon` fields accept an agent-chosen external URL, but the fetch would be performed by Notion's servers for an image, not a general agent-controlled request carrying data; kept unlabelled. Undetermined because the source was not supplied and the URL-side-channel cannot be inspected. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-post-page": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-post-page\", description \"Notion | Create a page\", inputs `parent`, `properties`, `children`, `cover`"
+   ],
+   "labels": [],
+   "rationale": "Creates a page inside the user's own workspace via api.notion.com. Written content lands in private account data, not a public repo/issue/gist, so no SINK. Undetermined: no source lines were provided to confirm the request target. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-post-search": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-post-search\", description \"Notion | Search by title\", input `query`"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Searches all pages and data sources shared with the integration and returns their titles/objects \u2014 private workspace content. The request goes to the fixed Notion API endpoint, so it is not a SINK. Source not provided; undetermined. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-query-data-source": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-query-data-source\", description \"Notion | Query a data source\", inputs `data_source_id`, `filter`"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Runs a filtered query against a Notion database the integration can see and returns the rows \u2014 private account data. The query goes to the fixed Notion endpoint, so it is not a SINK despite the destructive hint. Source not provided; undetermined. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-retrieve-a-block": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-retrieve-a-block\", description \"Notion | Retrieve a block\", input `block_id`"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Returns a single block's content from the user's workspace using the user's credential \u2014 non-public data into context. Source not provided; undetermined. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-retrieve-a-comment": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-retrieve-a-comment\", description \"Notion | Retrieve comments\", input `block_id`"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns comment threads on a page: private workspace data (SECRET). Comment threads are a multi-writer surface \u2014 guests, external collaborators and other integrations can post into them, and comment bodies are returned verbatim to the agent \u2014 so attacker-controllable text can plausibly arrive here; the label is kept under the least-restrictive reading. No source lines were supplied to settle who may write comments in a given deployment. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-retrieve-a-data-source": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-retrieve-a-data-source\", description \"Notion | Retrieve a data source\", input `data_source_id`"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Returns the schema/title/description of a private Notion data source using the user's token \u2014 non-public data. Source not provided; undetermined. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-retrieve-a-database": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-retrieve-a-database\", description \"Notion | Retrieve a database\", input `database_id`"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Returns a private database object (title, data sources, parent) from the user's workspace. Source not provided; undetermined. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-retrieve-a-page": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-retrieve-a-page\", description \"Notion | Retrieve a page\", input `page_id`"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Returns page properties from the user's Notion workspace reached with the user's integration token \u2014 non-public data. Source not provided; undetermined. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-retrieve-a-page-property": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-retrieve-a-page-property\", description \"Notion | Retrieve a page property item\", inputs `page_id`, `property_id`"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Reads an individual property value from a private page using the user's credential \u2014 non-public data into the agent context. Source not provided; undetermined. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-retrieve-page-markdown": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-retrieve-page-markdown\", description \"Notion | Retrieve a page as Markdown\", input `page_id`, `include_transcript`"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Dumps the full content of a private Notion page (optionally including meeting-note transcripts) into the agent context using the user's integration token \u2014 clearly non-public data. Source not provided; undetermined. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-update-a-block": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-update-a-block\", description \"Notion | Update a block\", inputs `block_id`, `type`, `archived`"
+   ],
+   "labels": [],
+   "rationale": "Mutates/archives a block in the user's private workspace through the fixed vendor endpoint; destructive but not an attacker-readable destination and no secret read-back is the tool's purpose. Undetermined because no source lines were provided. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-update-a-data-source": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-update-a-data-source\", description \"Notion | Update a data source\", inputs `data_source_id`, `properties`"
+   ],
+   "labels": [],
+   "rationale": "Mutates the schema of a database inside the user's workspace through the vendor endpoint; no attacker-readable destination, no secret return as its purpose, no host execution. Undetermined: source not supplied. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  },
+  "API-update-page-markdown": {
+   "default_enabled": true,
+   "evidence": [
+    "advertised tool list: name \"API-update-page-markdown\", description \"Notion | Update a page's content as Markdown\", inputs `replace_content.new_str`, `update_content.content_updates`"
+   ],
+   "labels": [],
+   "rationale": "Overwrites or find-and-replaces the whole content of a page in the user's own workspace (and can delete child pages with `allow_deleting_content`). Highly destructive, but the write target is private account data rather than an attacker-readable destination, so no SINK. Undetermined: the server source was not provided, so neither the request target nor any publish side effect could be verified. [unverified: no citation with a file:line reference]",
+   "undetermined": true
+  }
+ },
+ "value_conditions": [],
+ "version": "2.5.1"
+}

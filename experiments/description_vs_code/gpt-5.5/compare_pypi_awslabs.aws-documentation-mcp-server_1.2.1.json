@@ -1,0 +1,84 @@
+[
+ {
+  "tool": "read_documentation",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "`read_documentation` validates `url` against `supported_domains_regex` (`^https?://docs\\.aws\\.amazon\\.com/` plus the neuron readthedocs regex) and requires a `.html` suffix (server_aws.py:184-193), then fetches via `_docs_client`, whose `enforce_redirect_allowlist` response hook re-checks every redi"
+ },
+ {
+  "tool": "read_sections",
+  "code": [],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url",
+   "section_titles"
+  ],
+  "annotations": {},
+  "rationale_code": "Same domain allowlist and `.html` check as `read_documentation` (server_aws.py:260-269); `read_sections_impl` only appends url-quoted `sections` parameters to the allow-listed URL and fetches with the redirect-revalidating client (server_utils.py:180-199). Content returned is public AWS documentatio"
+ },
+ {
+  "tool": "search_table",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url",
+   "section_title",
+   "query"
+  ],
+  "annotations": {},
+  "rationale_code": "`search_table` enforces the same `supported_domains_regex` allowlist and `.html` suffix (server_aws.py:365-374) and `search_table_impl` fetches the allow-listed doc URL with `quote`-escaped `query`/`section` params through `_docs_client` (server_utils.py:262-282). Output is parsed rows from the publ"
+ },
+ {
+  "tool": "search_documentation",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "product_types",
+   "guide_types"
+  ],
+  "annotations": {},
+  "rationale_code": "The request goes only to the hardcoded `SEARCH_API_URL` = `https://proxy.search.docs.aws.com/search` (server_aws.py:49, 490-499); `search_phrase`/`search_intent` are sent to that fixed vendor endpoint, which the rules say is not a SINK. Results are AWS-curated documentation titles, excerpts and URLs"
+ },
+ {
+  "tool": "recommend",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "`recommend` interpolates the caller-supplied `url_str` only into the query string of the hardcoded `RECOMMENDATIONS_API_URL` (`https://api.contentrecs.docs.aws.com/v1/recommendations?path=...`, server_aws.py:699), so the network destination cannot be chosen by the agent even though `url_str` itself "
+ }
+]

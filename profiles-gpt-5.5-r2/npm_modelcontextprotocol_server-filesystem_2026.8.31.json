@@ -1,0 +1,311 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All advertised tools are registered unconditionally in `dist/index.js`; there is no source-shown feature flag or disabled-by-default toolset that removes individual tools.",
+  "Filesystem reach is constrained by `validatePath`, which checks requested paths against `allowedDirectories` and resolved symlink targets (`dist/lib.js:91-117`). `allowedDirectories` are initialized from command-line arguments (`dist/index.js:29-74`) and may be replaced by MCP roots (`dist/index.js:574-607`).",
+  "If no command-line directories are provided and the client does not support/provide MCP roots, initialization throws and the server cannot operate (`dist/index.js:600-623`)."
+ ],
+ "package": "@modelcontextprotocol/server-filesystem",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-filesystem_2026.8.31_01d646830c09",
+ "tools": {
+  "create_directory": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "path"
+   ],
+   "evidence": [
+    "dist/index.js:334-353",
+    "dist/lib.js:91-117"
+   ],
+   "identifier_output_fields": [
+    "content"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "`create_directory` validates the local `path` and calls `fs.mkdir` with `recursive: true`, changing local filesystem state within allowed directories. It returns only a success message based on the supplied path and does not send data to an external attacker-readable destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "directory_tree": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:438-489",
+    "dist/lib.js:91-117"
+   ],
+   "identifier_output_fields": [
+    "content"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`directory_tree` recursively validates and reads local directories, returning a JSON-formatted tree of file and directory `name` values. This exposes non-public host filesystem structure.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "edit_file": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "path"
+   ],
+   "evidence": [
+    "dist/index.js:311-333",
+    "dist/lib.js:91-117",
+    "dist/lib.js:207-290"
+   ],
+   "identifier_output_fields": [
+    "content"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`edit_file` validates the local `path`, reads the existing host file, applies `edits`, and returns a unified diff. The diff is derived from the original and modified host file content, so the tool can return non-public host file data. With default `dryRun: false`, it also writes the modified content back to the file.",
+   "undetermined": false,
+   "value_args": [
+    "edits"
+   ]
+  },
+  "get_file_info": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:536-557",
+    "dist/lib.js:136-147",
+    "dist/lib.js:91-117"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`get_file_info` validates a local `path`, stats the file or directory, and returns size, timestamps, type, and permissions. This exposes non-public host filesystem metadata.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_allowed_directories": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:558-573",
+    "dist/index.js:29-74",
+    "dist/index.js:574-607"
+   ],
+   "identifier_output_fields": [
+    "content"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`list_allowed_directories` returns the server's configured local allowed directories, which come from command-line arguments or MCP roots. These local host paths are non-public environment/configuration data and identify reachable filesystem locations.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_directory": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:354-375",
+    "dist/lib.js:91-117"
+   ],
+   "identifier_output_fields": [
+    "content"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`list_directory` validates a local `path`, reads directory entries with `fs.readdir`, and returns file/directory names. Local directory contents and names are non-public host filesystem data.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_directory_with_sizes": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:376-437",
+    "dist/lib.js:91-117"
+   ],
+   "identifier_output_fields": [
+    "content"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`list_directory_with_sizes` validates a local `path`, reads directory entries, stats each entry, and returns names and file sizes. This exposes non-public host filesystem listing and metadata.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "move_file": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "source",
+    "destination"
+   ],
+   "evidence": [
+    "dist/index.js:490-512",
+    "dist/lib.js:91-117",
+    "dist/lib.js:189-206"
+   ],
+   "identifier_output_fields": [
+    "content"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "`move_file` validates local `source` and `destination` paths and renames the source to the destination, changing local filesystem state within allowed directories. It returns only a success message based on supplied paths and does not send data externally.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_file": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:153-171",
+    "dist/index.js:173-179",
+    "dist/lib.js:91-117",
+    "dist/lib.js:148-149",
+    "dist/lib.js:293-321",
+    "dist/lib.js:328-359"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`read_file` uses `readTextFileHandler`, validates the requested local `path`, then returns file text (or `head`/`tail` excerpts) in `content`/`structuredContent.content`. This returns host file contents from allowed directories, which are non-public data.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_media_file": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:197-258",
+    "dist/index.js:137-149",
+    "dist/lib.js:91-117"
+   ],
+   "identifier_output_fields": [
+    "uri"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`read_media_file` validates a local `path`, reads the file bytes with `readFileAsBase64Stream`, and returns base64 `data` or `resource.blob`; for non-image/audio it also returns a file `uri`. This returns host file contents from allowed directories.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_multiple_files": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:259-290",
+    "dist/lib.js:91-117",
+    "dist/lib.js:148-149"
+   ],
+   "identifier_output_fields": [
+    "content"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`read_multiple_files` validates each local file path and returns each file's text content, prefixed by the requested path, in `content`/`structuredContent.content`. This returns host file contents from allowed directories.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_text_file": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:153-171",
+    "dist/index.js:180-196",
+    "dist/lib.js:91-117",
+    "dist/lib.js:148-149",
+    "dist/lib.js:293-321",
+    "dist/lib.js:328-359"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`read_text_file` uses `readTextFileHandler`, validates the requested local `path`, then returns file text (or `head`/`tail` excerpts) in `content`/`structuredContent.content`. This returns host file contents from allowed directories, which are non-public data.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_files": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:513-535",
+    "dist/lib.js:365-392",
+    "dist/lib.js:91-117"
+   ],
+   "identifier_output_fields": [
+    "content"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`search_files` validates a local root `path`, recursively reads directory entries, and returns matching full paths. The returned host file/directory paths are non-public filesystem data.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "write_file": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "path"
+   ],
+   "evidence": [
+    "dist/index.js:291-310",
+    "dist/lib.js:91-117",
+    "dist/lib.js:151-188"
+   ],
+   "identifier_output_fields": [
+    "content"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "`write_file` validates the local destination `path` and writes agent-supplied `content` to the host filesystem within allowed directories. It changes local state but does not send data to an attacker-readable external destination in the code shown.",
+   "undetermined": false,
+   "value_args": [
+    "content"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "2026.8.31"
+}

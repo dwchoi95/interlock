@@ -1,0 +1,243 @@
+{
+ "kind": "python",
+ "notes": [],
+ "package": "agentdojo/banking",
+ "source": "baselines/agentdojo/src/agentdojo",
+ "tools": {
+  "get_balance": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/banking_client.py:154-158"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`get_balance` returns `account.balance` from the private `bank_account` dependency.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_iban": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/banking_client.py:50-52"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`get_iban` returns `account.iban`, the current user's bank account identifier, from the private `bank_account` dependency.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_most_recent_transactions": {
+   "attacker_named_fields": [
+    "sender"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/banking_client.py:161-169",
+    "default_suites/v1/tools/banking_client.py:8-17"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "sender",
+    "recipient"
+   ],
+   "injectable_output_fields": [
+    "subject"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`get_most_recent_transactions` returns entries from the user's private `account.transactions`, exposing non-public banking history. Transaction fields include `sender` and `subject`; for incoming transactions, an outside payer can choose the sender identity and subject text, making those returned fields untrusted.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_scheduled_transactions": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/banking_client.py:172-178",
+    "default_suites/v1/tools/banking_client.py:20-24"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "sender",
+    "recipient"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`get_scheduled_transactions` returns `account.scheduled_transactions` from the private `bank_account` dependency, exposing non-public scheduled banking activity.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_user_info": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/user_account.py:20-31"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`get_user_info` returns non-public fields from the private `user_account` dependency, including the user's name and address fields.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_file": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "file_path"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/file_reader.py:8-9",
+    "default_suites/v1/tools/file_reader.py:12-18"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`read_file` reads from the local `filesystem.files` mapping at agent-supplied `file_path` and returns the file contents, which are host/local file data.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "schedule_transaction": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "recipient"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/banking_client.py:82-108"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`schedule_transaction` creates a scheduled `Transaction` addressed to the agent-supplied `recipient` with supplied `amount`, `subject`, `date`, and `recurring`, then stores it in `account.scheduled_transactions`; this schedules a payment to an agent-chosen recipient.",
+   "undetermined": false,
+   "value_args": [
+    "amount",
+    "subject",
+    "date",
+    "recurring"
+   ]
+  },
+  "send_money": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "recipient"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/banking_client.py:55-75"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`send_money` creates a `Transaction` using agent-supplied `recipient`, `amount`, `subject`, and `date`, then appends it to `account.transactions`; this is a payment/transfer action to an agent-chosen recipient.",
+   "undetermined": false,
+   "value_args": [
+    "amount",
+    "subject",
+    "date"
+   ]
+  },
+  "update_password": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/user_account.py:34-42"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "`update_password` changes the private `account.password` to the supplied `password` and returns only a fixed status message; the code does not send the password to an attacker-readable destination or return private data.",
+   "undetermined": false,
+   "value_args": [
+    "password"
+   ]
+  },
+  "update_scheduled_transaction": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "id",
+    "recipient"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/banking_client.py:115-150"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`update_scheduled_transaction` selects a scheduled payment by `id` and can change its `recipient`, `amount`, `subject`, `date`, and `recurring` fields, including redirecting or altering a payment to an agent-chosen recipient.",
+   "undetermined": false,
+   "value_args": [
+    "amount",
+    "subject",
+    "date",
+    "recurring"
+   ]
+  },
+  "update_user_info": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/user_account.py:46-75"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`update_user_info` updates private `user_account` profile fields and returns the resulting `first_name`, `last_name`, `street`, and `city`, which are non-public user information.",
+   "undetermined": false,
+   "value_args": [
+    "first_name",
+    "last_name",
+    "street",
+    "city"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "v1.2"
+}

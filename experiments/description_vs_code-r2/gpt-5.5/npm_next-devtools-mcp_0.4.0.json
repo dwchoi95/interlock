@@ -1,0 +1,97 @@
+{
+ "tools": {
+  "browser_eval": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The description says this tool `does NOT drive the browser itself`; it only `points you at agent-browser` and `tells you how to install it (if needed) and where to start`. Although the described CLI could later `open pages, click, type, screenshot, or capture console errors`, those actions are not advertised as actions performed by this MCP tool itself, so no SECRET/UNTRUSTED/SINK/HOSTEXEC label is assigned.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "nextjs_docs": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool is for `THIS project` and tells where docs are inside the locally installed package at `node_modules/next/dist/docs/`, and may determine whether `the project is on an older Next.js`. That is local project/package state, so it can return non-public host/project metadata into context. It `does NOT fetch documentation`, and the advertised output is local paths/instructions rather than attacker-authored web content, so UNTRUSTED and SINK are not assigned.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "nextjs_index": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Discover[s] all running Next.js development servers` and returns `Server port, PID, and URL` plus the `Complete list of available MCP tools` exposed by local dev servers at `/_next/mcp`. This is localhost/runtime project information, so it can return non-public local/server data. The discovered tool descriptions and schemas come from the running local Next.js server as advertised; the text does not show attacker-authored content or an attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "port",
+    "PID",
+    "URL",
+    "tools",
+    "tool names"
+   ],
+   "attacker_named_fields": []
+  },
+  "nextjs_call": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Call a specific MCP tool on a running Next.js development server`. Common tools include `Error diagnostics`, `Route information`, and `Build status`, which can expose local app/runtime information, so SECRET applies. It can also invoke `Cache management (clear caches)`, making it state-changing. The advertised target is a local Next.js dev server identified by `port`; the description does not advertise requests to attacker-chosen external hosts, public posting, messaging, or host code execution. Because available tools `varies by Next.js version`, the exact downstream reach is not fully settled from the advertisement alone, but the least restrictive supported label from the text is SECRET and WRITE.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "port",
+    "toolName",
+    "args"
+   ],
+   "value_args": [
+    "args"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No source code or output schemas were provided; output fields are inferred only from the advertised descriptions.",
+  "For nextjs_call, the description says available tools vary by Next.js version, so downstream behavior cannot be completely determined from the advertised text."
+ ],
+ "usage": {
+  "input_tokens": 2488,
+  "output_tokens": 3853,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

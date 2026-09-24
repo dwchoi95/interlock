@@ -1,0 +1,16 @@
+{
+ "package": "mcp-server-git",
+ "tool": "git_diff_staged",
+ "claimed": [
+  "SECRET"
+ ],
+ "HOSTEXEC": "not_supported",
+ "SECRET": "supported",
+ "SINK": "not_supported",
+ "UNTRUSTED": "supported",
+ "reason": "The cited code runs `repo.git.diff(..., \"--cached\")` and returns the staged diff as text. That establishes it reads and returns local repository contents/staged changes, which may include non-public host data, so SECRET is supported. The returned diff content is derived from repository files/changes and can be controlled by whoever controls the repo or staged content, so UNTRUSTED is supported. The lines do not show arbitrary host code execution, only a fixed git diff operation, so HOSTEXEC is not supported. They also do not show sending data to an attacker-readable destination; the data is returned as the tool response, so SINK is not supported.",
+ "usage": {
+  "input_tokens": 594,
+  "output_tokens": 686
+ }
+}

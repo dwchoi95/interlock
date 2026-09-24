@@ -1,0 +1,22 @@
+{
+  "package": "mcp-server-fetch",
+  "version": "2026.8.18",
+  "source": "pip download --no-deps mcp-server-fetch==2026.8.18, wheel unzipped (not installed/run) in scratchpad adj-docs/fetch/; httpx 0.28.1 and httpcore wheels downloaded and read to confirm scheme handling. Paths below are relative to scratchpad adj-docs/.",
+  "tools": {
+    "fetch": {
+      "labels": ["SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Does an HTTP GET (following redirects) to any http(s) URL the agent picks and returns the body. That makes it a SINK (agent data can go in the host, path or query) and UNTRUSTED (the attacker controls the page). It is also SECRET because nothing blocks localhost, private IPs or intranet hosts: a robots.txt 404 counts as allowed, and redirects are followed without re-checking robots.txt. file:// is refused by httpx/httpcore.",
+      "evidence": "fetch/mcp_server_fetch/server.py:111-126 (client.get(url, follow_redirects=True), no host/IP filter); server.py:73-93 (robots.txt GET to agent-chosen scheme+netloc; 4xx other than 401/403 => allowed); server.py:234-238 (robots check only on the original URL, only when not ignore_robots_txt); server.py:154 (url: AnyUrl, no allow-list); fetch/mcp_server_fetch-2026.8.18.dist-info/METADATA:37-38 (README CAUTION: 'can access local/internal IP addresses'); httpcore/httpcore/_async/connection_pool.py:205-213 + httpx/httpx/_transports/default.py:88 (non-http(s)/ws schemes such as file:// raise UnsupportedProtocol, an HTTPError caught at server.py:127-128 / 82-86)"
+    }
+  },
+  "value_conditions": [],
+  "notes": [
+    "CLI flags are exactly --user-agent, --ignore-robots-txt and --proxy-url (fetch/mcp_server_fetch/__init__.py:12-18). None of them removes the tool or any label. --ignore-robots-txt only drops the robots.txt gate (server.py:234), and that gate never stopped attacker hosts (the attacker writes their own robots.txt) or intranet hosts with no robots.txt. --proxy-url routes traffic through a proxy (server.py:75,119) whose egress policy is unknown, so the least-restrictive default applies.",
+    "No private-IP, localhost or DNS-rebinding protection exists anywhere in server.py. SSRF to intranet or localhost web services is the SECRET route. Host files are not reachable because file:// is not supported by httpx.",
+    "The server also exposes a 'fetch' prompt (server.py:209-284) that skips robots.txt. It is a prompt, not a tool, so it is outside the tool labels.",
+    "httpx AsyncClient keeps its default trust_env=True, so HTTP(S)_PROXY/NO_PROXY from the environment are honoured. This does not affect labels."
+  ]
+}

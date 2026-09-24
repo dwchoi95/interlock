@@ -1,0 +1,127 @@
+{
+ "tools": {
+  "ai_tutor": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool loads bundled tutor material: `Loads the core instructions, curriculum, and persona for the Angular AI Tutor` and returns `a new set of instructions and rules for you, the LLM`. The advertised source is not described as attacker-controlled, non-public user data, a network destination, or code execution. It does not modify state.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "get_best_practices": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns an official guide: `Retrieves the official Angular Best Practices Guide` and, with `workspacePath`, returns a guide matching `the project's Angular version`. It is not advertised as returning file contents or other non-public project data, and it does not send data to an attacker-chosen destination or execute code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "workspacePath"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "search_documentation": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches a fixed official site: `Searches the official Angular documentation at https://angular.dev`. A query to this fixed vendor endpoint is not a SINK, and the advertised content is official Angular documentation rather than attacker-controllable material. It sends the agent-supplied `query` to the documentation service, so its enforcement kind is WRITE even though it is otherwise read-only in effect.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "version"
+   ],
+   "value_args": [
+    "query"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "searchedVersion",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "find_examples": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns a curated official examples database: `curated database of official, best-practice code examples` and `generic code examples bundled with the CLI`. It is not advertised as returning non-public project file contents, attacker-controlled content, sending data to an attacker-chosen destination, or executing code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "workspacePath"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "list_projects": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns non-public local repository metadata: `Provides a comprehensive overview of all Angular workspaces and projects within the repository`, including project locations and configuration details such as `root`, `sourceRoot`, `path`, `unitTestFramework`, `styleLanguage`, `selectorPrefix`, and `frameworkVersion`. This is host/project data returned into the agent context, so it is SECRET. It is read-only and does not send data out or modify state.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "path",
+    "root",
+    "sourceRoot",
+    "unitTestFramework",
+    "styleLanguage",
+    "selectorPrefix",
+    "frameworkVersion"
+   ],
+   "attacker_named_fields": []
+  },
+  "onpush_zoneless_migration": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads local Angular code from an absolute path: `The tool can operate on either a single file or an entire directory. Provide the absolute path` and `The contents are read with fs.readFileSync.` Its output is an analysis and migration plan based on those non-public file contents, so it returns SECRET-derived local data. The description says `This tool DOES NOT modify code` and only `PROVIDES INSTRUCTIONS`, so it is read-only and not HOSTEXEC or SINK.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "fileOrDirPath"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [],
+ "usage": {
+  "input_tokens": 4587,
+  "output_tokens": 3886,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

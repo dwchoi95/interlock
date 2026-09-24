@@ -1,0 +1,208 @@
+{
+ "tools": {
+  "create_entities": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can write state because it says `Create multiple new entities in the knowledge graph`. The advertised destination is only the `knowledge graph`, with no `URL`, recipient, public repository, or other attacker-readable destination, so it is not judged a SINK. It is not advertised to read or return graph data, web content, or execute code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "name"
+   ],
+   "value_args": [
+    "entityType",
+    "observations"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "create_relations": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can write state because it says `Create multiple new relations between entities in the knowledge graph`. The relation endpoints identify what graph records are acted on, but the destination is only the `knowledge graph`, not an attacker-readable destination. It is not advertised to return data or execute code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "from",
+    "to"
+   ],
+   "value_args": [
+    "relationType"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "add_observations": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can write state because it says `Add new observations to existing entities in the knowledge graph`. The `entityName` selects the graph record and `contents` are stored observation content. The advertised destination is only the `knowledge graph`, so it is not a SINK, and it is not advertised to read data or execute code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "entityName"
+   ],
+   "value_args": [
+    "contents"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "delete_entities": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can modify state because it says `Delete multiple entities and their associated relations from the knowledge graph`. The `entityNames` select graph records to delete. It is not advertised to return non-public data, retrieve attacker-controlled content, send data to an attacker-readable destination, or execute code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "entityNames"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "delete_observations": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can modify state because it says `Delete specific observations from entities in the knowledge graph`. The `entityName` and `observations` identify what graph content is acted on for deletion. It is not advertised to return data, send data to an external destination, or execute code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "entityName",
+    "observations"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "delete_relations": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can modify state because it says `Delete multiple relations from the knowledge graph`. The `from`, `to`, and `relationType` fields identify the relation records being acted on. It is not advertised to return data, send data externally, or execute code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "from",
+    "to",
+    "relationType"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "read_graph": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads data because it says `Read the entire knowledge graph`. The description does not say that the graph is public; under the conservative reading, the user's memory/knowledge graph can contain non-public data, so the returned graph is SECRET. The graph can also contain text previously stored as entities, relation types, or observations, and the advertised write tools allow arbitrary observation/entity content to be added to the same `knowledge graph`; since attacker-controlled tool output could have been stored there, returned graph text is treated as UNTRUSTED. No external destination or code execution is advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "name",
+    "from",
+    "to"
+   ],
+   "attacker_named_fields": [
+    "name",
+    "from",
+    "to"
+   ]
+  },
+  "search_nodes": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads data because it says `Search for nodes in the knowledge graph based on a query` and searches `entity names, types, and observation content`. The description does not say that the graph contents are public, so matching nodes may expose non-public memory data and are SECRET. Because names, types, and observation content can include arbitrary text previously stored in the graph, including attacker-controlled content passed through by the agent, returned matches are treated as UNTRUSTED. It is not advertised to send data to an attacker-readable destination or execute code.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "query"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "name"
+   ],
+   "attacker_named_fields": [
+    "name"
+   ]
+  },
+  "open_nodes": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads data because it says `Open specific nodes in the knowledge graph by their names` and `retrieve` entities. The description does not say those nodes are public, so returned node data may be non-public and is SECRET. Node names, types, and observations can contain arbitrary graph text previously written, including attacker-controlled content propagated by the agent, so returned node content is treated as UNTRUSTED. No attacker-readable output destination or code execution is advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "names"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "name"
+   ],
+   "attacker_named_fields": [
+    "name"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No source code or output schemas were provided; output-field judgments are inferred from the advertised descriptions and input field names for knowledge-graph entities, relations, and observations.",
+  "All tools are treated as default-enabled because the advertised text does not say any tool is off by default."
+ ],
+ "usage": {
+  "input_tokens": 2155,
+  "output_tokens": 4759,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

@@ -1,0 +1,1331 @@
+{
+ "model": "gpt-5.5",
+ "claims_judged": 243,
+ "labels_claimed": 412,
+ "labels_supported": 232,
+ "share_supported": 0.5631,
+ "claimed_by_label_and_verdict": {
+  "HOSTEXEC/insufficient": 3,
+  "HOSTEXEC/not_supported": 3,
+  "HOSTEXEC/supported": 2,
+  "SECRET/insufficient": 61,
+  "SECRET/not_supported": 11,
+  "SECRET/supported": 98,
+  "SINK/insufficient": 18,
+  "SINK/not_supported": 11,
+  "SINK/supported": 45,
+  "UNTRUSTED/insufficient": 62,
+  "UNTRUSTED/not_supported": 11,
+  "UNTRUSTED/supported": 87
+ },
+ "unclaimed_by_label_and_verdict": {
+  "HOSTEXEC/insufficient": 26,
+  "HOSTEXEC/not_supported": 209,
+  "SECRET/insufficient": 42,
+  "SECRET/not_supported": 22,
+  "SECRET/supported": 5,
+  "SINK/insufficient": 24,
+  "SINK/not_supported": 132,
+  "SINK/supported": 11,
+  "UNTRUSTED/insufficient": 49,
+  "UNTRUSTED/not_supported": 5,
+  "UNTRUSTED/supported": 25
+ },
+ "claims_fully_supported": 120,
+ "per_package": {
+  "@21st-dev/magic": "1/4",
+  "@angular/cli": "3/3",
+  "@azure-devops/mcp": "26/32",
+  "@browsermcp/mcp": "5/10",
+  "@bytebase/dbhub": "1/2",
+  "@executeautomation/playwright-mcp-server": "1/24",
+  "@modelcontextprotocol/server-brave-search": "2/2",
+  "@modelcontextprotocol/server-filesystem": "10/10",
+  "@modelcontextprotocol/server-github": "4/24",
+  "@modelcontextprotocol/server-memory": "3/3",
+  "@modelcontextprotocol/server-postgres": "1/1",
+  "@modelcontextprotocol/server-puppeteer": "0/7",
+  "@modelcontextprotocol/server-slack": "7/7",
+  "@playwright/mcp": "8/21",
+  "@sentry/mcp-server": "0/8",
+  "@supabase/mcp-server-supabase": "6/10",
+  "@upstash/context7-mcp": "2/2",
+  "chrome-devtools-mcp": "6/22",
+  "figma-developer-mcp": "0/1",
+  "firecrawl-mcp": "14/18",
+  "mcp-server-fetch": "1/1",
+  "mcp-server-git": "7/7",
+  "n8n-mcp": "1/4",
+  "next-devtools-mcp": "2/3",
+  "nx": "0/1",
+  "shadcn": "3/5",
+  "task-master-ai": "5/6",
+  "tavily-mcp": "1/5"
+ },
+ "usage": {
+  "input_tokens": 647399,
+  "output_tokens": 267843
+ },
+ "unsupported": [
+  {
+   "package": "@21st-dev/magic",
+   "tool": "21st_magic_component_builder",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show local file content is read via getContentOfFile(absolutePathToCurrentFile), which establishes access to host file data. They do not show arbitrary host code execution. The HTTP POST is to a fixed client/path in the shown code, not an agent-chosen or attacker-readable destination as required for SINK. Data from response.data / promptUser is incorporated into componentData.code, but the cited lines do not by themselves establish that this is attacker-controllable content returned by the tool."
+  },
+  {
+   "package": "@21st-dev/magic",
+   "tool": "21st_magic_component_inspiration",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show an async function posting the provided message and searchQuery to a fixed API path via twentyFirstClient, then returning data.text. There is no arbitrary host code execution. The request target is not agent-chosen in these lines, so SINK is not established. The lines do not show whether twentyFirstClient uses credentials to retrieve non-public SaaS data, so SECRET is not settled. The returned data comes from an external client response, but the lines alone do not establish that it is attacker-controllable, so UNTRUSTED is also not settled."
+  },
+  {
+   "package": "@21st-dev/magic",
+   "tool": "21st_magic_component_refiner",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited code reads the contents of an absolute host file path via getContentOfFile(absolutePathToRefiningFile), establishing access to host file contents/non-public data. It sends data to twentyFirstClient.post(\"/api/refine-ui\"), which appears to be a fixed vendor/client endpoint rather than an agent-chosen attacker-readable destination, so SINK is not supported under the given definition. There is no arbitrary host code execution shown. The returned text is data.text from the API response, but these lines alone do not establish that the response is attacker-controllable."
+  },
+  {
+   "package": "@azure-devops/mcp",
+   "tool": "advsec_get_alert_details",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show the tool obtains an API connection, calls `alertApi.getAlert(...)`, and returns the result as JSON, supporting that it reads potentially non-public Azure DevOps alert data into the agent context. They do not show arbitrary host code execution. They do not show sending agent-supplied data to an attacker-chosen destination; the parameters are used in a fixed API call. The lines do not establish whether the returned alert data is attacker-controllable, so UNTRUSTED is insufficient."
+  },
+  {
+   "package": "@azure-devops/mcp",
+   "tool": "pipelines_definition",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show calls to a build API to fetch pipeline definitions or definition revisions and return them as JSON. They do not show arbitrary host code execution, nor do they send agent-supplied data to an attacker-chosen destination. The lines suggest data is being retrieved from some API, but they do not by themselves establish that it is non-public data accessed with user credentials. They also do not settle whether the returned definitions/revisions are attacker-controllable content."
+  },
+  {
+   "package": "@azure-devops/mcp",
+   "tool": "pipelines_write",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited code calls Azure DevOps pipeline/build APIs using a connection/token and returns API results such as pipelineRun/newPipeline/updatedBuild, so it establishes returning credential-reached SaaS data and externally supplied/untrusted API response content. It does not show arbitrary code execution on the MCP host. It does send user-derived request bodies/parameters to remote API endpoints, but the lines alone do not establish an attacker-chosen host or an attacker-readable/public destination, so SINK is not settled."
+  },
+  {
+   "package": "@azure-devops/mcp",
+   "tool": "testplan",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show construction of Azure DevOps-style API URLs and GET requests with fetch, plus nearby context showing response handling. They do not show arbitrary host code execution. They also do not by themselves establish that the fetched data is non-public or reached with user credentials, that the destination URL/host is agent-chosen or attacker-readable, or that the returned response content is attacker-controllable; those depend on facts not established by these lines alone."
+  },
+  {
+   "package": "@azure-devops/mcp",
+   "tool": "wit_work_item_write",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited lines show Azure DevOps/work-item API create/update/batch PATCH calls and returning the resulting JSON, including responses obtained via a Bearer token, so credentialed SaaS data is returned to the agent context. The returned work item/API JSON can include user- or remote-controlled fields, so UNTRUSTED is supported. There is no arbitrary host code execution shown. Although data is sent to an org URL/API, the lines alone do not establish that the destination is attacker-readable or agent-chosen/public, so SINK is not settled."
+  },
+  {
+   "package": "@azure-devops/mcp",
+   "tool": "work_capacity_write",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show construction of a capacity patch, a call to workApi.updateCapacityWithIdentityRef, and returning selected fields from the response. There is no arbitrary host code execution. The update call is to a specific API client method, not an agent-chosen URL/recipient or clearly attacker-readable public destination, so these lines do not establish a SINK. The response may contain capacity/team-member data from an API, but the cited lines alone do not establish that it is non-public/credentialed SECRET data or that it is attacker-controllable UNTRUSTED content."
+  },
+  {
+   "package": "@browsermcp/mcp",
+   "tool": "browser_click",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show validation of click parameters, an internal socket message to perform a browser click, and returning the current page URL/title/ARIA snapshot. They do not show arbitrary host code execution. They also do not show agent-supplied data being sent to an attacker-readable destination; the only send is to a fixed internal socket message. The returned browser page snapshot/title/URL can contain attacker-controlled web page content, so UNTRUSTED is supported. The lines could return private page content depending on the browser state, but they do not by themselves establish access to non-public data, so SECRET is insufficient."
+  },
+  {
+   "package": "@browsermcp/mcp",
+   "tool": "browser_get_console_logs",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited code sends a fixed socket message with an empty payload, receives `consoleLogs`, serializes them, and returns them as text. It does not show arbitrary host code execution, and it does not send agent-supplied data to an attacker-readable destination. The lines show data being retrieved from some socket/browser context, but they do not by themselves establish that the logs contain non-public/secret data or that they are attacker-controllable."
+  },
+  {
+   "package": "@browsermcp/mcp",
+   "tool": "browser_get_console_logs",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited code sends a fixed socket message with an empty payload, receives `consoleLogs`, serializes them, and returns them as text. It does not show arbitrary host code execution, and it does not send agent-supplied data to an attacker-readable destination. The lines show data being retrieved from some socket/browser context, but they do not by themselves establish that the logs contain non-public/secret data or that they are attacker-controllable."
+  },
+  {
+   "package": "@browsermcp/mcp",
+   "tool": "browser_go_back",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show a handler sending a fixed socket message to go forward, and optionally returning the current page URL, title, and browser/ARIA snapshot. They do not show arbitrary host code execution. They do not deliver agent-supplied data to an attacker-readable destination. The returned page URL/title/snapshot can contain web page content controlled by the page/site, so UNTRUSTED is supported. Although browser page contents might include private data in some contexts, these lines alone do not establish that non-public data such as host files, intranet, or credentialed SaaS data is accessed or returned, so SECRET is insufficient."
+  },
+  {
+   "package": "@browsermcp/mcp",
+   "tool": "browser_go_forward",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited handler sends a fixed browser_go_forward socket message and, because it is registered as goForward(true), returns captureAriaSnapshot output. The snapshot function returns the current page URL, title, and browser_snapshot content, which are web/page-controlled and therefore untrusted. The lines do not show arbitrary host code execution or delivery of agent-supplied data to an attacker-readable destination. They also do not establish that the returned page data is non-public/credentialed/local data, only that browser page data is returned."
+  },
+  {
+   "package": "@browsermcp/mcp",
+   "tool": "browser_hover",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show the handler validates params, sends a fixed socket message to perform a browser hover, then captures and returns the browser page URL, title, and ARIA snapshot. This does not show arbitrary host code execution. It does not show delivery to an attacker-readable or agent-chosen destination; the socket messages are to the browser/context. The returned page URL/title/snapshot are browser page content and can be controlled by a web page, so UNTRUSTED is supported. The lines show page content being returned, but do not by themselves establish that the page is non-public, credentialed SaaS, localhost, file, or intranet content, so SECRET is insufficient."
+  },
+  {
+   "package": "@bytebase/dbhub",
+   "tool": "execute_sql",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited lines show the tool executes the provided SQL through a connector and returns result sets/messages in the tool response. That supports SECRET because database result sets reached through a configured connector may contain non-public database data returned to the agent. The lines do not show arbitrary host code execution, so HOSTEXEC is not supported. They do not establish delivery of data to an attacker-readable destination; SQL execution might have write effects depending on configuration/SQL/database, but the cited lines alone do not show an attacker-readable sink. They also do not establish that returned result sets/messages are attacker-controllable; database contents could be untrusted in some deployments, but that is not settled by these lines alone."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "click",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited code performs a browser-page click via a locator and then may include a page snapshot in the response. This does not show arbitrary host code execution. The optional snapshot supports returning page-derived content, which can be attacker-controllable. However, these lines alone do not establish that the snapshot contains non-public/credentialed data, nor do they clearly show agent-supplied data being sent to an attacker-readable destination; a click may have effects, but the cited lines do not settle that."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "close_page",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show error rethrowing and response flags such as setIncludePages(true) and setListThirdPartyDeveloperTools(), plus the start of an unrelated newPage export. They do not show arbitrary host code execution or delivery of agent-supplied data to an attacker-readable destination. The response flags suggest additional page/developer-tool information may be included, but these lines alone do not establish what data is returned or whether it is non-public or attacker-controllable."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "close_page",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show error rethrowing and response flags such as setIncludePages(true) and setListThirdPartyDeveloperTools(), plus the start of an unrelated newPage export. They do not show arbitrary host code execution or delivery of agent-supplied data to an attacker-readable destination. The response flags suggest additional page/developer-tool information may be included, but these lines alone do not establish what data is returned or whether it is non-public or attacker-controllable."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "drag",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show locating two page elements by UID, performing a browser drag/drop action, appending a success message, attaching a wait result, and optionally including a snapshot. They do not show arbitrary host code execution. They also do not show sending agent-supplied data to an attacker-readable destination; the operation is a UI drag/drop between existing page elements. The lines hint that page-derived results or a snapshot may be returned, but they do not establish whether that content is non-public/secret or attacker-controllable, so SECRET and UNTRUSTED are not settled by these lines alone."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "drag",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show locating two page elements by UID, performing a browser drag/drop action, appending a success message, attaching a wait result, and optionally including a snapshot. They do not show arbitrary host code execution. They also do not show sending agent-supplied data to an attacker-readable destination; the operation is a UI drag/drop between existing page elements. The lines hint that page-derived results or a snapshot may be returned, but they do not establish whether that content is non-public/secret or attacker-controllable, so SECRET and UNTRUSTED are not settled by these lines alone."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "handle_dialog",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited code accepts a browser dialog using request.params.promptText, which can deliver agent-supplied text to the page/dialog context, so a SINK effect is supported. The lines do not show arbitrary host code execution. response.setIncludePages(true) suggests additional page information may be included, but these lines alone do not establish that non-public data is returned or that attacker-controlled content is returned."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "handle_dialog",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited code accepts a browser dialog using request.params.promptText, which can deliver agent-supplied text to the page/dialog context, so a SINK effect is supported. The lines do not show arbitrary host code execution. response.setIncludePages(true) suggests additional page information may be included, but these lines alone do not establish that non-public data is returned or that attacker-controlled content is returned."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "hover",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show the tool finds a page element by uid, performs a browser hover action on it, appends a success message, attaches the wait result, and optionally includes a page snapshot. They do not show arbitrary host code execution. They also do not show delivery of agent-supplied data to an attacker-readable destination. The optional snapshot may contain page content, but these lines alone do not establish whether that content is non-public/secret or attacker-controlled."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "hover",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show the tool finds a page element by uid, performs a browser hover action on it, appends a success message, attaches the wait result, and optionally includes a page snapshot. They do not show arbitrary host code execution. They also do not show delivery of agent-supplied data to an attacker-readable destination. The optional snapshot may contain page content, but these lines alone do not establish whether that content is non-public/secret or attacker-controlled."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "lighthouse_audit",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show Lighthouse navigation/snapshot is run against the current Puppeteer page URL, reports are generated/saved, and the Lighthouse-derived output is attached to the response. They do not show arbitrary host code execution. They do not establish that non-public data is accessed, though the audited page could potentially be private depending on surrounding context. They also do not clearly establish delivery of agent-supplied data to an attacker-readable destination; navigation to the current page URL may involve network access, but these lines alone do not settle attacker-readability or agent choice. The returned/saved Lighthouse result is derived from a web page, whose content/URL can be attacker-controlled, so UNTRUSTED is supported."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "list_pages",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited handler only toggles response options to include pages and lists of developer/MCP tools. It does not show arbitrary host code execution or delivery of agent-supplied data to an attacker-readable destination. The lines suggest browser page information may be included, but they do not show what fields are returned or whether they are non-public/credentialed data, so SECRET is not settled. Likewise, although page/tool metadata could potentially be attacker-controlled, these lines alone do not establish that attacker-controllable content is returned."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "list_pages",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited handler only toggles response options to include pages and lists of developer/MCP tools. It does not show arbitrary host code execution or delivery of agent-supplied data to an attacker-readable destination. The lines suggest browser page information may be included, but they do not show what fields are returned or whether they are non-public/credentialed data, so SECRET is not settled. Likewise, although page/tool metadata could potentially be attacker-controlled, these lines alone do not establish that attacker-controllable content is returned."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "navigate_page",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show navigation to a caller-provided URL via page.pptrPage.goto, which is a request to an agent-chosen URL/host and therefore supports SINK. They also show evaluateOnNewDocument with a caller-provided script, but that executes in the browser/page context, not arbitrary host execution, so HOSTEXEC is not supported. The lines do not show non-public host/file/SaaS data being returned to the agent; arbitrary navigation might reach such data, but return of it is not established. Likewise, although arbitrary web pages can be loaded and setIncludePages(true) suggests page metadata may be included, these lines alone do not settle that attacker-controlled content is returned."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "navigate_page",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show navigation to a caller-provided URL via page.pptrPage.goto, which is a request to an agent-chosen URL/host and therefore supports SINK. They also show evaluateOnNewDocument with a caller-provided script, but that executes in the browser/page context, not arbitrary host execution, so HOSTEXEC is not supported. The lines do not show non-public host/file/SaaS data being returned to the agent; arbitrary navigation might reach such data, but return of it is not established. Likewise, although arbitrary web pages can be loaded and setIncludePages(true) suggests page metadata may be included, these lines alone do not settle that attacker-controlled content is returned."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "performance_start_trace",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show Puppeteer tracing being started, optionally reloading by navigating to a variable URL, then parsing/storing/attaching a trace-derived result. There is no arbitrary host code execution shown. The variable page navigation is a network request to a non-fixed destination, which supports SINK. The trace/summary is derived from browser page activity and can include page-controlled data, supporting UNTRUSTED. Although screenshots/raw traces could contain sensitive page contents, these lines alone do not establish that the page/source is non-public, authenticated, intranet, localhost, or otherwise SECRET."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "performance_stop_trace",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited code stops a Puppeteer page tracing session, parses the resulting trace buffer, may save it via context.saveFile, and attaches trace output/summary to the response. It does not show arbitrary host code execution. The trace is data derived from the target webpage/browser activity, which can be attacker-controlled, and processed results are returned, so UNTRUSTED is supported. The lines do not establish that the trace contains non-public/credentialed/local data, so SECRET is insufficient. They also show a saveFile call but not that it writes to an attacker-readable/public destination, so SINK is insufficient."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "press_key",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show the tool parses an agent/user-supplied key string and sends keyboard events to the current Puppeteer page, so it can deliver supplied input into a web page, which is a sink. They do not show arbitrary host code execution. The optional snapshot may return page content, but these lines alone do not establish that the page content is non-public/secret or attacker-controlled; that depends on the page and on includeSnapshot's behavior."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "press_key",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show the tool parses an agent/user-supplied key string and sends keyboard events to the current Puppeteer page, so it can deliver supplied input into a web page, which is a sink. They do not show arbitrary host code execution. The optional snapshot may return page content, but these lines alone do not establish that the page content is non-public/secret or attacker-controlled; that depends on the page and on includeSnapshot's behavior."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "resize_page",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show browser/window resizing using request width and height, and setting a flag to include pages in the response. They do not show arbitrary host code execution. They also do not show agent-supplied data being sent to an attacker-readable external destination. However, without the implementation/meaning of response.setIncludePages(true), the lines alone do not settle whether page information returned could contain non-public data or attacker-controllable content."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "resize_page",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show browser/window resizing using request width and height, and setting a flag to include pages in the response. They do not show arbitrary host code execution. They also do not show agent-supplied data being sent to an attacker-readable external destination. However, without the implementation/meaning of response.setIncludePages(true), the lines alone do not settle whether page information returned could contain non-public data or attacker-controllable content."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "select_page",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines select a page by ID, mark the response to include pages and tool lists, and optionally bring the browser page to the front. They do not show arbitrary host code execution, nor do they show sending agent-supplied data to an attacker-readable destination. The response flags may cause page or tool information to be returned, but the cited lines alone do not establish whether that information is non-public/secret or attacker-controllable."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "select_page",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines select a page by ID, mark the response to include pages and tool lists, and optionally bring the browser page to the front. They do not show arbitrary host code execution, nor do they show sending agent-supplied data to an attacker-readable destination. The response flags may cause page or tool information to be returned, but the cited lines alone do not establish whether that information is non-public/secret or attacker-controllable."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "take_heapsnapshot",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines define CLI metadata for take_heapsnapshot: it captures a heap snapshot of a target page and saves it to a specified .heapsnapshot file path. They do not show arbitrary host code execution. They also do not show delivery to an attacker-readable destination; a local file path is not, by itself, a SINK under the definition. The heap snapshot may contain page data, which could be sensitive or attacker-controlled depending on the target page and how results are exposed, but these lines alone do not establish that non-public data or attacker-controlled content is returned into the agent context."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "upload_file",
+   "label": "SECRET",
+   "verdict": "not_supported",
+   "reason": "The cited lines show no arbitrary host code execution. They do show local file paths being passed to Puppeteer file-upload mechanisms (`handle.uploadFile(...filePaths)` and `fileChooser.accept(filePaths)`), which can make agent-selected file data available to the current browser page, so these lines support a SINK effect. They do not show file contents or other non-public data being returned into the agent context, only a status line with the paths and an optional snapshot call, so SECRET is not supported. The optional `response.includeSnapshot()` might return page content, but these lines alone do not establish what that snapshot contains or whether it is attacker-controllable, so UNTRUSTED is insufficient."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "upload_file",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show no arbitrary host code execution. They do show local file paths being passed to Puppeteer file-upload mechanisms (`handle.uploadFile(...filePaths)` and `fileChooser.accept(filePaths)`), which can make agent-selected file data available to the current browser page, so these lines support a SINK effect. They do not show file contents or other non-public data being returned into the agent context, only a status line with the paths and an optional snapshot call, so SECRET is not supported. The optional `response.includeSnapshot()` might return page content, but these lines alone do not establish what that snapshot contains or whether it is attacker-controllable, so UNTRUSTED is insufficient."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "wait_for",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited handler waits for specified text on the current browser page, appends a status line, and includes a page snapshot in the response. There is no arbitrary host code execution shown and no delivery of data to an attacker-readable destination. The snapshot may contain page content, but these lines alone do not establish whether that content is non-public/secret or attacker-controllable."
+  },
+  {
+   "package": "chrome-devtools-mcp",
+   "tool": "wait_for",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited handler waits for specified text on the current browser page, appends a status line, and includes a page snapshot in the response. There is no arbitrary host code execution shown and no delivery of data to an attacker-readable destination. The snapshot may contain page content, but these lines alone do not establish whether that content is non-public/secret or attacker-controllable."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_assert_response",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show dispatch to assertResponseTool.execute and the input schema/description for asserting a previously expected HTTP response body contains a value. They do not show the implementation, what data is returned, whether response bodies are exposed to the agent, whether any non-public data is read, whether data is sent to an attacker-readable destination, or whether arbitrary host code is executed."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_assert_response",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show dispatch to assertResponseTool.execute and the input schema/description for asserting a previously expected HTTP response body contains a value. They do not show the implementation, what data is returned, whether response bodies are exposed to the agent, whether any non-public data is read, whether data is sent to an attacker-readable destination, or whether arbitrary host code is executed."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_click",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show that the `playwright_click` case dispatches to `clickTool.execute(args, context)` and that the tool accepts a CSS selector string. They do not show the implementation of `clickTool.execute`, what data it reads or returns, whether it can execute host code, whether it sends data to an attacker-readable destination, or whether returned content is attacker-controlled."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_click_and_switch_tab",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show dispatcher cases routing the tool name to clickAndSwitchTabTool.execute(args, context) and a helper that sets a global Playwright page and brings it to the front. They do not show the implementation of clickAndSwitchTabTool.execute or what data it reads, returns, sends, or executes. Therefore these lines alone do not establish HOSTEXEC, SECRET access, SINK behavior, or UNTRUSTED content handling."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_console_logs",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show dispatch to consoleLogsTool.execute and that browser page console/pageerror events are captured and registered with consoleLogsTool. They do not show arbitrary host code execution; the only script-related context is browser-page event handling/injection, not host execution. They also do not show sending agent-supplied data to any attacker-readable destination. The lines suggest page-controlled console/error text is collected, but they do not show consoleLogsTool.execute returning those messages to the agent, so UNTRUSTED is not established from these lines alone. Likewise, while such logs could theoretically contain private data, these lines do not establish access to non-public host/SaaS/local/intranet data or that such data is returned."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_delete",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show a tool named playwright_delete with a URL argument, described as performing an HTTP DELETE request, and dispatching to deleteRequestTool; creating an API request context with baseURL from the provided URL supports that it can send an agent-supplied request to a chosen URL, so SINK is supported. The lines do not show arbitrary host code execution. They also do not show whether any response body or other data is returned into the agent context, so SECRET and UNTRUSTED are not settled by these lines alone."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_delete",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show a tool named playwright_delete with a URL argument, described as performing an HTTP DELETE request, and dispatching to deleteRequestTool; creating an API request context with baseURL from the provided URL supports that it can send an agent-supplied request to a chosen URL, so SINK is supported. The lines do not show arbitrary host code execution. They also do not show whether any response body or other data is returned into the agent context, so SECRET and UNTRUSTED are not settled by these lines alone."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_drag",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show dispatch to dragTool.execute and the input schema requiring sourceSelector and targetSelector strings. They do not show the implementation of dragTool.execute, what data it reads or returns, whether it executes host code, or whether it sends data to any attacker-readable destination. Thus none of the labels are established by these lines alone."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_evaluate",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show that the dispatcher calls evaluateTool.execute for playwright_evaluate and that its schema accepts a JavaScript 'script' string described as code to execute in the browser console. Browser-page JavaScript execution is not, by itself, host arbitrary code execution. The lines do not show whether results are returned to the agent, whether any non-public data is read, whether data can be sent to attacker-readable destinations, or whether attacker-controllable page content is returned."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_evaluate",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show that the dispatcher calls evaluateTool.execute for playwright_evaluate and that its schema accepts a JavaScript 'script' string described as code to execute in the browser console. Browser-page JavaScript execution is not, by itself, host arbitrary code execution. The lines do not show whether results are returned to the agent, whether any non-public data is read, whether data can be sent to attacker-readable destinations, or whether attacker-controllable page content is returned."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_evaluate",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show that the dispatcher calls evaluateTool.execute for playwright_evaluate and that its schema accepts a JavaScript 'script' string described as code to execute in the browser console. Browser-page JavaScript execution is not, by itself, host arbitrary code execution. The lines do not show whether results are returned to the agent, whether any non-public data is read, whether data can be sent to attacker-readable destinations, or whether attacker-controllable page content is returned."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_fill",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show that the playwright_fill case dispatches to fillTool.execute(args, context) and that the tool schema accepts a selector and value for filling an input. They do not show the implementation of fillTool.execute, what data it reads or returns, whether it can execute host code, whether it accesses secrets, whether the filled value is delivered to an attacker-readable destination, or whether it returns attacker-controllable content."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_fill",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show that the playwright_fill case dispatches to fillTool.execute(args, context) and that the tool schema accepts a selector and value for filling an input. They do not show the implementation of fillTool.execute, what data it reads or returns, whether it can execute host code, whether it accesses secrets, whether the filled value is delivered to an attacker-readable destination, or whether it returns attacker-controllable content."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_get",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show that for API tools an API request context is created with `baseURL: args.url`, and that the `playwright_get` case delegates to `getRequestTool.execute(args, context)`. They do not show arbitrary host code execution. They also do not show the implementation of `getRequestTool.execute`, whether any HTTP request is actually sent, what data is included, or what response content is returned. Thus SECRET, SINK, and UNTRUSTED are not settled by these lines alone."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_get",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited lines show that for API tools an API request context is created with `baseURL: args.url`, and that the `playwright_get` case delegates to `getRequestTool.execute(args, context)`. They do not show arbitrary host code execution. They also do not show the implementation of `getRequestTool.execute`, whether any HTTP request is actually sent, what data is included, or what response content is returned. Thus SECRET, SINK, and UNTRUSTED are not settled by these lines alone."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_get",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show that for API tools an API request context is created with `baseURL: args.url`, and that the `playwright_get` case delegates to `getRequestTool.execute(args, context)`. They do not show arbitrary host code execution. They also do not show the implementation of `getRequestTool.execute`, whether any HTTP request is actually sent, what data is included, or what response content is returned. Thus SECRET, SINK, and UNTRUSTED are not settled by these lines alone."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_get_visible_html",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines identify and describe the tool as returning the HTML content of the current page, which is browser/page content and can be attacker-controlled, so UNTRUSTED is supported. The lines do not show arbitrary host code execution, delivery to an attacker-readable destination, or that the returned page content is non-public/credentialed; because they only dispatch to visibleHtmlTool.execute and give a schema/description, they do not settle HOSTEXEC, SINK, or SECRET."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_get_visible_text",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines identify a tool named `playwright_get_visible_text` whose description is to get the visible text content of the current page, and show it dispatching to `visibleTextTool.execute`. That supports that it can return web page text, which may be attacker-controlled, so UNTRUSTED is supported. The lines do not show arbitrary host code execution, and the tool has no inputs or behavior suggesting it sends agent-supplied data to an attacker-readable destination, so HOSTEXEC and SINK are not supported. Although current page text could potentially include private/authenticated/intranet content, these lines alone do not establish that it reaches or returns non-public data, so SECRET is insufficient."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_go_back",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show a switch dispatch: the \"playwright_go_back\" case delegates to goBackTool.execute(args, context). They do not show the implementation of goBackTool.execute or what data it reads, returns, sends, or executes. Therefore these lines alone do not establish HOSTEXEC, SECRET, SINK, or UNTRUSTED effects."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_go_forward",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show a switch dispatching the \"playwright_go_forward\" case to goForwardTool.execute(args, context). They do not show what that execute method does, what data it reads or returns, whether it sends data anywhere, whether it executes host code, or whether it exposes attacker-controllable content."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_hover",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show that the dispatcher calls `hoverTool.execute(args, context)` for `playwright_hover` and that the tool accepts a CSS selector to hover an element. They do not show the implementation of `hoverTool.execute`, what data it returns, whether it reads secrets, sends data to attacker-readable destinations, returns page-controlled content, or executes host code."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_iframe_click",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show that the tool name is dispatched to `iframeClickTool.execute(args, context)` and that its schema accepts iframe and element CSS selectors for clicking. They do not show the implementation of `iframeClickTool.execute`, what data it reads or returns, whether it sends data to any destination, whether returned content is attacker-controlled, or whether it can execute arbitrary host code."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_iframe_fill",
+   "label": "UNTRUSTED",
+   "verdict": "not_supported",
+   "reason": "The cited lines show only that the tool dispatches to iframeFillTool.execute and that its schema accepts an iframe selector, element selector, and value to fill into an element in an iframe on the page. Filling a page/iframe element with an agent-supplied value establishes a data-delivery action to page content, so SINK is supported. The lines do not show arbitrary host code execution, returning non-public data into context, or returning attacker-controllable content."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_navigate",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show a tool whose schema accepts a required URL and is described as navigating to that URL, and the handler routes `playwright_navigate` to `navigationTool.execute`; navigating to an agent-chosen URL entails making a request to an agent-chosen host, so SINK is supported. The lines show launching/using a Playwright browser, but not arbitrary host code execution, so HOSTEXEC is not supported. They do not show what `navigationTool.execute` returns or whether page contents, local files, intranet data, or other non-public data are returned to the agent, so SECRET is insufficient. They also do not show attacker-controlled web content being returned into the agent context, so UNTRUSTED is insufficient."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_navigate",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show a tool whose schema accepts a required URL and is described as navigating to that URL, and the handler routes `playwright_navigate` to `navigationTool.execute`; navigating to an agent-chosen URL entails making a request to an agent-chosen host, so SINK is supported. The lines show launching/using a Playwright browser, but not arbitrary host code execution, so HOSTEXEC is not supported. They do not show what `navigationTool.execute` returns or whether page contents, local files, intranet data, or other non-public data are returned to the agent, so SECRET is insufficient. They also do not show attacker-controlled web content being returned into the agent context, so UNTRUSTED is insufficient."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_patch",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines define and dispatch a tool described as performing an HTTP PATCH request with agent-supplied url, body value, token, and headers, which supports data being sent to an agent-chosen URL/host. They do not show arbitrary host code execution. They also do not show what response, if any, is returned to the agent, so they do not establish access to secrets or return of attacker-controlled content."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_patch",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines define and dispatch a tool described as performing an HTTP PATCH request with agent-supplied url, body value, token, and headers, which supports data being sent to an agent-chosen URL/host. They do not show arbitrary host code execution. They also do not show what response, if any, is returned to the agent, so they do not establish access to secrets or return of attacker-controlled content."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_post",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show this tool is an API tool, initializes an API context from args.url, dispatches playwright_post to postRequestTool.execute(args, context), and defines inputs including a URL, body value, bearer token, and headers. That supports SINK because the tool is described as performing an HTTP POST to an agent-supplied URL with agent-supplied body/headers/token. The lines do not show arbitrary host code execution. They also do not show what response data is returned, whether non-public/local/intranet resources are reachable and returned, or whether attacker-controlled response content is returned to the agent, so SECRET and UNTRUSTED are insufficient."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_post",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show this tool is an API tool, initializes an API context from args.url, dispatches playwright_post to postRequestTool.execute(args, context), and defines inputs including a URL, body value, bearer token, and headers. That supports SINK because the tool is described as performing an HTTP POST to an agent-supplied URL with agent-supplied body/headers/token. The lines do not show arbitrary host code execution. They also do not show what response data is returned, whether non-public/local/intranet resources are reachable and returned, or whether attacker-controlled response content is returned to the agent, so SECRET and UNTRUSTED are insufficient."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_press_key",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show dispatch to pressKeyTool.execute and the input schema/description for a key press with an optional CSS selector. They do not show the implementation or returned data, so they do not establish host code execution, access to secrets, delivery of data to an attacker-readable sink, or return of attacker-controllable content."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_put",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show the tool is registered/dispatches to putRequestTool.execute, has a schema with agent-supplied url/value/token/headers, and is described as performing an HTTP PUT request using a Playwright API request context with baseURL set from the URL. That supports SINK because agent-supplied data can be sent to an agent-chosen URL. The lines do not show arbitrary host code execution. They also do not show what response data is returned, so they do not settle whether non-public data or attacker-controlled response content enters the agent context."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_put",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show the tool is registered/dispatches to putRequestTool.execute, has a schema with agent-supplied url/value/token/headers, and is described as performing an HTTP PUT request using a Playwright API request context with baseURL set from the URL. That supports SINK because agent-supplied data can be sent to an agent-chosen URL. The lines do not show arbitrary host code execution. They also do not show what response data is returned, so they do not settle whether non-public data or attacker-controlled response content enters the agent context."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_screenshot",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show this tool is routed to screenshotTool.execute, is described as taking a screenshot of the current page or selected element, can store screenshots/base64 or save PNGs, and exposes a getScreenshots map. A screenshot of a web page can contain page-controlled content, so UNTRUSTED is supported. The lines do not show arbitrary host code execution. They also do not show delivery to an attacker-readable destination; saving a PNG to a local downloads directory is not, by itself, a SINK as defined. The screenshot might contain private/authenticated/local content, but these lines do not establish that the tool reaches or returns non-public data with user credentials, so SECRET is insufficient."
+  },
+  {
+   "package": "@executeautomation/playwright-mcp-server",
+   "tool": "playwright_select",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show that the dispatcher calls selectTool.execute(args, context) for the playwright_select case and that the tool accepts a CSS selector and value. They do not show the implementation of selectTool.execute, what data it reads or returns, whether it executes host code, whether it accesses non-public data, whether it sends data to an attacker-readable destination, or whether returned content is attacker-controllable."
+  },
+  {
+   "package": "figma-developer-mcp",
+   "tool": "get_figma_data",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited code shows configuration/auth handling for Figma tokens, formatting of design-like data, generic fetch logic, image file processing, and PostHog telemetry. It does not show arbitrary host command/code execution. The PostHog telemetry is to a fixed vendor endpoint, which is not a SINK under the definition, and the generic fetch is not shown to send agent-supplied data to an attacker-chosen destination. Although the lines suggest authenticated Figma access and serialization of returned design content, they do not by themselves show the get_figma_data tool handler returning non-public SaaS data to the agent, nor do they settle whether returned content is attacker-controllable."
+  },
+  {
+   "package": "figma-developer-mcp",
+   "tool": "get_figma_data",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited code shows configuration/auth handling for Figma tokens, formatting of design-like data, generic fetch logic, image file processing, and PostHog telemetry. It does not show arbitrary host command/code execution. The PostHog telemetry is to a fixed vendor endpoint, which is not a SINK under the definition, and the generic fetch is not shown to send agent-supplied data to an attacker-chosen destination. Although the lines suggest authenticated Figma access and serialization of returned design content, they do not by themselves show the get_figma_data tool handler returning non-public SaaS data to the agent, nor do they settle whether returned content is attacker-controllable."
+  },
+  {
+   "package": "firecrawl-mcp",
+   "tool": "firecrawl_map",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited lines show schema validation, logging, a call to client.map with a user-supplied URL/options, and returning the result as text. They do not show arbitrary host code execution, so HOSTEXEC is not supported. The description says it returns matching URLs rather than page bodies, but the lines do not settle whether client.map can reach or return non-public/localhost/intranet data, so SECRET is insufficient. The call goes through client.map/Firecrawl rather than showing a direct request to an agent-chosen attacker-readable destination; the lines do not establish whether data is delivered to arbitrary hosts, so SINK is insufficient. Because the tool operates on arbitrary user-supplied web domains and returns URLs discovered from those sites, returned content can be controlled by an attacker who controls a target site, so UNTRUSTED is supported."
+  },
+  {
+   "package": "firecrawl-mcp",
+   "tool": "firecrawl_monitor_get",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited code accepts an id, calls monitorRequest(session, `/monitor/${encodeURIComponent(id)}`), and returns asText(res). It does not show arbitrary host code execution. It also does not show delivery to an attacker-chosen URL/host or public/message destination; the only agent-controlled value is URL-encoded into a fixed path. The lines suggest a read request whose response is returned, but without the implementation of monitorRequest or proof of authenticated/non-public data, SECRET is not fully established. Likewise, the response may be external/service data, but these lines alone do not establish it is attacker-controllable UNTRUSTED content."
+  },
+  {
+   "package": "firecrawl-mcp",
+   "tool": "firecrawl_monitor_update",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited lines show only that the monitor update tool can update fields such as goal, judgeEnabled, webhook, and notification, and that a body parameter accepts arbitrary record content. They do not show arbitrary host code execution. They also do not establish what data the tool returns, so SECRET and UNTRUSTED are not settled. Although webhook/notification fields suggest possible outbound delivery, the cited lines alone do not show that the tool sends agent-supplied data to an attacker-readable destination or an agent-chosen URL, so SINK is insufficient."
+  },
+  {
+   "package": "firecrawl-mcp",
+   "tool": "firecrawl_parse",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show an fs readFile import but no file read, and a curl command string being constructed but not executed, so they do not establish host code execution. The code posts metadata to a fixed Firecrawl endpoint to mint an upload URL; per the label definition, a request to a fixed vendor endpoint is not a SINK, and the hosted path explicitly says it cannot read local files. The lines do show a credentialed API response containing uploadUrl/uploadRef, but they do not by themselves fully show that non-public data is returned to the agent. Similarly, although a command string may contain caller/API-provided values, the cited lines do not settle whether attacker-controllable content is actually returned by the tool."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "create_branch",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show argument parsing, a call to branches.createBranchFromRef(...), and returning the resulting branch as JSON. They do not show the implementation of createBranchFromRef, what data source it accesses, whether it uses credentials or private data, whether it writes to an attacker-readable destination, whether returned data is attacker-controlled, or any host command/code execution."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "create_pull_request",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited lines only dispatch the create_pull_request case: parse request arguments, call pulls.createPullRequest(args), and return the resulting object as JSON text. They do not show the implementation of createPullRequest, any external write/request, any reading of non-public data, any arbitrary host code execution, or whether returned data is attacker-controllable. Therefore these lines alone do not settle any of the labels."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "create_pull_request_review",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show argument parsing, passing owner/repo/pull_number/options to pulls.createPullRequestReview(...), and returning the JSON-stringified result. They do not show arbitrary host code execution. They also do not show the implementation of createPullRequestReview, what credentials or data source it uses, whether it writes to an attacker-readable destination, or whether the returned data is attacker-controllable. The function name suggests a GitHub PR review operation, but these lines alone do not establish SECRET, SINK, or UNTRUSTED effects."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "create_repository",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited lines show the tool is registered as `create_repository`, parses arguments, calls `repository.createRepository(args)`, and returns the JSON-stringified result. They do not show arbitrary host code execution. They suggest interaction with GitHub, but do not establish that non-public data is read and returned, that data is written to an attacker-readable/public destination, or that the returned content is attacker-controllable; those details depend on the unseen `createRepository` implementation, schema, and repository visibility/API behavior."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "get_file_contents",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show argument parsing, a call to files.getFileContents(owner, repo, path, branch), and returning the resulting contents as text. They do not show arbitrary host code execution. They also do not show writing or sending agent-supplied data to an attacker-readable destination, only returning data to the caller. The lines suggest reading repository file contents, but without the implementation or authentication context they do not establish whether the contents are non-public/credentialed secrets. Likewise, while repository file contents could be attacker-controlled, these lines alone do not settle the provenance of files.getFileContents or whether the returned data is attacker-controlled."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "get_file_contents",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show argument parsing, a call to files.getFileContents(owner, repo, path, branch), and returning the resulting contents as text. They do not show arbitrary host code execution. They also do not show writing or sending agent-supplied data to an attacker-readable destination, only returning data to the caller. The lines suggest reading repository file contents, but without the implementation or authentication context they do not establish whether the contents are non-public/credentialed secrets. Likewise, while repository file contents could be attacker-controlled, these lines alone do not settle the provenance of files.getFileContents or whether the returned data is attacker-controlled."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "get_issue",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show argument parsing, a call to issues.getIssue(owner, repo, issue_number), and returning that result as JSON. They do not show arbitrary host code execution. They do not show a write or request to an agent-chosen attacker-readable destination; this is only a read-style call and return to the caller. The lines also do not establish whether the fetched issue is non-public/credentialed data, so SECRET is insufficient. Although issue content could be attacker-controlled in many systems, these lines alone do not establish the provenance or controllability of issues.getIssue's returned data, so UNTRUSTED is insufficient."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "get_issue",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show argument parsing, a call to issues.getIssue(owner, repo, issue_number), and returning that result as JSON. They do not show arbitrary host code execution. They do not show a write or request to an agent-chosen attacker-readable destination; this is only a read-style call and return to the caller. The lines also do not establish whether the fetched issue is non-public/credentialed data, so SECRET is insufficient. Although issue content could be attacker-controlled in many systems, these lines alone do not establish the provenance or controllability of issues.getIssue's returned data, so UNTRUSTED is insufficient."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "get_pull_request",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines only parse arguments, call pulls.getPullRequest(owner, repo, pull_number), and return the resulting pull request JSON as text. They do not show arbitrary host code execution or writing/sending agent-supplied data to an attacker-readable destination. They also do not establish that the returned pull request is non-public or accessed with user credentials, so SECRET is insufficient. Pull request data is repository/user-supplied content, and the lines show it is returned to the agent, so UNTRUSTED is supported."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "get_pull_request_comments",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines only parse arguments, call an external helper `pulls.getPullRequestComments(...)`, and return the resulting `comments` as JSON. They do not show arbitrary host code execution. They also do not show whether the helper accesses private/authenticated data, nor whether the returned comments are attacker-controllable. The lines do not show sending agent-supplied data to an attacker-readable destination; returning data to the MCP caller is not a SINK under the definition."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "get_pull_request_comments",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only parse arguments, call an external helper `pulls.getPullRequestComments(...)`, and return the resulting `comments` as JSON. They do not show arbitrary host code execution. They also do not show whether the helper accesses private/authenticated data, nor whether the returned comments are attacker-controllable. The lines do not show sending agent-supplied data to an attacker-readable destination; returning data to the MCP caller is not a SINK under the definition."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "get_pull_request_files",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines parse owner/repo/pull_number, call getPullRequestFiles, and return the resulting files as JSON. Pull request file data is content/metadata supplied through a PR and can be attacker-controlled, so UNTRUSTED is supported. The lines do not show authentication or access to non-public/private repository data, so SECRET is not settled. They show no arbitrary host code execution and no write/exfiltration to an attacker-readable destination; the data is only returned in the tool response."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "get_pull_request_reviews",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines parse owner/repo/pull_number, call getPullRequestReviews, and return the resulting reviews as JSON text. They do not show arbitrary host code execution. They also do not show delivering agent-supplied data to an attacker-readable destination; this is a read-style call and a return to the caller. The lines suggest data is being retrieved and returned, but they do not establish whether the reviews are non-public data accessed with credentials, so SECRET is insufficient. They also do not show the implementation or provenance of the returned reviews enough to establish attacker-controllable content, so UNTRUSTED is insufficient."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "get_pull_request_reviews",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines parse owner/repo/pull_number, call getPullRequestReviews, and return the resulting reviews as JSON text. They do not show arbitrary host code execution. They also do not show delivering agent-supplied data to an attacker-readable destination; this is a read-style call and a return to the caller. The lines suggest data is being retrieved and returned, but they do not establish whether the reviews are non-public data accessed with credentials, so SECRET is insufficient. They also do not show the implementation or provenance of the returned reviews enough to establish attacker-controllable content, so UNTRUSTED is insufficient."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "get_pull_request_status",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines parse arguments, call pulls.getPullRequestStatus(owner, repo, pull_number), and return the resulting status as JSON text. They do not show arbitrary host code execution. They also do not show sending agent-supplied data to an attacker-readable destination or performing a write, only returning data to the caller. However, because the implementation and data source of pulls.getPullRequestStatus are not shown, these lines alone do not establish whether the returned status is non-public/SaaS data accessed with credentials, nor whether it contains attacker-controllable content."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "get_pull_request_status",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines parse arguments, call pulls.getPullRequestStatus(owner, repo, pull_number), and return the resulting status as JSON text. They do not show arbitrary host code execution. They also do not show sending agent-supplied data to an attacker-readable destination or performing a write, only returning data to the caller. However, because the implementation and data source of pulls.getPullRequestStatus are not shown, these lines alone do not establish whether the returned status is non-public/SaaS data accessed with credentials, nor whether it contains attacker-controllable content."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "list_commits",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines only parse the list_commits arguments, call an unknown commits.listCommits helper, and return its results as JSON. They do not show arbitrary host code execution or any write/exfiltration to an attacker-readable destination. Whether the returned commits are non-public data, or attacker-controllable content, depends on the implementation and data source of commits.listCommits, which are not shown in these lines."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "list_commits",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only parse the list_commits arguments, call an unknown commits.listCommits helper, and return its results as JSON. They do not show arbitrary host code execution or any write/exfiltration to an attacker-readable destination. Whether the returned commits are non-public data, or attacker-controllable content, depends on the implementation and data source of commits.listCommits, which are not shown in these lines."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "list_issues",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines parse arguments, call issues.listIssues(owner, repo, options), and return the JSON-stringified result. They do not show arbitrary host code execution or sending agent-supplied data to an attacker-readable destination. The helper call may retrieve issue data, but these lines alone do not establish whether that data is non-public/credentialed SECRET data or attacker-controllable UNTRUSTED content."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "list_issues",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines parse arguments, call issues.listIssues(owner, repo, options), and return the JSON-stringified result. They do not show arbitrary host code execution or sending agent-supplied data to an attacker-readable destination. The helper call may retrieve issue data, but these lines alone do not establish whether that data is non-public/credentialed SECRET data or attacker-controllable UNTRUSTED content."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "list_pull_requests",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines parse arguments, call pulls.listPullRequests(owner, repo, options), and return the result as JSON text. They do not show any host code execution or any write/message/request to an attacker-readable destination beyond a presumed fixed API call, so HOSTEXEC and SINK are not supported by these lines. The returned pull request data could potentially include private repository data or user-controlled PR content, but the cited lines do not show the implementation, authentication context, repository visibility, or data provenance, so SECRET and UNTRUSTED are not settled by these lines alone."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "list_pull_requests",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines parse arguments, call pulls.listPullRequests(owner, repo, options), and return the result as JSON text. They do not show any host code execution or any write/message/request to an attacker-readable destination beyond a presumed fixed API call, so HOSTEXEC and SINK are not supported by these lines. The returned pull request data could potentially include private repository data or user-controlled PR content, but the cited lines do not show the implementation, authentication context, repository visibility, or data provenance, so SECRET and UNTRUSTED are not settled by these lines alone."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "merge_pull_request",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited lines show argument parsing, a call to an external helper `pulls.mergePullRequest(...)`, and returning that helper's result as JSON. They do not show arbitrary host code execution. They also do not show the helper implementation, whether it accesses non-public data, whether it performs a write to an attacker-readable destination, or whether the returned result contains attacker-controllable content."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "push_files",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show a dispatcher branch parsing arguments, calling files.pushFiles(args.owner, args.repo, args.branch, args.files, args.message), and returning the result. They do not show the implementation of pushFiles or where data is sent/read from. Thus they do not establish host execution, access to non-public data, delivery to an attacker-readable destination, or retrieval of attacker-controllable content."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "search_code",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show dispatch for the \"search_code\" case: parse arguments, call search.searchCode(args), and return JSON-stringified results. They do not show what search.searchCode does, what data source it queries, whether credentials or non-public data are involved, whether returned content is attacker-controllable, whether any data is sent to an attacker-readable destination, or whether any host code execution occurs."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "search_code",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show dispatch for the \"search_code\" case: parse arguments, call search.searchCode(args), and return JSON-stringified results. They do not show what search.searchCode does, what data source it queries, whether credentials or non-public data are involved, whether returned content is attacker-controllable, whether any data is sent to an attacker-readable destination, or whether any host code execution occurs."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "search_issues",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show argument parsing, a call to search.searchIssues(args), and returning the JSON-stringified result. They do not show the implementation of search.searchIssues, the data source, whether credentials or non-public data are used, whether returned content is attacker-controllable, whether data is sent to any attacker-readable destination, or any host code execution."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "search_issues",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show argument parsing, a call to search.searchIssues(args), and returning the JSON-stringified result. They do not show the implementation of search.searchIssues, the data source, whether credentials or non-public data are used, whether returned content is attacker-controllable, whether data is sent to any attacker-readable destination, or any host code execution."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "search_repositories",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show the tool parses arguments, calls repository.searchRepositories(query, page, perPage), and returns the JSON-serialized results. They do not show any arbitrary host code execution. They also do not show delivery to an agent-chosen or attacker-readable destination; at most a query is passed to a repository search helper. The lines alone do not establish whether the search uses credentials or can return non-public/private repository data, so SECRET is insufficient. The returned repository search results are external repository metadata/content that can be controlled by repository owners, so UNTRUSTED is supported."
+  },
+  {
+   "package": "@modelcontextprotocol/server-github",
+   "tool": "search_users",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show dispatch for the search_users case: arguments are parsed, an unknown search.searchUsers(args) function is called, and its results are returned as JSON text. They do not show the implementation of searchUsers or where its data comes from/goes to, so they do not establish host code execution, access to non-public data, delivery to an attacker-readable sink, or attacker-controllable returned content."
+  },
+  {
+   "package": "@modelcontextprotocol/server-puppeteer",
+   "tool": "puppeteer_click",
+   "label": "SINK",
+   "verdict": "not_supported",
+   "reason": "The cited lines show user-provided launch options being merged into the configuration passed to `puppeteer.launch(...)`; Puppeteer launch configuration can control the host process that is started, so these lines support host execution. The click handler itself only calls `page.click(args.selector)` and returns a confirmation string echoing the selector. The cited lines do not show non-public data being returned, agent-supplied data being sent to an attacker-readable external destination, or attacker-controlled page/content data being returned."
+  },
+  {
+   "package": "@modelcontextprotocol/server-puppeteer",
+   "tool": "puppeteer_evaluate",
+   "label": "HOSTEXEC",
+   "verdict": "not_supported",
+   "reason": "The cited code executes args.script via page.evaluate in a Puppeteer browser page and returns the evaluation result and captured console logs. Because this is browser-page JavaScript rather than host-side arbitrary code execution, HOSTEXEC is not supported by these lines. The returned result/logs can reflect attacker-controlled page state or page script behavior, so UNTRUSTED is supported. Arbitrary browser-page JavaScript can initiate requests/beacons to attacker-chosen URLs carrying agent-supplied data, so SINK is supported. The lines do not by themselves establish that the current page contains authenticated/private, localhost, intranet, or file data, so SECRET is insufficient."
+  },
+  {
+   "package": "@modelcontextprotocol/server-puppeteer",
+   "tool": "puppeteer_evaluate",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited code executes args.script via page.evaluate in a Puppeteer browser page and returns the evaluation result and captured console logs. Because this is browser-page JavaScript rather than host-side arbitrary code execution, HOSTEXEC is not supported by these lines. The returned result/logs can reflect attacker-controlled page state or page script behavior, so UNTRUSTED is supported. Arbitrary browser-page JavaScript can initiate requests/beacons to attacker-chosen URLs carrying agent-supplied data, so SINK is supported. The lines do not by themselves establish that the current page contains authenticated/private, localhost, intranet, or file data, so SECRET is insufficient."
+  },
+  {
+   "package": "@modelcontextprotocol/server-puppeteer",
+   "tool": "puppeteer_fill",
+   "label": "HOSTEXEC",
+   "verdict": "insufficient",
+   "reason": "The cited fill line sends the caller/agent-supplied args.value into a browser page via page.type(args.selector, args.value), which is a data-delivery sink to page content that may be readable by the site. The lines do not show the tool returning non-public data; its returned text is just a status message echoing inputs. They also do not show returning attacker-controlled page content. puppeteer.launch shows a browser being started, but these lines alone do not establish arbitrary host code execution by the tool."
+  },
+  {
+   "package": "@modelcontextprotocol/server-puppeteer",
+   "tool": "puppeteer_hover",
+   "label": "HOSTEXEC",
+   "verdict": "insufficient",
+   "reason": "The cited lines show the handler obtains a Puppeteer page, may launch a browser with merged launch options, and for this case waits for and hovers over a selector, returning a fixed success/error message containing the selector. They do not show arbitrary host code execution, access to or return of non-public data, or delivery of agent-supplied data to an attacker-readable destination; those could depend on omitted details such as how mergedConfig/args are built or what page is loaded, so those effects are not settled by the cited lines. The returned content shown is just status text based on the caller-provided selector/error, not attacker-controlled page content, so UNTRUSTED is not supported."
+  },
+  {
+   "package": "@modelcontextprotocol/server-puppeteer",
+   "tool": "puppeteer_navigate",
+   "label": "HOSTEXEC",
+   "verdict": "not_supported",
+   "reason": "The cited lines show the tool obtains a Puppeteer page and calls page.goto(args.url), then returns only a fixed success message containing the supplied URL. Navigating to an agent-supplied URL establishes a SINK because it makes a request to an agent-chosen destination. The lines do not show arbitrary host code execution; browser/page JavaScript is not host execution by itself. They also do not show the tool returning page contents, localhost/file/intranet data, or other secrets. Although console messages are collected elsewhere in the browser setup, these lines do not show this navigate call returning attacker-controlled page content, only the navigation status string."
+  },
+  {
+   "package": "@modelcontextprotocol/server-puppeteer",
+   "tool": "puppeteer_navigate",
+   "label": "SECRET",
+   "verdict": "not_supported",
+   "reason": "The cited lines show the tool obtains a Puppeteer page and calls page.goto(args.url), then returns only a fixed success message containing the supplied URL. Navigating to an agent-supplied URL establishes a SINK because it makes a request to an agent-chosen destination. The lines do not show arbitrary host code execution; browser/page JavaScript is not host execution by itself. They also do not show the tool returning page contents, localhost/file/intranet data, or other secrets. Although console messages are collected elsewhere in the browser setup, these lines do not show this navigate call returning attacker-controlled page content, only the navigation status string."
+  },
+  {
+   "package": "@modelcontextprotocol/server-puppeteer",
+   "tool": "puppeteer_navigate",
+   "label": "UNTRUSTED",
+   "verdict": "not_supported",
+   "reason": "The cited lines show the tool obtains a Puppeteer page and calls page.goto(args.url), then returns only a fixed success message containing the supplied URL. Navigating to an agent-supplied URL establishes a SINK because it makes a request to an agent-chosen destination. The lines do not show arbitrary host code execution; browser/page JavaScript is not host execution by itself. They also do not show the tool returning page contents, localhost/file/intranet data, or other secrets. Although console messages are collected elsewhere in the browser setup, these lines do not show this navigate call returning attacker-controlled page content, only the navigation status string."
+  },
+  {
+   "package": "@modelcontextprotocol/server-puppeteer",
+   "tool": "puppeteer_screenshot",
+   "label": "HOSTEXEC",
+   "verdict": "not_supported",
+   "reason": "The cited code launches/uses a Puppeteer page, sets the viewport, takes a screenshot of the current page or selected element, stores it, and returns the screenshot data/base64 in the tool result. That establishes returning rendered page contents, which can include non-public/authenticated/local page contents (SECRET) and also attacker-controlled web content (UNTRUSTED). It does not show arbitrary host code execution; launching Puppeteer/browser is not by itself arbitrary host execution. It also does not show sending agent-supplied data to an attacker-readable destination or writing to an external/public location, so SINK is not supported."
+  },
+  {
+   "package": "@modelcontextprotocol/server-puppeteer",
+   "tool": "puppeteer_select",
+   "label": "HOSTEXEC",
+   "verdict": "insufficient",
+   "reason": "The cited select case waits for a selector and calls page.select(args.selector, args.value), then returns only a confirmation string based on the supplied arguments. It does not return page contents or other non-public data, and it does not return attacker-controlled web content. The lines do show Puppeteer launching a browser, but they do not by themselves establish arbitrary host code execution; launch options/source of mergedConfig are not shown. Similarly, selecting a value may interact with whatever page is open, but these lines alone do not establish delivery to an attacker-readable destination."
+  },
+  {
+   "package": "@modelcontextprotocol/server-puppeteer",
+   "tool": "puppeteer_select",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited select case waits for a selector and calls page.select(args.selector, args.value), then returns only a confirmation string based on the supplied arguments. It does not return page contents or other non-public data, and it does not return attacker-controlled web content. The lines do show Puppeteer launching a browser, but they do not by themselves establish arbitrary host code execution; launch options/source of mergedConfig are not shown. Similarly, selecting a value may interact with whatever page is open, but these lines alone do not establish delivery to an attacker-readable destination."
+  },
+  {
+   "package": "n8n-mcp",
+   "tool": "get_node",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show get_node validating parameters and returning node documentation/metadata read from this.db via SELECT queries, so database-derived data is returned into the agent context. They do not show arbitrary host code execution, eval, shelling out, or similar. They also do not show agent-supplied data being sent to an attacker-readable destination such as an arbitrary URL, public write, or chosen recipient. The returned content comes from a database and includes user-influenced lookup/error paths, but these lines alone do not establish that the database contents are attacker-controllable."
+  },
+  {
+   "package": "n8n-mcp",
+   "tool": "get_template",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show parameter validation, conversion of templateId, and returning a template fetched via templateService.getTemplate, described as complete workflow JSON from a community template library/database. They do not show arbitrary host code execution or delivery of agent-supplied data to an attacker-readable destination. They do show data being retrieved from a service/database, but the lines do not establish that the data is non-public/secret. Similarly, while a community template library could contain externally supplied content, the cited lines do not establish that it is attacker-controllable."
+  },
+  {
+   "package": "n8n-mcp",
+   "tool": "search_nodes",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited dispatcher lines show search_nodes invokes searchNodes with user-supplied query/options, and the later lines show returned results can include examples built from a SQL database query (template_node_configs fields parsed and placed into result.examples), establishing return of database-derived data. The lines do not show arbitrary host code execution or delivery of agent-supplied data to an attacker-readable destination. They also do not establish that any returned content is attacker-controllable; database/template content may be external or untrusted, but that is not settled by these lines alone."
+  },
+  {
+   "package": "next-devtools-mcp",
+   "tool": "nextjs_call",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show the tool takes a port, toolName, and args, calls callNextJsTool(portNumber, args.toolName, args.args || {}), and returns the result. The README states this calls runtime tools on a running Next.js dev server and those tools can expose local development information such as errors, logs, project structure, config, and source-file mappings, so SECRET is supported. Because caller-supplied arguments/tool names are sent to a selected local dev-server port, these lines support SINK. The lines do not show arbitrary host code execution; that would depend on the implementation or runtime tool behavior, so HOSTEXEC is insufficient. They also do not establish that the returned content is attacker-controlled, only that it comes from a local Next.js dev server, so UNTRUSTED is insufficient."
+  },
+  {
+   "package": "nx",
+   "tool": "nx_docs",
+   "label": "UNTRUSTED",
+   "verdict": "not_supported",
+   "reason": "The cited lines only build static guidance text telling an agent when to use nx_docs or nx-generate. They do not show arbitrary host code execution, access to non-public data, sending data to an attacker-readable destination, or returning attacker-controllable content."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_click",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited handler sets the response to include a page snapshot and performs a browser click/double-click on a page locator using agent-supplied parameters. That supports UNTRUSTED because the returned snapshot is web-page content, which may be attacker-controlled. It also supports SINK because the tool sends agent-controlled interaction data such as the target, button, modifiers, and click count into the web page, which can be observed by a controlled page. The lines do not show arbitrary host code execution. They also do not by themselves establish that the included snapshot is non-public or credentialed data, so SECRET is insufficient."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_drag",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines define a browser drag-and-drop action between two locators and include a snapshot in the response. They do not show arbitrary host code execution. They also do not show agent-supplied data being sent to an attacker-readable destination; this is interaction within an existing browser tab, not an agent-chosen network/write sink. The snapshot could potentially contain page content, which might be non-public or attacker-controlled depending on the page and browser state, but these lines alone do not establish that the returned content is secret or attacker-controlled."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_drag",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines define a browser drag-and-drop action between two locators and include a snapshot in the response. They do not show arbitrary host code execution. They also do not show agent-supplied data being sent to an attacker-readable destination; this is interaction within an existing browser tab, not an agent-chosen network/write sink. The snapshot could potentially contain page content, which might be non-public or attacker-controlled depending on the page and browser state, but these lines alone do not establish that the returned content is secret or attacker-controlled."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_drop",
+   "label": "SECRET",
+   "verdict": "not_supported",
+   "reason": "The cited lines define a browser action that can drop files or MIME-typed data onto a page element, with absolute file paths and explicit data as inputs; that establishes delivery of agent-supplied data/files to web page content, so SINK is supported. The lines do not show arbitrary host code execution, returning non-public data into the agent context, or returning attacker-controlled content to the agent."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_drop",
+   "label": "UNTRUSTED",
+   "verdict": "not_supported",
+   "reason": "The cited lines define a browser action that can drop files or MIME-typed data onto a page element, with absolute file paths and explicit data as inputs; that establishes delivery of agent-supplied data/files to web page content, so SINK is supported. The lines do not show arbitrary host code execution, returning non-public data into the agent context, or returning attacker-controlled content to the agent."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_file_upload",
+   "label": "SECRET",
+   "verdict": "not_supported",
+   "reason": "The cited lines do not show arbitrary host code execution. They also do not show file contents or other non-public data being returned into the agent context; they resolve filenames and set them on a browser file chooser, but no secret content is returned. They do show a sink: supplied file paths are passed to `fileChooser.setFiles(...)`, making those files available to the browser page/file upload destination. `response2.setIncludeSnapshot()` indicates the tool response includes a browser snapshot, which is page-derived content and can be attacker-controlled/untrusted."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_fill_form",
+   "label": "SECRET",
+   "verdict": "not_supported",
+   "reason": "The cited README lines describe browser_fill_form as filling multiple form fields with supplied field values and mark it read-only false. That supports SINK because agent-supplied data can be written into a browser page/form, an attacker-readable destination when the page is controlled by or observable to an attacker. The lines do not show arbitrary host code execution, access to non-public/local data returned into context, or returning attacker-controllable page content. The coreBundle excerpt is for a different toolName (browser_type), not browser_fill_form, and does not add support for those labels."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_fill_form",
+   "label": "UNTRUSTED",
+   "verdict": "not_supported",
+   "reason": "The cited README lines describe browser_fill_form as filling multiple form fields with supplied field values and mark it read-only false. That supports SINK because agent-supplied data can be written into a browser page/form, an attacker-readable destination when the page is controlled by or observable to an attacker. The lines do not show arbitrary host code execution, access to non-public/local data returned into context, or returning attacker-controllable page content. The coreBundle excerpt is for a different toolName (browser_type), not browser_fill_form, and does not add support for those labels."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_handle_dialog",
+   "label": "SECRET",
+   "verdict": "not_supported",
+   "reason": "The cited lines describe a browser dialog handler with accept/dismiss behavior and an optional promptText/prompt parameter. They do not show arbitrary host code execution, access to host files/private data, or returning attacker-controlled page content. They do show agent-supplied prompt text being provided when accepting a prompt dialog, which can deliver that data to the browser page/dialog recipient, so SINK is supported."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_handle_dialog",
+   "label": "UNTRUSTED",
+   "verdict": "not_supported",
+   "reason": "The cited lines describe a browser dialog handler with accept/dismiss behavior and an optional promptText/prompt parameter. They do not show arbitrary host code execution, access to host files/private data, or returning attacker-controlled page content. They do show agent-supplied prompt text being provided when accepting a prompt dialog, which can deliver that data to the browser page/dialog recipient, so SINK is supported."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_hover",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show that `hover` is included in a tool list and that `browser_hover` is documented as hovering over an element on a page with certain parameters. They do not show the implementation, what data is read or returned, whether any host execution occurs, whether attacker-controlled content is returned, or whether data is sent to an attacker-readable destination."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_hover",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines only show that `hover` is included in a tool list and that `browser_hover` is documented as hovering over an element on a page with certain parameters. They do not show the implementation, what data is read or returned, whether any host execution occurs, whether attacker-controlled content is returned, or whether data is sent to an attacker-readable destination."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_network_requests",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show the tool reads the browser tab's recorded network requests, filters them, formats request URLs/lines, and returns them via response.addResult; no arbitrary host code execution is shown. It does not send data to an attacker-readable external destination; addResult returns/saves the result locally, and a suggested filename is not a network/public sink. The returned network request URLs/lines can be controlled by the loaded web page or remote sites, so UNTRUSTED is supported. Although browser network history may include sensitive/private URLs in some sessions, these lines alone do not establish that the returned data is non-public user/host/SaaS data, so SECRET is insufficient."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_press_key",
+   "label": "SECRET",
+   "verdict": "not_supported",
+   "reason": "The cited lines describe a browser tool that accepts an agent-supplied `key` string and presses/generates that key in the browser; this can deliver agent-supplied input to the currently focused web page, so SINK is supported. The lines do not show arbitrary host code execution, returning non-public data, or returning attacker-controlled content."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_press_key",
+   "label": "UNTRUSTED",
+   "verdict": "not_supported",
+   "reason": "The cited lines describe a browser tool that accepts an agent-supplied `key` string and presses/generates that key in the browser; this can deliver agent-supplied input to the currently focused web page, so SINK is supported. The lines do not show arbitrary host code execution, returning non-public data, or returning attacker-controlled content."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_select_option",
+   "label": "SECRET",
+   "verdict": "not_supported",
+   "reason": "The cited lines describe a tool that selects one or more supplied values in a page dropdown and is marked read-only false. That establishes it can send agent-supplied data into the browser page, which may be attacker-readable via the page. The lines do not show arbitrary host code execution, access to non-public host/SaaS data returned to the agent, or returning attacker-controlled content."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_select_option",
+   "label": "UNTRUSTED",
+   "verdict": "not_supported",
+   "reason": "The cited lines describe a tool that selects one or more supplied values in a page dropdown and is marked read-only false. That establishes it can send agent-supplied data into the browser page, which may be attacker-readable via the page. The lines do not show arbitrary host code execution, access to non-public host/SaaS data returned to the agent, or returning attacker-controlled content."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_snapshot",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines define a read-only browser snapshot tool that captures and returns/saves an accessibility snapshot of the current page. They do not show arbitrary host code execution. They do not show sending agent-supplied data to an attacker-readable destination; saving to a workspace-relative file is not enough to establish a SINK. The snapshot may contain non-public data depending on what the current page is, but these lines alone do not establish access to credentials, local files, intranet, or other secrets. The returned page snapshot is browser page content, which can be attacker-controlled, so UNTRUSTED is supported."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_tabs",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show browser tab operations: ensuring a tab, creating a new tab, optionally navigating it to a provided URL, recording the navigation action, then reading tab header snapshots and returning rendered tab information. They do not show arbitrary host code execution, so HOSTEXEC is not supported. Navigating to a user-supplied URL and reading tab headers could involve external or page-controlled content, but the lines alone do not establish whether fetched content is exposed, whether destinations are attacker-readable, or whether returned data is attacker-controlled/non-public; therefore SECRET, SINK, and UNTRUSTED are insufficient."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_tabs",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited lines show browser tab operations: ensuring a tab, creating a new tab, optionally navigating it to a provided URL, recording the navigation action, then reading tab header snapshots and returning rendered tab information. They do not show arbitrary host code execution, so HOSTEXEC is not supported. Navigating to a user-supplied URL and reading tab headers could involve external or page-controlled content, but the lines alone do not establish whether fetched content is exposed, whether destinations are attacker-readable, or whether returned data is attacker-controlled/non-public; therefore SECRET, SINK, and UNTRUSTED are insufficient."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_tabs",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show browser tab operations: ensuring a tab, creating a new tab, optionally navigating it to a provided URL, recording the navigation action, then reading tab header snapshots and returning rendered tab information. They do not show arbitrary host code execution, so HOSTEXEC is not supported. Navigating to a user-supplied URL and reading tab headers could involve external or page-controlled content, but the lines alone do not establish whether fetched content is exposed, whether destinations are attacker-readable, or whether returned data is attacker-controlled/non-public; therefore SECRET, SINK, and UNTRUSTED are insufficient."
+  },
+  {
+   "package": "@playwright/mcp",
+   "tool": "browser_type",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show browser automation filling/typing `secret.value`/text into a page element and optionally pressing Enter, which can deliver agent-provided or looked-up data to the currently loaded web page, so SINK is supported. They also call `response2.setIncludeSnapshot()`, indicating page snapshot content may be included in the response; browser page content is attacker-controllable, so UNTRUSTED is supported. The lines do not show arbitrary host code execution. Although a secret lookup is used and redaction is attempted for an action log, the lines alone do not establish that non-public data is returned into the agent context, so SECRET is insufficient."
+  },
+  {
+   "package": "@sentry/mcp-server",
+   "tool": "analyze_issue_with_seer",
+   "label": "SINK",
+   "verdict": "not_supported",
+   "reason": "The cited lines show the handler creating an API service from the request context and fetching Sentry issue/autofix data with organization and issue identifiers, so they support SECRET because SaaS issue data reachable via the user's context/credentials is brought into the tool context. The lines do not show arbitrary host code execution. They also do not establish a SINK: the shown network/API calls are to the configured Sentry API service, and the cited allowlist comment suggests restricted vendor regions rather than agent-chosen attacker-readable destinations; the optional instruction is not shown being sent anywhere. UNTRUSTED is not settled by these lines alone: Sentry issue contents might include attacker-controlled data in practice, but the cited code does not establish that the returned content is attacker-controllable."
+  },
+  {
+   "package": "@sentry/mcp-server",
+   "tool": "analyze_issue_with_seer",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show the handler creating an API service from the request context and fetching Sentry issue/autofix data with organization and issue identifiers, so they support SECRET because SaaS issue data reachable via the user's context/credentials is brought into the tool context. The lines do not show arbitrary host code execution. They also do not establish a SINK: the shown network/API calls are to the configured Sentry API service, and the cited allowlist comment suggests restricted vendor regions rather than agent-chosen attacker-readable destinations; the optional instruction is not shown being sent anywhere. UNTRUSTED is not settled by these lines alone: Sentry issue contents might include attacker-controlled data in practice, but the cited code does not establish that the returned content is attacker-controllable."
+  },
+  {
+   "package": "@sentry/mcp-server",
+   "tool": "execute_sentry_tool",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited lines show execute_sentry_tool dispatches to an available catalog tool and returns that tool's output; the catalog includes many Sentry data-retrieval operations such as issue details, stacktraces, breadcrumbs, user reports, replays, attachments, conversations, etc., so these lines support that it can return Sentry SaaS data into the agent context. They do not show arbitrary host code execution: the user selects among existing handlers, with no eval/shell or user-supplied code execution shown. The lines show mutating/destructive tools and openWorldHint, but do not establish that agent-supplied data is sent to an attacker-readable destination. They also do not by themselves establish that returned content is attacker-controllable, though some listed Sentry data could be in practice."
+  },
+  {
+   "package": "@sentry/mcp-server",
+   "tool": "execute_sentry_tool",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show execute_sentry_tool dispatches to an available catalog tool and returns that tool's output; the catalog includes many Sentry data-retrieval operations such as issue details, stacktraces, breadcrumbs, user reports, replays, attachments, conversations, etc., so these lines support that it can return Sentry SaaS data into the agent context. They do not show arbitrary host code execution: the user selects among existing handlers, with no eval/shell or user-supplied code execution shown. The lines show mutating/destructive tools and openWorldHint, but do not establish that agent-supplied data is sent to an attacker-readable destination. They also do not by themselves establish that returned content is attacker-controllable, though some listed Sentry data could be in practice."
+  },
+  {
+   "package": "@sentry/mcp-server",
+   "tool": "find_organizations",
+   "label": "SECRET",
+   "verdict": "not_supported",
+   "reason": "The cited lines only show that find_organizations is registered in a catalog/top-level tool list and may be hidden under certain constraints. They do not show the tool handler, any host code execution, access to non-public data, delivery of data to an attacker-readable destination, or return of attacker-controllable content."
+  },
+  {
+   "package": "@sentry/mcp-server",
+   "tool": "find_projects",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines mainly register `find_projects` in a catalog/top-level tool list and show unrelated constants/another handler. They do not show arbitrary host code execution or any agent-controlled outbound/write destination. They also do not show the `find_projects` handler, API calls, or returned data, so whether it reads non-public Sentry data or returns attacker-controllable content is not settled by these lines alone."
+  },
+  {
+   "package": "@sentry/mcp-server",
+   "tool": "find_projects",
+   "label": "SINK",
+   "verdict": "not_supported",
+   "reason": "The cited lines mainly register `find_projects` in a catalog/top-level tool list and show unrelated constants/another handler. They do not show arbitrary host code execution or any agent-controlled outbound/write destination. They also do not show the `find_projects` handler, API calls, or returned data, so whether it reads non-public Sentry data or returns attacker-controllable content is not settled by these lines alone."
+  },
+  {
+   "package": "@sentry/mcp-server",
+   "tool": "get_sentry_resource",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines describe a read-only tool that fetches Sentry resources such as issues, events, traces, conversations, replays, monitors, and snapshots, and the handler delegates to resource-specific handlers; that supports SECRET because it returns SaaS resource data from Sentry. The lines do not show arbitrary host code execution. They also do not show sending agent-supplied data to an attacker-readable destination or making requests to an agent-chosen host; the URL is described as a Sentry URL/resource identifier. The lines do not establish whether the returned Sentry resource contents are attacker-controllable, so UNTRUSTED is insufficient."
+  },
+  {
+   "package": "@sentry/mcp-server",
+   "tool": "search_events",
+   "label": "SINK",
+   "verdict": "not_supported",
+   "reason": "The cited lines describe a read-only Sentry event/replay search tool requiring event:read scope and returning datasets such as errors with stack traces, application logs, spans, metrics, profiles, and replays; that establishes access to non-public SaaS data via Sentry credentials, so SECRET is supported. The lines show no arbitrary host code execution. They also show no capability to send agent-supplied data to an attacker-chosen/readable destination; querying Sentry via a fixed service is not a SINK. Although Sentry events/logs/replays may in practice contain user- or attacker-controlled content, the cited lines alone do not establish attacker control of returned content, so UNTRUSTED is insufficient."
+  },
+  {
+   "package": "@sentry/mcp-server",
+   "tool": "search_events",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines describe a read-only Sentry event/replay search tool requiring event:read scope and returning datasets such as errors with stack traces, application logs, spans, metrics, profiles, and replays; that establishes access to non-public SaaS data via Sentry credentials, so SECRET is supported. The lines show no arbitrary host code execution. They also show no capability to send agent-supplied data to an attacker-chosen/readable destination; querying Sentry via a fixed service is not a SINK. Although Sentry events/logs/replays may in practice contain user- or attacker-controlled content, the cited lines alone do not establish attacker control of returned content, so UNTRUSTED is insufficient."
+  },
+  {
+   "package": "@sentry/mcp-server",
+   "tool": "search_issues",
+   "label": "SINK",
+   "verdict": "not_supported",
+   "reason": "The cited lines define a read-only Sentry issue search requiring `event:read` and format returned Sentry issue data such as issue IDs, titles, status, user/event counts, assignee, timestamps, and culprit, so they support that the tool returns non-public SaaS issue data. Those returned issue fields, especially titles/culprits derived from captured events, can contain attacker-controlled content. The lines do not show arbitrary host code execution, nor do they show sending agent-supplied data to an attacker-readable destination; they only build output links/text for the user."
+  },
+  {
+   "package": "@sentry/mcp-server",
+   "tool": "update_issue",
+   "label": "SECRET",
+   "verdict": "not_supported",
+   "reason": "The cited lines show a tool named update_issue with event:write scope and a helper that calls apiService.createIssueComment with organizationSlug, issueId, and text: reason, which supports a SINK effect because agent-supplied text can be written as an issue comment. The lines do not show arbitrary host code execution, returning non-public data into the agent context, or returning attacker-controllable content; other cited snippets are registration/configuration or unrelated context."
+  },
+  {
+   "package": "@sentry/mcp-server",
+   "tool": "update_issue",
+   "label": "UNTRUSTED",
+   "verdict": "not_supported",
+   "reason": "The cited lines show a tool named update_issue with event:write scope and a helper that calls apiService.createIssueComment with organizationSlug, issueId, and text: reason, which supports a SINK effect because agent-supplied text can be written as an issue comment. The lines do not show arbitrary host code execution, returning non-public data into the agent context, or returning attacker-controllable content; other cited snippets are registration/configuration or unrelated context."
+  },
+  {
+   "package": "shadcn",
+   "tool": "list_items_in_registries",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The shown list_items_in_registries branch validates arguments, reads configured registries via imported helpers, calls another imported helper to obtain items, and formats those items into text. These lines do not show arbitrary host code execution. They suggest project configuration and registry item data may be involved, but the actual implementations of oa/Za/_a are not shown, so the lines alone do not establish whether non-public host data is returned, whether network/request data is sent to an attacker-readable destination, or whether the returned registry item content is attacker-controllable."
+  },
+  {
+   "package": "shadcn",
+   "tool": "view_items_in_registries",
+   "label": "SINK",
+   "verdict": "insufficient",
+   "reason": "The cited code for view_items_in_registries parses an items array, calls helper functions l(process.cwd()) and ma(...), formats the returned items with E(i), and returns text. There is no visible eval, subprocess, shell, or other arbitrary host code execution, so HOSTEXEC is not supported. The call to load config from the current working directory and the registry lookup might involve local project files or non-public registry data, but the cited lines do not show what l or ma read or whether any secret data is returned, so SECRET is insufficient. Likewise, ma may contact registries and send item names/config-derived data, but no outbound destination or request is shown in these lines, so SINK is insufficient. The returned item details come from ma and may be registry-controlled content, but without the helper implementation or registry source behavior, these lines alone do not establish attacker-controllable returned content, so UNTRUSTED is insufficient."
+  },
+  {
+   "package": "shadcn",
+   "tool": "view_items_in_registries",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited code for view_items_in_registries parses an items array, calls helper functions l(process.cwd()) and ma(...), formats the returned items with E(i), and returns text. There is no visible eval, subprocess, shell, or other arbitrary host code execution, so HOSTEXEC is not supported. The call to load config from the current working directory and the registry lookup might involve local project files or non-public registry data, but the cited lines do not show what l or ma read or whether any secret data is returned, so SECRET is insufficient. Likewise, ma may contact registries and send item names/config-derived data, but no outbound destination or request is shown in these lines, so SINK is insufficient. The returned item details come from ma and may be registry-controlled content, but without the helper implementation or registry source behavior, these lines alone do not establish attacker-controllable returned content, so UNTRUSTED is insufficient."
+  },
+  {
+   "package": "@supabase/mcp-server-supabase",
+   "tool": "apply_migration",
+   "label": "SECRET",
+   "verdict": "not_supported",
+   "reason": "The cited excerpt shows imports, helper functions, and implementations for other Supabase tools such as organizations/projects/branches, plus a helper that labels SQL query results as untrusted. It does not show the apply_migration tool\u2019s implementation or tie any shown behavior to that tool. There is no host arbitrary code execution shown, no shown return of non-public data by apply_migration, no attacker-readable sink established for apply_migration, and no shown attacker-controllable return content for apply_migration."
+  },
+  {
+   "package": "@supabase/mcp-server-supabase",
+   "tool": "apply_migration",
+   "label": "SINK",
+   "verdict": "not_supported",
+   "reason": "The cited excerpt shows imports, helper functions, and implementations for other Supabase tools such as organizations/projects/branches, plus a helper that labels SQL query results as untrusted. It does not show the apply_migration tool\u2019s implementation or tie any shown behavior to that tool. There is no host arbitrary code execution shown, no shown return of non-public data by apply_migration, no attacker-readable sink established for apply_migration, and no shown attacker-controllable return content for apply_migration."
+  },
+  {
+   "package": "@supabase/mcp-server-supabase",
+   "tool": "apply_migration",
+   "label": "UNTRUSTED",
+   "verdict": "not_supported",
+   "reason": "The cited excerpt shows imports, helper functions, and implementations for other Supabase tools such as organizations/projects/branches, plus a helper that labels SQL query results as untrusted. It does not show the apply_migration tool\u2019s implementation or tie any shown behavior to that tool. There is no host arbitrary code execution shown, no shown return of non-public data by apply_migration, no attacker-readable sink established for apply_migration, and no shown attacker-controllable return content for apply_migration."
+  },
+  {
+   "package": "@supabase/mcp-server-supabase",
+   "tool": "execute_sql",
+   "label": "SINK",
+   "verdict": "not_supported",
+   "reason": "The cited lines define a formatter for SQL query results that includes JSON.stringify(e) in the tool output and explicitly warns that the SQL result contains untrusted user data, so UNTRUSTED is supported. Because the output is described as the result of a SQL query, the lines support returning database data into the agent context, which fits SECRET. The lines do not show arbitrary host command/code execution, and they do not show sending agent-supplied data to an attacker-readable external destination; they only format returned data, so HOSTEXEC and SINK are not supported."
+  },
+  {
+   "package": "@supabase/mcp-server-supabase",
+   "tool": "query_logs",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The cited lines show no arbitrary code execution on the host. They also do not show delivery of agent-supplied data to an attacker-readable or agent-chosen destination; the visible fetch is to a configured URL and is not established as a SINK. The excerpt does show a helper formatting SQL query results and explicitly warning that the embedded JSON contains \u201cuntrusted user data,\u201d which supports UNTRUSTED. However, these lines do not establish that the returned data is non-public database/SaaS data reached with user credentials for this tool, so SECRET is insufficient."
+  },
+  {
+   "package": "@supabase/mcp-server-supabase",
+   "tool": "search_docs",
+   "label": "UNTRUSTED",
+   "verdict": "not_supported",
+   "reason": "The cited search_docs code defines a GraphQL-querying documentation search tool: its description loads a schema and execute returns contentApiClient.query({query: graphql_query}). There is no host command execution. The lines indicate it searches Supabase documentation, not host files or non-public user/SaaS data. Although the user-supplied GraphQL query is sent to the content API client, the destination is not agent-chosen or shown as attacker-readable; it appears to be a fixed documentation/content API, so these lines do not establish a SINK. The returned content is documentation query results, with no indication it is attacker-controllable."
+  },
+  {
+   "package": "task-master-ai",
+   "tool": "parse_prd",
+   "label": "SECRET",
+   "verdict": "insufficient",
+   "reason": "The parse_prd code shown resolves a local PRD path, checks file existence, creates a local output directory if needed, and calls an opaque core parse function, then returns a status/message/outputPath through Y. The cited lines do not show arbitrary host code execution or delivery to an attacker-readable/agent-chosen external destination. They do indicate local file involvement, but the actual core parsing function is not shown and the visible returned data does not include the PRD contents, so the lines alone do not settle whether non-public file content or attacker-controlled PRD-derived content is returned to the agent."
+  },
+  {
+   "package": "task-master-ai",
+   "tool": "parse_prd",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The parse_prd code shown resolves a local PRD path, checks file existence, creates a local output directory if needed, and calls an opaque core parse function, then returns a status/message/outputPath through Y. The cited lines do not show arbitrary host code execution or delivery to an attacker-readable/agent-chosen external destination. They do indicate local file involvement, but the actual core parsing function is not shown and the visible returned data does not include the PRD contents, so the lines alone do not settle whether non-public file content or attacker-controlled PRD-derived content is returned to the agent."
+  },
+  {
+   "package": "tavily-mcp",
+   "tool": "tavily_crawl",
+   "label": "SINK",
+   "verdict": "not_supported",
+   "reason": "The cited lines show no arbitrary host code execution, only an axios POST and string formatting. They also do not show access to host files, localhost/intranet resources, databases, or private SaaS data returned into context. The tool sends parameters to `this.baseURLs.crawl`; the shown request is to the crawl API endpoint, not directly to an agent-chosen URL/host, so these lines alone do not establish a SINK under the definition, and a fixed vendor API request is not a SINK. The returned crawl response includes crawled page URLs, raw content previews, and favicons derived from web pages specified through arguments, so the output can contain attacker-controlled web content; UNTRUSTED is supported."
+  },
+  {
+   "package": "tavily-mcp",
+   "tool": "tavily_extract",
+   "label": "SINK",
+   "verdict": "not_supported",
+   "reason": "The cited lines show no arbitrary host code execution. They show posting parameters, including user-provided urls, to an extract endpoint and returning/formatting response data including URL content/raw_content; that supports that the tool can return web content that may be attacker-controlled. The lines do not show access to host files, databases, localhost/intranet, or authenticated private SaaS data, so SECRET is not established. They also do not show sending data to an agent-chosen or attacker-readable destination; the POST is to this.baseURLs.extract rather than a URL chosen from args, and a fixed vendor endpoint would not be a SINK."
+  },
+  {
+   "package": "tavily-mcp",
+   "tool": "tavily_map",
+   "label": "SINK",
+   "verdict": "not_supported",
+   "reason": "The cited lines show the tavily_map case sends user-provided parameters such as url/instructions to this.map, which POSTs them to this.baseURLs.map via axios and returns response.data, then formats response.base_url and response.results into text. There is no host code execution. The output is remote/API-derived map data influenced by the supplied URL and mapped pages, so it is untrusted. The lines do not establish access to host files, databases, intranet, or other non-public user data, though they do show use of an API key, so SECRET is not settled. The request destination is this.baseURLs.map rather than an agent-chosen URL/host, and a fixed vendor API request is not a SINK based on these lines."
+  },
+  {
+   "package": "tavily-mcp",
+   "tool": "tavily_research",
+   "label": "SINK",
+   "verdict": "not_supported",
+   "reason": "The cited lines show HTTP POST/GET calls to a research endpoint and returning the endpoint's content. They do not show arbitrary host code execution. They also do not show delivery to an agent-chosen URL or attacker-readable destination; the destination is `this.baseURLs.research`, not derived from the request parameters in the cited lines, and a fixed vendor endpoint would not be a SINK. The lines do show returned remote API content, but they do not establish that it is non-public user/host/SaaS data, so SECRET is insufficient. They likewise do not establish that the returned content is attacker-controllable, only that it comes from the API response, so UNTRUSTED is insufficient."
+  },
+  {
+   "package": "tavily-mcp",
+   "tool": "tavily_research",
+   "label": "UNTRUSTED",
+   "verdict": "insufficient",
+   "reason": "The cited lines show HTTP POST/GET calls to a research endpoint and returning the endpoint's content. They do not show arbitrary host code execution. They also do not show delivery to an agent-chosen URL or attacker-readable destination; the destination is `this.baseURLs.research`, not derived from the request parameters in the cited lines, and a fixed vendor endpoint would not be a SINK. The lines do show returned remote API content, but they do not establish that it is non-public user/host/SaaS data, so SECRET is insufficient. They likewise do not establish that the returned content is attacker-controllable, only that it comes from the API response, so UNTRUSTED is insufficient."
+  }
+ ]
+}

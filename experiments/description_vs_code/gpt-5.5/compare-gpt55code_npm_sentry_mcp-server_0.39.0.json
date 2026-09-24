@@ -1,0 +1,239 @@
+[
+ {
+  "tool": "find_organizations",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "query"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "The tool is exposed as a top-level tool and catalog entry (`find_organizations`). The provided source excerpt does not include its handler; based on the advertised behavior it reads organizations accessible with the user's Sentry credentials, which is non-public account data. Because handler/output "
+ },
+ {
+  "tool": "find_projects",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SECRET",
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "organizationSlug",
+   "regionUrl"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "The tool is exposed as a top-level tool and catalog entry (`find_projects`). It reads Sentry projects accessible in a user's organization, which is non-public account data. Its schema includes `regionUrl`; the excerpt shows constraints can inject matching tool parameters, but does not show complete "
+ },
+ {
+  "tool": "update_issue",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "organizationSlug",
+   "regionUrl",
+   "issueId",
+   "issueUrl",
+   "assignedTo"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "`update_issue` is a write tool for issue status/assignment. When `reason` is supplied, `tryPostReasonComment` calls `apiService.createIssueComment({ organizationSlug, issueId, text: reason })`, storing agent-supplied text on a Sentry issue. It may also read/return issue state from the user's Sentry "
+ },
+ {
+  "tool": "search_events",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "organizationSlug",
+   "projectSlug",
+   "regionUrl"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "The tool searches Sentry errors/logs/spans/metrics/profiles/replays. Results can include non-public telemetry such as users, pages, releases, traces, log/error messages, and user IDs/emails from the user's Sentry account. Telemetry fields like log messages, error messages, replay visited pages, user"
+ },
+ {
+  "tool": "analyze_issue_with_seer",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "organizationSlug",
+   "regionUrl",
+   "issueId",
+   "issueUrl"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "The handler constructs an API service, parses the issue parameters, fetches the issue with `apiService.getIssue`, checks Seer support, and retrieves/starts Autofix analysis. This exposes issue data and Seer analysis/code-fix output from the user's Sentry account. Issue details and derived analysis c"
+ },
+ {
+  "tool": "search_issues",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "organizationSlug",
+   "projectSlugOrId",
+   "regionUrl"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "`search_issues` returns grouped Sentry issues and formats Sentry URLs, issue short IDs, titles, status, assignee, dates, culprit, counts, and categories. These are non-public Sentry account data. Issue titles/culprits and feedback-related issue content can be attacker-influenced through captured err"
+ },
+ {
+  "tool": "get_sentry_resource",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url",
+   "resourceType",
+   "resourceId",
+   "organizationSlug"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "`get_sentry_resource` fetches Sentry resources by URL or by resource type and ID, including issues, events, traces, spans, agent conversations, replays, monitors, snapshots, and images. Those resources are non-public Sentry account data and many resource bodies can contain attacker-controlled teleme"
+ },
+ {
+  "tool": "search_sentry_tools",
+  "code": [],
+  "description": [],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "query"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "This tool searches the local/session Sentry tool catalog by static tool name/description and returns executable schemas. It does not itself read Sentry account data, fetch attacker-controlled content, or send agent data to an attacker-readable destination in the shown code."
+ },
+ {
+  "tool": "execute_sentry_tool",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "name",
+   "arguments"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`execute_sentry_tool` looks up an available catalog tool by `name`, validates/prepares `arguments`, and calls the target tool's handler. The catalog includes read tools over Sentry account data, tools returning attacker-influenced telemetry, and write tools such as `update_issue`, project/team/DSN o"
+ }
+]

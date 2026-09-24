@@ -1,0 +1,128 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All eight tools are registered unconditionally in the ListTools handler (dist/index.js:390-404); there is no flag or toolset gating, so every tool is default-enabled once the two required env vars are present.",
+  "All network calls go to fixed `https://slack.com/api/...` endpoints (dist/index.js:175,184,197,208,220,236,244,255,265); no agent-supplied URL or host is ever fetched, so the SINK labels rest solely on agent-chosen Slack channel/thread recipients for message posting.",
+  "No filesystem, shell or subprocess use anywhere in the file, so no tool is HOSTEXEC."
+ ],
+ "package": "@modelcontextprotocol/server-slack",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-slack_2025.4.25_86a43545fc53",
+ "tools": {
+  "slack_add_reaction": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:219-229",
+    "dist/index.js:327"
+   ],
+   "labels": [],
+   "rationale": "`addReaction` only sends an emoji `name` plus channel/timestamp to the fixed Slack `reactions.add` endpoint and returns the API ack; it reads no workspace content back and carries no meaningful agent-supplied payload to an attacker-readable destination.",
+   "undetermined": false
+  },
+  "slack_get_channel_history": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:231-237",
+    "dist/index.js:338"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`getChannelHistory` fetches `conversations.history` with the user's bot credentials and returns raw message JSON to the agent: private workspace conversation content (SECRET) that is authored by many parties - other members, guests, Slack Connect/external users, and bots/integrations relaying web content - so the text is attacker-influencable (UNTRUSTED).",
+   "undetermined": false
+  },
+  "slack_get_thread_replies": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:239-245",
+    "dist/index.js:349"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`getThreadReplies` returns raw `conversations.replies` JSON read with the bot token: non-public workspace messages (SECRET) whose bodies are written by third parties including external/guest users and relay bots (UNTRUSTED).",
+   "undetermined": false
+  },
+  "slack_get_user_profile": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:260-266",
+    "dist/index.js:367"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`getUserProfile` calls `users.profile.get` with the bot token and returns the detailed profile JSON (SECRET). Profile text is authored by the target user, who may be an external/guest account rather than the operator, so it is treated as attacker-influencable; the code cannot rule this out.",
+   "undetermined": true
+  },
+  "slack_get_users": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:247-258",
+    "dist/index.js:356"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`getUsers` reads `users.list` with the user's bot token and returns the full member directory (names, emails, profile fields) into context - non-public workspace data. Profile fields are self-authored by arbitrary workspace members including guests/Slack Connect users, so the returned strings may carry injected instructions; kept as UNTRUSTED under the least-restrictive reading since the code does not constrain who may be in the directory.",
+   "undetermined": true
+  },
+  "slack_list_channels": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:175",
+    "dist/index.js:184",
+    "dist/index.js:296"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`getChannels` calls Slack `conversations.list` / `conversations.info` with the user's bot token (`botHeaders`, dist/index.js:158-161) and returns the raw JSON into the agent context, exposing non-public workspace channel metadata (names, topics, purposes). No agent-chosen outbound destination, so no SINK; channel topics/purposes are member-authored but the primary reach here is workspace metadata.",
+   "undetermined": false
+  },
+  "slack_post_message": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:197-205",
+    "dist/index.js:306"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`postMessage` posts agent-supplied `text` to an agent-chosen `channel_id` via `chat.postMessage`; the recipient channel is fully chosen by the agent and may be a public, shared or Slack Connect channel readable by an attacker, so arbitrary agent data can be delivered outward.",
+   "undetermined": false
+  },
+  "slack_reply_to_thread": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:207-217",
+    "dist/index.js:317"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`postReply` sends agent-supplied `text` to an agent-chosen `channel_id`/`thread_ts` through `chat.postMessage`, the same attacker-reachable delivery path as posting a message.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "unset - all public channels in the team are listed",
+   "effect": "Restricts `slack_list_channels` to the listed channels via `conversations.info` instead of enumerating all public channels; it does not restrict the channel_id accepted by history/reply/post tools, so SINK and SECRET reach is unchanged.",
+   "evidence": "dist/index.js:164-194",
+   "kind": "environment variable",
+   "syntax": "SLACK_CHANNEL_IDS=\"C01234567,C76543210\""
+  },
+  {
+   "default": "unset - process exits with an error",
+   "effect": "Both are required; if either is missing the server exits before advertising any tool, so no tool is reachable.",
+   "evidence": "dist/index.js:270-275",
+   "kind": "environment variable",
+   "syntax": "SLACK_BOT_TOKEN=xoxb-...; SLACK_TEAM_ID=T..."
+  }
+ ],
+ "version": "2025.4.25"
+}

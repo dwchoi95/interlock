@@ -1,0 +1,1674 @@
+{
+ "workspace": {
+  "suite": "workspace",
+  "tools": [
+   {
+    "name": "send_email",
+    "kind": "WRITE",
+    "destination_args": [
+     "recipients",
+     "cc",
+     "bcc"
+    ],
+    "value_args": [
+     "subject",
+     "body",
+     "attachments"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "id_",
+     "sender",
+     "recipients",
+     "cc",
+     "bcc",
+     "attachments"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:154-193; default_suites/v1/tools/email_client.py:73-102",
+    "rationale": "`send_email` parses optional attachments, then calls `inbox.send_email(recipients, subject, body, ...)`, which creates a sent email addressed to agent-chosen `recipients`/`cc`/`bcc` with agent-supplied `subject` and `body`. That is a SINK. The returned `Email` includes `sender=self.account_email`, so it returns account data from the user's email account."
+   },
+   {
+    "name": "delete_email",
+    "kind": "WRITE",
+    "destination_args": [
+     "email_id"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:214-220; default_suites/v1/tools/email_client.py:113-118",
+    "rationale": "`delete_email` acts on the email identified by `email_id` and moves it from `emails` to `trash`, but the advertised wrapper returns only a success string containing the supplied id and does not send data externally."
+   },
+   {
+    "name": "get_unread_emails",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "subject",
+     "body",
+     "attachments"
+    ],
+    "structured_output_fields": [
+     "id_",
+     "sender",
+     "recipients",
+     "cc",
+     "bcc",
+     "attachments"
+    ],
+    "attacker_named_fields": [
+     "sender"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:148-151; default_suites/v1/tools/email_client.py:120-124; default_suites/v1/tools/types.py:69-85",
+    "rationale": "The tool returns unread `Email` objects from the user's inbox, including sender, recipients, subject, body, and attachments, so it returns non-public email data. Received email `subject`/`body` and sender-controlled identifiers can be authored by outside senders. It also marks returned messages as read (`email.read = True`), so it is state-changing."
+   },
+   {
+    "name": "get_sent_emails",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "id_",
+     "sender",
+     "recipients",
+     "cc",
+     "bcc",
+     "attachments"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:223-225; default_suites/v1/tools/email_client.py:63-66; default_suites/v1/tools/types.py:69-85",
+    "rationale": "The tool returns sent `Email` objects from the user's mailbox, including message bodies, subjects, recipients, and attachments; these are non-public account data. The code does not show outside authorship for sent messages."
+   },
+   {
+    "name": "get_received_emails",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "subject",
+     "body",
+     "attachments"
+    ],
+    "structured_output_fields": [
+     "id_",
+     "sender",
+     "recipients",
+     "cc",
+     "bcc",
+     "attachments"
+    ],
+    "attacker_named_fields": [
+     "sender"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:228-230; default_suites/v1/tools/email_client.py:58-62; default_suites/v1/tools/types.py:69-85",
+    "rationale": "The tool returns received `Email` objects from the user's inbox, so it returns non-public mailbox data. Received messages have sender-controlled `subject`, `body`, and sender identifiers, making the output UNTRUSTED."
+   },
+   {
+    "name": "get_draft_emails",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "id_",
+     "sender",
+     "recipients",
+     "cc",
+     "bcc",
+     "attachments"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:233-235; default_suites/v1/tools/email_client.py:68-71; default_suites/v1/tools/types.py:69-85",
+    "rationale": "The tool returns draft `Email` objects from the user's mailbox, including private draft subjects, bodies, recipients, and attachments. The code does not show outside authorship for drafts."
+   },
+   {
+    "name": "search_emails",
+    "kind": "READ",
+    "destination_args": [
+     "sender"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "subject",
+     "body",
+     "attachments"
+    ],
+    "structured_output_fields": [
+     "id_",
+     "sender",
+     "recipients",
+     "cc",
+     "bcc",
+     "attachments"
+    ],
+    "attacker_named_fields": [
+     "sender"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:196-211; default_suites/v1/tools/email_client.py:104-111; default_suites/v1/tools/types.py:69-85",
+    "rationale": "`search_emails` searches the user's mailbox and returns matching `Email` objects, so it can return non-public email data. Because it searches all emails when `sender` is null, matches can include received emails whose `subject`, `body`, and `sender` are controlled by outside senders."
+   },
+   {
+    "name": "search_contacts_by_name",
+    "kind": "READ",
+    "destination_args": [
+     "query"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "name"
+    ],
+    "structured_output_fields": [
+     "email",
+     "name"
+    ],
+    "attacker_named_fields": [
+     "email"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:238-244; default_suites/v1/tools/email_client.py:32-46; default_suites/v1/tools/email_client.py:126-133",
+    "rationale": "The tool returns entries from the user's email contact list, which is non-public account data. Contacts are populated from `initial_emails` using `email.recipients`, `email.sender`, `email.cc`, and `email.bcc`; outside senders can choose their email address, and the displayed `name` is derived from that address."
+   },
+   {
+    "name": "search_contacts_by_email",
+    "kind": "READ",
+    "destination_args": [
+     "query"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "name"
+    ],
+    "structured_output_fields": [
+     "email",
+     "name"
+    ],
+    "attacker_named_fields": [
+     "email"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:247-253; default_suites/v1/tools/email_client.py:32-46; default_suites/v1/tools/email_client.py:135-142",
+    "rationale": "The tool returns entries from the user's email contact list, which is non-public account data. Contacts are populated from email participants and senders in `initial_emails`; outside senders can choose sender addresses, and generated names are derived from those addresses."
+   },
+   {
+    "name": "get_current_day",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/calendar_client.py:191-197",
+    "rationale": "The tool only returns `calendar.current_day.isoformat()` and does not expose event contents or send data externally."
+   },
+   {
+    "name": "search_calendar_events",
+    "kind": "READ",
+    "destination_args": [
+     "query",
+     "date"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "title",
+     "description",
+     "location"
+    ],
+    "structured_output_fields": [
+     "id_",
+     "participants"
+    ],
+    "attacker_named_fields": [
+     "participants"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/calendar_client.py:171-188; default_suites/v1/tools/calendar_client.py:69-78; default_suites/v1/tools/types.py:43-52",
+    "rationale": "The tool searches and returns the user's stored `CalendarEvent` objects, exposing non-public calendar data. Calendar events can be multi-party records (`participants`) and the code does not establish that all `initial_events` were authored only by the user, so event `title`, `description`, and `location` are treated as potentially outside-authored."
+   },
+   {
+    "name": "get_day_calendar_events",
+    "kind": "READ",
+    "destination_args": [
+     "day"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "title",
+     "description",
+     "location"
+    ],
+    "structured_output_fields": [
+     "id_",
+     "participants"
+    ],
+    "attacker_named_fields": [
+     "participants"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/calendar_client.py:128-134; default_suites/v1/tools/calendar_client.py:31-32; default_suites/v1/tools/types.py:43-52",
+    "rationale": "The tool returns `CalendarEvent` objects for the user's calendar day, exposing non-public calendar data. The code does not settle whether `initial_events` can include events authored or invited by outside parties, so free-text event fields are treated as potentially attacker-authored."
+   },
+   {
+    "name": "create_calendar_event",
+    "kind": "WRITE",
+    "destination_args": [
+     "participants"
+    ],
+    "value_args": [
+     "title",
+     "start_time",
+     "end_time",
+     "description",
+     "location"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "id_",
+     "participants"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/calendar_client.py:137-168; default_suites/v1/tools/calendar_client.py:34-56; default_suites/v1/tools/calendar_client.py:162-167",
+    "rationale": "The tool creates a calendar event and sends an invitation email to agent-chosen `participants` with agent-supplied `title` and `description`, making it a SINK. The created event appends `self.account_email` to participants and is returned, exposing account/calendar data."
+   },
+   {
+    "name": "cancel_calendar_event",
+    "kind": "WRITE",
+    "destination_args": [
+     "event_id"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/calendar_client.py:200-211; default_suites/v1/tools/calendar_client.py:58-67",
+    "rationale": "`cancel_calendar_event` marks an event canceled and calls `inbox.send_email` to notify the event's participants, with the canceled event attached. The `event_id` chosen at call time determines which participants receive the notification and attachment."
+   },
+   {
+    "name": "reschedule_calendar_event",
+    "kind": "WRITE",
+    "destination_args": [
+     "event_id"
+    ],
+    "value_args": [
+     "new_start_time",
+     "new_end_time"
+    ],
+    "injectable_output_fields": [
+     "title",
+     "description",
+     "location"
+    ],
+    "structured_output_fields": [
+     "id_",
+     "participants"
+    ],
+    "attacker_named_fields": [
+     "participants"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED",
+     "SINK"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/calendar_client.py:214-239; default_suites/v1/tools/calendar_client.py:91-118; default_suites/v1/tools/types.py:43-52",
+    "rationale": "The tool changes a stored event, sends a rescheduling email with the event attached to the event's participants, and returns the `CalendarEvent`, so it is a SINK and returns non-public calendar data. The code does not establish that returned stored event text was authored only by the user, so event free-text fields are treated as potentially outside-authored."
+   },
+   {
+    "name": "add_calendar_event_participants",
+    "kind": "WRITE",
+    "destination_args": [
+     "event_id",
+     "participants"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "title",
+     "description",
+     "location"
+    ],
+    "structured_output_fields": [
+     "id_",
+     "participants"
+    ],
+    "attacker_named_fields": [
+     "participants"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/calendar_client.py:242-254; default_suites/v1/tools/calendar_client.py:120-125; default_suites/v1/tools/types.py:43-52",
+    "rationale": "The tool modifies a stored calendar event's `participants` and returns the full `CalendarEvent`, exposing non-public calendar data. Although the docstring mentions email, the code only calls `calendar.add_participants` and does not send. The code does not establish that existing event text was authored only by the user, so free-text event fields are treated as potentially outside-authored."
+   },
+   {
+    "name": "append_to_file",
+    "kind": "WRITE",
+    "destination_args": [
+     "file_id"
+    ],
+    "value_args": [
+     "content"
+    ],
+    "injectable_output_fields": [
+     "filename",
+     "content"
+    ],
+    "structured_output_fields": [
+     "id_",
+     "filename",
+     "owner",
+     "shared_with"
+    ],
+    "attacker_named_fields": [
+     "filename",
+     "owner",
+     "shared_with"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/cloud_drive_client.py:134-144; default_suites/v1/tools/cloud_drive_client.py:58-63; default_suites/v1/tools/types.py:17-27",
+    "rationale": "The tool appends agent-supplied `content` to a cloud-drive file identified by `file_id` and returns the full `CloudDriveFile`, including private file content and metadata. The code has owner/sharing metadata but does not settle whether files can be shared or outside-authored, so file text is treated as potentially untrusted."
+   },
+   {
+    "name": "search_files_by_filename",
+    "kind": "READ",
+    "destination_args": [
+     "filename"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "filename",
+     "content"
+    ],
+    "structured_output_fields": [
+     "id_",
+     "filename",
+     "owner",
+     "shared_with"
+    ],
+    "attacker_named_fields": [
+     "filename",
+     "owner",
+     "shared_with"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/cloud_drive_client.py:69-77; default_suites/v1/tools/cloud_drive_client.py:52-53; default_suites/v1/tools/types.py:17-27",
+    "rationale": "The tool returns matching `CloudDriveFile` objects from the user's cloud drive, including file contents and metadata. The code does not settle whether returned files can be shared or authored by parties other than the user, so file names/content are treated as potentially untrusted."
+   },
+   {
+    "name": "create_file",
+    "kind": "WRITE",
+    "destination_args": [
+     "filename"
+    ],
+    "value_args": [
+     "content"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "id_",
+     "filename",
+     "owner",
+     "shared_with"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/cloud_drive_client.py:80-90; default_suites/v1/tools/cloud_drive_client.py:34-44",
+    "rationale": "The tool creates a cloud-drive file with agent-supplied `filename` and `content` and returns the resulting `CloudDriveFile`. The return includes `owner=self.account_email`, exposing account/cloud-drive metadata. It writes only to the user's cloud drive and does not share externally."
+   },
+   {
+    "name": "delete_file",
+    "kind": "WRITE",
+    "destination_args": [
+     "file_id"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "filename",
+     "content"
+    ],
+    "structured_output_fields": [
+     "id_",
+     "filename",
+     "owner",
+     "shared_with"
+    ],
+    "attacker_named_fields": [
+     "filename",
+     "owner",
+     "shared_with"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/cloud_drive_client.py:93-99; default_suites/v1/tools/cloud_drive_client.py:46-50; default_suites/v1/tools/types.py:17-27",
+    "rationale": "The tool deletes a cloud-drive file selected by `file_id` and returns the deleted `CloudDriveFile`, including non-public contents and metadata. The code does not settle whether the deleted file could have been shared or outside-authored, so file text is treated as potentially untrusted."
+   },
+   {
+    "name": "get_file_by_id",
+    "kind": "READ",
+    "destination_args": [
+     "file_id"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "filename",
+     "content"
+    ],
+    "structured_output_fields": [
+     "id_",
+     "filename",
+     "owner",
+     "shared_with"
+    ],
+    "attacker_named_fields": [
+     "filename",
+     "owner",
+     "shared_with"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/cloud_drive_client.py:102-107; default_suites/v1/tools/cloud_drive_client.py:29-32; default_suites/v1/tools/types.py:17-27",
+    "rationale": "The tool returns a `CloudDriveFile` selected by `file_id`, including non-public file contents and metadata from the user's cloud drive. The code does not settle whether returned files can be shared or outside-authored, so file names/content are treated as potentially untrusted."
+   },
+   {
+    "name": "list_files",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "filename",
+     "content"
+    ],
+    "structured_output_fields": [
+     "id_",
+     "filename",
+     "owner",
+     "shared_with"
+    ],
+    "attacker_named_fields": [
+     "filename",
+     "owner",
+     "shared_with"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/cloud_drive_client.py:110-114; default_suites/v1/tools/types.py:17-27",
+    "rationale": "The tool returns all `CloudDriveFile` objects in the user's cloud drive, including non-public contents and metadata. The code does not settle whether listed files can include shared or outside-authored content, so file names/content are treated as potentially untrusted."
+   },
+   {
+    "name": "share_file",
+    "kind": "WRITE",
+    "destination_args": [
+     "file_id",
+     "email"
+    ],
+    "value_args": [
+     "permission"
+    ],
+    "injectable_output_fields": [
+     "filename",
+     "content"
+    ],
+    "structured_output_fields": [
+     "id_",
+     "filename",
+     "owner",
+     "shared_with"
+    ],
+    "attacker_named_fields": [
+     "filename",
+     "owner",
+     "shared_with"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED",
+     "SINK"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/cloud_drive_client.py:117-131; default_suites/v1/tools/cloud_drive_client.py:29-32; default_suites/v1/tools/types.py:17-27",
+    "rationale": "`share_file` retrieves the file selected by `file_id`, grants access to the agent-chosen `email` by updating `file.shared_with[email]`, and returns the full file. Sharing a file with an agent-chosen email is a SINK, and returning the file exposes non-public cloud-drive data. The code does not settle whether file text may be outside-authored, so it is treated as potentially untrusted."
+   },
+   {
+    "name": "search_files",
+    "kind": "READ",
+    "destination_args": [
+     "query"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "filename",
+     "content"
+    ],
+    "structured_output_fields": [
+     "id_",
+     "filename",
+     "owner",
+     "shared_with"
+    ],
+    "attacker_named_fields": [
+     "filename",
+     "owner",
+     "shared_with"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/cloud_drive_client.py:147-155; default_suites/v1/tools/cloud_drive_client.py:55-56; default_suites/v1/tools/types.py:17-27",
+    "rationale": "The tool searches cloud-drive file contents and returns matching `CloudDriveFile` objects, exposing non-public file contents and metadata. The code does not settle whether matching files can be shared or outside-authored, so file names/content are treated as potentially untrusted."
+   }
+  ]
+ },
+ "slack": {
+  "suite": "slack",
+  "tools": [
+   {
+    "name": "get_channels",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:14-19; default_suites/v1/tools/slack.py:25-27",
+    "rationale": "`get_channels` returns `slack.channels`, a Slack workspace data structure. Channel names are workspace identifiers and may be non-public Slack data; in a multi-writer Slack workspace, channel names can also be outside-party-controlled identifiers."
+   },
+   {
+    "name": "add_user_to_channel",
+    "kind": "WRITE",
+    "destination_args": [
+     "user",
+     "channel"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:30-40",
+    "rationale": "`add_user_to_channel` acts on an agent-supplied `user` and `channel` and appends the channel to `slack.user_channels[user]`, granting that chosen user access/membership to the chosen channel."
+   },
+   {
+    "name": "read_channel_messages",
+    "kind": "READ",
+    "destination_args": [
+     "channel"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "body"
+    ],
+    "structured_output_fields": [
+     "sender",
+     "recipient"
+    ],
+    "attacker_named_fields": [
+     "sender",
+     "recipient"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:8-11; default_suites/v1/tools/slack.py:43-50",
+    "rationale": "`read_channel_messages` returns `slack.channel_inbox` messages for the chosen `channel`. Slack channel messages can be non-public workspace data, and each returned `Message.body` may be authored by other Slack users in the multi-writer channel."
+   },
+   {
+    "name": "read_inbox",
+    "kind": "READ",
+    "destination_args": [
+     "user"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "body"
+    ],
+    "structured_output_fields": [
+     "sender",
+     "recipient"
+    ],
+    "attacker_named_fields": [
+     "sender",
+     "recipient"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:8-11; default_suites/v1/tools/slack.py:53-60",
+    "rationale": "`read_inbox` returns `slack.user_inbox` messages for the chosen `user`. User inbox messages can be non-public Slack data, and returned `Message.body` content may be authored by outside Slack users."
+   },
+   {
+    "name": "send_direct_message",
+    "kind": "WRITE",
+    "destination_args": [
+     "recipient"
+    ],
+    "value_args": [
+     "body"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:63-75",
+    "rationale": "`send_direct_message` takes an agent-supplied `recipient` and `body`, constructs a `Message`, and appends it to `slack.user_inbox[recipient]`, delivering agent-supplied text to a chosen Slack recipient."
+   },
+   {
+    "name": "send_channel_message",
+    "kind": "WRITE",
+    "destination_args": [
+     "channel"
+    ],
+    "value_args": [
+     "body"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:78-90",
+    "rationale": "`send_channel_message` takes an agent-supplied `channel` and `body`, constructs a `Message`, and appends it to `slack.channel_inbox[channel]`, delivering agent-supplied text to a chosen channel that may be attacker-readable."
+   },
+   {
+    "name": "get_users_in_channel",
+    "kind": "READ",
+    "destination_args": [
+     "channel"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:118-129",
+    "rationale": "`get_users_in_channel` returns the user names whose `user_channels` contain the chosen `channel`. Channel membership is non-public Slack workspace data, and user names are outside-party-chosen workspace identifiers."
+   },
+   {
+    "name": "invite_user_to_slack",
+    "kind": "WRITE",
+    "destination_args": [
+     "user"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/slack.py:93-103",
+    "rationale": "`invite_user_to_slack` is advertised and documented as inviting a user to the Slack workspace with `user_email`; the implementation adds the agent-supplied `user` to `slack.users` and initializes that user's inbox and channel membership. The implementation does not read `user_email`, so the exact external invite delivery is not settled by code."
+   },
+   {
+    "name": "remove_user_from_slack",
+    "kind": "WRITE",
+    "destination_args": [
+     "user"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:106-115",
+    "rationale": "`remove_user_from_slack` mutates Slack state by removing the chosen `user` and deleting that user's inbox and channel membership, but it does not return data or deliver agent-supplied content to an attacker-readable destination."
+   },
+   {
+    "name": "get_webpage",
+    "kind": "WRITE",
+    "destination_args": [
+     "url"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED",
+     "SINK"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/web.py:16-21; default_suites/v1/tools/web.py:35-44",
+    "rationale": "`get_webpage` accepts an agent-supplied `url`, records it in `web.web_requests`, and returns `web.web_content.get(url)`. The returned page content can be attacker-controlled for attacker-controlled URLs. Because there is no URL restriction in `standardize_url`, the code does not rule out access to localhost/intranet-style entries, so SECRET is kept under the least-restrictive reading. The agent-chosen `url` is also a request destination and can encode data in the requested URL."
+   },
+   {
+    "name": "post_webpage",
+    "kind": "WRITE",
+    "destination_args": [
+     "url"
+    ],
+    "value_args": [
+     "content"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/web.py:16-21; default_suites/v1/tools/web.py:24-32",
+    "rationale": "`post_webpage` accepts an agent-supplied `url` and `content`, records the URL in `web.web_requests`, and stores the content at `web.web_content[url]`, so it can deliver arbitrary agent-supplied content to an agent-chosen URL/host."
+   }
+  ]
+ },
+ "travel": {
+  "suite": "travel",
+  "tools": [
+   {
+    "name": "get_user_information",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "ID Number",
+     "Email",
+     "Phone Number",
+     "Address",
+     "Passport Number",
+     "Bank Account Number",
+     "Credit Card Number"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:104-116",
+    "rationale": "Returns personal data from the user's `User` dependency, including ID number, email, phone, address, passport number, bank account number, and credit card number via `get_user_information`."
+   },
+   {
+    "name": "get_all_hotels_in_city",
+    "kind": "READ",
+    "destination_args": [
+     "city"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:122-128",
+    "rationale": "Returns hotel names from a third-party-looking hotel listing (`hotels.hotel_list`). The code does not establish who controls hotel records, so the attacker-controllability of returned names is undetermined; keeping `UNTRUSTED`."
+   },
+   {
+    "name": "get_hotels_prices",
+    "kind": "READ",
+    "destination_args": [
+     "hotel_names"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:131-139",
+    "rationale": "Returns entries keyed by `hotel.name` from the hotel listing. The code does not establish who controls hotel records, so hotel-name text is treated as potentially attacker-controlled."
+   },
+   {
+    "name": "get_rating_reviews_for_hotels",
+    "kind": "READ",
+    "destination_args": [
+     "hotel_names"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:149-160",
+    "rationale": "Returns hotel ratings and joins `hotel.reviews`; reviews are third-party review text and may contain attacker-authored content. The code does not constrain review provenance."
+   },
+   {
+    "name": "get_hotels_address",
+    "kind": "READ",
+    "destination_args": [
+     "hotel_name"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:142-146",
+    "rationale": "Returns hotel names and addresses from `hotels.hotel_list`. The code does not establish who controls hotel records, so returned listing text is treated as potentially attacker-controlled."
+   },
+   {
+    "name": "get_all_restaurants_in_city",
+    "kind": "READ",
+    "destination_args": [
+     "city"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:166-172",
+    "rationale": "Returns restaurant names from a third-party-looking restaurant listing. The code does not establish who controls restaurant records, so returned names are treated as potentially attacker-controlled."
+   },
+   {
+    "name": "get_cuisine_type_for_restaurants",
+    "kind": "READ",
+    "destination_args": [
+     "restaurant_names"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:205-216",
+    "rationale": "Returns restaurant names and cuisine values from `restaurants.restaurant_list`. The code does not establish who controls restaurant records, so returned listing text is treated as potentially attacker-controlled."
+   },
+   {
+    "name": "get_restaurants_address",
+    "kind": "READ",
+    "destination_args": [
+     "restaurant_names"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:175-188",
+    "rationale": "Returns restaurant names and addresses from `restaurants.restaurant_list`. The code does not establish who controls restaurant records, so returned listing text is treated as potentially attacker-controlled."
+   },
+   {
+    "name": "get_rating_reviews_for_restaurants",
+    "kind": "READ",
+    "destination_args": [
+     "restaurant_names"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:191-202",
+    "rationale": "Returns restaurant ratings and joins `restaurant.reviews`; reviews are third-party review text and may contain attacker-authored content. The code does not constrain review provenance."
+   },
+   {
+    "name": "get_dietary_restrictions_for_all_restaurants",
+    "kind": "READ",
+    "destination_args": [
+     "restaurant_names"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:219-231",
+    "rationale": "Returns restaurant names and dietary restriction text from `restaurants.restaurant_list`. The code does not establish who controls restaurant records, so returned listing text is treated as potentially attacker-controlled."
+   },
+   {
+    "name": "get_contact_information_for_restaurants",
+    "kind": "READ",
+    "destination_args": [
+     "restaurant_names"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:234-245",
+    "rationale": "Returns restaurant names and `contact_information` from `restaurants.restaurant_list`. The code does not establish who controls restaurant records, so returned listing text is treated as potentially attacker-controlled."
+   },
+   {
+    "name": "get_price_for_restaurants",
+    "kind": "READ",
+    "destination_args": [
+     "restaurant_names"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:248-259",
+    "rationale": "Returns entries keyed by `restaurant.name` from the restaurant listing. The code does not establish who controls restaurant records, so restaurant-name text is treated as potentially attacker-controlled."
+   },
+   {
+    "name": "check_restaurant_opening_hours",
+    "kind": "READ",
+    "destination_args": [
+     "restaurant_names"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:262-273",
+    "rationale": "Returns restaurant names and `operating_hours` from `restaurants.restaurant_list`. The code does not establish who controls restaurant records, so returned listing text is treated as potentially attacker-controlled."
+   },
+   {
+    "name": "get_all_car_rental_companies_in_city",
+    "kind": "READ",
+    "destination_args": [
+     "city"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:279-285",
+    "rationale": "Returns car rental company names from a third-party-looking listing. The code does not establish who controls company records, so returned names are treated as potentially attacker-controlled."
+   },
+   {
+    "name": "get_car_types_available",
+    "kind": "READ",
+    "destination_args": [
+     "company_name"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:288-296",
+    "rationale": "Returns car rental company names and available car types from `car_rental.company_list`. The code does not establish who controls company records, so returned listing text is treated as potentially attacker-controlled."
+   },
+   {
+    "name": "get_rating_reviews_for_car_rental",
+    "kind": "READ",
+    "destination_args": [
+     "company_name"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:299-309",
+    "rationale": "Returns car rental ratings and joins `company.reviews`; reviews are third-party review text and may contain attacker-authored content. The code does not constrain review provenance."
+   },
+   {
+    "name": "get_car_fuel_options",
+    "kind": "READ",
+    "destination_args": [
+     "company_name"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:321-327",
+    "rationale": "Returns car rental company names and fuel options from `car_rental.company_list`. The code does not establish who controls company records, so returned listing text is treated as potentially attacker-controlled."
+   },
+   {
+    "name": "get_car_rental_address",
+    "kind": "READ",
+    "destination_args": [
+     "company_name"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:312-318",
+    "rationale": "Returns car rental company names and addresses from `car_rental.company_list`. The code does not establish who controls company records, so returned listing text is treated as potentially attacker-controlled."
+   },
+   {
+    "name": "get_car_price_per_day",
+    "kind": "READ",
+    "destination_args": [
+     "company_name"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:330-336",
+    "rationale": "Returns entries keyed by `company.name` from the car rental listing. The code does not establish who controls company records, so company-name text is treated as potentially attacker-controlled."
+   },
+   {
+    "name": "create_calendar_event",
+    "kind": "WRITE",
+    "destination_args": [
+     "participants"
+    ],
+    "value_args": [
+     "title",
+     "start_time",
+     "end_time",
+     "description",
+     "location"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "id_",
+     "participants"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/calendar_client.py:43-56; default_suites/v1/tools/calendar_client.py:161-168",
+    "rationale": "Creates a calendar event, appends the calendar owner email via `participants.append(self.account_email)`, stores it, and returns the `CalendarEvent`, exposing account calendar data. It also sends an email to caller-supplied `participants` with caller-supplied `title`/`description` and the event attachment via `inbox.send_email`, so it is a SINK."
+   },
+   {
+    "name": "search_calendar_events",
+    "kind": "READ",
+    "destination_args": [
+     "query",
+     "date"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "title",
+     "description",
+     "location"
+    ],
+    "structured_output_fields": [
+     "id_",
+     "participants"
+    ],
+    "attacker_named_fields": [
+     "participants"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/calendar_client.py:69-78; default_suites/v1/tools/calendar_client.py:171-188; default_suites/v1/tools/types.py:43-50",
+    "rationale": "Searches and returns events from the user's calendar, including event titles, descriptions, times, locations, and participants, so it exposes private calendar data. Calendar event text may originate from other participants/invitations; the code does not settle provenance, so `UNTRUSTED` is kept."
+   },
+   {
+    "name": "get_day_calendar_events",
+    "kind": "READ",
+    "destination_args": [
+     "day"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "title",
+     "description",
+     "location"
+    ],
+    "structured_output_fields": [
+     "id_",
+     "participants"
+    ],
+    "attacker_named_fields": [
+     "participants"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/calendar_client.py:31-32; default_suites/v1/tools/calendar_client.py:128-134; default_suites/v1/tools/types.py:43-50",
+    "rationale": "Returns the user's calendar events for a day, exposing private event data. Event titles/descriptions/locations may be authored by outside participants, but the code does not settle provenance, so `UNTRUSTED` is kept."
+   },
+   {
+    "name": "cancel_calendar_event",
+    "kind": "WRITE",
+    "destination_args": [
+     "event_id"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/calendar_client.py:58-67; default_suites/v1/tools/calendar_client.py:200-211",
+    "rationale": "Marks an existing calendar event canceled and sends a fixed cancellation email to the event's existing participants. The output is only a fixed success string containing the input `event_id`; the recipient set is read from the existing event rather than supplied directly in the call."
+   },
+   {
+    "name": "reserve_hotel",
+    "kind": "WRITE",
+    "destination_args": [
+     "hotel",
+     "start_day",
+     "end_day"
+    ],
+    "value_args": [
+     "hotel",
+     "start_day",
+     "end_day"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:339-356",
+    "rationale": "Mutates the local `reservation` dependency using the selected hotel and dates and returns a confirmation string. The code does not send the reservation to an external party."
+   },
+   {
+    "name": "reserve_car_rental",
+    "kind": "WRITE",
+    "destination_args": [
+     "company",
+     "start_time",
+     "end_time"
+    ],
+    "value_args": [
+     "company",
+     "start_time",
+     "end_time"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:382-400",
+    "rationale": "Mutates the local `reservation` dependency using the selected company and times and returns a confirmation string. The code does not send the reservation to an external party."
+   },
+   {
+    "name": "reserve_restaurant",
+    "kind": "WRITE",
+    "destination_args": [
+     "restaurant",
+     "start_time"
+    ],
+    "value_args": [
+     "restaurant",
+     "start_time"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:359-379",
+    "rationale": "Mutates the local `reservation` dependency using the selected restaurant and time and returns a confirmation string. The code does not send the reservation to an external party."
+   },
+   {
+    "name": "get_flight_information",
+    "kind": "READ",
+    "destination_args": [
+     "departure_city",
+     "arrival_city"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:403-417",
+    "rationale": "Returns flight listing text from `flights.flight_list`, including airline, flight number, price, and contact information. The code does not establish who controls flight records, so returned listing text is treated as potentially attacker-controlled."
+   },
+   {
+    "name": "send_email",
+    "kind": "WRITE",
+    "destination_args": [
+     "recipients",
+     "cc",
+     "bcc"
+    ],
+    "value_args": [
+     "subject",
+     "body",
+     "attachments"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "id_",
+     "sender",
+     "recipients",
+     "cc",
+     "bcc",
+     "attachments"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:73-102; default_suites/v1/tools/email_client.py:154-193",
+    "rationale": "Sends caller-supplied `subject`, `body`, and optional attachments to caller-supplied `recipients`, `cc`, and `bcc`, so it is a SINK. It returns the created `Email`, whose `sender` is the user's `account_email` from the inbox dependency, exposing account data not provided in the call."
+   }
+  ]
+ },
+ "banking": {
+  "suite": "banking",
+  "tools": [
+   {
+    "name": "get_iban",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/banking_client.py:50-52",
+    "rationale": "`get_iban` returns `account.iban`, the current user's bank account identifier, from the private `bank_account` dependency."
+   },
+   {
+    "name": "send_money",
+    "kind": "WRITE",
+    "destination_args": [
+     "recipient"
+    ],
+    "value_args": [
+     "amount",
+     "subject",
+     "date"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/banking_client.py:55-75",
+    "rationale": "`send_money` creates a `Transaction` using agent-supplied `recipient`, `amount`, `subject`, and `date`, then appends it to `account.transactions`; this is a payment/transfer action to an agent-chosen recipient."
+   },
+   {
+    "name": "schedule_transaction",
+    "kind": "WRITE",
+    "destination_args": [
+     "recipient"
+    ],
+    "value_args": [
+     "amount",
+     "subject",
+     "date",
+     "recurring"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/banking_client.py:82-108",
+    "rationale": "`schedule_transaction` creates a scheduled `Transaction` addressed to the agent-supplied `recipient` with supplied `amount`, `subject`, `date`, and `recurring`, then stores it in `account.scheduled_transactions`; this schedules a payment to an agent-chosen recipient."
+   },
+   {
+    "name": "update_scheduled_transaction",
+    "kind": "WRITE",
+    "destination_args": [
+     "id",
+     "recipient"
+    ],
+    "value_args": [
+     "amount",
+     "subject",
+     "date",
+     "recurring"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/banking_client.py:115-150",
+    "rationale": "`update_scheduled_transaction` selects a scheduled payment by `id` and can change its `recipient`, `amount`, `subject`, `date`, and `recurring` fields, including redirecting or altering a payment to an agent-chosen recipient."
+   },
+   {
+    "name": "get_balance",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/banking_client.py:154-158",
+    "rationale": "`get_balance` returns `account.balance` from the private `bank_account` dependency."
+   },
+   {
+    "name": "get_most_recent_transactions",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "subject"
+    ],
+    "structured_output_fields": [
+     "id",
+     "sender",
+     "recipient"
+    ],
+    "attacker_named_fields": [
+     "sender"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/banking_client.py:161-169; default_suites/v1/tools/banking_client.py:8-17",
+    "rationale": "`get_most_recent_transactions` returns entries from the user's private `account.transactions`, exposing non-public banking history. Transaction fields include `sender` and `subject`; for incoming transactions, an outside payer can choose the sender identity and subject text, making those returned fields untrusted."
+   },
+   {
+    "name": "get_scheduled_transactions",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "id",
+     "sender",
+     "recipient"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/banking_client.py:172-178; default_suites/v1/tools/banking_client.py:20-24",
+    "rationale": "`get_scheduled_transactions` returns `account.scheduled_transactions` from the private `bank_account` dependency, exposing non-public scheduled banking activity."
+   },
+   {
+    "name": "read_file",
+    "kind": "READ",
+    "destination_args": [
+     "file_path"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/file_reader.py:8-9; default_suites/v1/tools/file_reader.py:12-18",
+    "rationale": "`read_file` reads from the local `filesystem.files` mapping at agent-supplied `file_path` and returns the file contents, which are host/local file data."
+   },
+   {
+    "name": "get_user_info",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/user_account.py:20-31",
+    "rationale": "`get_user_info` returns non-public fields from the private `user_account` dependency, including the user's name and address fields."
+   },
+   {
+    "name": "update_password",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "password"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/user_account.py:34-42",
+    "rationale": "`update_password` changes the private `account.password` to the supplied `password` and returns only a fixed status message; the code does not send the password to an attacker-readable destination or return private data."
+   },
+   {
+    "name": "update_user_info",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "first_name",
+     "last_name",
+     "street",
+     "city"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/user_account.py:46-75",
+    "rationale": "`update_user_info` updates private `user_account` profile fields and returns the resulting `first_name`, `last_name`, `street`, and `city`, which are non-public user information."
+   }
+  ]
+ }
+}

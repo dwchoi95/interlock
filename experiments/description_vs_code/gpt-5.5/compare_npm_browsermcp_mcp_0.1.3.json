@@ -1,0 +1,250 @@
+[
+ {
+  "tool": "browser_navigate",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "`navigate` forwards an agent-chosen `url` over the websocket to the browser extension (`context.sendSocketMessage(\"browser_navigate\", { url })`), so the agent can cause the user's real browser to issue a request to any attacker-chosen host, with data smuggled in the URL path/query \u2014 a SINK. It is re"
+ },
+ {
+  "tool": "browser_go_back",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`goBack` is registered with snapshot=true (`goBack(true)` at line 717) and returns `captureAriaSnapshot`, i.e. the URL, title and full accessibility snapshot of whatever page the user's logged-in browser lands on: private session content (SECRET) and possibly attacker-authored page text (UNTRUSTED)."
+ },
+ {
+  "tool": "browser_go_forward",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`goForward(true)` returns `captureAriaSnapshot` content for the resulting page \u2014 the user's authenticated browser content (SECRET) and potentially attacker-controlled page text (UNTRUSTED)."
+ },
+ {
+  "tool": "browser_snapshot",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`snapshot.handle` calls `captureAriaSnapshot`, which asks the extension for `getUrl`, `getTitle` and `browser_snapshot` of the currently connected tab. That tab may be an authenticated SaaS/intranet/localhost page (SECRET) or an attacker-controlled web page whose text is injected into the agent cont"
+ },
+ {
+  "tool": "browser_click",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "element",
+   "ref"
+  ],
+  "annotations": {},
+  "rationale_code": "`click` sends `browser_click` to the extension and then returns `captureAriaSnapshot` content, exposing the resulting page (user's session data \u2192 SECRET; attacker page text \u2192 UNTRUSTED). The click itself carries only an element reference, no agent-authored payload, so it is not itself an exfiltratio"
+ },
+ {
+  "tool": "browser_hover",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "element",
+   "ref"
+  ],
+  "annotations": {},
+  "rationale_code": "`hover` returns `captureAriaSnapshot` output after hovering, so page content of the connected tab reaches the agent: private authenticated content (SECRET) and attacker-authored page text (UNTRUSTED)."
+ },
+ {
+  "tool": "browser_type",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "element",
+   "ref"
+  ],
+  "annotations": {},
+  "rationale_code": "`type` sends agent-supplied `text` into an editable element of the live page and can press Enter (`submit` in `TypeTool`), so arbitrary agent data can be posted into an attacker-readable destination (attacker-hosted form, public comment box, search query) \u2014 SINK. It also returns `captureAriaSnapshot"
+ },
+ {
+  "tool": "browser_select_option",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "element",
+   "ref"
+  ],
+  "annotations": {},
+  "rationale_code": "`selectOption` sets dropdown values in the page and returns `captureAriaSnapshot` content: user's private page content (SECRET) and attacker-authored page text (UNTRUSTED). The selected values are constrained to existing option values, so it is not treated as a general exfiltration channel."
+ },
+ {
+  "tool": "browser_press_key",
+  "code": [],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`pressKey` forwards a single key name to the extension and returns only the fixed string `Pressed key ${key}`; no page content is returned and no agent-authored payload of meaningful size leaves the host."
+ },
+ {
+  "tool": "browser_wait",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`wait2` only sleeps in the browser and returns a fixed confirmation string; it reads nothing and sends nothing outward."
+ },
+ {
+  "tool": "browser_get_console_logs",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`getConsoleLogs` returns the connected tab's console output verbatim (`consoleLogs.map((log) => JSON.stringify(log))`). Logs of an authenticated app can contain private data/tokens (SECRET) and any page script \u2014 including an attacker's \u2014 can write arbitrary strings to the console (UNTRUSTED)."
+ },
+ {
+  "tool": "browser_screenshot",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`screenshot` returns a PNG of the current tab into the agent context: pixels of the user's logged-in page (SECRET) and, when the tab shows attacker content, attacker-chosen rendered text/instructions (UNTRUSTED)."
+ }
+]

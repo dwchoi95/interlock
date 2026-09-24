@@ -1,0 +1,26 @@
+{
+ "kind": "npm",
+ "notes": [
+  "The provided source consists solely of dist/src/ai/set-up-ai-agents/get-agent-rules.js, a prompt-text generator; it contains no MCP tool registration, no HTTP client, and no filesystem or process access.",
+  "Because the handler for the single advertised tool (`nx_docs`) is absent, all labeling is inferred from the advertised schema/annotations plus the prompt text that describes `nx_docs` as the documentation lookup mechanism; verdict is marked undetermined.",
+  "The generated rules text itself instructs the agent to prefer Nx MCP tools and to check `--help` output, hinting the broader server exposes command-running capabilities, but no such tool is advertised here and no such code is shown, so no HOSTEXEC label is assigned to `nx_docs`."
+ ],
+ "package": "nx",
+ "source": ".cache/sources/.views/npm_nx_22.7.12_96cf29a571ee",
+ "tools": {
+  "nx_docs": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/src/ai/set-up-ai-agents/get-agent-rules.js:14",
+    "dist/src/ai/set-up-ai-agents/get-agent-rules.js:20-24"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "No implementation for `nx_docs` is present in the supplied source; the only file is `getAgentRules`, which merely references the tool as the way to look up Nx documentation and CLI flags (`nx_docs` mentioned at lines 14 and 20-24). The advertised schema takes a free-text `userQuery` and is annotated `openWorldHint: true`, indicating it reaches out to an external documentation service and returns retrieved document sections into the agent context. Since retrieved remote/third-party documentation text lands in context and the code that constructs the request and parses the response is not available, the least restrictive reading is retained: UNTRUSTED. A query sent to a fixed vendor docs endpoint is not a SINK, and nothing in the provided code shows reading local/private files or credentialed data, so SECRET and HOSTEXEC are not raised - but this cannot be confirmed without the tool handler, hence undetermined.",
+   "undetermined": true
+  }
+ },
+ "value_conditions": [],
+ "version": "22.7.12"
+}

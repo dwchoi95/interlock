@@ -1,0 +1,729 @@
+[
+ {
+  "tool": "click",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "uid"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`click` acts on an arbitrary page and, when `includeSnapshot` is true, calls `response.includeSnapshot()` which returns the page's a11y tree. The page may be attacker-controlled web content (UNTRUSTED) or the user's authenticated/intranet page reached with the persistent Chrome profile (SECRET)."
+ },
+ {
+  "tool": "close_page",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId"
+  ],
+  "annotations": {
+   "category": "navigation",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`closePage` sets `response.setIncludePages(true)`, returning the list of open pages with their URLs/titles: titles/URLs of attacker-visited pages are attacker-controllable (UNTRUSTED) and the user's open tab URLs are private browser-session data (SECRET)."
+ },
+ {
+  "tool": "drag",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "from_uid",
+   "to_uid"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`drag` manipulates an arbitrary page and can return a full snapshot via `response.includeSnapshot()`, mixing attacker page content (UNTRUSTED) with the user's authenticated page content (SECRET)."
+ },
+ {
+  "tool": "emulate",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId"
+  ],
+  "annotations": {
+   "category": "emulation",
+   "readOnlyHint": false
+  },
+  "rationale_code": "The `extraHttpHeaders` argument lets the agent inject arbitrary headers (the description explicitly shows `Authorization: Bearer token`) into every HTTP request the page makes; if the page is attacker-controlled this delivers agent-supplied data to an attacker-readable host. The emulation handler so"
+ },
+ {
+  "tool": "evaluate_script",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "function",
+   "filePath"
+  ],
+  "annotations": {
+   "category": "debugging",
+   "readOnlyHint": false,
+   "conditions": [
+    "javascriptEvaluation"
+   ]
+  },
+  "rationale_code": "`evaluate_script` runs an arbitrary JavaScript function in the target page and returns its JSON result: it can read the page/DOM/cookieStore of the user's authenticated session (SECRET), return attacker page data (UNTRUSTED), and perform `await fetch(...)` to an agent-chosen host, exfiltrating anyth"
+ },
+ {
+  "tool": "fill",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "uid"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`fill`/`fillFormElement` writes agent-supplied `value` into an element of an arbitrary page; on an attacker-controlled page that value can be transmitted to the attacker (SINK). With `includeSnapshot` it returns the page a11y tree, which is attacker-controllable (UNTRUSTED) and may contain the user'"
+ },
+ {
+  "tool": "fill_form",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "elements"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`fillForm` loops `fillFormElement` writing multiple agent-supplied values into an arbitrary (possibly attacker-controlled) page, then optionally returns the snapshot via `response.includeSnapshot()`. Same reasoning as `fill`: SINK via page-mediated submission, UNTRUSTED/SECRET via the returned snaps"
+ },
+ {
+  "tool": "get_console_message",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "pageId",
+   "msgid"
+  ],
+  "annotations": {
+   "category": "debugging",
+   "readOnlyHint": true
+  },
+  "rationale_code": "`response.attachConsoleMessage(msgid)` returns console output of the target page; console text is fully controlled by the page (UNTRUSTED) and may contain data from the user's authenticated session (SECRET). [unverified: no cited span contains the tool name or a backticked identifier]"
+ },
+ {
+  "tool": "get_network_request",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "reqid",
+   "requestFilePath",
+   "responseFilePath"
+  ],
+  "annotations": {
+   "category": "network",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`attachNetworkRequest` returns request/response headers and bodies; the description states it is useful for inspecting `Cookie` and `Set-Cookie` headers, i.e. the user's credentials and private response bodies (SECRET), while response bodies from visited sites are attacker-controllable (UNTRUSTED). "
+ },
+ {
+  "tool": "handle_dialog",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "action"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`handleDialog` accepts/dismisses a page dialog and then calls `response.setIncludePages(true)`, returning the open-page list (attacker-controllable titles/URLs plus the user's private tab URLs)."
+ },
+ {
+  "tool": "hover",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "uid"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`hover` interacts with an arbitrary page and can return the a11y snapshot through `response.includeSnapshot()`, which carries attacker page content and the user's authenticated page content."
+ },
+ {
+  "tool": "lighthouse_audit",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "outputDirPath"
+  ],
+  "annotations": {
+   "category": "debugging",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`navigation`/`snapshot` audit the currently loaded page and `response.attachLighthouseResult(output)` returns `lhr.mainDocumentUrl`, scores and report paths derived from page content: audit data is derived from attacker-controllable pages (UNTRUSTED) and reveals the user's (possibly intranet/authent"
+ },
+ {
+  "tool": "list_console_messages",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "pageId",
+   "types",
+   "serviceWorkerId"
+  ],
+  "annotations": {
+   "category": "debugging",
+   "readOnlyHint": true
+  },
+  "rationale_code": "`response.setIncludeConsoleData(true, ...)` returns all console messages (optionally with stack traces) of the target page: page-authored text is attacker-controllable (UNTRUSTED) and can include private data from the user's session (SECRET). [unverified: no cited span contains the tool name or a ba"
+ },
+ {
+  "tool": "list_network_requests",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "pageId",
+   "resourceTypes"
+  ],
+  "annotations": {
+   "category": "network",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Returns DevTools network data and the recent request list for the page (URLs, including intranet/authenticated endpoints) \u2014 private session data (SECRET) and attacker-influenced request/URL strings from visited sites (UNTRUSTED). [unverified: no cited span contains the tool name or a backticked iden"
+ },
+ {
+  "tool": "list_pages",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "category": "navigation",
+   "readOnlyHint": true
+  },
+  "rationale_code": "`response.setIncludePages(true)` enumerates the pages open in the user's browser (persistent profile) with URLs/titles: the user's open tabs are private data (SECRET) and titles/URLs of attacker-visited pages are attacker-controlled text injected into the agent context (UNTRUSTED)."
+ },
+ {
+  "tool": "navigate_page",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "type",
+   "url"
+  ],
+  "annotations": {
+   "category": "navigation",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`page.pptrPage.goto(request.params.url, options)` issues a request to an agent-chosen URL, so any data the agent embeds in the URL reaches an attacker-controlled host (SINK); `validateUrl` only restricts javascript:/data:/vbscript: when `javascriptEvaluation` is disabled. `initScript` additionally r"
+ },
+ {
+  "tool": "new_page",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url",
+   "isolatedContext"
+  ],
+  "annotations": {
+   "category": "navigation",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`context.newPage(...)` then `pptrPage.goto(request.params.url)` fetches an agent-chosen URL, a direct exfiltration channel (SINK). The response includes the page list with titles/URLs from attacker-visited pages (UNTRUSTED) and the user's own tabs (SECRET). [unverified: no cited span contains the to"
+ },
+ {
+  "tool": "performance_analyze_insight",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "pageId",
+   "insightSetId",
+   "insightName"
+  ],
+  "annotations": {
+   "category": "performance",
+   "readOnlyHint": true
+  },
+  "rationale_code": "`response.attachTraceInsight(lastRecording, ...)` returns detailed trace insight content for the recorded page, including resource URLs and page-derived strings: attacker-controllable (UNTRUSTED) and revealing the user's possibly private page/resources (SECRET). [unverified: no cited span contains t"
+ },
+ {
+  "tool": "performance_start_trace",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "filePath"
+  ],
+  "annotations": {
+   "category": "performance",
+   "readOnlyHint": false
+  },
+  "rationale_code": "Starts tracing (and may reload the page), then `response.attachTraceSummary(result)` returns trace-derived data including `parsedTrace.data.Meta.mainFrameURL` and resource URLs/script names of the audited page \u2014 private session data (SECRET) and attacker-controllable page content (UNTRUSTED). Raw tr"
+ },
+ {
+  "tool": "performance_stop_trace",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "filePath"
+  ],
+  "annotations": {
+   "category": "performance",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`stopTracingAndAppendOutput` parses the trace and attaches its summary to the response, exposing page URLs and page-derived trace content (SECRET/UNTRUSTED) and optionally saving the raw trace to a local file."
+ },
+ {
+  "tool": "press_key",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "Dispatches keyboard events to the page and can return the a11y snapshot through `response.includeSnapshot()`, injecting attacker page content and exposing the user's authenticated page content."
+ },
+ {
+  "tool": "resize_page",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId"
+  ],
+  "annotations": {
+   "category": "emulation",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`resizePage` ends with `response.setIncludePages(true)`, returning the open-page list with attacker-controllable titles/URLs and the user's private tab URLs."
+ },
+ {
+  "tool": "select_page",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId"
+  ],
+  "annotations": {
+   "category": "navigation",
+   "readOnlyHint": true
+  },
+  "rationale_code": "`selectPage` calls `response.setIncludePages(true)`, returning page URLs/titles from the user's browser (private) which for attacker-visited pages are attacker-controlled strings."
+ },
+ {
+  "tool": "take_heapsnapshot",
+  "code": [
+   "SECRET"
+  ],
+  "description": [],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "filePath"
+  ],
+  "annotations": {
+   "category": "memory",
+   "readOnlyHint": false
+  },
+  "rationale_code": "Captures the JS heap of the target page (which holds the user's authenticated page data) and writes it to `filePath`. The handler source is not part of the provided files, so whether any heap content is echoed into the response cannot be confirmed; the least restrictive reading keeps SECRET. The wri"
+ },
+ {
+  "tool": "take_screenshot",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "uid",
+   "filePath"
+  ],
+  "annotations": {
+   "category": "debugging",
+   "readOnlyHint": false
+  },
+  "rationale_code": "Captures the page/element and returns it as base64 image data via `response.attachImage(...)`: a rendering of attacker-controlled web content (UNTRUSTED, images can carry injected instructions) and of the user's authenticated/intranet pages (SECRET). `filePath` writes only into allowed local roots v"
+ },
+ {
+  "tool": "take_snapshot",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "filePath"
+  ],
+  "annotations": {
+   "category": "debugging",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`response.includeSnapshot({verbose, filePath})` returns the full a11y tree text of the target page: arbitrary attacker-controlled page text enters the agent context (UNTRUSTED) and private content of the user's logged-in pages is disclosed (SECRET). [unverified: no cited span contains the tool name "
+ },
+ {
+  "tool": "type_text",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "submitKey"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`page.pptrPage.keyboard.type(request.params.text)` plus an optional `submitKey` press types agent-supplied text into the focused element of an arbitrary page and can submit it; on an attacker-controlled page this delivers the data to the attacker. Whether the text leaves the browser depends on the p"
+ },
+ {
+  "tool": "upload_file",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "uid",
+   "filePaths"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`handle.uploadFile(...filePaths)` / `fileChooser.accept(filePaths)` sends the contents of host files to the page's file input; if the page is attacker-controlled this uploads local file contents to the attacker (SINK). `verifyFilesSchema.filePaths` restricts paths to configured filesystem roots (def"
+ },
+ {
+  "tool": "wait_for",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "pageId"
+  ],
+  "annotations": {
+   "category": "navigation",
+   "readOnlyHint": true
+  },
+  "rationale_code": "After `page.waitForTextOnPage(...)` it calls `response.includeSnapshot()`, unconditionally returning the page a11y tree \u2014 attacker-controlled page text (UNTRUSTED) and the user's authenticated page content (SECRET)."
+ }
+]

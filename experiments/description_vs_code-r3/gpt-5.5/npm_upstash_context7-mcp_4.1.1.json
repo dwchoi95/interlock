@@ -1,0 +1,67 @@
+{
+ "tools": {
+  "resolve-library-id": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool resolves a `package/product name` and returns `matching libraries` with fields including `Library ID`, `Name`, `Description`, and `Versions`. Public package/library metadata can be authored by third parties under the threat model, so returned library names/descriptions/versions/IDs are untrusted. It does not advertise access to local files, private accounts, credentials, or intranet resources, so it is not SECRET. It sends the `query` to the fixed `Context7 API for processing`; a fixed vendor endpoint is not an attacker-chosen destination, so it is not a SINK. No host code execution is advertised, so it is not HOSTEXEC. Although the annotation is read-only, the enforcement kind is WRITE because the description says `The query is sent to the Context7 API for processing`.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "query"
+   ],
+   "injectable_output_fields": [
+    "Library ID",
+    "Name",
+    "Description",
+    "Versions"
+   ],
+   "identifier_output_fields": [
+    "Library ID",
+    "Name",
+    "Versions"
+   ],
+   "attacker_named_fields": [
+    "Library ID",
+    "Name",
+    "Versions"
+   ]
+  },
+  "query-docs": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Retrieves and queries up-to-date documentation and code examples from Context7 for any programming library or framework`. Public documentation and code examples for arbitrary libraries/frameworks can be attacker-authored under the threat model, so the returned documentation text is untrusted. It does not advertise access to local files, private accounts, credentials, or intranet resources, so it is not SECRET. It sends the `query` to the fixed `Context7 API for processing`; a fixed vendor endpoint is not an attacker-chosen destination, so it is not a SINK. No host code execution is advertised, so it is not HOSTEXEC. Although the annotation is read-only, the enforcement kind is WRITE because the description says `The query is sent to the Context7 API for processing`.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "query"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "Both tools advertise calls to the fixed Context7 API rather than to an agent-chosen URL or host, so neither is labeled SINK despite sending the query argument out of the agent context."
+ ],
+ "usage": {
+  "input_tokens": 387,
+  "output_tokens": 5006,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 1792
+ }
+}

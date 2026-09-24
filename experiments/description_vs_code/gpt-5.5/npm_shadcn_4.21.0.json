@@ -1,0 +1,179 @@
+{
+ "tools": {
+  "get_project_registries": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads local project configuration: `Get configured registry names from components.json`. Local project files are non-public host data, and the returned configured registry names are identifiers from that file.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "list_items_in_registries": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns registry data: `List items from registries` and may use `every registry configured in components.json`. Registry item metadata can be third-party/attacker-controlled, so it is UNTRUSTED. It is also treated as SECRET because the text does not say configured registries are public; a configured registry such as `@acme` could be private/internal, so listing it could return non-public registry data. This private-registry reach is undetermined from the advertised text, so the label is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "registries"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "name"
+   ],
+   "attacker_named_fields": [
+    "name"
+   ]
+  },
+  "search_items_in_registries": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches external/configured registries: `Search for components in registries` and may search `every registry configured in components.json`. Returned item names/descriptions can be registry-authored, so they are UNTRUSTED. The text does not say registries are public, so configured private registries could return non-public data, making SECRET possible. The `query` is an agent-supplied search string sent to selected `registries`; because the destination registry can be selected from configured registries and is not described as a fixed vendor endpoint, this is treated as a possible SINK. The privacy and sink details are not settled by the text, so labels are kept as undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "registries"
+   ],
+   "value_args": [
+    "query"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "name"
+   ],
+   "attacker_named_fields": [
+    "name"
+   ]
+  },
+  "view_items_in_registries": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns detailed registry item data, including `name, description, type and files content`; those fields can be authored by a third-party registry, making the output UNTRUSTED. Because the item source is a registry selected by `items` with `registry prefix`, and the text does not say registries are public, a configured private/internal registry could expose non-public file contents, so SECRET is kept. The `items` strings decide the registry/item looked up and may be sent as registry requests; because the registry destination is not described as a fixed vendor endpoint, this is treated as a possible SINK. These private-registry and request-routing details are undetermined from the description.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "items"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "name",
+    "description",
+    "type",
+    "files content"
+   ],
+   "identifier_output_fields": [
+    "name"
+   ],
+   "attacker_named_fields": [
+    "name"
+   ]
+  },
+  "get_item_examples_from_registries": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns registry example/demo code: `Find usage examples and demos with their complete code` and `Returns full implementation code with dependencies`; such code can be authored by third-party registries, making it UNTRUSTED. Because it searches configured `registries` and the text does not state they are public, it could return non-public examples from a private/internal registry, so SECRET is kept. The agent-supplied `query` is sent to selected `registries`; since those destinations are not described as fixed vendor endpoints, this is treated as a possible SINK. These details are not settled by the advertised text.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "registries"
+   ],
+   "value_args": [
+    "query"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "get_add_command_for_items": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns a `shadcn CLI add command` for `items ... prefixed with the registry name`. If item names originated from a third-party registry, the command text may reflect attacker-chosen item identifiers. The description does not state that item strings are sanitized or fixed, so UNTRUSTED is kept as an undetermined conservative label. The tool only returns a command and is not advertised as executing it, so it is not HOSTEXEC.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "items"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "get_audit_checklist": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool is advertised only as returning `a quick checklist to verify that everything is working as expected`. It has no inputs, no external destination, and no indication that it reads private data, returns attacker-authored content, writes state, sends messages, or executes code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No source code was available; judgments are based only on the advertised tool names, descriptions, input schemas, and annotations."
+ ],
+ "usage": {
+  "input_tokens": 2063,
+  "output_tokens": 6338,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

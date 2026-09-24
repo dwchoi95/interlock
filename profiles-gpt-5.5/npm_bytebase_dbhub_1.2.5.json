@@ -1,0 +1,102 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Only the two advertised MCP tools were judged. The HTTP workbench/API routes and opt-in tools (`explain_sql`, `health_check`, and custom tools) were not advertised in the supplied tool list."
+ ],
+ "package": "@bytebase/dbhub",
+ "source": ".cache/sources/.views/npm_bytebase_dbhub_1.2.5_2e58a38413c9",
+ "tools": {
+  "execute_sql": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "sql"
+   ],
+   "evidence": [
+    "dist/index.js:273-276 defines the `execute_sql` input schema with a caller-supplied `sql` string.",
+    "dist/index.js:290-301 gets the tool config, applies the read-only policy, and calls `connector.executeSQL(sql, executeOptions)`.",
+    "dist/index.js:302-307 returns `statements` from `result.resultSets` to the agent.",
+    "dist/chunk-VDA5BVNE.js:124-127 shows `policyFromReadonly` allows writes unless `readonly === true`.",
+    "dist/chunk-VDA5BVNE.js:18-21 and dist/chunk-VDA5BVNE.js:2482-2492 show `execute_sql` is one of the default built-in tools when no per-source tool config is present."
+   ],
+   "identifier_output_fields": [
+    "source_id",
+    "statements.sql",
+    "statements.rows"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`execute_sql` executes caller-supplied SQL against the configured database via `connector.executeSQL` and returns result rows. Database contents reached through the user's configured connection are non-public data, so returned rows are SECRET. Because `readonly` is not true for the advertised tool and `policyFromReadonly` allows DML/DDL/admin/unknown by default, the call may change database state, but the destination is the configured database rather than an agent-chosen attacker-readable host, so it is not labeled SINK.",
+   "undetermined": false,
+   "value_args": [
+    "sql"
+   ]
+  },
+  "search_objects": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:332-340 defines the `search_objects` input schema.",
+    "dist/index.js:731-732 connects to and gets the current database connector.",
+    "dist/index.js:753-789 dispatches to database object search functions and returns `results` to the agent.",
+    "dist/index.js:418-438 reads table names, schemas, column counts, row counts, and comments.",
+    "dist/index.js:449-471 returns full table column and index metadata.",
+    "dist/index.js:639-648 returns stored procedure/function metadata including parameters and definitions.",
+    "dist/chunk-VDA5BVNE.js:18-21 and dist/chunk-VDA5BVNE.js:2482-2492 show `search_objects` is one of the default built-in tools when no per-source tool config is present."
+   ],
+   "identifier_output_fields": [
+    "object_type",
+    "pattern",
+    "schema",
+    "table",
+    "detail_level",
+    "results.name",
+    "results.schema",
+    "results.table",
+    "results.type",
+    "results.language",
+    "results.return_type",
+    "results.columns.name",
+    "results.columns.type",
+    "results.indexes.name",
+    "results.indexes.columns"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`search_objects` reads schemas, tables, views, columns, indexes, comments, row counts, and procedure/function definitions from the configured database and returns them. These database metadata and definitions are non-public data reached through the user's configured connection, so the output is SECRET. The tool only reads from the configured connector and does not contact an agent-chosen host or change state.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "Absent by default; normal configuration uses TOML, DSN, environment variables, or `.env` sources.",
+   "effect": "When present, `isDemoMode()` is true and the source is an in-memory SQLite sample database; this removes the SECRET label for data that comes only from the bundled demo database rather than the user's non-public database.",
+   "evidence": "dist/chunk-VDA5BVNE.js:643-646; dist/chunk-VDA5BVNE.js:705-710; dist/chunk-VDA5BVNE.js:1030-1032; dist/index.js:1894-1895",
+   "kind": "flag",
+   "syntax": "--demo"
+  },
+  {
+   "default": "No TOML config by default unless `--config` is supplied; with no per-source tools, both advertised built-ins are enabled.",
+   "effect": "If a source has explicit tool entries, only those configured tools are registered for that source; unlisted default built-ins such as `execute_sql` or `search_objects` are removed. If no tools are configured for a source, the default built-ins are `execute_sql` and `search_objects`.",
+   "evidence": "dist/chunk-VDA5BVNE.js:1074-1087; dist/chunk-VDA5BVNE.js:2468-2492",
+   "kind": "configuration",
+   "syntax": "--config=<path> with TOML `[[tools]]` entries such as `name = \"...\"` and `source = \"<source-id>\"`"
+  },
+  {
+   "default": "Unset by default; `policyFromReadonly` treats anything other than `true` as write-allowed.",
+   "effect": "For `execute_sql`, setting `readonly = true` denies non-read SQL and removes write capability, though the tool can still return SECRET database query results.",
+   "evidence": "dist/chunk-VDA5BVNE.js:124-129; dist/index.js:290-296; dist/chunk-VDA5BVNE.js:1182-1186",
+   "kind": "configuration",
+   "syntax": "TOML `[[tools]] name = \"execute_sql\" source = \"<source-id>\" readonly = true`"
+  }
+ ],
+ "version": "1.2.5"
+}

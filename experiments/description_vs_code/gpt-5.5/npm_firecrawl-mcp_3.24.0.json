@@ -1,0 +1,835 @@
+{
+ "tools": {
+  "firecrawl_scrape": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns attacker-authored web page material because it can `Retrieve and extract content from one supplied URL` and returns `markdown, HTML, links, screenshots... or JSON`. It is a SINK because the agent chooses the `supplied URL` and `Browser actions may change the live page`. SECRET is retained because the description does not exclude `file://`, localhost, intranet, or authenticated/profile-backed pages from the supplied URL/profile reach; this is undetermined from the advertised text.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "url",
+    "profile"
+   ],
+   "value_args": [
+    "jsonOptions",
+    "queryOptions",
+    "actions"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "links",
+    "page metadata"
+   ],
+   "attacker_named_fields": [
+    "links",
+    "page metadata"
+   ]
+  },
+  "firecrawl_map": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns attacker-controlled identifiers because it `Enumerate[s] URLs indexed under one website` and `Returns matching URLs`. It is a SINK because the agent supplies the website `url`; the text does not settle whether Firecrawl only consults an index or may contact the chosen host, so the label is kept. SECRET is retained because the text does not exclude non-public localhost/intranet site inventories from `one website`; this is undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "url",
+    "search",
+    "sitemap",
+    "includeSubdomains",
+    "limit",
+    "ignoreQueryParameters"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "firecrawl_search": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns public attacker-controllable material because it `Search[es] web, news, or image sources`, can search `GitHub issues... repository READMEs, and curated documentation sites`, and returns `page snippets` or extracted page content. The search query goes to Firecrawl/a search surface rather than an agent-chosen attacker host, so it is not a SINK on the advertised text.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "query",
+    "tbs",
+    "filter",
+    "location",
+    "includeDomains",
+    "excludeDomains",
+    "sources",
+    "categories",
+    "enterprise"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "data.developer",
+    "data.web"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "url"
+   ]
+  },
+  "firecrawl_search_feedback": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Writes private Firecrawl account/job state because it records feedback for a prior `firecrawl_search` UUID and reports whether `a refund was applied` and `daily-cap status`, which are non-public account/accounting data. It is not a SINK because the destination is the fixed Firecrawl feedback endpoint, not an attacker-chosen recipient.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "searchId"
+   ],
+   "value_args": [
+    "rating",
+    "valuableSources",
+    "missingContent",
+    "querySuggestions"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "firecrawl_feedback": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Writes private Firecrawl job/account feedback because it submits feedback for a completed `search, scrape, parse, or map job` and returns `feedback ID, and accounting fields`. It is not a SINK because the advertised recipient is the fixed Firecrawl feedback service.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "endpoint",
+    "jobId",
+    "url",
+    "pageNumbers"
+   ],
+   "value_args": [
+    "rating",
+    "issues",
+    "tags",
+    "note",
+    "valuableSources",
+    "missingContent",
+    "querySuggestions",
+    "metadata"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "feedback ID"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_crawl": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns attacker-controlled web content because it runs a `multi-page crawl at a website URL` and returns `collected data`/`page data`. It is a SINK because the agent supplies the crawl `url` and may configure `webhook`/`webhookHeaders`. SECRET is retained because the description does not exclude localhost, intranet, or otherwise non-public URLs from the crawl scope; this is undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "url",
+    "excludePaths",
+    "includePaths",
+    "allowExternalLinks",
+    "allowSubdomains",
+    "crawlEntireDomain",
+    "webhook"
+   ],
+   "value_args": [
+    "prompt",
+    "webhookHeaders",
+    "scrapeOptions"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "crawl ID",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "url"
+   ]
+  },
+  "firecrawl_check_crawl_status": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can return prior crawl results because it retrieves `available results for an existing crawl ID`; those results may include attacker-authored crawled pages. SECRET is retained because the existing crawl may have targeted non-public URLs or account-private crawl state, and the text does not rule that out.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "id"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "available results"
+   ],
+   "identifier_output_fields": [
+    "url"
+   ],
+   "attacker_named_fields": [
+    "url"
+   ]
+  },
+  "firecrawl_extract": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Deprecated but still advertised. It is an extraction entry point over `URLs`; because it is described as compatibility for `firecrawl_scrape`/`firecrawl_search`, it can return attacker-controlled web content and send requests to supplied URLs. SECRET is retained because the advertised text does not exclude localhost, intranet, or other non-public URLs.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "urls",
+    "allowExternalLinks",
+    "enableWebSearch",
+    "includeSubdomains"
+   ],
+   "value_args": [
+    "prompt",
+    "schema"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "url"
+   ],
+   "attacker_named_fields": [
+    "url"
+   ]
+  },
+  "firecrawl_agent": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Starts a web research job where the agent can provide `optional seed URLs`; requesting agent-chosen URLs can deliver data in those URLs to attacker-readable hosts. This call `returns only a job ID, not the research result`, so the advertised output itself is not attacker-authored content.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "urls"
+   ],
+   "value_args": [
+    "prompt",
+    "schema"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "job ID"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_agent_status": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns `final results`/`result data` for a web research job whose agent can `search, navigate, read pages`; public pages are attacker-controllable. SECRET is retained because the prior job may have read non-public URLs, and the status tool returns those results; the text does not exclude that.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "id"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "result data"
+   ],
+   "identifier_output_fields": [
+    "url"
+   ],
+   "attacker_named_fields": [
+    "url"
+   ]
+  },
+  "firecrawl_interact": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK",
+    "HOSTEXEC"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Advertises arbitrary code execution because `code can run as Bash, Python, or Node`; the text does not state that this is confined to a remote non-host sandbox, so HOSTEXEC is retained and implies SECRET, UNTRUSTED, and SINK. It also directly acts as a SINK because it can `navigate a page, click controls, fill fields` and `form submission can create persistent external side effects`. Outputs can include web/page and execution output: `Returns execution output, stdout/stderr, exit status, and session viewing URLs`.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "scrapeId",
+    "url"
+   ],
+   "value_args": [
+    "prompt",
+    "code",
+    "scrapeOptions"
+   ],
+   "injectable_output_fields": [
+    "return",
+    "execution output",
+    "stdout",
+    "stderr"
+   ],
+   "identifier_output_fields": [
+    "session viewing URLs"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_interact_stop": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Only stops a fixed Firecrawl interact session: `Stop the live interact session associated with a scrapeId and release its resources`. It returns `a success confirmation` and does not advertise returning external content or sending data to an attacker-chosen destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "scrapeId"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "firecrawl_parse": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Explicitly reaches local host files: `Local MCP reads filePath from the server filesystem` and returns `parsed document content`. The threat model treats host files as SECRET. The advertised input is a local `filePath`, not attacker-controlled web content, so UNTRUSTED is not added.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "filePath"
+   ],
+   "value_args": [
+    "jsonOptions",
+    "queryOptions",
+    "contentType"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "firecrawl_monitor_create": {
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Creates private authenticated account state and `Returns the created monitor`, so the monitor configuration is SECRET. It is a SINK because a monitor `can send configured email or webhook notifications` and the schema exposes `email` and `webhookUrl` destinations.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "body",
+    "page",
+    "pages",
+    "queries",
+    "includeDomains",
+    "excludeDomains",
+    "email",
+    "webhookUrl"
+   ],
+   "value_args": [
+    "body",
+    "goal",
+    "name",
+    "scheduleText",
+    "timezone",
+    "searchWindow",
+    "maxResults",
+    "includeDiffs"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "email",
+    "webhookUrl",
+    "page",
+    "pages",
+    "queries"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_monitor_list": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns private SaaS/account data: `List monitors for the authenticated account` and returns `monitor records and pagination metadata`. No attacker-chosen delivery destination is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "limit",
+    "offset"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_monitor_get": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns private SaaS/account data because it retrieves `one monitor by ID, including its configuration and current state`. No attacker-chosen delivery destination is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "id"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "email",
+    "webhookUrl",
+    "page",
+    "pages",
+    "queries"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_monitor_update": {
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Patches private authenticated account state and `Returns the updated monitor`, so the output includes SECRET monitor configuration. It is a SINK because the body can change `webhook` and `notifications`, which can send future data to configured destinations.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "id",
+    "body"
+   ],
+   "value_args": [
+    "body"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "email",
+    "webhookUrl",
+    "page",
+    "pages",
+    "queries"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_monitor_delete": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Acts on private authenticated monitor state: `Permanently delete a monitor by ID` and returns `deletion status`. It does not advertise sending data to an attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "id"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_monitor_run": {
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Acts on private monitor/account state and returns `the queued check`, so SECRET account data/check identifiers may be returned. SINK is retained because the monitor may have configured email/webhook notifications from `Create monitor`; this tool `starts network work for the monitor's configured targets`, but the text does not settle whether running it can trigger those configured notifications.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "id"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "checkId",
+    "id"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_monitor_checks": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns private authenticated monitor history: `List historical checks for a monitor`. The historical checks concern monitored web/search targets whose page/check summaries can reflect attacker-controlled public content, so UNTRUSTED is retained.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "id",
+    "limit",
+    "offset",
+    "status"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "checkId",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "url"
+   ]
+  },
+  "firecrawl_monitor_check": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns private account monitor check data and page results: `Retrieve one monitor check and its page-level results`. Those results include web-derived diffs and snapshots: `Markdown tracking returns a unified text diff` and `JSON tracking returns... previous/current values and a current snapshot`, which can be authored by outside web pages.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "id",
+    "checkId",
+    "limit",
+    "skip",
+    "pageStatus"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "unified text diff",
+    "previous/current values",
+    "current snapshot"
+   ],
+   "identifier_output_fields": [
+    "next",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "url"
+   ]
+  },
+  "firecrawl_research_search_papers": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns public scientific content that outside parties author: it searches `PubMed, bioRxiv, medRxiv` and `arXiv and other scientific sources` and returns `titles, authors, and abstracts`. Those sources are public/multi-writer, so they are UNTRUSTED.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "query",
+    "k",
+    "authors",
+    "categories",
+    "from",
+    "to"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "titles",
+    "authors",
+    "abstracts"
+   ],
+   "identifier_output_fields": [
+    "canonical IDs",
+    "authors"
+   ],
+   "attacker_named_fields": [
+    "canonical IDs",
+    "authors"
+   ]
+  },
+  "firecrawl_research_inspect_paper": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves public paper metadata: `title, abstract, authors, categories, source IDs, and dates`. Paper metadata and abstracts are authored/registered by outside parties, so the returned text is UNTRUSTED.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "paperId"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "title",
+    "abstract",
+    "authors"
+   ],
+   "identifier_output_fields": [
+    "source IDs",
+    "authors",
+    "paperId"
+   ],
+   "attacker_named_fields": [
+    "source IDs",
+    "authors",
+    "paperId"
+   ]
+  },
+  "firecrawl_research_related_papers": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns citation-graph `ranked candidates` from public literature; candidate papers and their metadata are authored/registered by outside parties, so returned titles/metadata/identifiers are UNTRUSTED.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "seed_ids",
+    "intent",
+    "mode",
+    "k",
+    "rerank"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "paper IDs",
+    "authors"
+   ],
+   "attacker_named_fields": [
+    "paper IDs",
+    "authors"
+   ]
+  },
+  "firecrawl_research_read_paper": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns paper body text from public literature: `Retrieve in-body passages from one paper`. These passages are authored by outside parties, so they are UNTRUSTED.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "paperId",
+    "question",
+    "k"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "matching passages"
+   ],
+   "identifier_output_fields": [
+    "paperId"
+   ],
+   "attacker_named_fields": [
+    "paperId"
+   ]
+  },
+  "firecrawl_research_search_github": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Searches public GitHub material: `public GitHub issue, pull-request, and README content` and returns `snippet, and full matched markdown`. Public GitHub content is attacker-controllable under the threat model.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "query",
+    "k"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "snippet",
+    "full matched markdown"
+   ],
+   "identifier_output_fields": [
+    "repository",
+    "URL"
+   ],
+   "attacker_named_fields": [
+    "repository",
+    "URL"
+   ]
+  },
+  "firecrawl_developer_search": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Searches public developer sources including `GitHub issues, merged pull requests, repository READMEs, and curated documentation sites` and returns `matched passages in markdown`. Those public/multi-writer sources can be attacker-authored.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "query",
+    "k",
+    "skills"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "matched passages"
+   ],
+   "identifier_output_fields": [
+    "ID",
+    "URL"
+   ],
+   "attacker_named_fields": [
+    "URL"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "syntax": "safe mode",
+   "kind": "mode",
+   "effect": "For `firecrawl_crawl`, `Webhooks and interactive scrape actions are unavailable in safe mode`, which can remove the webhook/action SINK surface for that mode.",
+   "default": "not specified",
+   "evidence": "description"
+  },
+  {
+   "syntax": "lockdown",
+   "kind": "flag",
+   "effect": "For scrape-style options, `lockdown cache-only retrieval` may avoid a live fetch to the supplied URL, potentially removing the live network SINK while still returning cached untrusted content; the exact scope is not settled by the advertised text.",
+   "default": "not specified",
+   "evidence": "description"
+  },
+  {
+   "syntax": "redactPII",
+   "kind": "flag",
+   "effect": "Requests PII redaction in returned content (`redactPII`) but does not remove SECRET/UNTRUSTED/SINK labels because the tool can still access and return other protected or attacker-authored content.",
+   "default": "not specified",
+   "evidence": "description"
+  },
+  {
+   "syntax": "zeroDataRetention",
+   "kind": "flag",
+   "effect": "Requests zero-data-retention behavior where eligible, but the descriptions do not state that it removes any reachability label.",
+   "default": "not specified",
+   "evidence": "description"
+  }
+ ],
+ "notes": [
+  "All judgements are based only on advertised names, descriptions, schemas, and annotations; each tool is treated as default-enabled because none is advertised as off by default.",
+  "For arbitrary URL tools, SECRET is retained where the description does not rule out localhost, intranet, file-like, or authenticated/profile-backed targets, per the least-restrictive/keep-the-label rule.",
+  "Queries sent only to fixed Firecrawl/vendor endpoints are not treated as SINKs; tools are SINKs when they can request an agent-chosen URL/host, configure a webhook/email recipient, or otherwise deliver data to an attacker-readable destination."
+ ],
+ "usage": {
+  "input_tokens": 10601,
+  "output_tokens": 10943,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

@@ -1,0 +1,156 @@
+[
+ {
+  "tool": "slack_list_channels",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`getChannels` calls Slack `conversations.list` / `conversations.info` with the user's bot token (`botHeaders`, dist/index.js:158-161) and returns the raw JSON into the agent context, exposing non-public workspace channel metadata (names, topics, purposes). No agent-chosen outbound destination, so no"
+ },
+ {
+  "tool": "slack_post_message",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "channel_id"
+  ],
+  "annotations": {},
+  "rationale_code": "`postMessage` posts agent-supplied `text` to an agent-chosen `channel_id` via `chat.postMessage`; the recipient channel is fully chosen by the agent and may be a public, shared or Slack Connect channel readable by an attacker, so arbitrary agent data can be delivered outward."
+ },
+ {
+  "tool": "slack_reply_to_thread",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "channel_id",
+   "thread_ts"
+  ],
+  "annotations": {},
+  "rationale_code": "`postReply` sends agent-supplied `text` to an agent-chosen `channel_id`/`thread_ts` through `chat.postMessage`, the same attacker-reachable delivery path as posting a message."
+ },
+ {
+  "tool": "slack_add_reaction",
+  "code": [],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "channel_id",
+   "timestamp"
+  ],
+  "annotations": {},
+  "rationale_code": "`addReaction` only sends an emoji `name` plus channel/timestamp to the fixed Slack `reactions.add` endpoint and returns the API ack; it reads no workspace content back and carries no meaningful agent-supplied payload to an attacker-readable destination."
+ },
+ {
+  "tool": "slack_get_channel_history",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "channel_id"
+  ],
+  "annotations": {},
+  "rationale_code": "`getChannelHistory` fetches `conversations.history` with the user's bot credentials and returns raw message JSON to the agent: private workspace conversation content (SECRET) that is authored by many parties - other members, guests, Slack Connect/external users, and bots/integrations relaying web co"
+ },
+ {
+  "tool": "slack_get_thread_replies",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "channel_id",
+   "thread_ts"
+  ],
+  "annotations": {},
+  "rationale_code": "`getThreadReplies` returns raw `conversations.replies` JSON read with the bot token: non-public workspace messages (SECRET) whose bodies are written by third parties including external/guest users and relay bots (UNTRUSTED)."
+ },
+ {
+  "tool": "slack_get_users",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`getUsers` reads `users.list` with the user's bot token and returns the full member directory (names, emails, profile fields) into context - non-public workspace data. Profile fields are self-authored by arbitrary workspace members including guests/Slack Connect users, so the returned strings may ca"
+ },
+ {
+  "tool": "slack_get_user_profile",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "user_id"
+  ],
+  "annotations": {},
+  "rationale_code": "`getUserProfile` calls `users.profile.get` with the bot token and returns the detailed profile JSON (SECRET). Profile text is authored by the target user, who may be an external/guest account rather than the operator, so it is treated as attacker-influencable; the code cannot rule this out."
+ }
+]

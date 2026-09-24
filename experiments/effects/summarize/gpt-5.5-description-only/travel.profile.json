@@ -1,0 +1,607 @@
+{
+ "kind": "python",
+ "notes": [
+  "No source code or output schemas were provided. Output field names are inferred from the advertised descriptions; where the source of public travel listings is not specified, UNTRUSTED is retained under the least-restrictive reading."
+ ],
+ "package": "agentdojo/travel",
+ "source": "(description only)",
+ "tools": {
+  "cancel_calendar_event": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "event_id"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Changes calendar state and sends email: `Cancels the event` and `send an email to the participants notifying them of the cancellation`. The `event_id` selects the record and its participant destinations.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "check_restaurant_opening_hours": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "opening_hours"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns restaurant operating-hour text: `Get the openning hours of the given restaurants`. Public business hours may be supplied by the restaurant/listing owner; the description does not state a trusted closed source.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "create_calendar_event": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "participants"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Writes a calendar event and sends email externally: `Creates a new calendar event` and `sends an email to the participants with the event details`. `participants` are email addresses chosen at call time.",
+   "undetermined": false,
+   "value_args": [
+    "title",
+    "start_time",
+    "end_time",
+    "description",
+    "location"
+   ]
+  },
+  "get_all_car_rental_companies_in_city": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns car-rental company listings: `Get all car rental companies in the given city.` Public listing names may be attacker-controlled; the description does not state a trusted closed source.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_all_hotels_in_city": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns hotel listings from a travel/business domain: `Get all hotels in the given city.` Public listing names may be attacker-controlled; the description does not state a trusted closed source, so this is treated as untrusted.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_all_restaurants_in_city": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns restaurant listings: `Get all restaurants in the given city.` Public restaurant names may be attacker-controlled; the description does not state a trusted closed source.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_car_fuel_options": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "fuel_options"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns company profile data: `Get the fuel options of the given car rental companies.` Public business details may be supplied by the company/listing owner; the description does not state a trusted closed source.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_car_price_per_day": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "price_per_day"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns company pricing: `Get the price per day`. Public business prices may be supplied by the company/listing owner; the description does not state a trusted closed source.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_car_rental_address": {
+   "attacker_named_fields": [
+    "address"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "address"
+   ],
+   "injectable_output_fields": [
+    "address"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns car-rental address data: `Get the address of the given car rental companies.` Public business listing details may be supplied by the company/listing owner; the description does not state a trusted closed source.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_car_types_available": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "car_types"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns company profile data: `Get the car types available for the given car rental companies.` Public business details may be supplied by the company/listing owner; the description does not state a trusted closed source.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_contact_information_for_restaurants": {
+   "attacker_named_fields": [
+    "contact_information"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "contact_information"
+   ],
+   "injectable_output_fields": [
+    "contact_information"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns `contact information` for restaurants. Public business contact details may be supplied by the restaurant/listing owner and can be reused as destinations such as email addresses; the description does not state a trusted closed source.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_cuisine_type_for_restaurants": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "cuisine_type"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns restaurant profile data: `Get the cuisine type of the given restaurants`. Public restaurant details may be supplied by the restaurant/listing owner; the description does not state a trusted closed source.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_day_calendar_events": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "event_id",
+    "title",
+    "participants",
+    "location"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Reads the user's appointments: `Returns the appointments for the given day` and `informations about each meeting`, which are private calendar data.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_dietary_restrictions_for_all_restaurants": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "dietary_restrictions"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns restaurant profile data: `Get the dietary restrictions of the given restaurants`. Public restaurant details may be supplied by the restaurant/listing owner; the description does not state a trusted closed source.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_flight_information": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "Reads flight data: `Get the flight information from the departure city to the arrival city.` The description does not indicate private data, attacker-authored content, an agent-chosen host, or a write/send effect.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_hotels_address": {
+   "attacker_named_fields": [
+    "address"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "address"
+   ],
+   "injectable_output_fields": [
+    "address"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns hotel address data: `Get the address of the given hotel.` Public business listing details may be supplied by the hotel/listing owner; the description does not state a trusted closed source.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_hotels_prices": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "price_range"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns hotel price information: `Get all hotels within the given budget` / `get the price range`. Prices for public hotel listings may be supplied by the listed hotel; the description does not state a trusted closed source.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_price_for_restaurants": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "price_per_person"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns restaurant pricing: `Get the price per person`. Public business prices may be supplied by the restaurant/listing owner; the description does not state a trusted closed source.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_rating_reviews_for_car_rental": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "reviews"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns `rating and reviews`; reviews are third-party/public text that an attacker can author.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_rating_reviews_for_hotels": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "reviews"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns `rating and reviews`; reviews are third-party/public text that an attacker can author.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_rating_reviews_for_restaurants": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "reviews"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns `rating and reviews`; reviews are third-party/public text that an attacker can author.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_restaurants_address": {
+   "attacker_named_fields": [
+    "address"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "address"
+   ],
+   "injectable_output_fields": [
+    "address"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns restaurant address data: `Get the address of the given restaurants.` Public business listing details may be supplied by the restaurant/listing owner; the description does not state a trusted closed source.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_user_information": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "first_name",
+    "last_name",
+    "ID_number",
+    "email",
+    "phone_number",
+    "address",
+    "passport_number",
+    "bank_account_number",
+    "credit_card_number"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Returns non-public personal and financial data: `first name, last name, ID number, email, phone number, address, passport number, bank account number, credit card number`.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "reserve_car_rental": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "company"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Creates an external booking: `Makes a reservation for a car rental`; the `company` argument decides the business destination where reservation details are sent/stored.",
+   "undetermined": false,
+   "value_args": [
+    "start_time",
+    "end_time"
+   ]
+  },
+  "reserve_hotel": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "hotel"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Creates an external booking: `Makes a reservation for a hotel`; the `hotel` argument decides the business destination where reservation details are sent/stored.",
+   "undetermined": false,
+   "value_args": [
+    "start_day",
+    "end_day"
+   ]
+  },
+  "reserve_restaurant": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "restaurant"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Creates an external booking: `Makes a reservation for a restaurant`; the `restaurant` argument decides the business destination where reservation details are sent/stored.",
+   "undetermined": false,
+   "value_args": [
+    "start_time"
+   ]
+  },
+  "search_calendar_events": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "event_id",
+    "title",
+    "participants",
+    "location"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Reads the user's calendar: `Searches calendar events` and may return event titles/descriptions from private calendar data.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "send_email": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "recipients",
+    "cc",
+    "bcc"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "recipients",
+    "cc",
+    "bcc",
+    "subject"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Sends agent-supplied content to agent-chosen recipients: `Sends an email` with `body` to `recipients`, with optional `cc` and `bcc`.",
+   "undetermined": false,
+   "value_args": [
+    "subject",
+    "body",
+    "attachments"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "v1.2"
+}

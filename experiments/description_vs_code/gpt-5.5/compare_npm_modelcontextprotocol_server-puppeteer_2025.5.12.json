@@ -1,0 +1,169 @@
+[
+ {
+  "tool": "puppeteer_navigate",
+  "code": [
+   "HOSTEXEC",
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "HOSTEXEC",
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url",
+   "launchOptions"
+  ],
+  "annotations": {},
+  "rationale_code": "`page.goto(args.url)` navigates the real browser to any agent-supplied URL, including `http://localhost`, intranet hosts and `file://` targets, and the resulting page state is readable via `puppeteer_screenshot`/`puppeteer_evaluate`; the fetch itself is an outbound request to an attacker-chosen host"
+ },
+ {
+  "tool": "puppeteer_screenshot",
+  "code": [
+   "HOSTEXEC",
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "HOSTEXEC",
+   "SINK"
+  ],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "name",
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`page.screenshot` returns the rendered content of whatever page the browser is on - which may be a `file://`, localhost/intranet page or a site where the user is logged in - as image or base64 text in the tool result (SECRET), and equally may be an attacker-controlled web page rendering injected ins"
+ },
+ {
+  "tool": "puppeteer_click",
+  "code": [
+   "HOSTEXEC",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "HOSTEXEC",
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`page.click(args.selector)` actuates the live page: on an attacker-controlled page it submits forms or follows links, delivering whatever was previously typed into the page (see `puppeteer_fill`) to the attacker's server, so it completes an exfiltration path. HOSTEXEC is kept because `ensureBrowser("
+ },
+ {
+  "tool": "puppeteer_fill",
+  "code": [
+   "HOSTEXEC",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "HOSTEXEC",
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`page.type(args.selector, args.value)` places agent-supplied text into an input on an agent/attacker-chosen page; combined with a click or an auto-submitting field this delivers that data to an attacker-readable destination. HOSTEXEC is kept for the same `ensureBrowser(args)` pass-through of `launch"
+ },
+ {
+  "tool": "puppeteer_select",
+  "code": [
+   "HOSTEXEC",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "HOSTEXEC",
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`page.select(args.selector, args.value)` sets agent-chosen form state on the current (possibly attacker-controlled) page, which can be submitted to the attacker's host; a change handler can trigger the submission directly. HOSTEXEC retained via the `ensureBrowser(args)` -> `puppeteer.launch` launch-"
+ },
+ {
+  "tool": "puppeteer_hover",
+  "code": [
+   "HOSTEXEC"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "HOSTEXEC",
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`page.hover` only moves the pointer and returns a fixed confirmation string, so it returns no page data and carries no agent payload off-host by itself; however `handleToolCall` still routes its arguments through `ensureBrowser(args)`, so an attached `launchOptions.executablePath` would be merged in"
+ },
+ {
+  "tool": "puppeteer_evaluate",
+  "code": [
+   "HOSTEXEC",
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "HOSTEXEC"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "script"
+  ],
+  "annotations": {},
+  "rationale_code": "`page.evaluate(args.script)` runs arbitrary JavaScript in the page and returns both the result and captured console output, so it can read the DOM/cookies/localStorage of a `file://`, localhost, intranet or logged-in page (SECRET), returns attacker-page-derived text (UNTRUSTED), and can issue `fetch"
+ }
+]

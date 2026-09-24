@@ -1,0 +1,670 @@
+{
+ "kind": "npm",
+ "notes": [
+  "The supplied source omits imported schemas and platform client implementations from `chunk-Q7RZ5JID.js`/other modules, so many exact output identifier fields and some downstream reach details are marked `undetermined` and interpreted conservatively.",
+  "No advertised tool executes arbitrary code on the MCP host. Edge Functions run remotely on Supabase, so `deploy_edge_function` is not labeled HOSTEXEC."
+ ],
+ "package": "@supabase/mcp-server-supabase",
+ "source": ".cache/sources/.views/npm_supabase_mcp-server-supabase_0.12.0_091d49272ccf",
+ "tools": {
+  "apply_migration": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "project_id",
+    "name",
+    "query"
+   ],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Passes agent-supplied raw SQL `query` and migration `name` to `e.applyMigration(r,{name:l,query:c})`, changing the remote database. Because the SQL is unconstrained in the shown code, the SQL text can determine records changed and may invoke database-side outbound/network functionality if available; treated as a sink on the least-restrictive reading.",
+   "undetermined": true,
+   "value_args": [
+    "query"
+   ]
+  },
+  "confirm_cost": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1",
+    "dist/chunk-UXVELPWK.js:275"
+   ],
+   "identifier_output_fields": [
+    "confirmation_id"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "Computes and returns `confirmation_id` with `M(t)` from caller-supplied cost fields; it does not read SaaS data or write state in the shown code.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "create_branch": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "project_id"
+   ],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:10-11"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "project_ref"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "After cost confirmation, calls `e.createBranch(project_id,{name})` and returns branch details for the user's project; this is non-public project data and changes project state.",
+   "undetermined": true,
+   "value_args": [
+    "name"
+   ]
+  },
+  "create_project": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "organization_id"
+   ],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "organization_id"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "After cost confirmation checks, calls `e.createProject({name,region,organization_id})` and returns the created project object, which is non-public account/project data. It changes Supabase account state.",
+   "undetermined": true,
+   "value_args": [
+    "name",
+    "region"
+   ]
+  },
+  "delete_branch": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "branch_id"
+   ],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:10-11"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Calls `e.deleteBranch(r)` for `branch_id` and returns only `{success:true}`. It changes project state but does not return secret content in the shown code.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "deploy_edge_function": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "project_id",
+    "name"
+   ],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:258-260"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "slug"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Passes agent-supplied function name, paths, JWT setting, and `files` to `e.deployEdgeFunction(...)`, creating a remotely deployed Supabase Edge Function. The deployed function can expose agent-supplied content/code through the project endpoint, especially if `verify_jwt` is disabled. It also returns function metadata for the user's project.",
+   "undetermined": true,
+   "value_args": [
+    "entrypoint_path",
+    "import_map_path",
+    "verify_jwt",
+    "files"
+   ]
+  },
+  "execute_sql": {
+   "attacker_named_fields": [
+    "result"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "project_id",
+    "query"
+   ],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1",
+    "dist/chunk-UXVELPWK.js:3-9"
+   ],
+   "identifier_output_fields": [
+    "result"
+   ],
+   "injectable_output_fields": [
+    "result"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Passes caller SQL to `e.executeSql(l,{query:r,read_only:n})` and returns the result wrapped by `Q`; `Q` explicitly states the result contains untrusted user data. SQL results can expose non-public database contents. With `readOnly` unset, the raw SQL can be destructive and unconstrained, so it can act as a sink through database writes or database-side outbound functionality if available.",
+   "undetermined": true,
+   "value_args": [
+    "query"
+   ]
+  },
+  "generate_typescript_types": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Calls `e.generateTypescriptTypes(t)`, which generates types from the user's project database/API schema; this can reveal non-public schema information. Exact output schema is imported from another chunk not supplied. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_advisors": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "identifier_output_fields": [
+    "result"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Calls `e.getSecurityAdvisors(r)` or `e.getPerformanceAdvisors(r)` for a project and returns the advisory result, which describes non-public database/project state. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_cost": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "For project costs it calls `e.getOrganization(o)` and `e.listProjects()` in `ee` to derive the returned cost from the organization's plan and active projects, exposing non-public account-derived information.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_edge_function": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:258-260"
+   ],
+   "identifier_output_fields": [
+    "name",
+    "entrypoint_path",
+    "import_map_path"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Calls `e.getEdgeFunction(i,r)` and returns file contents for an Edge Function. Source files in the user's project are non-public data and may contain secrets.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_organization": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "slug",
+    "name"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Calls `e.getOrganization(t)` for an organization id and returns organization details, including subscription plan per the tool definition; this is non-public account data. Exact imported output schema is not present in the supplied source.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_project": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "organization_id"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Calls `e.getProject(t)` and returns details for a Supabase project, a non-public user account resource. Exact project schema is imported from another chunk not supplied.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_project_url": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "identifier_output_fields": [
+    "url"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Calls `e.getProjectUrl(t)` and returns the API URL for the user's project. Although such URLs may be embedded in applications, listing it is credentialed project metadata. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_publishable_keys": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "identifier_output_fields": [
+    "keys.api_key",
+    "keys.name",
+    "keys.id"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Calls `e.getPublishableKeys(t)` and returns API key material and key metadata for the user's project. Even if described as publishable, the complete credentialed key listing is non-public SaaS data. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_branches": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:10-11"
+   ],
+   "identifier_output_fields": [
+    "branches",
+    "id",
+    "name",
+    "project_ref"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Calls `e.listBranches(r)` and returns development branch details for a project, non-public project data. Exact branch schema is imported from another chunk not supplied.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_edge_functions": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:258-260"
+   ],
+   "identifier_output_fields": [
+    "functions"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Calls `e.listEdgeFunctions(i)` and returns the user's project Edge Functions, which is non-public project metadata. Exact function schema is imported from another chunk not supplied.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_extensions": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:123-133",
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "identifier_output_fields": [
+    "extensions.name",
+    "extensions.schema"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Runs the extension catalog query `it()` via `e.executeSql(... read_only:true)` and returns installed/available extension information for the user's database. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_migrations": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "identifier_output_fields": [
+    "migrations"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Calls `e.listMigrations(r)` and returns migration history for the user's project database, which is non-public project data. Exact migration schema is imported from another chunk not supplied. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_organizations": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "identifier_output_fields": [
+    "organizations",
+    "id",
+    "slug",
+    "name"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Calls `e.listOrganizations()` and returns the user's organization memberships as `{organizations: ...}`; this is non-public SaaS account data reached with the user's credentials.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_projects": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "identifier_output_fields": [
+    "projects",
+    "id",
+    "name",
+    "organization_id"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Calls `e.listProjects()` and returns Supabase projects visible to the user, which is non-public SaaS account data. Exact project schema is imported from another chunk not supplied.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_tables": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:123-232",
+    "dist/chunk-UXVELPWK.js:241-251"
+   ],
+   "identifier_output_fields": [
+    "tables.name",
+    "columns.name",
+    "primary_keys",
+    "foreign_key_constraints.name",
+    "foreign_key_constraints.source_table",
+    "foreign_key_constraints.target_table",
+    "advisory.id",
+    "advisory.doc_url"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Builds catalog SQL over table, column, primary-key, relationship, and comment metadata and runs it through `e.executeSql(... read_only:true)`; this returns non-public database schema/metadata for the user's project.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "merge_branch": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "branch_id"
+   ],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:10-11"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Calls `e.mergeBranch(r)` for `branch_id` and returns only `{success:true}`. It changes project state but does not return secret content in the shown code.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "pause_project": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "project_id"
+   ],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Calls `e.pauseProject(t)` for the supplied `project_id` and returns only `{success:true}`; it changes account state but does not return non-public content in the shown code.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "query_logs": {
+   "attacker_named_fields": [
+    "result"
+   ],
+   "default_enabled": false,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1",
+    "dist/chunk-UXVELPWK.js:3-9"
+   ],
+   "identifier_output_fields": [
+    "result"
+   ],
+   "injectable_output_fields": [
+    "result"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "When `debugging.queryLogs` is present, calls `queryLogs` with caller SQL and returns the log query result wrapped by `Q`, which marks it as untrusted. Project logs are non-public project data and can contain attacker-controlled request/log content.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "rebase_branch": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "branch_id"
+   ],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:10-11"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Calls `e.rebaseBranch(r)` for `branch_id` and returns only `{success:true}`. It changes project state but does not return secret content in the shown code.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "reset_branch": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "branch_id"
+   ],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:10-11"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Calls `e.resetBranch(r,{migration_version:l})` and returns only `{success:true}`. It changes branch state; `migration_version` selects the reset target.",
+   "undetermined": true,
+   "value_args": [
+    "migration_version"
+   ]
+  },
+  "restore_project": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "project_id"
+   ],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Calls `e.restoreProject(t)` for the supplied `project_id` and returns only `{success:true}`; it changes account state but does not return non-public content in the shown code.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "search_docs": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1",
+    "dist/chunk-UXVELPWK.js:252-258"
+   ],
+   "identifier_output_fields": [
+    "result"
+   ],
+   "injectable_output_fields": [
+    "result"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`search_docs` returns the result of an arbitrary documentation GraphQL query via `e.query({query:o})`; documentation/search-style public content is treated as untrusted attacker-influenceable content under the threat model. The request goes to the configured Content API, not an agent-chosen host.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "docs plus platform-supported account/database/debugging/development/functions/branching",
+   "effect": "Only selected/supported feature groups are advertised. `storage` is not in `_n`, so it is off by default unless explicitly requested. Invalid feature groups are rejected.",
+   "evidence": "dist/chunk-UXVELPWK.js:260-275",
+   "kind": "tool availability",
+   "syntax": "features: Set/array of feature groups parsed by `_t(o, i ?? b)`; default `b = _n.filter(S => Ae.includes(S) || Object.keys(platform).includes(S))`, with `_n = [\"docs\",\"account\",\"database\",\"debugging\",\"development\",\"functions\",\"branching\"]` and `Ae = [\"docs\"]`."
+  },
+  {
+   "default": "false/undefined; write tools advertised and `execute_sql` passes `read_only: undefined`",
+   "effect": "Tools in `we` (annotations `readOnlyHint === false` except `readOnlyBehavior:\"adapt\"`) are hidden and their execute paths also throw if reached. `execute_sql` remains available but passes `read_only:true` to `e.executeSql`, changing it to read-only behavior.",
+   "evidence": "dist/chunk-UXVELPWK.js:1, dist/chunk-UXVELPWK.js:275",
+   "kind": "tool availability/behavior",
+   "syntax": "readOnly: true"
+  },
+  {
+   "default": "undefined; account tools may be advertised and project tools require `project_id`",
+   "effect": "Account tools are omitted (`!n && A`), and tools with `project_id` have that argument injected/omitted by `f(... inject:{project_id:n})`.",
+   "evidence": "dist/chunk-UXVELPWK.js:2, dist/chunk-UXVELPWK.js:275",
+   "kind": "tool schema/availability",
+   "syntax": "projectId: <string>"
+  },
+  {
+   "default": "absent unless platform capability is provided",
+   "effect": "`query_logs` is added only when the debugging platform exposes `queryLogs`; when present, `get_logs` is created with `hidden: !!queryLogs`.",
+   "evidence": "dist/chunk-UXVELPWK.js:1",
+   "kind": "tool availability",
+   "syntax": "debugging.queryLogs truthy"
+  },
+  {
+   "default": "no costConfirmation means explicit `confirm_cost_id` remains required for create tools",
+   "effect": "For enabled create tools, `confirm_cost_id` is omitted and inline elicitation is used. If all create tools use inline confirmation, `get_cost` and `confirm_cost` are hidden; otherwise their `type` enum is narrowed to the non-inline resource types.",
+   "evidence": "dist/chunk-UXVELPWK.js:1, dist/chunk-UXVELPWK.js:275",
+   "kind": "tool schema/availability",
+   "syntax": "costConfirmation.enabledTools plus client MCP form elicitation capability (`CLIENT_CAPABILITIES_META_KEY.elicitation` containing `form` or empty object)"
+  },
+  {
+   "default": "https://supabase.com/docs/api/graphql",
+   "effect": "Changes the fixed Content API URL used by `search_docs` from `https://supabase.com/docs/api/graphql` to the configured URL; not call-time agent-chosen.",
+   "evidence": "dist/chunk-UXVELPWK.js:1, dist/chunk-UXVELPWK.js:275",
+   "kind": "destination configuration",
+   "syntax": "contentApiUrl: <URL>"
+  }
+ ],
+ "version": "0.12.0"
+}

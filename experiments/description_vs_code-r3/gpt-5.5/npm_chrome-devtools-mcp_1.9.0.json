@@ -1,0 +1,730 @@
+{
+ "tools": {
+  "click": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Clicks on the provided element` can activate page UI, including attacker-controlled controls or submissions, so it can be a SINK. If `includeSnapshot` is used, the response includes a page snapshot; page content can be private user/SaaS/intranet data or attacker-authored web content. Snapshot `uid` values identify elements for later calls.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId",
+    "uid"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "uid"
+   ],
+   "attacker_named_fields": []
+  },
+  "close_page": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Closes the page by its index`; this changes browser state but does not advertise returning data or sending agent-supplied content to an attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "drag": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Drag an element onto another element` can trigger page-side state changes or submissions, so it can be a SINK. If `includeSnapshot` is used, returned page snapshot text may be private or attacker-authored; snapshot `uid` values are identifiers for later calls.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId",
+    "from_uid",
+    "to_uid"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "uid"
+   ],
+   "attacker_named_fields": []
+  },
+  "emulate": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Emulates various features on the target page`; in particular `extraHttpHeaders` are `included into every HTTP request originating from the page and persist across navigations`, so agent-supplied header values can be sent to web hosts.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId"
+   ],
+   "value_args": [
+    "geolocation",
+    "userAgent",
+    "extraHttpHeaders"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "evaluate_script": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Evaluate a JavaScript function inside the target page` and examples include `await fetch(\"example.com\")`; page JS can read private page state and return it, fetch attacker-controlled content and return it, or send data to arbitrary hosts. This is page-context execution, not host code execution, so it is not HOSTEXEC. `filePath` can write returned output to a local file.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId",
+    "function",
+    "filePath"
+   ],
+   "value_args": [
+    "function",
+    "dialogAction"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "fill": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Type text into an input` sends the `value` into the target page, where attacker-controlled page scripts can read or submit it. If `includeSnapshot` is used, the returned snapshot may contain private or attacker-authored page text and element `uid` identifiers.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId",
+    "uid"
+   ],
+   "value_args": [
+    "value"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "uid"
+   ],
+   "attacker_named_fields": []
+  },
+  "fill_form": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Fill out multiple form elements` sends `value` data into page form fields, which attacker-controlled page scripts can read or submit. If `includeSnapshot` is used, the returned snapshot may contain private or attacker-authored text and `uid` identifiers.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId",
+    "elements"
+   ],
+   "value_args": [
+    "elements"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "uid"
+   ],
+   "attacker_named_fields": []
+  },
+  "get_console_message": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Gets a console message`; console messages on a logged-in or local page may contain non-public data, and attacker-controlled pages can author console text. `msgid` identifies a message selected from `list_console_messages`.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "msgid"
+   ],
+   "attacker_named_fields": []
+  },
+  "get_network_request": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It gets a network request and is `Useful for inspecting request headers (including 'Cookie') and response headers`; cookies and bodies can be non-public, while response bodies/headers/URLs can be attacker-controlled. Optional file paths can save request or response bodies locally.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "requestFilePath",
+    "responseFilePath"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "reqid",
+    "url",
+    "headers"
+   ],
+   "attacker_named_fields": [
+    "url",
+    "headers"
+   ]
+  },
+  "handle_dialog": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`handle`ing a browser dialog can enter `promptText` into a page prompt; an attacker-controlled page can read the prompt response, so this can send agent-supplied data to the page.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId"
+   ],
+   "value_args": [
+    "action",
+    "promptText"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "hover": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Hover over the provided element` changes page interaction state and can trigger page scripts or requests. If `includeSnapshot` is used, returned page snapshot text can be private or attacker-authored, with `uid` identifiers for later calls.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId",
+    "uid"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "uid"
+   ],
+   "attacker_named_fields": []
+  },
+  "lighthouse_audit": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Get Lighthouse score and reports` for the target page; reports for logged-in, local, or intranet pages may include private page-derived details, and reports for attacker-controlled pages can include attacker-controlled page-derived text/URLs. `outputDirPath` writes reports locally.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId",
+    "outputDirPath"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "url"
+   ],
+   "attacker_named_fields": [
+    "url"
+   ]
+  },
+  "list_console_messages": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`List all console messages for the target page`; console output on private pages may include secrets, and attacker-controlled pages can author console messages. Listed message IDs can be used with `get_console_message`.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "msgid",
+    "serviceWorkerId"
+   ],
+   "attacker_named_fields": []
+  },
+  "list_network_requests": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Lists the most recent requests for the target page`; request URLs and metadata for logged-in/local pages can be non-public, and attacker-controlled pages can generate attacker-controlled request URLs. Returned request IDs can be used by `get_network_request`.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "reqid",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "url"
+   ]
+  },
+  "list_pages": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Get a list of pages open in the browser`; open page URLs/titles can reveal non-public browsing/account state, and attacker-controlled pages can choose page titles/URLs. The exact returned fields are not advertised, so this keeps the conservative labels.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "pageId",
+    "title",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "url"
+   ]
+  },
+  "navigate_page": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Go to a URL, or back, forward, or reload`; with `type=url`, the `url` is an agent-chosen network destination, and `initScript` is agent-supplied script executed on the next document, so the tool can send data to web hosts or page context.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId",
+    "url"
+   ],
+   "value_args": [
+    "url",
+    "initScript"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "new_page": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Open a new tab and load a URL`; the required `url` is an agent-chosen network destination, so data placed in the URL can be delivered to an attacker-controlled host. The new page ID is an identifier for later calls.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [
+    "url"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "pageId"
+   ],
+   "attacker_named_fields": []
+  },
+  "performance_analyze_insight": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It `Provides more detailed information` on a performance insight from a trace recording. Trace-derived details for private pages may expose non-public URLs/content, and attacker pages can influence trace-derived names/URLs/text.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "url"
+   ],
+   "attacker_named_fields": [
+    "url"
+   ]
+  },
+  "performance_start_trace": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Start a performance trace on the target webpage`; trace results and insight sets are derived from the page and network activity, which can include private page data or attacker-controlled URLs/text. `filePath` can save raw trace data locally, and `reload` can change page state.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId",
+    "filePath"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "insightSetId",
+    "insightName",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "url"
+   ]
+  },
+  "performance_stop_trace": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Stop the active performance trace recording`; returned or saved trace results are page-derived and can contain private page/network details or attacker-controlled URLs/text. `filePath` can save raw trace data locally.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId",
+    "filePath"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "insightSetId",
+    "insightName",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "url"
+   ]
+  },
+  "press_key": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Press a key or key combination` sends keystrokes to the page, where attacker-controlled pages can observe effects or trigger submissions. If `includeSnapshot` is used, returned page snapshot text may be private or attacker-authored and includes `uid` identifiers.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId"
+   ],
+   "value_args": [
+    "key"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "uid"
+   ],
+   "attacker_named_fields": []
+  },
+  "resize_page": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Resizes the page's window`; this changes browser/page state but does not advertise returning page content or sending agent-supplied content to a remote destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId"
+   ],
+   "value_args": [
+    "width",
+    "height"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "select_page": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Select a page as a context for future tool calls`; this selects/focuses an existing page but does not advertise returning private/untrusted page content or sending data out.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "take_heapsnapshot": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Capture a heap snapshot of the target page` to a required local `filePath`. The advertised text says it saves to a local file, not that it returns the heap into the agent context or sends it to an attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId",
+    "filePath"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "take_screenshot": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Take a screenshot of the page or element`; screenshots can contain private logged-in/local page content or attacker-controlled page content. `filePath` can save the screenshot locally instead of returning it.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId",
+    "uid",
+    "filePath"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "take_snapshot": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Take a text snapshot of the target page based on the a11y tree`; page text can be private or attacker-authored. The snapshot `lists page elements along with a unique identifier (uid)`, and `filePath` can save it locally.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId",
+    "filePath"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "uid"
+   ],
+   "attacker_named_fields": []
+  },
+  "type_text": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Type text using keyboard into a previously focused input`; agent-supplied `text` and optional `submitKey` go into the target page, where an attacker-controlled page can read or submit them.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId"
+   ],
+   "value_args": [
+    "text",
+    "submitKey"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "upload_file": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Upload a file through a provided element`; local `filePaths` are sent to the selected page element, which can be attacker-controlled, so this is a SINK. If `includeSnapshot` is used, returned snapshot text may be private or attacker-authored and includes `uid` identifiers.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "pageId",
+    "uid"
+   ],
+   "value_args": [
+    "filePaths"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "uid"
+   ],
+   "attacker_named_fields": []
+  },
+  "wait_for": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Wait for the specified text to appear on the selected page`; success/failure can reveal whether private text is present on a logged-in/local page. The exact response fields are not advertised, so output text injectability is left empty and the judgement is conservative.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [
+  {
+   "syntax": "javascriptEvaluation",
+   "kind": "tool condition",
+   "effect": "Controls availability of evaluate_script; the advertised annotations name condition `javascriptEvaluation`, but do not state that it is disabled by default.",
+   "default": "enabled not contradicted",
+   "evidence": "conditions"
+  }
+ ],
+ "notes": [
+  "HOSTEXEC is not assigned: the advertised JavaScript execution is `inside the target page`, which is browser/page-context execution rather than arbitrary host code execution.",
+  "For browser interaction tools, `pageId`/element UIDs are treated as destinations when they determine which browser page or element is changed or receives input."
+ ],
+ "usage": {
+  "input_tokens": 772,
+  "output_tokens": 11258,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 5888
+ }
+}

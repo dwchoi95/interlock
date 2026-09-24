@@ -1,0 +1,737 @@
+{
+ "tools": {
+  "start_codegen_session": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Starts a local code generation session (`Start a new code generation session`) and takes an `outputPath` for later generated tests, but does not advertise returning page data or sending data to an attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "options.outputPath"
+   ],
+   "value_args": [
+    "options.testNamePrefix"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "sessionId"
+   ],
+   "attacker_named_fields": []
+  },
+  "end_codegen_session": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Ends a session and writes a generated test file (`generate the test file`) identified by `sessionId`; the advertised text does not say it returns the generated file content or sends it off-host.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "sessionId"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "get_codegen_session": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It returns information about a recorded session (`Get information about a code generation session`). Such a session records Playwright actions (`record Playwright actions`), which may include non-public user-entered data and attacker-controlled page/action details. Result contents are not specified, so this is treated as potentially returning both secret and untrusted session data.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "clear_codegen_session": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Clears local session state (`Clear a code generation session`) selected by `sessionId`; no returned external content or attacker-readable delivery is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "sessionId"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "playwright_navigate": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Navigates to an agent-supplied `url` (`Navigate to a URL`), causing a request to an agent-chosen URL/host, which is a sink. It does not advertise returning the page body itself.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "playwright_screenshot": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns/captures a screenshot of the current page (`Take a screenshot of the current page or a specific element`), which can include non-public authenticated/local content or attacker-controlled page content. It can also save a PNG file (`Save screenshot as PNG file`).",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "name",
+    "downloadsDir"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "playwright_click": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Clicking page elements (`Click an element on the page`) can submit or trigger browser requests from the current page, including sending values previously supplied by the agent to an attacker-controlled page.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "selector"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "playwright_iframe_click": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Clicking an element in an iframe (`Click an element in an iframe on the page`) can submit or trigger requests from attacker-controlled iframe/page content carrying agent-supplied page state.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "iframeSelector",
+    "selector"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "playwright_iframe_fill": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Fills an iframe element with an agent-supplied `value` (`Value to fill`); attacker-controlled page/iframe scripts or later submission can read that value.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "iframeSelector",
+    "selector"
+   ],
+   "value_args": [
+    "value"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "playwright_fill": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Fills an input field (`fill out an input field`) with an agent-supplied `value`; on an attacker-controlled page this delivers the value to attacker-readable script or later form submission.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "selector"
+   ],
+   "value_args": [
+    "value"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "playwright_select": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Selects a value in a page `<select>` (`Value to select`), making agent-supplied data observable to the current page and possible later submission.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "selector"
+   ],
+   "value_args": [
+    "value"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "playwright_hover": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Only hovers an element (`Hover an element on the page`). It can change page state, but the advertised input does not carry substantive agent data to an attacker-readable destination and no returned content is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "selector"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "playwright_upload_file": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Uploads a host file selected by `filePath` (`Absolute path to the file to upload`) into the current page (`Upload a file to an input[type='file'] element`), which can send that file to an attacker-controlled page/site.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "selector"
+   ],
+   "value_args": [
+    "filePath"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "playwright_evaluate": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Executes arbitrary browser-page JavaScript (`Execute JavaScript in the browser console`). The script can read and return current page data, including non-public authenticated/local page data or attacker-authored content, and can send agent-supplied data via browser requests from the page context. This is browser execution, not advertised host code execution.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "script"
+   ],
+   "value_args": [
+    "script"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "playwright_console_logs": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves browser console logs (`Retrieve console logs from the browser`), which may contain secrets logged by authenticated/local pages or attacker-authored log text from attacker pages. It can also clear logs (`clear logs after retrieval`).",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "playwright_resize": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Resizes/reconfigures viewport and device emulation (`Resize the browser viewport`, `device presets`). It changes browser state but does not advertise returning outside content or sending agent-supplied content to an attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "playwright_close": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Closes local browser resources (`Close the browser and release all resources`) without returning outside content or delivering data externally.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "playwright_get": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Performs an HTTP GET to an agent-supplied `url` (`URL to perform GET operation`), so it is a request to an agent-chosen host. The response can be attacker-controlled or non-public if the URL reaches localhost/intranet/authenticated resources or uses supplied authorization (`Bearer token`).",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [
+    "token",
+    "headers"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "playwright_post": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Posts agent-supplied body data (`Data to post in the body`) to an agent-supplied `url` (`URL to perform POST operation`), an attacker-readable sink. The HTTP response may be attacker-controlled or non-public depending on the target and authorization.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [
+    "value",
+    "token",
+    "headers"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "playwright_put": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Sends agent-supplied body data (`Data to PUT in the body`) to an agent-supplied `url` (`URL to perform PUT operation`), an attacker-readable sink. The response can be attacker-controlled or non-public.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [
+    "value",
+    "token",
+    "headers"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "playwright_patch": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Sends agent-supplied body data (`Data to PATCH in the body`) to an agent-supplied `url` (`URL to perform PATCH operation`), an attacker-readable sink. The response can be attacker-controlled or non-public.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [
+    "value",
+    "token",
+    "headers"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "playwright_delete": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Performs an HTTP DELETE to an agent-supplied `url` (`URL to perform DELETE operation`), which is a request to an agent-chosen host and may change server state. The response can be attacker-controlled or non-public.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [
+    "token",
+    "headers"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "playwright_expect_response": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Only starts a local wait operation for a matching response (`start waiting for a HTTP response`, `does not wait for its completion`) using an identifier and URL pattern; it does not advertise returning response content or contacting a new URL.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "id"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id"
+   ],
+   "attacker_named_fields": []
+  },
+  "playwright_assert_response": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Waits for and validates a previously observed HTTP response and may inspect the `response body` (`Data to expect in the body of the HTTP response`). The text does not specify whether the body is returned, so under the least restrictive reading it may expose non-public or attacker-controlled response content.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "playwright_custom_user_agent": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Sets an agent-supplied user agent (`Custom User Agent`) that will be sent by the browser to subsequently visited sites, including attacker-controlled ones.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "userAgent"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "playwright_get_visible_text": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns visible text of the current page (`Get the visible text content of the current page`), which may be authenticated/local secret content or attacker-authored web content.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "playwright_get_visible_html": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns HTML from the current page (`Get the HTML content of the current page`), which may contain non-public authenticated/local data or attacker-authored markup. Options only clean/filter the returned HTML.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "playwright_go_back": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Navigates within existing browser history (`Navigate back in browser history`). It changes browser state, but has no agent-chosen URL argument and does not advertise returning page content.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "playwright_go_forward": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Navigates within existing browser history (`Navigate forward in browser history`). It changes browser state, but has no agent-chosen URL argument and does not advertise returning page content.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "playwright_drag": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Drags an element to a target (`Drag an element to a target location`), changing page state. The advertised inputs are selectors, with no substantive content value and no returned outside content.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "sourceSelector",
+    "targetSelector"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "playwright_press_key": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Presses an agent-specified key (`Press a keyboard key`) optionally after focusing a selector; this can type into or submit the current page, delivering agent-supplied keystrokes or previously filled data to an attacker-controlled page.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "selector"
+   ],
+   "value_args": [
+    "key"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "playwright_save_as_pdf": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Saves the current page as a local PDF (`Save the current page as a PDF file`) under `outputPath`/`filename`; the description does not advertise returning the page content or sending it to an attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "outputPath",
+    "filename"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "playwright_click_and_switch_tab": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Clicks a link and switches tabs (`Click a link and switch to the newly opened tab`); the click can trigger navigation/submission from attacker-controlled page content and can send agent-supplied page state.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "selector"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No tool is advertised as disabled by default, so all default_enabled values are true.",
+  "`playwright_evaluate` is treated as browser-page JavaScript execution, not HOSTEXEC, because the advertised text says `in the browser console` and does not advertise arbitrary host code execution."
+ ],
+ "usage": {
+  "input_tokens": 321,
+  "output_tokens": 9117,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 3840
+ }
+}

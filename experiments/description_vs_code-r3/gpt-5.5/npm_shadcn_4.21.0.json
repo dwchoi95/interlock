@@ -1,0 +1,185 @@
+{
+ "tools": {
+  "get_project_registries": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns local project configuration data: `Get configured registry names from components.json`. Because `components.json` is a host file and the tool returns its configured registry names, it can return non-public local data. The returned registry names are identifiers usable in later `registries` arguments.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "list_items_in_registries": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads registry contents: `List items from registries` and may use `every registry configured in components.json`. Registry item data can be authored by third-party or public registry publishers, so returned item data is UNTRUSTED. Because configured registries may include non-public/private registries from the user's `components.json`, whether it returns non-public registry data is not settled by the description, so SECRET is kept conservatively. The `registries` argument is a registry-name selector, not advertised as a URL/host argument.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "name",
+    "registry",
+    "type"
+   ],
+   "attacker_named_fields": [
+    "name",
+    "type"
+   ]
+  },
+  "search_items_in_registries": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches registry item data: `Search for components in registries using fuzzy matching` against `item names and descriptions`. Registry names and descriptions can be authored by third-party registry publishers, making output UNTRUSTED. Since it searches registries `configured in components.json`, it may also return non-public/private registry contents, but the description does not settle whether such registries are public, so SECRET is kept conservatively. The search `query` selects what to read and is not a destination.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "name",
+    "description",
+    "return"
+   ],
+   "identifier_output_fields": [
+    "name",
+    "registry",
+    "type"
+   ],
+   "attacker_named_fields": [
+    "name",
+    "type"
+   ]
+  },
+  "view_items_in_registries": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns detailed registry item data, including `the name, description, type and files content`. Registry authors can control names, descriptions, types, file names, and file contents, so the output is UNTRUSTED. If the referenced registry is private or otherwise non-public, `files content` and metadata may be non-public; the description does not rule that out, so SECRET is kept conservatively.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "name",
+    "description",
+    "type",
+    "files",
+    "files content",
+    "return"
+   ],
+   "identifier_output_fields": [
+    "name",
+    "type",
+    "files"
+   ],
+   "attacker_named_fields": [
+    "name",
+    "type",
+    "files"
+   ]
+  },
+  "get_item_examples_from_registries": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns registry examples and code: `Find usage examples and demos with their complete code` and `Returns full implementation code with dependencies`. Registry publishers can author example names, code, and dependency lists, so the output is UNTRUSTED. If configured registries contain private examples or code, the tool may return non-public data; the description does not settle this, so SECRET is kept conservatively.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "code",
+    "dependencies",
+    "return"
+   ],
+   "identifier_output_fields": [
+    "name",
+    "dependencies"
+   ],
+   "attacker_named_fields": [
+    "name",
+    "dependencies"
+   ]
+  },
+  "get_add_command_for_items": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool produces an add command for `specific items in a registry` from item identifiers such as `@shadcn/button`. Registry item names can be supplied from third-party registry listings, so the returned command may include attacker-authored item identifiers. It only says `Get the shadcn CLI add command`; it does not advertise actually executing the command or adding components, so it is READ and not HOSTEXEC or a write sink.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "get_audit_checklist": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns a `quick checklist to verify that everything is working as expected`. The description does not advertise reading local/private data, contacting registries, returning third-party content, writing/sending data, or executing code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No advertised annotations or descriptions say any tool is disabled by default.",
+  "No input schema declares a URL or host destination argument; registry selectors are advertised as registry names such as `@shadcn` or `@acme`, not arbitrary URLs."
+ ],
+ "usage": {
+  "input_tokens": 395,
+  "output_tokens": 5675,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 1792
+ }
+}

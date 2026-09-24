@@ -1,0 +1,250 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Only the tools in the advertised-tools list were judged. The source also contains n8n management tools, but they were not included in the advertised list supplied for judgment.",
+  "For `validate_workflow`, the provided source shows the input and output schemas and dispatch but not the full validator internals; the UNTRUSTED assessment follows the stated threat model that attacker-controlled workflow/template content may be passed into the tool."
+ ],
+ "package": "n8n-mcp",
+ "source": ".cache/sources/.views/npm_n8n-mcp_2.57.1_932d1ac80569",
+ "tools": {
+  "get_node": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp/server.js:1031-1043",
+    "dist/mcp/server.js:2052-2058",
+    "dist/mcp/server.js:2323-2325",
+    "dist/mcp/server.js:2347-2360",
+    "dist/mcp/server.js:2262-2271"
+   ],
+   "identifier_output_fields": [
+    "nodeType",
+    "workflowNodeType",
+    "displayName",
+    "properties",
+    "operations",
+    "versions",
+    "template"
+   ],
+   "injectable_output_fields": [
+    "nodeType",
+    "workflowNodeType",
+    "displayName",
+    "description",
+    "documentation",
+    "properties",
+    "examples",
+    "template",
+    "useCases"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`get_node` returns node metadata, schema, documentation, and optional template examples. For community nodes, fields such as `nodeType`, `displayName`, `documentation`, properties, and examples can originate from third-party node packages or public templates, so the output is attacker-controllable. It is read-only and does not send data to an agent-chosen destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_template": {
+   "attacker_named_fields": [
+    "author",
+    "name"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp/server.js:1091-1095",
+    "dist/mcp/server.js:3040-3048",
+    "dist/mcp/tool-docs/templates/get-template.js:19-20",
+    "dist/mcp/tool-docs/templates/get-template.js:34-48"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "author",
+    "nodes",
+    "url",
+    "workflow",
+    "workflow.nodes.id",
+    "workflow.nodes.name",
+    "workflow.nodes.type",
+    "workflow.connections"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`get_template` retrieves workflow templates by `templateId` from the public/community template library. The returned template name, description, author information, URL, workflow nodes, parameters, connections, and settings are public template content that outside authors can control. The tool is read-only and does not send agent data to an external destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_nodes": {
+   "attacker_named_fields": [
+    "authorName"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp/server.js:1022-1030",
+    "dist/mcp/tool-docs/discovery/search-nodes.js:23-32",
+    "dist/mcp/tool-docs/discovery/search-nodes.js:37-39",
+    "dist/mcp/server.js:2262-2271"
+   ],
+   "identifier_output_fields": [
+    "nodeType",
+    "displayName",
+    "category",
+    "authorName"
+   ],
+   "injectable_output_fields": [
+    "nodeType",
+    "displayName",
+    "description",
+    "category",
+    "authorName",
+    "examples",
+    "template",
+    "useCases"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`search_nodes` calls `searchNodes` and can search `community` nodes. Its documented return includes node names/descriptions and community fields such as `authorName`; community registry/package content is third-party/attacker-controllable. With `includeExamples`, it also returns real template examples derived from templates (`template`, `useCases`, configuration examples). It is read-only and does not contact an agent-chosen host.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_templates": {
+   "attacker_named_fields": [
+    "author",
+    "name"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp/server.js:1096-1128",
+    "dist/mcp/tool-docs/templates/search-templates.js:22-30",
+    "dist/mcp/tool-docs/templates/search-templates.js:98-113",
+    "dist/mcp/server.js:3113-3123"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "author",
+    "nodes",
+    "url",
+    "metadata",
+    "category",
+    "topNodes"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`search_templates` searches public workflow templates and pattern data. Its documented results include template `id`, `name`, `description`, `author`, `nodes`, `url`, and metadata, which are derived from third-party/public template records; those fields are attacker-controllable. Pattern mode returns categories and node names mined from templates. It is read-only and does not contact an agent-chosen host.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "tools_documentation": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp/server.js:1020-1021",
+    "dist/mcp/server.js:2998-3002",
+    "dist/mcp/tools-documentation.js:9-65"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "`tools_documentation` only dispatches to `getToolsDocumentation`, which returns static bundled documentation from `getToolsOverview`/`getToolDocumentation`. The shown code does not fetch user-private data, attacker-controlled web content, write anywhere, or execute code.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "validate_node": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp/server.js:1044-1090",
+    "dist/mcp/server.js:2960-2975",
+    "dist/mcp/server.js:2981-2995",
+    "dist/mcp/tools.js:163-210"
+   ],
+   "identifier_output_fields": [
+    "nodeType",
+    "workflowNodeType",
+    "displayName",
+    "errors.property",
+    "warnings.property",
+    "missingRequiredFields"
+   ],
+   "injectable_output_fields": [
+    "displayName",
+    "errors.property",
+    "errors.message",
+    "errors.fix",
+    "warnings.property",
+    "warnings.message",
+    "warnings.suggestion",
+    "suggestions",
+    "missingRequiredFields"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`validate_node` validates a requested node type against repository node metadata. The minimal path returns `displayName` and `missingRequiredFields` from node properties (`prop.displayName || prop.name`); for community nodes, that metadata can be authored by third parties. Full validation also returns property names, errors, warnings, and suggestions per the output schema. It does not write or send data out.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "validate_workflow": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp/tools.js:339-377",
+    "dist/mcp/tools.js:379-420",
+    "dist/mcp/server.js:1131-1133"
+   ],
+   "identifier_output_fields": [
+    "errors.node",
+    "warnings.node"
+   ],
+   "injectable_output_fields": [
+    "errors.node",
+    "errors.message",
+    "errors.details",
+    "warnings.node",
+    "warnings.message",
+    "warnings.details",
+    "suggestions"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`validate_workflow` validates an agent-supplied workflow object and returns errors/warnings/suggestions containing node names and messages. Because the threat model allows attacker-controlled template/workflow output to be passed into this tool\u2019s `workflow` argument, these result fields can carry attacker-authored node names or workflow content. The validator implementation is not fully shown, so the exact amount of reflected content is undetermined; the label is kept. The tool is read-only and does not send data to an agent-chosen destination.",
+   "undetermined": true,
+   "value_args": []
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "not set / tool not disabled",
+   "effect": "If a requested tool name is in the disabled-tools set, execution is rejected with an error, effectively removing that tool at call time. Default behavior when not disabled is enabled.",
+   "evidence": "dist/mcp/server.js:1007-1009",
+   "kind": "environment variable",
+   "syntax": "DISABLED_TOOLS environment variable includes the tool name; exact list-separator syntax is not shown in the provided excerpt"
+  }
+ ],
+ "version": "2.57.1"
+}

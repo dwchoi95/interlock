@@ -1,0 +1,217 @@
+{
+ "tools": {
+  "tools_documentation": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool only advertises access to documentation for the MCP tools: `Get documentation for n8n MCP tools` and `quick start guide`. It does not advertise access to user-private data, attacker-controlled public content, outbound delivery, or code execution.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "topic"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "search_nodes": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The results can include third-party/public content because the `source` filter includes `community=community nodes` and `verified community nodes`, and `includeExamples=true` includes `real-world configuration examples from popular templates`. Community registries and public templates are attacker-controllable under the threat model. The tool is advertised as search/read-only and does not advertise secrets, outbound delivery to attacker-chosen destinations, or host execution.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "query",
+    "mode",
+    "source"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "nodeType"
+   ],
+   "attacker_named_fields": [
+    "nodeType"
+   ]
+  },
+  "get_node": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can return `docs=readable markdown documentation` for a requested `nodeType` and can include `real-world configuration examples from templates` when `includeExamples` is used. Those templates are public/third-party content under the advertised template functionality, and node documentation may include community node material because the server advertises community-node search elsewhere and this tool does not exclude it. No write, secret, or host execution capability is advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "nodeType",
+    "mode",
+    "fromVersion",
+    "toVersion",
+    "propertyQuery"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "nodeType",
+    "versions"
+   ],
+   "attacker_named_fields": [
+    "nodeType"
+   ]
+  },
+  "validate_node": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool validates an arbitrary `nodeType` and returns `errors/warnings/suggestions`. The description does not state that validation is limited to vendor/core nodes; given the server advertises community nodes elsewhere, validation messages may derive from community-authored node schemas or may quote attacker-authored configuration passed through the agent. This is not fully settled by the text, so the least restrictive reading keeps UNTRUSTED. It is advertised as validation/read-only, not as a sink, secret source, or executor.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "nodeType",
+    "mode",
+    "profile"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "errors",
+    "warnings",
+    "suggestions"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "get_template": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves templates by ID and can return `full (complete workflow)` / `complete workflow JSON`. Public workflow templates are third-party/multi-writer content under the threat model, so returned workflow text can be attacker-authored. The advertised operation is read-only and does not send data to attacker-chosen destinations, access user-private data, or execute code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "templateId",
+    "mode"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "templateId"
+   ],
+   "attacker_named_fields": []
+  },
+  "search_templates": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches public templates: `Search templates`, including `text search`, templates using nodes, metadata, and `workflow pattern summaries mined from 2700+ templates`. Returned fields can include `name`, `description`, `author`, `nodes`, `url`, and `metadata`, which may be authored or chosen by template publishers. The tool is read-only and no attacker-chosen outbound delivery, secrets, or execution are advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "searchMode",
+    "query",
+    "nodeTypes",
+    "task",
+    "category",
+    "complexity",
+    "maxSetupMinutes",
+    "minSetupMinutes",
+    "requiredService",
+    "targetAudience"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "name",
+    "description",
+    "author",
+    "nodes",
+    "url",
+    "metadata"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "author",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "author"
+   ]
+  },
+  "validate_workflow": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool validates a `complete workflow JSON` and returns `errors/warnings/fixes`. The text does not state that returned diagnostics cannot quote node names, expressions, or other workflow content; workflows can come from public templates or community nodes elsewhere in this server. Because this is not settled by the advertised text, the least restrictive reading keeps UNTRUSTED. It is validation/read-only and does not advertise secret access, outbound delivery to attacker-chosen destinations, or code execution.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "errors",
+    "warnings",
+    "fixes"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [
+  {
+   "syntax": "search_nodes.source=\"core\" AND search_nodes.includeExamples=false",
+   "kind": "argument",
+   "effect": "Removes the advertised community/template UNTRUSTED sources for search_nodes by restricting results to `core=n8n base nodes` and disabling `real-world configuration examples from popular templates`.",
+   "default": "not_applicable",
+   "evidence": "description"
+  },
+  {
+   "syntax": "search_templates.fields subset of [\"id\",\"views\",\"created\"]",
+   "kind": "argument",
+   "effect": "Avoids the advertised attacker-authored template text fields for keyword search, because `fields` controls `fields to include in response`; this omits `name`, `description`, `author`, `nodes`, `url`, and `metadata`.",
+   "default": "not_applicable",
+   "evidence": "description"
+  }
+ ],
+ "notes": [
+  "No tool advertises SECRET access to local files, private SaaS/account data, databases, localhost, intranet, or credentials.",
+  "No tool advertises SINK behavior: there is no write/post/send/request-to-agent-chosen-URL operation in the advertised schemas.",
+  "No tool advertises HOSTEXEC behavior. Validation of nodes/workflows is treated as syntax/configuration checking, not execution."
+ ],
+ "usage": {
+  "input_tokens": 3172,
+  "output_tokens": 6954,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

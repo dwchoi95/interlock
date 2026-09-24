@@ -1,0 +1,87 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Connector implementations (`postgres-M3W3Y6F5.js`, `sqlite-ASYMU5BI.js`, `mysql-*`, `mariadb-*`, `sqlserver-*`) and `chunk-IQRBLAB4.js` (`isReadOnlySQL`, `hasEscapeHatchFunction`, `allowedKeywords`) are not included in the provided source, so the exact reach of `connector.executeSQL` (file access via sqlite `ATTACH`/extension loading, PostgreSQL `COPY ... PROGRAM`, SQL Server `xp_cmdshell`) cannot be verified from code. Any of those would raise `execute_sql` toward HOSTEXEC on the database host; the classifier's existence (`isAdminStatement` -> `hasEscapeHatchFunction`) shows such functions are recognised and are allowed whenever readonly is not configured.",
+  "Every tool call is recorded with its SQL and the client user-agent into the in-process `RequestStore` and is readable over the workbench API at `GET /api/requests` (dist/index.js:1501-1508, dist/index.js:2003), so SQL text and error messages leave the MCP channel when the HTTP transport is used.",
+  "`startConfigWatcher` hot-reloads `--config` TOML on file change (dist/index.js:1704-1708), so tool sets, readonly flags and custom tool statements can change at runtime from the local config file."
+ ],
+ "package": "@bytebase/dbhub",
+ "source": ".cache/sources/.views/npm_bytebase_dbhub_1.2.5_2e58a38413c9",
+ "tools": {
+  "execute_sql": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:301",
+    "dist/index.js:302-307",
+    "dist/index.js:291-296",
+    "dist/index.js:119-123",
+    "dist/chunk-VDA5BVNE.js:1967"
+   ],
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "`createExecuteSqlToolHandler` runs any agent-supplied SQL string through `connector.executeSQL` against the configured database (reached with the user's DSN credentials, possibly through an SSH tunnel to an intranet host) and returns the rows straight into the agent context (`toStatementsPayload` -> `createToolSuccessResponse`), so it is SECRET. The access policy is `policyFromReadonly(toolConfig?.readonly)`; with no `[[tools]] readonly = true` entry the value is `undefined`, so `write = \"allow\"` and DML/DDL/`admin` statements (including whatever `hasEscapeHatchFunction` / `sqlServerDynamicSqlPattern` classify as admin, e.g. dynamic SQL and vendor escape-hatch functions) are permitted. Arbitrary unrestricted SQL on engines like PostgreSQL/MySQL/SQL Server can open outbound connections or write to attacker-reachable destinations (dblink/COPY ... PROGRAM/xp_cmdshell class features), so SINK is kept. The concrete connector implementations (`postgres-*.js`, `sqlite-*.js`, etc.) are not in the provided source, so the exact ceiling of `executeSQL` (including whether sqlite extension loading is possible, which would be host code execution) cannot be settled; the least restrictive reading is kept.",
+   "undetermined": true
+  },
+  "search_objects": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:781-790",
+    "dist/index.js:429-471",
+    "dist/index.js:639-648",
+    "dist/index.js:360-361"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`createSearchDatabaseObjectsToolHandler` enumerates schemas, tables, views, columns, indexes and stored-procedure definitions from the user's database (`connector.getTableSchema`, `connector.getStoredProcedureDetail`, and a `SELECT COUNT(*)` via `getTableRowCount`) and returns them to the agent, i.e. non-public data obtained with the user's credentials. No agent-chosen destination is contacted: `pattern`/`schema`/`table` only filter results and the count query is built with `quoteQualifiedIdentifier`, so no SINK. Database identifiers/comments come from the user's own data store, not from attacker-controlled multi-writer content, so no UNTRUSTED.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "No `readonly` entry -> `toolConfig?.readonly` is undefined -> write = \"allow\" (all statement classes permitted).",
+   "effect": "`policyFromReadonly(true)` denies dml, ddl, admin and unknown statement classes, so `execute_sql` becomes read-only (no writes, no escape-hatch/admin functions) and `executeSQL` is called with `readonly: true`; this removes the SINK reading while SECRET remains.",
+   "evidence": "dist/index.js:124-127, dist/index.js:291-300",
+   "kind": "config-file",
+   "syntax": "dbhub.toml: [[tools]] name = \"execute_sql\" / source = \"<id>\" / readonly = true"
+  },
+  {
+   "default": "Sources with no `[[tools]]` entries get only `execute_sql` and `search_objects` (`BUILTIN_TOOLS`).",
+   "effect": "Registers the opt-in built-ins `explain_sql` / `health_check` for that source (and, because any `[[tools]]` entry for a source replaces the default set, can also drop `execute_sql`/`search_objects` from that source).",
+   "evidence": "dist/chunk-VDA5BVNE.js:2478-2493",
+   "kind": "config-file",
+   "syntax": "dbhub.toml: [[tools]] name = \"explain_sql\" | name = \"health_check\" with source = \"<id>\""
+  },
+  {
+   "default": "No custom tools (`tools: []` for DSN/demo configuration).",
+   "effect": "Registers additional custom tools whose fixed SQL `statement` is executed with agent-supplied bound parameters; such tools return database data (SECRET) and, if the statement is not read-only, perform writes.",
+   "evidence": "dist/index.js:1395-1413, dist/chunk-VDA5BVNE.js:1034-1038",
+   "kind": "config-file",
+   "syntax": "dbhub.toml: [[tools]] name = \"<custom>\" / source / statement / parameters"
+  },
+  {
+   "default": "Off; a real DSN/TOML source is required.",
+   "effect": "Replaces the configured source with an in-memory SQLite sample employee database (`sqlite:///:memory:` plus a demo init script), so tool output is sample data rather than the user's real data (removes SECRET).",
+   "evidence": "dist/chunk-VDA5BVNE.js:705-711, dist/chunk-VDA5BVNE.js:1030-1033",
+   "kind": "cli-flag",
+   "syntax": "--demo"
+  },
+  {
+   "default": "Unset -> no row cap.",
+   "effect": "Caps rows returned by `execute_sql`/custom tools (`executeOptions.maxRows`), limiting but not removing data exposure.",
+   "evidence": "dist/index.js:297-301",
+   "kind": "config-file",
+   "syntax": "dbhub.toml: [[tools]] max_rows = <n>"
+  },
+  {
+   "default": "`stdio` transport; when HTTP is used, only loopback Host/Origin values are accepted and auth is disabled (`tokens: []`).",
+   "effect": "Exposes the MCP endpoint plus the workbench REST API (`/api/sources`, `/api/requests`, which leak source config and recorded SQL) over HTTP. Without `--auth-token` no bearer token is required; `--allowed-hosts *` disables DNS-rebinding/Host checks, allowing remote callers to drive all tools.",
+   "evidence": "dist/chunk-VDA5BVNE.js:737-748, dist/chunk-VDA5BVNE.js:793-819, dist/index.js:1988-2008, dist/index.js:1805-1811",
+   "kind": "cli-flag/env",
+   "syntax": "--transport http [--port 8080] [--host 0.0.0.0] [--allowed-hosts h1,h2] [--auth-token t1,t2] (env TRANSPORT, PORT, DBHUB_HOST, DBHUB_ALLOWED_HOSTS, DBHUB_AUTH_TOKEN)"
+  }
+ ],
+ "version": "1.2.5"
+}

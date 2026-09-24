@@ -1,0 +1,194 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Only `dist/index.js`/`dist/index.cjs` bundles were provided with elided regions; handler bodies for `find_organizations`, `find_projects`, `update_issue`, `search_events`, `search_issues` and `resolveResourceParams` are not fully visible, so some labels rest on the tool registration, input schema and shared helpers (`apiServiceFromContext`, catalog wiring).",
+  "Sentry content is stored in the user's own account but is populated by arbitrary third-party traffic against the monitored application (error messages, HTTP URLs, user agents, session-replay click text/URLs, user feedback, agent-conversation inputs). That is why the event/issue/resource readers are labelled UNTRUSTED while pure account-metadata readers (orgs, projects) are not.",
+  "`update_issue`'s `reason` is written as a Sentry issue comment (`createIssueComment`, index.js:29598), which stays inside the user's private org feed and therefore is not treated as a public-write sink.",
+  "`execute_sentry_tool` is the widest surface: it can run every entry of `catalogTools`, including write tools (`create_project`, `create_dsn`, `update_project`, `delete_uptime_monitor`) and `create_uptime_monitor`, which makes Sentry issue repeated requests to an agent-chosen URL."
+ ],
+ "package": "@sentry/mcp-server",
+ "source": ".cache/sources/.views/npm_sentry_mcp-server_0.39.0_8a168fd234fe",
+ "tools": {
+  "analyze_issue_with_seer": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:38377-38396",
+    "dist/index.js:38365-38370",
+    "dist/index.js:42310",
+    "dist/index.js:53-63"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The handler calls `apiService.getIssue` and `apiService.getAutofixState` with the user's token and returns Seer's root-cause analysis, which quotes the issue's error text, stack frames and source snippets (SECRET). That underlying error content is produced by traffic an attacker can send to the user's application, and Seer output echoes it, so UNTRUSTED. `regionUrl` is passed to `apiServiceFromContext` at index.js:38377 to pick the API host with only the unverified `SENTRY_ALLOWED_REGION_DOMAINS` restriction visible, so SINK is kept as undetermined.",
+   "undetermined": true
+  },
+  "execute_sentry_tool": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:42541-42550",
+    "dist/index.js:42483-42499",
+    "dist/index.js:42272-42326",
+    "dist/index.js:42285"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`createExecuteTool` resolves any tool from `catalogTools` via `getSearchableTools` and invokes `tool.handler` with agent-supplied `arguments`, so it inherits the whole catalog's reach: private Sentry data (`get_issue_details`, `get_event_attachment`, `find_dsns`, `whoami`) is SECRET, attacker-influencable event/replay/feedback/agent-conversation content is UNTRUSTED, and `create_uptime_monitor`/`update_uptime_monitor` (index.js:42285-42286) register an agent-chosen URL that Sentry will request, delivering agent-supplied data to an attacker-readable host; `regionUrl` on many catalog tools is likewise reachable. No host code execution path exists, so not HOSTEXEC.",
+   "undetermined": false
+  },
+  "find_organizations": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:42274",
+    "dist/index.js:13437-13446",
+    "dist/index.js:13501"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`find_organizations_default` is registered in the catalog and in `TOP_LEVEL_TOOL_NAMES`; it lists the organizations reachable with the user's Sentry credentials, i.e. non-public account data, into the agent context. Its advertised schema has no `regionUrl` and no free URL, so no outbound agent-chosen destination. Org/project names come from the user's own account, so not attacker-controlled.",
+   "undetermined": false
+  },
+  "find_projects": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:42276",
+    "dist/index.js:13437-13446",
+    "dist/index.js:53-63",
+    "dist/index.js:41424-41425"
+   ],
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "`find_projects_default` returns the user's private project inventory for an organization (SECRET). Its advertised input includes `regionUrl`, which is threaded into `apiServiceFromContext(context, { regionUrl })` (the pattern visible at index.js:41425) to choose the API host; the only visible guard is the `SENTRY_ALLOWED_REGION_DOMAINS` constant whose enforcement code is not in the bundle shown, and the parameter's own description says self-hosted hosts are supported. Under the least-restrictive reading an agent-chosen host can receive the authenticated request, so SINK is kept as undetermined.",
+   "undetermined": true
+  },
+  "get_sentry_resource": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:41674-41688",
+    "dist/index.js:41702-41713",
+    "dist/index.js:41721-41726",
+    "dist/index.js:42317"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`get_sentry_resource_default` fetches issues, events, traces, spans, agent conversations, replays, monitors and preprod snapshot images from the user's Sentry account (SECRET). Those payloads include error messages, replay page URLs, snapshot images and agent-conversation transcripts (LLM inputs/outputs) that attackers can influence by interacting with the monitored application (UNTRUSTED). The `url` input is parsed by `resolveResourceParams` to derive resource type/ids rather than being fetched as an arbitrary destination, and the schema exposes no `regionUrl`, so no SINK is asserted; the full body of `resolveResourceParams` is not visible.",
+   "undetermined": true
+  },
+  "search_events": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:37286-37291",
+    "dist/index.js:37313-37321",
+    "dist/index.js:42301",
+    "dist/index.js:53-63",
+    "dist/index.js:41424-41425"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`search_events_default` queries the user's Sentry errors/logs/spans/replays with their credentials (SECRET). The returned rows carry error messages, log bodies, HTTP URLs, user agents and replay click/URL data that originate from arbitrary third-party traffic against the user's application, so content is attacker-influencable (UNTRUSTED). `regionUrl` in the input schema selects the API host through `apiServiceFromContext`, and only the `SENTRY_ALLOWED_REGION_DOMAINS` comment (no visible validator) restricts it, so SINK is kept as undetermined.",
+   "undetermined": true
+  },
+  "search_issues": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:38924-38931",
+    "dist/index.js:38852-38868",
+    "dist/index.js:38883-38884",
+    "dist/index.js:38976-38977"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`search_issues_default` lists grouped issues from the user's org with their credentials (SECRET). The formatter emits `issue.title` and `issue.culprit` and explicitly surfaces feedback-category issues containing end-user submitted feedback content, all attacker-influencable through the monitored application (UNTRUSTED). The schema carries `regionUrl` (index.js:38977) which selects the outbound API host via `apiServiceFromContext`; only the `SENTRY_ALLOWED_REGION_DOMAINS` comment at index.js:53-63 hints at validation and the validator itself is not in the shipped excerpt, so SINK is kept as undetermined.",
+   "undetermined": true
+  },
+  "search_sentry_tools": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:13435",
+    "dist/index.js:42347-42353",
+    "dist/index.js:42467-42470"
+   ],
+   "labels": [],
+   "rationale": "This catalog-infrastructure tool only scores in-process tool `name`/`description` metadata via `scoreTool` and returns names plus JSON schemas built by `zodFieldMapToJsonSchema`; it performs no Sentry API call and reaches no external destination, so it carries no data-flow label.",
+   "undetermined": false
+  },
+  "update_issue": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:29618-29621",
+    "dist/index.js:29592-29610",
+    "dist/index.js:13437-13446",
+    "dist/index.js:53-63",
+    "dist/index.js:41424-41425"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`update_issue_default` mutates and reads an issue in the user's Sentry org and calls `apiService.createIssueComment` with the agent-supplied `reason`; the comment lands in the user's own private issue feed, not a public destination, so that write is not itself a sink. It returns issue state/result text derived from issue data whose titles/culprits originate from application error traffic an attacker can trigger, and the handler body beyond the comment helper is not shown, so UNTRUSTED is kept (undetermined). The schema's `regionUrl` selects the API host via `apiServiceFromContext` with only the unverified `SENTRY_ALLOWED_REGION_DOMAINS` guard visible, so SINK is kept as undetermined.",
+   "undetermined": true
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "Host-supplied; the advertised list implies the default deployment grants the skills covering these tools.",
+   "effect": "`isAllowedBySkills` drops every tool whose `skills` list is not enabled by the granted skill set; with no granted skills, no tool is advertised at all.",
+   "evidence": "dist/index.js:13494-13499",
+   "kind": "capability/toolset gate",
+   "syntax": "context.grantedSkills (session skill grant, e.g. inspect / triage / seer)"
+  },
+  {
+   "default": "Unset (tools visible, params accepted).",
+   "effect": "`isHiddenByConstraints` removes `find_organizations` when an org is pinned, and `find_projects` (and `create_project`) when a project is pinned; `getFilteredInputSchema`/`injectConstraintParams` also strip and auto-inject those params.",
+   "evidence": "dist/index.js:13500-13511",
+   "kind": "constraint binding",
+   "syntax": "constraints.organizationSlug / constraints.projectSlug"
+  },
+  {
+   "default": "Off (non-experimental).",
+   "effect": "`isToolVisibleInMode` hides tools marked `experimental` unless experimental mode is on, and hides `hideInExperimentalMode` tools when it is on.",
+   "evidence": "dist/index.js:13472-13475",
+   "kind": "release-mode flag",
+   "syntax": "experimentalMode"
+  },
+  {
+   "default": "No project pinned \u2192 check skipped, tools kept.",
+   "effect": "`hasRequiredCapabilities` drops tools whose `requiredCapabilities` are not true for the pinned project (e.g. `get_trace_details` requires `traces`).",
+   "evidence": "dist/index.js:13489-13493, dist/index.js:27818-27819",
+   "kind": "capability gate",
+   "syntax": "constraints.projectCapabilities (e.g. traces)"
+  },
+  {
+   "default": "Constant is defined; actual enforcement unverified.",
+   "effect": "Stated to restrict the agent-supplied `regionUrl` to known Sentry domains, which would remove the SINK reading for every regionUrl-bearing tool; the enforcement code is not present in the provided bundle and self-hosted hosts are explicitly contemplated by the parameter description.",
+   "evidence": "dist/index.js:53-63",
+   "kind": "host allow-list constant",
+   "syntax": "SENTRY_ALLOWED_REGION_DOMAINS = {sentry.io, us.sentry.io, de.sentry.io}"
+  },
+  {
+   "default": "Default surface policy on (restricted top-level list).",
+   "effect": "Only the names in `TOP_LEVEL_TOOL_NAMES` plus the two catalog-infrastructure tools are exposed through tools/list; all other catalog tools are reachable only via `search_sentry_tools` + `execute_sentry_tool`.",
+   "evidence": "dist/index.js:13435-13455, dist/index.js:13479-13489",
+   "kind": "surface policy",
+   "syntax": "useDefaultSurfacePolicy / TOP_LEVEL_TOOL_NAMES"
+  }
+ ],
+ "version": "0.39.0"
+}

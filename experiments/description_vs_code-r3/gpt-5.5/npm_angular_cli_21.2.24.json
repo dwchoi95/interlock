@@ -1,0 +1,143 @@
+{
+ "tools": {
+  "ai_tutor": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns bundled tutor instructions/curriculum/persona: `Loads the core instructions, curriculum, and persona for the Angular AI Tutor` and `The text returned by this tool is a new set of instructions and rules for you`. The description does not say it reads user files, fetches attacker-controlled content, sends data externally, or executes host code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "get_best_practices": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "With `workspacePath`, the tool uses a local project path: `The absolute path to the angular.json file for the workspace` and returns a guide that `matches the project's Angular version` / `corresponds to the installed version`. That can reveal non-public local project configuration, so SECRET is kept. It otherwise returns an official/bundled guide, with no attacker-controlled source, no agent-chosen destination, and no host code execution described. Undetermined because the exact returned fields are not advertised, but the project-specific selection itself may disclose the local Angular version.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "search_documentation": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches a fixed official site: `Searches the official Angular documentation at https://angular.dev`. A query to this fixed vendor endpoint is not a SINK, and the description does not indicate attacker-controlled content, secrets, state changes, or host execution. It returns identifiers such as `searchedVersion`, `URL`, `titles`, and `breadcrumbs` from the search results.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "searchedVersion",
+    "url",
+    "title",
+    "breadcrumbs"
+   ],
+   "attacker_named_fields": []
+  },
+  "find_examples": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "With `workspacePath`, the tool uses `The absolute path to the angular.json file for the workspace` to find examples that `match the project's Angular version` / `correspond to the installed version`, which can reveal non-public local project configuration. It otherwise uses a `curated database of official, best-practice code examples` / `generic code examples bundled with the CLI`, so no attacker-controlled source, external sink, or host execution is described. Undetermined because the exact output fields are not advertised, but the version-specific selection may disclose local project version data.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "list_projects": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads and returns an overview of local repository Angular workspaces/projects: `Provides a comprehensive overview of all Angular workspaces and projects within the repository`, including locations and configuration such as `root`, `sourceRoot`, `unitTestFramework`, `styleLanguage`, `selectorPrefix`, `frameworkVersion`, `builder`, and the workspace `path`. This is non-public local project data, so SECRET applies. No attacker-controlled source, sink, or host execution is described.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name",
+    "path",
+    "root",
+    "sourceRoot",
+    "unitTestFramework",
+    "styleLanguage",
+    "selectorPrefix",
+    "frameworkVersion",
+    "builder",
+    "type"
+   ],
+   "attacker_named_fields": []
+  },
+  "onpush_zoneless_migration": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads local host files from an absolute path: `The tool can operate on either a single file or an entire directory. Provide the absolute path` and `The contents are read with fs.readFileSync`. Its analysis/instructions may expose code or file-derived information, so SECRET applies. It explicitly `DOES NOT modify code` and only `PROVIDES INSTRUCTIONS`, so it is not a SINK or HOSTEXEC from the advertised text. Local files are not attacker-controlled under the threat model, so UNTRUSTED does not apply.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [
+  {
+   "syntax": "get_best_practices.workspacePath omitted",
+   "kind": "argument",
+   "effect": "SECRET reach from the user's local project is removed; the tool returns `the generic best practices guide bundled with the CLI`.",
+   "default": "",
+   "evidence": "description"
+  },
+  {
+   "syntax": "find_examples.workspacePath omitted",
+   "kind": "argument",
+   "effect": "SECRET reach from the user's local project is removed; the tool searches `the generic code examples bundled with the CLI`.",
+   "default": "",
+   "evidence": "description"
+  }
+ ],
+ "notes": [
+  "Judgement is based only on the advertised tool names, descriptions, input schemas, and annotations; no source code was available."
+ ],
+ "usage": {
+  "input_tokens": 871,
+  "output_tokens": 4686,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 3840
+ }
+}

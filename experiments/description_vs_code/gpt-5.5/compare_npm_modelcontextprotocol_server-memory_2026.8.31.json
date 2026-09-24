@@ -1,0 +1,196 @@
+[
+ {
+  "tool": "create_entities",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "name"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`createEntities` appends caller-supplied entities to the local JSONL graph via `saveGraph` (`fs.writeFile`/`fs.rename` on `MEMORY_FILE_PATH`). The response only echoes the newly created entities, so no non-public data is returned; the destination is a local file not readable by an attacker, and no c"
+ },
+ {
+  "tool": "create_relations",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "from",
+   "to"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`createRelations` writes caller-supplied relations to the local memory file through `saveGraph` and returns only the echoed input. Purely local persistence: no secret read-back, no attacker-controlled input source, no egress channel."
+ },
+ {
+  "tool": "add_observations",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "entityName"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`addObservations` mutates the local graph file and returns the list of observations the caller just supplied. No reading of other user data into context, no network or process execution."
+ },
+ {
+  "tool": "delete_entities",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "entityNames"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`deleteEntities` filters entities/relations out of the local graph and rewrites the file; the response is a fixed success message. Destructive locally but no data exfiltration, no secret return, no exec."
+ },
+ {
+  "tool": "delete_observations",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "entityName",
+   "observations"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`deleteObservations` rewrites the local memory file with observations removed and returns a constant message. No labelled reach."
+ },
+ {
+  "tool": "delete_relations",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "from",
+   "to",
+   "relationType"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`deleteRelations` rewrites the local memory file and returns a constant success message. No secret return, no attacker-readable destination, no execution."
+ },
+ {
+  "tool": "read_graph",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`readGraph` -> `loadGraph` does `fs.readFile(this.memoryFilePath)` and returns the entire persisted knowledge graph (arbitrary private user notes stored under the user's own account/host) into the agent's context, so it is SECRET. The path comes from `MEMORY_FILE_PATH`/`defaultMemoryPath`, not from "
+ },
+ {
+  "tool": "search_nodes",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "query"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`searchNodes` loads the local memory file with `fs.readFile` and returns matching entities, types and observation text \u2014 the user's private stored memories \u2014 into the agent's context."
+ },
+ {
+  "tool": "open_nodes",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "names"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`openNodes` reads the local memory file via `loadGraph` and returns the requested entities plus every relation touching them, i.e. non-public locally stored user data."
+ }
+]

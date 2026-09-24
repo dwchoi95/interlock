@@ -1,0 +1,657 @@
+[
+ {
+  "tool": "browser_close",
+  "code": [],
+  "description": [],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Close browser",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The advertised tool closes the browser/page and has no declared inputs or shown return of page/local data. [unverified: documentation cannot verify a clearance]"
+ },
+ {
+  "tool": "browser_resize",
+  "code": [],
+  "description": [],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Resize browser window",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The tool changes the browser window size using `width` and `height`; the provided source excerpt does not show it returning page data or contacting an agent-chosen host. [unverified: documentation cannot verify a clearance]"
+ },
+ {
+  "tool": "browser_console_messages",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "filename"
+  ],
+  "annotations": {
+   "title": "Get console messages",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "It returns console messages from the current page. Page scripts, including attacker-controlled pages, author console text, so output is UNTRUSTED; pages reached with the user's credentials may log non-public data, so output can be SECRET. `filename` can save the returned data to a local workspace fi"
+ },
+ {
+  "tool": "browser_handle_dialog",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Handle a dialog",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The tool accepts or dismisses a page dialog and can send `promptText` into a prompt dialog controlled by the current page, which may be attacker-readable. [evidence: documentation only]"
+ },
+ {
+  "tool": "browser_evaluate",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "target",
+   "function",
+   "filename"
+  ],
+  "annotations": {
+   "title": "Evaluate JavaScript",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The handler takes agent-supplied `function` text and evaluates it in the page or an element with `eval` (`locator.locator.evaluate` or `tab.page.evaluate`). The evaluated code can read page DOM/storage and return data from authenticated pages (SECRET) or attacker-authored pages (UNTRUSTED), and the "
+ },
+ {
+  "tool": "browser_file_upload",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Upload files",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`paths` are resolved as client filenames and passed to `fileChooser.setFiles`, causing local file contents to be made available to the current page (SECRET and SINK). The handler also requests a page snapshot with `response2.setIncludeSnapshot()`, so the response can include attacker-authored page c"
+ },
+ {
+  "tool": "browser_drop",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "target"
+  ],
+  "annotations": {
+   "title": "Drop files or data onto an element",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The tool is advertised to drop local file `paths` or MIME `data` onto a page element. Dropping files can expose local file contents (SECRET) and both files and `data` are delivered to the current page (SINK), which may be attacker-controlled. The implementation body is not included, so page-output b"
+ },
+ {
+  "tool": "browser_find",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Find in page snapshot",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "It searches and returns snippets from the current page accessibility snapshot. Snapshot text can be private authenticated-page data (SECRET) or attacker-authored web content (UNTRUSTED). Returned node references/snippets can be reused as `target` values. [evidence: documentation only]"
+ },
+ {
+  "tool": "browser_fill_form",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "fields"
+  ],
+  "annotations": {
+   "title": "Fill form",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The tool fills multiple form fields; each field includes a `target` and `value`, so agent-supplied values can be delivered to the current web page, including attacker-controlled pages. [evidence: documentation only]"
+ },
+ {
+  "tool": "browser_press_key",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Press a key",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The tool sends the agent-supplied `key` to the current page. Keystrokes can be observed by page scripts or used to submit data to the current site, which may be attacker-controlled. [evidence: documentation only]"
+ },
+ {
+  "tool": "browser_type",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "target"
+  ],
+  "annotations": {
+   "title": "Type text",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The handler resolves a page `target`, then fills or types `text` into it (`locator2.fill` / `pressSequentially`), so agent-supplied text, including looked-up secrets, is delivered to the page (SINK). With `submit` or `slowly`, it includes a snapshot after the action, which can contain private authen"
+ },
+ {
+  "tool": "browser_navigate",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {
+   "title": "Navigate to a URL",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The handler navigates to the agent-supplied `url` with `checkUrlAndNavigate`, which makes a request to an agent-chosen URL/host (SINK), and then includes a page snapshot. The resulting page can be an authenticated/private page (SECRET) or attacker-controlled web content (UNTRUSTED)."
+ },
+ {
+  "tool": "browser_navigate_back",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Go back",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The handler calls `page.goBack()` and includes a snapshot of the resulting page. That snapshot can contain private authenticated content (SECRET) or attacker-authored page content (UNTRUSTED). No call-time URL/host argument chooses a destination."
+ },
+ {
+  "tool": "browser_network_requests",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "filename"
+  ],
+  "annotations": {
+   "title": "List network requests",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "The handler reads `tab2.requests()`, renders request lines including request URLs, and returns or saves them. Network URLs from authenticated browsing can be non-public (SECRET), and URLs are influenced by attacker-controlled pages/resources (UNTRUSTED). The numbered request output provides identifi"
+ },
+ {
+  "tool": "browser_network_request",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "filename"
+  ],
+  "annotations": {
+   "title": "Show network request details",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "The handler selects a recorded request by `index` and returns headers/bodies or full details. Request/response headers and bodies may include cookies, authorization, form data, or private API data (SECRET); response bodies and URLs can be attacker-authored (UNTRUSTED). `filename` can save the result"
+ },
+ {
+  "tool": "browser_run_code_unsafe",
+  "code": [
+   "HOSTEXEC",
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "HOSTEXEC",
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "code",
+   "filename"
+  ],
+  "annotations": {
+   "title": "Run Playwright code (unsafe)",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The advertised description states this tool executes arbitrary JavaScript in the Playwright server process and is RCE-equivalent. Arbitrary host execution can read host files/secrets (SECRET), process attacker-controlled data (UNTRUSTED), and send data to arbitrary attacker-readable destinations (SI"
+ },
+ {
+  "tool": "browser_take_screenshot",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "filename"
+  ],
+  "annotations": {
+   "title": "Take a screenshot",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "It captures the current page as an image. Screenshots can reveal authenticated/private page contents (SECRET) or attacker-controlled page contents (UNTRUSTED). The advertised behavior saves to `filename` or an output file if omitted, so it changes local state. [evidence: documentation only]"
+ },
+ {
+  "tool": "browser_snapshot",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "filename"
+  ],
+  "annotations": {
+   "title": "Page snapshot",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "The handler captures an accessibility snapshot of the current page via `setIncludeFullSnapshot`. Page snapshots can include non-public authenticated content (SECRET) and attacker-authored web content (UNTRUSTED). Returned element references/text can be reused as later `target` inputs; `filename` wri"
+ },
+ {
+  "tool": "browser_click",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "target"
+  ],
+  "annotations": {
+   "title": "Click",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The handler resolves the page `target`, includes a snapshot, and performs `locator2.click` or `dblclick`. Clicking can activate page controls or submit data to the current site (SINK), and the included snapshot can contain private authenticated content (SECRET) or attacker-authored content (UNTRUSTE"
+ },
+ {
+  "tool": "browser_drag",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "startTarget",
+   "endTarget"
+  ],
+  "annotations": {
+   "title": "Drag mouse",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The tool performs drag and drop between page elements identified by `startTarget` and `endTarget`, so it can deliver page state/actions to the current site (SINK). The implementation body is omitted; under the least-restrictive reading, browser action responses may include page snapshots containing "
+ },
+ {
+  "tool": "browser_hover",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "target"
+  ],
+  "annotations": {
+   "title": "Hover mouse",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The tool hovers over a page element selected by `target`. Hover events are delivered to the current page and can be observed by attacker-controlled scripts (SINK). The implementation is not shown; under the least-restrictive reading, the action may return page content such as a snapshot, which can b"
+ },
+ {
+  "tool": "browser_select_option",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "target"
+  ],
+  "annotations": {
+   "title": "Select option",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The tool selects agent-supplied `values` in a page dropdown identified by `target`, delivering those values/events to the current page, including attacker-controlled pages. [evidence: documentation only]"
+ },
+ {
+  "tool": "browser_tabs",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "action",
+   "index",
+   "url"
+  ],
+  "annotations": {
+   "title": "Manage tabs",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The `new` action can navigate a new tab to agent-supplied `url` (SINK) and include a snapshot. The tool also returns tab header snapshots, including page titles/URLs, which can reveal private authenticated pages (SECRET) or attacker-authored page titles/URLs (UNTRUSTED). `index` selects tabs to clos"
+ },
+ {
+  "tool": "browser_wait_for",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Wait for",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "The tool waits for page text or time. The implementation is not shown; under the least-restrictive reading, a wait-for action may return page state/snapshot containing private authenticated content (SECRET) or attacker-authored content (UNTRUSTED). [evidence: documentation only]"
+ },
+ {
+  "tool": "browser_webmcp_list",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "List WebMCP tools",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "The handler lists WebMCP tools registered by the current page and renders that listing. Tool names/descriptions/frame labels are page-provided and attacker-controllable (UNTRUSTED); on authenticated/private pages, the registered tool listing may be non-public (SECRET). Returned tool names/frame iden"
+ },
+ {
+  "tool": "browser_webmcp_call",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "name",
+   "frame",
+   "params"
+  ],
+  "annotations": {
+   "title": "Call a WebMCP tool",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The handler selects a page-registered WebMCP tool by `name`/`frame`, serializes agent-supplied `params`, and calls it inside the page frame with `frame.evaluate`. This sends `params` to page-provided code (SINK). The code explicitly reports that the output is page-provided and untrusted, and page to"
+ }
+]

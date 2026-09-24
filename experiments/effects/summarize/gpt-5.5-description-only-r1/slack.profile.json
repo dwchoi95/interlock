@@ -1,0 +1,251 @@
+{
+ "kind": "python",
+ "notes": [],
+ "package": "agentdojo/slack",
+ "source": "(description only)",
+ "tools": {
+  "add_user_to_channel": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "user",
+    "channel"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "The description says `Add a user to a given channel.` It changes Slack membership state, but does not itself return non-public content, attacker-controlled content, execute host code, or deliver agent-supplied content to an attacker-readable destination. The acted-on destination/objects are the declared `user` and `channel` arguments.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_channels": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "The description says `Get the list of channels in the slack.` This returns workspace data reached with the user's Slack access, which may be non-public. Channel names are identifiers; because channel names can commonly be created/named by workspace participants, their attacker-control is not settled by the advertised text, so this is marked undetermined while retaining the least restrictive attacker-named reading.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_users_in_channel": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "channel"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "The description says `Get the list of users in the given channel.` The user list of a Slack channel is workspace data reached with the user's credentials and may be non-public, so SECRET applies. The `channel` argument selects what is read. Returned user names/IDs are identifiers; whether some are attacker-chosen names is not settled by the advertised text, so attacker_named_fields is retained with undetermined true.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_webpage": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The description says `Returns the content of the webpage at a given URL.` The `url` argument can point to arbitrary attacker-controlled web hosts, so returned page content is UNTRUSTED. Because the tool fetches an agent-chosen URL/host, the request itself can be observed by an attacker-controlled host, making it a SINK for data placed in the URL. Under the threat model, a URL may also be `file://`, `localhost`, or intranet unless the advertised text restricts schemes/hosts; the text only says `given URL`, so it may return local or intranet content and SECRET applies. This reach is not settled, so undetermined is true while retaining the labels.",
+   "undetermined": true,
+   "value_args": [
+    "url"
+   ]
+  },
+  "invite_user_to_slack": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "user",
+    "user_email"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The description says `Invites a user to the Slack workspace` and the schema says `The user email where invite should be sent.` Sending an invitation transmits agent-supplied invitation/user data to an email address chosen by `user_email`, which can be attacker-readable, so SINK applies. It also changes Slack workspace state. The destination is primarily `user_email`, with `user` also identifying the invited account/name; the value content includes the supplied `user` identity used in the invite.",
+   "undetermined": false,
+   "value_args": [
+    "user"
+   ]
+  },
+  "post_webpage": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The description says `Posts a webpage at a given URL with the given content.` Posting to an arbitrary `url` sends/stores agent-supplied `content` at an agent-chosen web destination that can be attacker-readable, so SINK applies. It changes external state/sends data out. The advertised text does not say the response returns webpage content, so UNTRUSTED/SECRET are not inferred from the output.",
+   "undetermined": false,
+   "value_args": [
+    "content"
+   ]
+  },
+  "read_channel_messages": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "channel"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The description says `Read the messages from the given channel.` Channel messages in Slack may include non-public workspace data available through the user's credentials, so SECRET applies. In a multi-user channel, messages can be authored by other users and thus are attacker-controllable under the threat model for multi-writer sources, so UNTRUSTED applies. The `channel` argument selects what is read. The returned message text is treated as injectable; any returned message identifiers, authors, channel names, or similar atomic IDs are not specified, so identifier fields are undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "read_inbox": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "user"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The description says `Read the messages from the given user inbox.` Inbox messages are Slack data reached with user/workspace credentials and can be non-public, so SECRET applies. Messages in an inbox can be sent by other users, making their contents attacker-controllable, so UNTRUSTED applies. The `user` argument selects the inbox. The whole result may include message text; any returned sender/user identifiers are not specified, and senders may be outside-party chosen, so these fields are marked using `return` with undetermined true.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "remove_user_from_slack": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "user"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "The description says `Remove a user from the Slack workspace.` This changes Slack workspace state for the `user` argument, but the advertised text does not indicate that it returns secrets, attacker-controlled content, executes host code, or sends agent-supplied data to an attacker-readable destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "send_channel_message": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "channel"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The description says `Send a channel message from `author` to `channel` with the given `content`.` Sending a channel message delivers agent-supplied data to a channel selected by the `channel` argument; a channel may be attacker-readable, so SINK applies. The schema uses `body` for the sent message body.",
+   "undetermined": false,
+   "value_args": [
+    "body"
+   ]
+  },
+  "send_direct_message": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "recipient"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The description says `Send a direct message from `author` to `recipient` with the given `content`.` Sending a direct message delivers agent-supplied data to a recipient chosen by the `recipient` argument, which can be attacker-readable if chosen/injected, so SINK applies. The schema uses `body` for the sent message body.",
+   "undetermined": false,
+   "value_args": [
+    "body"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "v1.2"
+}

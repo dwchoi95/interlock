@@ -1,0 +1,443 @@
+{
+ "kind": "npm",
+ "notes": [
+  "The browser is launched with a persistent Chrome profile (see skills/chrome-devtools/SKILL.md:8), so page-reading tools operate with the user's real cookies/sessions; that is why snapshot/screenshot/console/network/trace tools are treated as SECRET.",
+  "`navigate_page`/`new_page` pass arbitrary URLs to `validateUrl` which only restricts javascript:/data:/vbscript: (and only when javascriptEvaluation is disabled); file:// and localhost/intranet URLs are reachable, so subsequent snapshot/screenshot calls can read local and internal content.",
+  "No tool in this advertised set executes code on the host: `evaluate_script`/`initScript` run inside the browser page, so per the rules they are labelled with their actual reach (SECRET/UNTRUSTED/SINK) rather than HOSTEXEC.",
+  "Handler sources for `emulate`, `evaluate_script` and `take_heapsnapshot` are not part of the supplied files; their labels are derived from the advertised schemas/descriptions in build/src/config/cli-options.js and marked undetermined.",
+  "`performance_start_trace`/`performance_stop_trace` send trace URLs to the fixed CrUX endpoint (build/src/tools/performance.js:189-206); a fixed vendor endpoint is not treated as a SINK."
+ ],
+ "package": "chrome-devtools-mcp",
+ "source": ".cache/sources/.views/npm_chrome-devtools-mcp_1.9.0_4ef2f10b6a6f",
+ "tools": {
+  "click": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/input.js:148",
+    "build/src/tools/input.js:156-158"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SECRET"
+   ],
+   "rationale": "`click` acts on an arbitrary page and, when `includeSnapshot` is true, calls `response.includeSnapshot()` which returns the page's a11y tree. The page may be attacker-controlled web content (UNTRUSTED) or the user's authenticated/intranet page reached with the persistent Chrome profile (SECRET).",
+   "undetermined": false
+  },
+  "close_page": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/pages.js:84-86"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SECRET"
+   ],
+   "rationale": "`closePage` sets `response.setIncludePages(true)`, returning the list of open pages with their URLs/titles: titles/URLs of attacker-visited pages are attacker-controllable (UNTRUSTED) and the user's open tab URLs are private browser-session data (SECRET).",
+   "undetermined": false
+  },
+  "drag": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/input.js:416-420",
+    "build/src/tools/input.js:423-425"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SECRET"
+   ],
+   "rationale": "`drag` manipulates an arbitrary page and can return a full snapshot via `response.includeSnapshot()`, mixing attacker page content (UNTRUSTED) with the user's authenticated page content (SECRET).",
+   "undetermined": false
+  },
+  "emulate": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/config/cli-options.js:199-204"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The `extraHttpHeaders` argument lets the agent inject arbitrary headers (the description explicitly shows `Authorization: Bearer token`) into every HTTP request the page makes; if the page is attacker-controlled this delivers agent-supplied data to an attacker-readable host. The emulation handler source is not included in the bundle shown, so this rests on the advertised schema/description.",
+   "undetermined": true
+  },
+  "evaluate_script": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/config/cli-options.js:207-234",
+    "build/src/config/cli-options.js:220"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`evaluate_script` runs an arbitrary JavaScript function in the target page and returns its JSON result: it can read the page/DOM/cookieStore of the user's authenticated session (SECRET), return attacker page data (UNTRUSTED), and perform `await fetch(...)` to an agent-chosen host, exfiltrating anything the agent passes in (SINK). It also accepts `filePath` to write output to the host filesystem. Execution is confined to the browser page, so not HOSTEXEC. Handler source is not part of the provided files, so labels come from the advertised schema/description.",
+   "undetermined": true
+  },
+  "fill": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/input.js:363",
+    "build/src/tools/input.js:367-369"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "`fill`/`fillFormElement` writes agent-supplied `value` into an element of an arbitrary page; on an attacker-controlled page that value can be transmitted to the attacker (SINK). With `includeSnapshot` it returns the page a11y tree, which is attacker-controllable (UNTRUSTED) and may contain the user's authenticated page data (SECRET). Whether the filled value actually leaves the browser depends on the page, so the SINK reading is kept as the least restrictive one.",
+   "undetermined": true
+  },
+  "fill_form": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/input.js:461-465",
+    "build/src/tools/input.js:466-470"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "`fillForm` loops `fillFormElement` writing multiple agent-supplied values into an arbitrary (possibly attacker-controlled) page, then optionally returns the snapshot via `response.includeSnapshot()`. Same reasoning as `fill`: SINK via page-mediated submission, UNTRUSTED/SECRET via the returned snapshot.",
+   "undetermined": true
+  },
+  "get_console_message": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/console.js:101"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`response.attachConsoleMessage(msgid)` returns console output of the target page; console text is fully controlled by the page (UNTRUSTED) and may contain data from the user's authenticated session (SECRET). [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "get_network_request": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/network.js:79",
+    "build/src/tools/network.js:105-120"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`attachNetworkRequest` returns request/response headers and bodies; the description states it is useful for inspecting `Cookie` and `Set-Cookie` headers, i.e. the user's credentials and private response bodies (SECRET), while response bodies from visited sites are attacker-controllable (UNTRUSTED). `requestFilePath`/`responseFilePath` only write to the local filesystem roots, which is not an attacker-readable destination.",
+   "undetermined": false
+  },
+  "handle_dialog": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/pages.js:320",
+    "build/src/tools/pages.js:342"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SECRET"
+   ],
+   "rationale": "`handleDialog` accepts/dismisses a page dialog and then calls `response.setIncludePages(true)`, returning the open-page list (attacker-controllable titles/URLs plus the user's private tab URLs).",
+   "undetermined": false
+  },
+  "hover": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/input.js:226-228",
+    "build/src/tools/input.js:231-233"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SECRET"
+   ],
+   "rationale": "`hover` interacts with an arbitrary page and can return the a11y snapshot through `response.includeSnapshot()`, which carries attacker page content and the user's authenticated page content.",
+   "undetermined": false
+  },
+  "lighthouse_audit": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/lighthouse.js:75-83",
+    "build/src/tools/lighthouse.js:135",
+    "build/src/tools/lighthouse.js:99"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SECRET"
+   ],
+   "rationale": "`navigation`/`snapshot` audit the currently loaded page and `response.attachLighthouseResult(output)` returns `lhr.mainDocumentUrl`, scores and report paths derived from page content: audit data is derived from attacker-controllable pages (UNTRUSTED) and reveals the user's (possibly intranet/authenticated) page URL and content (SECRET). The audited URL is `page.pptrPage.url()`, not agent-chosen, so no SINK; reports are written via `context.saveFile` into allowed local roots.",
+   "undetermined": false
+  },
+  "list_console_messages": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/console.js:75-82"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`response.setIncludeConsoleData(true, ...)` returns all console messages (optionally with stack traces) of the target page: page-authored text is attacker-controllable (UNTRUSTED) and can include private data from the user's session (SECRET). [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "list_network_requests": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/network.js:63-74"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns DevTools network data and the recent request list for the page (URLs, including intranet/authenticated endpoints) \u2014 private session data (SECRET) and attacker-influenced request/URL strings from visited sites (UNTRUSTED). [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "list_pages": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/pages.js:22-25"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`response.setIncludePages(true)` enumerates the pages open in the user's browser (persistent profile) with URLs/titles: the user's open tabs are private data (SECRET) and titles/URLs of attacker-visited pages are attacker-controlled text injected into the agent context (UNTRUSTED).",
+   "undetermined": false
+  },
+  "navigate_page": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/pages.js:193",
+    "build/src/tools/pages.js:181",
+    "build/src/tools/pages.js:249-251"
+   ],
+   "labels": [
+    "SINK",
+    "UNTRUSTED",
+    "SECRET"
+   ],
+   "rationale": "`page.pptrPage.goto(request.params.url, options)` issues a request to an agent-chosen URL, so any data the agent embeds in the URL reaches an attacker-controlled host (SINK); `validateUrl` only restricts javascript:/data:/vbscript: when `javascriptEvaluation` is disabled. `initScript` additionally runs arbitrary JS on the next document (`evaluateOnNewDocument`). The response calls `setIncludePages(true)`, returning page titles/URLs (UNTRUSTED attacker-controlled strings, plus the user's private tab URLs \u2014 SECRET).",
+   "undetermined": false
+  },
+  "new_page": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/pages.js:117-122",
+    "build/src/tools/pages.js:123-124"
+   ],
+   "labels": [
+    "SINK",
+    "UNTRUSTED",
+    "SECRET"
+   ],
+   "rationale": "`context.newPage(...)` then `pptrPage.goto(request.params.url)` fetches an agent-chosen URL, a direct exfiltration channel (SINK). The response includes the page list with titles/URLs from attacker-visited pages (UNTRUSTED) and the user's own tabs (SECRET). [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "performance_analyze_insight": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/performance.js:138-143"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`response.attachTraceInsight(lastRecording, ...)` returns detailed trace insight content for the recorded page, including resource URLs and page-derived strings: attacker-controllable (UNTRUSTED) and revealing the user's possibly private page/resources (SECRET). [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "performance_start_trace": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/performance.js:61-68",
+    "build/src/tools/performance.js:166-176"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Starts tracing (and may reload the page), then `response.attachTraceSummary(result)` returns trace-derived data including `parsedTrace.data.Meta.mainFrameURL` and resource URLs/script names of the audited page \u2014 private session data (SECRET) and attacker-controllable page content (UNTRUSTED). Raw trace can be written to a local `filePath` via `context.saveFile`.",
+   "undetermined": false
+  },
+  "performance_stop_trace": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/performance.js:112-118",
+    "build/src/tools/performance.js:146-176"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`stopTracingAndAppendOutput` parses the trace and attaches its summary to the response, exposing page URLs and page-derived trace content (SECRET/UNTRUSTED) and optionally saving the raw trace to a local file.",
+   "undetermined": false
+  },
+  "press_key": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/input.js:555-572",
+    "build/src/tools/input.js:575-577"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SECRET"
+   ],
+   "rationale": "Dispatches keyboard events to the page and can return the a11y snapshot through `response.includeSnapshot()`, injecting attacker page content and exposing the user's authenticated page content.",
+   "undetermined": false
+  },
+  "resize_page": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/pages.js:286-290"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SECRET"
+   ],
+   "rationale": "`resizePage` ends with `response.setIncludePages(true)`, returning the open-page list with attacker-controllable titles/URLs and the user's private tab URLs.",
+   "undetermined": false
+  },
+  "select_page": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/pages.js:50-52"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SECRET"
+   ],
+   "rationale": "`selectPage` calls `response.setIncludePages(true)`, returning page URLs/titles from the user's browser (private) which for attacker-visited pages are attacker-controlled strings.",
+   "undetermined": false
+  },
+  "take_heapsnapshot": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/config/cli-options.js:1264-1281"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Captures the JS heap of the target page (which holds the user's authenticated page data) and writes it to `filePath`. The handler source is not part of the provided files, so whether any heap content is echoed into the response cannot be confirmed; the least restrictive reading keeps SECRET. The written file stays inside the configured filesystem roots, so it is not an attacker-readable destination.",
+   "undetermined": true
+  },
+  "take_screenshot": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/screenshot.js:232-237",
+    "build/src/tools/screenshot.js:261-264"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Captures the page/element and returns it as base64 image data via `response.attachImage(...)`: a rendering of attacker-controlled web content (UNTRUSTED, images can carry injected instructions) and of the user's authenticated/intranet pages (SECRET). `filePath` writes only into allowed local roots via `context.saveFile`. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "take_snapshot": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/snapshot.js:34-37"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`response.includeSnapshot({verbose, filePath})` returns the full a11y tree text of the target page: arbitrary attacker-controlled page text enters the agent context (UNTRUSTED) and private content of the user's logged-in pages is disclosed (SECRET). [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "type_text": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/input.js:388-391"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`page.pptrPage.keyboard.type(request.params.text)` plus an optional `submitKey` press types agent-supplied text into the focused element of an arbitrary page and can submit it; on an attacker-controlled page this delivers the data to the attacker. Whether the text leaves the browser depends on the page's handlers, so the label is kept as the least restrictive reading.",
+   "undetermined": true
+  },
+  "upload_file": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/input.js:505",
+    "build/src/tools/input.js:513-516",
+    "build/src/tools/input.js:522-523"
+   ],
+   "labels": [
+    "SINK",
+    "UNTRUSTED",
+    "SECRET"
+   ],
+   "rationale": "`handle.uploadFile(...filePaths)` / `fileChooser.accept(filePaths)` sends the contents of host files to the page's file input; if the page is attacker-controlled this uploads local file contents to the attacker (SINK). `verifyFilesSchema.filePaths` restricts paths to configured filesystem roots (default OS temp dir) only for local browsers. With `includeSnapshot` the response also returns the page snapshot (UNTRUSTED/SECRET).",
+   "undetermined": false
+  },
+  "wait_for": {
+   "default_enabled": true,
+   "evidence": [
+    "build/src/tools/snapshot.js:58-60"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "After `page.waitForTextOnPage(...)` it calls `response.includeSnapshot()`, unconditionally returning the page a11y tree \u2014 attacker-controlled page text (UNTRUSTED) and the user's authenticated page content (SECRET).",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "enabled (javascriptEvaluation defaults to true)",
+   "effect": "Disables evaluation tools (`evaluate_script` and slim evaluate), removes the `initScript` parameter from `navigate_page`, and disallows navigating to javascript:, data: and vbscript: URLs. Removes the HOSTEXEC-adjacent/SINK reach of `evaluate_script`.",
+   "evidence": "build/src/config/mcp-options.js:126-130",
+   "kind": "cli flag",
+   "syntax": "--no-javascript-evaluation (--javascriptEvaluation=false)"
+  },
+  {
+   "default": "off",
+   "effect": "Exposes only 3 tools (navigation, script execution, screenshot), removing all other advertised tools.",
+   "evidence": "build/src/config/mcp-options.js:195-198",
+   "kind": "cli flag",
+   "syntax": "--slim"
+  },
+  {
+   "default": "categories enabled",
+   "effect": "Disables all tools in the given category, e.g. `list_network_requests`/`get_network_request` (network SECRET sources), `emulate`/`resize_page`, `performance_*`.",
+   "evidence": "build/src/config/mcp-options.js:334-339",
+   "kind": "cli flag (tool categories)",
+   "syntax": "--no-category-network / --no-category-emulation / --no-category-performance"
+  },
+  {
+   "default": "false (no redaction)",
+   "effect": "Redacts network headers considered sensitive before returning them to the client, reducing (but not removing) the SECRET exposure of `get_network_request`/`list_network_requests`.",
+   "evidence": "build/src/config/mcp-options.js:204-208",
+   "kind": "cli flag",
+   "syntax": "--redactNetworkHeaders"
+  },
+  {
+   "default": "unset (no URL restrictions)",
+   "effect": "Blocks or allow-lists URL patterns for navigations and subresources, constraining the SINK reach of `navigate_page`, `new_page` and `evaluate_script` fetches.",
+   "evidence": "build/src/config/mcp-options.js:106-115",
+   "kind": "cli flag",
+   "syntax": "--blockedUrlPattern=<pattern> / --allowedUrlPattern=<pattern>"
+  },
+  {
+   "default": "filesystemRoot = OS temp directory; allowUnrestrictedPaths = false (but the bundled CLI sets allowUnrestrictedPaths=true)",
+   "effect": "Constrains which paths file-writing/reading parameters (`filePath`, `outputDirPath`, `upload_file.filePaths`) may touch; `--allowUnrestrictedPaths` removes the restriction, widening `upload_file` exfiltration to any host file.",
+   "evidence": "build/src/config/mcp-options.js:209-224",
+   "kind": "cli flag",
+   "syntax": "--filesystemRoot=<dir> (alias --workspace) / --allowUnrestrictedPaths"
+  },
+  {
+   "default": "performanceCrux = true (URLs are sent)",
+   "effect": "Stops sending URLs from performance traces to the fixed CrUX API endpoint (a fixed vendor endpoint, not an agent-chosen sink).",
+   "evidence": "build/src/config/mcp-options.js:116-120",
+   "kind": "cli flag",
+   "syntax": "--no-performance-crux"
+  },
+  {
+   "default": "off (memoryDebugging default false; others unset)",
+   "effect": "Gate additional tool families (heapsnapshot analysis, extension install/reload, PWA install/launch, click_at, screencast, WebMCP/3p tool execution) that are not advertised in this tool list and are off by default in MCP mode.",
+   "evidence": "build/src/config/mcp-options.js:52-57",
+   "kind": "cli flag",
+   "syntax": "--memoryDebugging / --categoryExtensions / --categoryPwa / --experimentalVision / --experimentalScreencast / --categoryExperimentalWebmcp / --categoryExperimentalThirdParty"
+  }
+ ],
+ "version": "1.9.0"
+}

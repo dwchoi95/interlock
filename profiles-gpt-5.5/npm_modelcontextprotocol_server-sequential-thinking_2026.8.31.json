@@ -1,0 +1,43 @@
+{
+ "kind": "npm",
+ "notes": [
+  "`README.md:130` mentions `DISABLE_THOUGHT_LOGGING=true` disables logging of thought information, but no provided source shows that implementation and it does not remove the advertised tool or any label assessed above.",
+  "The implementation file `dist/lib.js` is missing from the supplied source; conclusions are limited to the registration and schemas in `dist/index.js`."
+ ],
+ "package": "@modelcontextprotocol/server-sequential-thinking",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-sequential-thinking_2026.8.31_52b4d7b543f3",
+ "tools": {
+  "sequentialthinking": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "branchId"
+   ],
+   "evidence": [
+    "dist/index.js:5 imports `SequentialThinkingServer` from `./lib.js`, but that implementation is not included in the provided source.",
+    "dist/index.js:23 constructs a single `thinkingServer` instance.",
+    "dist/index.js:24-25 registers the advertised `sequentialthinking` tool unconditionally.",
+    "dist/index.js:80-90 declares only reasoning/state parameters such as `thought`, `thoughtNumber`, `totalThoughts`, and `branchId`; no URL, host, file path, recipient, command, or code parameter is declared.",
+    "dist/index.js:91-96 annotates the tool as read-only/non-destructive with `openWorldHint: false`.",
+    "dist/index.js:97-103 declares output fields limited to `thoughtNumber`, `totalThoughts`, `nextThoughtNeeded`, `branches`, and `thoughtHistoryLength`.",
+    "dist/index.js:104-114 handles calls by passing `args` to `thinkingServer.processThought(args)` and returning its `content` plus parsed `structuredContent`.",
+    "dist/index.js:116-119 connects only a stdio MCP transport."
+   ],
+   "identifier_output_fields": [
+    "thoughtNumber",
+    "totalThoughts",
+    "branches"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "The visible registration does not expose any URL/host/file/recipient/command parameters and the declared output is limited to sequential-thinking bookkeeping. No shown code reads host files or SaaS data for tool output, fetches attacker-controlled content, sends data to an attacker-readable destination, or executes arbitrary code. However, the actual `SequentialThinkingServer.processThought` implementation is in `./lib.js`, which is referenced but not provided, so side effects and exact returned `content` cannot be fully verified from the supplied source. The tool appears stateful because a singleton `thinkingServer` is reused and the output includes `branches` and `thoughtHistoryLength`; the input `thought` is the stored reasoning content, and `branchId` is the branch identifier if branching is used.",
+   "undetermined": true,
+   "value_args": [
+    "thought"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "2026.8.31"
+}

@@ -1,0 +1,203 @@
+{
+ "kind": "npm",
+ "notes": [
+  "No tool in this server performs any network request, spawns a process, or writes to a remote/publicly readable destination: the only imports are `fs`, `path`, `crypto`, `string_decoder`, `diff`, `minimatch` (dist/lib.js:1-8) and the MCP stdio transport (dist/index.js:2-11). Hence no SINK and no HOSTEXEC labels.",
+  "Write-capable tools (`write_file`, `edit_file`, `move_file`) are confined by `validatePath` to the allowlist (dist/lib.js:91-134), including symlink-target re-checks. If an operator includes a home directory or repo containing shell rc files, CI configs or MCP configs in the allowlist, an agent-driven write could indirectly lead to later code execution; that is a configuration consequence, not code in this server, so HOSTEXEC is not asserted.",
+  "UNTRUSTED was not assigned to the read tools because under the stated threat model the user's local files are not attacker-controlled. In practice a root containing a downloads folder, a cloned third-party repo, or a shared/synced directory would make read_* outputs attacker-influenced; operators should treat file contents as untrusted in that case.",
+  "`edit_file` is marked undetermined: its diff output (dist/lib.js:257-263) echoes surrounding lines of the edited local file, which is arguably a SECRET-style read, but it only covers the file the agent already chose to modify, and the dedicated read tools already carry the label."
+ ],
+ "package": "@modelcontextprotocol/server-filesystem",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-filesystem_2026.8.31_01d646830c09",
+ "tools": {
+  "create_directory": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:345-352"
+   ],
+   "labels": [],
+   "rationale": "`fs.mkdir` with `recursive:true` on a `validatePath`-checked path; returns only a success message. No data return, no external destination, no execution.",
+   "undetermined": false
+  },
+  "directory_tree": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:450-488",
+    "dist/index.js:452-454"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`buildTree` recursively walks the allowed directory with `fs.readdir` and returns the full JSON name/type tree \u2014 non-public host filesystem structure.",
+   "undetermined": false
+  },
+  "edit_file": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:326-332",
+    "dist/lib.js:207-291"
+   ],
+   "labels": [],
+   "rationale": "`applyFileEdits` reads the target file, applies agent-supplied replacements and writes atomically inside allowed directories. Output is a unified diff of a file the user already owns and the agent chose; local write is not an attacker-readable destination, so no SINK. The diff does echo file content but only of the file the agent explicitly targeted and already modified \u2014 the read tools carry the SECRET label for that reach.",
+   "undetermined": true
+  },
+  "get_file_info": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:547-556",
+    "dist/lib.js:136-147"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`getFileStats` returns size, timestamps, permissions and type of a local file \u2014 non-public host metadata.",
+   "undetermined": false
+  },
+  "list_allowed_directories": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:567-572",
+    "dist/index.js:29-74"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Returns the absolute local paths of the configured roots (`allowedDirectories`), revealing usernames/home layout of the host \u2014 non-public local configuration data. No input, no write, no network.",
+   "undetermined": false
+  },
+  "list_directory": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:365-374"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`fs.readdir` returns the names of files/directories on the user's host, which is non-public local data returned into agent context.",
+   "undetermined": false
+  },
+  "list_directory_with_sizes": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:388-436"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`fs.readdir` plus `fs.stat` per entry returns local filenames and sizes \u2014 non-public host filesystem metadata.",
+   "undetermined": false
+  },
+  "move_file": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:502-511",
+    "dist/lib.js:189-206"
+   ],
+   "labels": [],
+   "rationale": "Both paths pass `validatePath`; `moveFile` renames within allowed directories and returns only a success string. No data disclosure, no external destination, no execution.",
+   "undetermined": false
+  },
+  "read_file": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:153-167",
+    "dist/lib.js:148-150",
+    "dist/index.js:173-179"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Deprecated alias registered with `readTextFileHandler`, which calls `validatePath` then `readFileContent`/`tailFile`/`headFile` and returns raw local file contents to the agent. Any file under the allowed directories (user's own project/home data) is read with the user's credentials, so it returns non-public host data. No network or exec path.",
+   "undetermined": false
+  },
+  "read_media_file": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:224-257",
+    "dist/index.js:137-150"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`readFileAsBase64Stream` streams any local file (mime default `application/octet-stream`, i.e. arbitrary binary) and returns it base64-encoded in the result, exposing non-public host file bytes.",
+   "undetermined": false
+  },
+  "read_multiple_files": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:273-289",
+    "dist/lib.js:148-150"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Loops `validatePath` + `readFileContent` over caller-supplied paths and concatenates the contents into the result \u2014 bulk exfiltration of local file content into agent context.",
+   "undetermined": false
+  },
+  "read_text_file": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:180-196",
+    "dist/index.js:166",
+    "dist/lib.js:148-150"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Same `readTextFileHandler`: reads local file text via `fs.readFile` and returns it in the tool result \u2014 non-public host file content.",
+   "undetermined": false
+  },
+  "search_files": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:527-534",
+    "dist/lib.js:365-392"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`searchFilesWithValidation` recursively walks the local tree and returns full matching paths \u2014 non-public host filesystem information.",
+   "undetermined": false
+  },
+  "write_file": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:302-309",
+    "dist/lib.js:151-188"
+   ],
+   "labels": [],
+   "rationale": "`writeFileContent` writes agent-supplied text to a path constrained by `validatePath`/`isPathWithinAllowedDirectories` on the local filesystem. The destination is local and not attacker-readable, so it is not a SINK; it returns only a success string, so no SECRET/UNTRUSTED. Not labelled HOSTEXEC because execution is not invoked here (see notes on config-file overwrite risk when an allowed root contains startup/config files).",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "No default; if omitted the server starts with an empty allowlist and relies on MCP roots.",
+   "effect": "Constrains every tool's reach: `validatePath` rejects any path outside these roots, so SECRET reach is limited to the listed trees. Passing e.g. `/` or `$HOME` widens it to the whole account.",
+   "evidence": "dist/index.js:29-74",
+   "kind": "cli-args",
+   "syntax": "mcp-server-filesystem <allowed-directory> [additional-directories...]"
+  },
+  {
+   "default": "Applied whenever the client advertises `capabilities.roots`; otherwise CLI args are kept.",
+   "effect": "Client-provided roots completely REPLACE the CLI allowlist at initialization and on every list_changed notification, re-scoping all tools' filesystem reach.",
+   "evidence": "dist/index.js:575-598",
+   "kind": "protocol-capability",
+   "syntax": "MCP client roots (capabilities.roots + notifications/roots/list_changed)"
+  },
+  {
+   "default": "Not the default in documented configs, which pass directories or roots.",
+   "effect": "Server throws during initialization, so no tool can operate (all labels moot).",
+   "evidence": "dist/index.js:617-622",
+   "kind": "runtime-error",
+   "syntax": "(no directories from args and no client roots)"
+  },
+  {
+   "default": "Mounts are read-write unless `ro` is added.",
+   "effect": "Read-only bind mount makes write_file/edit_file/create_directory/move_file fail at the OS level; read tools keep SECRET.",
+   "evidence": "README.md:215-231",
+   "kind": "deployment-flag",
+   "syntax": "docker run --mount type=bind,src=...,dst=/projects/...,ro"
+  }
+ ],
+ "version": "2026.8.31"
+}

@@ -1,0 +1,82 @@
+{
+ "kind": "npm",
+ "notes": [
+  "At shutdown the server spawns `dist/telemetry/flush-events.js` with `process.execPath` and aggregated session JSON (dist/index.js:144-150). This is not reachable as a tool and the argument is server-generated aggregation data, so it is not labelled, but the telemetry module sources were not provided.",
+  "`dist/_internal/nextjs-runtime-manager.js` and the telemetry modules are not part of the supplied source, so the network/transport details behind `nextjs_index` and `nextjs_call` (and where telemetry is posted) could not be verified directly."
+ ],
+ "package": "next-devtools-mcp",
+ "source": ".cache/sources/.views/npm_next-devtools-mcp_0.4.0_91c49454f95a",
+ "tools": {
+  "browser_eval": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/browser-eval.js:30",
+    "dist/tools/browser-eval.js:39",
+    "dist/tools/browser-eval.js:48-74"
+   ],
+   "labels": [],
+   "rationale": "`detectAgentBrowser` runs only two hard-coded probes (`command -v agent-browser` / `where agent-browser` and `agent-browser --version`) via `execSync`; the agent-supplied `task` string is never passed to a shell, only interpolated into the returned JSON guidance text (dist/tools/browser-eval.js:59-61). The handler returns static install/usage instructions, so nothing non-public is read, no outbound network destination is chosen, and no agent-supplied code is executed by the server. The description tells the agent to run the `agent-browser` CLI itself, but that execution happens through the agent's own shell tool, not through this server, so no HOSTEXEC is attributed here.",
+   "undetermined": false
+  },
+  "nextjs_call": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/nextjs_call.js:2",
+    "dist/tools/nextjs_call.js:62-68",
+    "dist/tools/nextjs_call.js:11-14",
+    "README.md:185-191"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`callNextJsTool(portNumber, args.toolName, args.args)` proxies an arbitrary tool name and arbitrary argument object to the Next.js dev server's localhost MCP endpoint and returns the raw `result`, which per the documented runtime tools includes build/runtime errors, the dev log file (browser console + server output), route/page metadata and Server Action source resolution \u2014 all private local project data, so SECRET. Those error and log payloads echo request URLs, fetched remote responses and browser console output, which an attacker who can make the dev app load or fetch third-party content can influence, so UNTRUSTED. The destination host is fixed to the local dev server with only the port selectable, so it is not an attacker-readable SINK, and no command execution happens in this process. Undetermined because `dist/_internal/nextjs-runtime-manager.js` is absent, leaving the exact request construction (host binding, URL/args handling) unverified.",
+   "undetermined": true
+  },
+  "nextjs_docs": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/nextjs-docs.js:45-48",
+    "dist/tools/nextjs-docs.js:56-61",
+    "dist/tools/nextjs-docs.js:70-71",
+    "dist/tools/nextjs-docs.js:78-84"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`resolveNextVersion` reads host files at an agent-chosen `project_path` (`node_modules/next/package.json` and `package.json`) with the user's filesystem privileges and returns the parsed `version` / declared dependency string plus directory-existence facts (`docsAvailable`) into the agent context. That is local, non-public data, so SECRET applies, though the exposure is narrow (version strings and path existence, not arbitrary file bodies). No outbound request or command execution occurs, so no SINK/HOSTEXEC.",
+   "undetermined": false
+  },
+  "nextjs_index": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/nextjs_index.js:2",
+    "dist/tools/nextjs_index.js:61-79",
+    "dist/tools/nextjs_index.js:115",
+    "dist/tools/nextjs_index.js:126-141"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`probeAndListTools` / `getAllAvailableServers` scan local ports and speak MCP to `http(s)://localhost:<port>/_next/mcp` via `detectProtocol` and `listNextJsTools`, returning discovered server ports, PIDs, launch `command` strings and the dev server's tool metadata \u2014 localhost service content plus local process information, hence SECRET. The target host comes from `MCP_HOST`/`localhost` and only the port is agent-chosen, so requests cannot reach an attacker-readable destination (no SINK). Marked undetermined because `dist/_internal/nextjs-runtime-manager.js` is not included, so the exact host binding and whether tool descriptions can carry project/third-party content cannot be confirmed; the least restrictive reading (SECRET kept) is used.",
+   "undetermined": true
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "telemetry enabled",
+   "effect": "Documented opt-out of anonymous usage telemetry; does not add or remove any tool or label (telemetry queueing happens in dist/index.js:56-66 and a detached flusher is spawned on shutdown).",
+   "evidence": "README.md:256-260",
+   "kind": "env var",
+   "syntax": "NEXT_TELEMETRY_DISABLED=1"
+  },
+  {
+   "default": "browser_eval, nextjs_docs, nextjs_index, nextjs_call all advertised",
+   "effect": "All four tools are unconditionally registered in the ListTools handler; there is no flag, toolset or capability that hides any of them.",
+   "evidence": "dist/index.js:17-47",
+   "kind": "tool gating",
+   "syntax": "(none)"
+  }
+ ],
+ "version": "0.4.0"
+}

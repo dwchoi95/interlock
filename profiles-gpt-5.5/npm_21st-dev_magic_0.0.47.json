@@ -1,0 +1,122 @@
+{
+ "kind": "npm",
+ "notes": [
+  "No advertised tool is shown behind a disabled-by-default flag or capability in the provided source.",
+  "Requests to the 21st.dev/SVGL fixed vendor endpoints are treated as WRITE kind because they send data out of the agent context, but they are not labeled SINK because the destination is not chosen by a schema URL/host argument and is not shown to be attacker-readable."
+ ],
+ "package": "@21st-dev/magic",
+ "source": ".cache/sources/.views/npm_21st-dev_magic_0.0.47_f93e342c7230",
+ "tools": {
+  "21st_magic_component_builder": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/create-ui.js:31-38",
+    "dist/tools/create-ui.js:51-58",
+    "dist/tools/create-ui.js:62-64",
+    "dist/tools/create-ui.js:102-107"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`execute` posts `message`, `searchQuery`, `context`, and `fileContent` read from `absolutePathToCurrentFile` to `/api/create-ui-variation`, then returns code selected through `CallbackServer.promptUser` as `content[].text`. The file read means private host file contents can influence/appear in the returned result, but the exact behavior of `getContentOfFile`, `twentyFirstClient`, and `CallbackServer` is not shown, so SECRET is kept as undetermined. The returned component snippet comes from remote 21st.dev/callback data (`response.data.data1` etc. and `componentData.code`), so it is treated as UNTRUSTED.",
+   "undetermined": true,
+   "value_args": [
+    "message",
+    "searchQuery",
+    "absolutePathToCurrentFile",
+    "context"
+   ]
+  },
+  "21st_magic_component_inspiration": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/fetch-ui.js:18-23",
+    "dist/tools/fetch-ui.js:24-29"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`execute` sends `message` and `searchQuery` to `/api/fetch-ui` through `twentyFirstClient` and returns remote `data.text` as `content[].text`. The description says this fetches matching components/previews from 21st.dev, so the returned snippet/data is treated as externally sourced UNTRUSTED content; the code does not show the server-side data source, so this is undetermined.",
+   "undetermined": true,
+   "value_args": [
+    "message",
+    "searchQuery"
+   ]
+  },
+  "21st_magic_component_refiner": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/refine-ui.js:23-29",
+    "dist/tools/refine-ui.js:30-35"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`execute` reads host file content via `getContentOfFile(absolutePathToRefiningFile)`, sends it as `fileContent` to `/api/refine-ui`, and returns remote `data.text` as `content[].text`. Because the returned redesign may include or derive from the private local file, SECRET is kept; exact remote behavior and `getContentOfFile` are not shown, so this is undetermined. The returned redesigned component/instructions are remote service output and are treated as UNTRUSTED.",
+   "undetermined": true,
+   "value_args": [
+    "userMessage",
+    "absolutePathToRefiningFile",
+    "context"
+   ]
+  },
+  "logo_search": {
+   "attacker_named_fields": [
+    "icons.icon"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/logo-search.js:40-52",
+    "dist/tools/logo-search.js:59-65",
+    "dist/tools/logo-search.js:153-177",
+    "dist/tools/logo-search.js:219-221",
+    "dist/tools/logo-search.js:249-254"
+   ],
+   "identifier_output_fields": [
+    "icons.icon",
+    "notFound.icon"
+   ],
+   "injectable_output_fields": [
+    "content.text",
+    "icons.code",
+    "icons.icon"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`execute` queries the external SVGL API, takes `logo.route` from that response, fetches SVG text from it with `fetchSVGContent`, converts it, and returns it inside JSON in `content[].text`. The logo title/URL/SVG/code are external registry/web content and are therefore UNTRUSTED. The tool also writes a local test-results file, but that is not attacker-readable by itself and no schema argument directly names an attacker-readable destination.",
+   "undetermined": true,
+   "value_args": [
+    "queries",
+    "format"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "0.0.47"
+}

@@ -1,0 +1,281 @@
+{
+ "tools": {
+  "read_file": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Reads local host file contents: `Read the complete contents of a file as text` and can target an arbitrary declared `path` within the server's accessible filesystem. Host files are non-public data. It is deprecated but not stated to be disabled. The description does not specify allowed-directory limits for this deprecated tool, so reach is partly undetermined; under the least restrictive reading, keep SECRET.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "path"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "read_text_file": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Reads local filesystem file contents: `Read the complete contents of a file from the file system as text` and `Only works within allowed directories.` Files reachable in allowed directories can contain non-public host data, so returned contents are SECRET.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "path"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "read_media_file": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Reads a local file and returns its contents: `Read a file and return it as a base64-encoded content block with its MIME type` and `Only works within allowed directories.` Files reachable in allowed directories can contain non-public host data, so returned file content is SECRET.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "path"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "read_multiple_files": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Reads multiple local file contents: `Read the contents of multiple files simultaneously` and `Only works within allowed directories.` Files reachable in allowed directories can contain non-public host data, so returned contents are SECRET.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "paths"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "write_file": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Writes to the local filesystem: `Create a new file or completely overwrite an existing file with new content` and `Only works within allowed directories.` This changes host state, but the advertised text does not indicate delivery to an attacker-readable destination, arbitrary code execution, reading secrets, or returning attacker-controlled content. Local filesystem writes alone are not SINK unless the destination is public/attacker-readable, which is not stated.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "path"
+   ],
+   "value_args": [
+    "content"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "edit_file": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Edits a local text file and `Returns a git-style diff showing the changes made.` The diff may include exact old lines from the file being edited, and files within allowed directories can contain non-public host data. It also changes host state unless `dryRun` is used. Because the exact amount of original file content in the diff is not specified, this is undetermined, but under the least restrictive reading SECRET is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "path"
+   ],
+   "value_args": [
+    "edits"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "create_directory": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Creates local directories: `Create a new directory or ensure a directory exists` and `Only works within allowed directories.` This changes host state but does not advertise returning non-public contents, attacker-controlled content, sending data to an attacker-readable destination, or executing code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "path"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "list_directory": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Lists local filesystem names: `Get a detailed listing of all files and directories in a specified path` and `Only works within allowed directories.` Directory listings and filenames in allowed host directories can be non-public host data, so the output is SECRET.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "path"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "list_directory_with_sizes": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Lists local filesystem names and sizes: `Get a detailed listing of all files and directories in a specified path, including sizes` and `Only works within allowed directories.` Directory entries and metadata in allowed host directories can be non-public host data, so the output is SECRET.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "path"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "directory_tree": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns a recursive local filesystem tree: `Get a recursive tree view of files and directories as a JSON structure` and `Only works within allowed directories.` File and directory names in allowed host directories can be non-public host data, so the output is SECRET.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "path"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "move_file": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Moves or renames local files/directories: `Move or rename files and directories` and `Both source and destination must be within allowed directories.` This changes host filesystem state but does not advertise returning non-public data, attacker-controlled content, sending data to an attacker-readable destination, or executing code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "source",
+    "destination"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "search_files": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Searches local filesystem names and returns matches: `Recursively search for files and directories matching a pattern` and `Returns full paths to all matching items`; `Only searches within allowed directories.` File paths in allowed host directories can be non-public host data, so the output is SECRET.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "path"
+   ],
+   "value_args": [
+    "pattern",
+    "excludePatterns"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "get_file_info": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns local filesystem metadata: `Retrieve detailed metadata about a file or directory` including `size, creation time, last modified time, permissions, and type`; `Only works within allowed directories.` File metadata and existence in allowed host directories can be non-public host data, so the output is SECRET.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "path"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "list_allowed_directories": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns accessible local directory paths: `Returns the list of directories that this server is allowed to access` and says nested paths are available. The allowed directory list reveals host filesystem locations/configuration, which can be non-public host data, so the output is SECRET.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "All tools are judged only from the advertised descriptions, schemas, and annotations. `Only works within allowed directories` limits scope but does not remove SECRET for local host files or filesystem metadata within those directories.",
+  "No tool advertises network access, public posting, messaging, or arbitrary host code execution, so no SINK or HOSTEXEC labels are assigned."
+ ],
+ "usage": {
+  "input_tokens": 2925,
+  "output_tokens": 1766,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

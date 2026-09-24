@@ -1,0 +1,103 @@
+[
+ {
+  "tool": "tavily_search",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`tavily_search` is a web search tool (`description` says it searches the web and returns snippets/source URLs) and posts the supplied search parameters to Tavily's fixed search endpoint. The returned `response.data` is formatted into agent-visible text including `answer`, result `title`, `url`, `con"
+ },
+ {
+  "tool": "tavily_extract",
+  "code": [
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "urls"
+  ],
+  "annotations": {},
+  "rationale_code": "`tavily_extract` accepts caller-supplied `urls` and is described as extracting content from those URLs, so it can cause requests to agent-chosen web hosts; an attacker-controlled host can observe such requests, making `urls` the destination. It returns extracted page content through `response.data`,"
+ },
+ {
+  "tool": "tavily_crawl",
+  "code": [
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "`tavily_crawl` accepts a caller-supplied root `url` and is described as crawling a website starting from that URL, so it can cause requests to an agent-chosen host; an attacker-controlled site can observe those requests, making `url` the destination. It returns crawled page URLs, raw content preview"
+ },
+ {
+  "tool": "tavily_map",
+  "code": [
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "`tavily_map` accepts a caller-supplied root `url` and is described as mapping a website starting from that URL, so it can cause requests to an agent-chosen host; an attacker-controlled site can observe those requests, making `url` the destination. It returns the mapped URLs found on that site, which"
+ },
+ {
+  "tool": "tavily_research",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`tavily_research` is described as gathering information from multiple sources and returns a detailed research response. The code posts the research `input` to Tavily's fixed research endpoint, polls that fixed endpoint, and returns `pollResponse.data.content` (or streamed accumulated content) as age"
+ }
+]

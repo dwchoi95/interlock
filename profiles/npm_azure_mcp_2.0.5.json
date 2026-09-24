@@ -1,0 +1,739 @@
+{
+ "kind": "npm",
+ "notes": [
+  "This npm package as supplied contains only README.md - no server implementation, tool registration code, or command handlers. Every label below is therefore inferred from the advertised tool names/descriptions plus the README capability list, and every tool is marked undetermined true; evidence lines point at the README capability statements rather than implementation lines.",
+  "Most tools are hierarchical routers ('learn=true' plus 'command'/'parameters'), so one advertised tool fans out to an entire Azure service command family. The label for each router reflects the broadest sub-command its description and README examples disclose (e.g. `keyvault` secret reads, `communication` SMS/email send, `storage` blob upload).",
+  "Tools whose descriptions mention shelling out to a CLI (`policy` 'using Azure CLI', `extension_azqr` 'Runs ... azqr commands', `azd`) are the HOSTEXEC candidates; without source, argument escaping cannot be checked so HOSTEXEC is retained per the least-restrictive rule.",
+  "README.md:451 explicitly warns that clients can invoke destructive operations under the user's RBAC permissions, reinforcing that these routers include write/mutate sub-commands, not just reads."
+ ],
+ "package": "@azure/mcp",
+ "source": ".cache/sources/.views/npm_azure_mcp_2.0.5_674321754801",
+ "tools": {
+  "acr": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:241-245"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`acr` lists the user's container registries and repositories using their Azure credentials - private inventory data. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "advisor": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:137-139"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`advisor` returns Azure Advisor recommendations scoped to the user's subscriptions - non-public account data. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "aks": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:299-304"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`aks` enumerates AKS clusters and node pools in the user's subscriptions, returning resource IDs, networking endpoints and identity configuration - non-public account data reached with the user's credentials. [evidence: documentation only]",
+   "undetermined": true
+  },
+  "appconfig": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:156-159"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`appconfig` lists configuration stores and reads key-value settings (\"Show my key-value pairs in App Config\"), returning private configuration values from the user's Azure account. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "applens": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:161-163"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`applens` runs AI-powered diagnostics against the user's Azure resources and returns detected problems and root causes - non-public data about the user's account. Request goes to the AppLens first-party diagnostic service, so no SINK is inferred; no code is shipped to verify the endpoint is fixed. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "applicationinsights": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:401"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`applicationinsights` lists and manages Application Insights components in the user's subscription - non-public resource inventory read with user credentials. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "appservice": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:165-176"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`appservice` reads web app details, application settings and deployments (\"Get the application settings for my web app\"), which are private account data including connection settings; it also mutates those settings, but writes stay inside the user's own resources so no SINK is inferred. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "azd": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:188",
+    "README.md:380"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK",
+    "HOSTEXEC"
+   ],
+   "rationale": "`azd` is advertised as the Azure Developer CLI tool suite performing \"project initialization, resource provisioning, deployment, and monitoring\". Driving `azd` implies spawning a local CLI process against the user's workspace with agent-supplied arguments (init templates, deploy targets), which is host code execution and can pull remote templates. Only README.md is included in this package, so the process invocation and argument sanitisation cannot be inspected; keeping the broadest reading. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "azuremigrate": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:356-360",
+    "README.md:400"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`azuremigrate` generates Platform Landing Zone Terraform from \"starter module\" content and CAF guidance; such generation typically incorporates remotely hosted accelerator/starter modules, i.e. third-party-sourced text placed into agent context. With no implementation source in the package I cannot confirm the content is bundled locally, so the untrusted reading is kept. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "azureterraformbestpractices": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:418"
+   ],
+   "labels": [],
+   "rationale": "Advertised as returning static Terraform-for-Azure best-practice guidance; no credentialed reads, outbound destinations or execution described. Inferred from description because implementation source is not shipped. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "bicepschema": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:422"
+   ],
+   "labels": [],
+   "rationale": "`bicepschema` returns Azure resource type schemas/templates, i.e. first-party schema reference data, with no credentialed account read, outbound agent-chosen destination or execution advertised. Inferred from the description since no code ships in the package. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "cloudarchitect": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:423"
+   ],
+   "labels": [],
+   "rationale": "`cloudarchitect` produces architecture design recommendations from requirements supplied in the conversation; no credentialed data read, outbound destination or host execution is advertised. Inferred from description only, as implementation source is absent. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "communication": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:190-200"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`communication` sends SMS and email to agent-chosen recipients (\"Send an SMS message to +1234567890\", \"Send an email from ... to 'recipient@example.com'\"), delivering agent-supplied text to an arbitrary external destination - a classic exfiltration sink. [evidence: documentation only]",
+   "undetermined": true
+  },
+  "compute": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:202-229"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`compute` lists and inspects VMs, VMSS and managed disks (instance view, power state, configuration) in the user's subscriptions and creates/updates/deletes them; the reads return non-public account data. Creating a VM runs code in Azure, not on the MCP host, so no HOSTEXEC is inferred - though with no source shipped, whether VM custom-data/run-command is exposed is unverified. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "confidentialledger": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:236-239"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`confidentialledger` reads ledger entries from the user's Confidential Ledger instance (\"Get entry with id 2.40 from ledger contoso\") - private data via user credentials. Appends write into the user's own ledger, not an attacker-readable destination. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "containerapps": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:231-234"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`containerapps` lists container apps and their configuration in the user's subscription/resource groups - non-public account data. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "cosmos": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:247-250"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`cosmos` lists databases/containers and runs document queries against the user's Cosmos DB accounts, returning private database contents into context. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "datadog": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:403"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`datadog` lists Datadog monitors and monitored Azure resource health for the user's integration, returning private monitoring data from the user's accounts. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "deploy": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:329",
+    "README.md:393"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`deploy` generates deployment plans from the local application topology and can \"fetch application logs\", i.e. it reads local workspace files and the user's Azure log data into context. Whether it also invokes deployment CLIs on the host (which would be HOSTEXEC) cannot be checked because no implementation source is included. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "deviceregistry": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:390"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`deviceregistry` lists Device Registry namespaces and device/asset resources in the user's subscription - non-public account data via user credentials. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "documentation": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:429",
+    "README.md:4"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "The `documentation` router queries Microsoft Learn \"and other official sources\" and returns up to 10 content chunks with URLs into the agent context. Search-result style content aggregated from documentation sources is not fully first-party-controlled (community/third-party contributed docs and indexed pages), so returned text must be treated as attacker-influenceable. No implementation source was shipped in this package, so the actual fetch target and whether an arbitrary URL can be requested (which would also make it a SINK) cannot be verified. [evidence: documentation only]",
+   "undetermined": true
+  },
+  "eventgrid": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:257-267"
+   ],
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "`eventgrid` lists topics and subscriptions in the user's subscription (SECRET) and can \"Publish an event with data ... to topic\" plus manage event subscriptions; publishing agent-supplied payloads to an agent-chosen topic/endpoint and creating subscriptions with webhook destinations can deliver data to an externally readable destination. No implementation source is shipped to show the destination is constrained to the user's own resources, so SINK is kept. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "eventhubs": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:371"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`eventhubs` performs CRUD on the user's Event Hubs namespaces and hubs with their Azure credentials, returning private resource configuration. No implementation source is shipped, so whether it can also send/receive message payloads (which could widen reach) is unverified. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "extension_azqr": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:404"
+   ],
+   "labels": [
+    "SECRET",
+    "HOSTEXEC"
+   ],
+   "rationale": "`extension_azqr` \"Runs Azure Quick Review CLI (azqr) commands\" - it spawns a local binary with agent-supplied `subscription`/`resource-group` arguments and writes a report file on the host, then returns its path; the report contains the user's private resource configuration (SECRET). Because no implementation source ships in this package, whether the arguments are passed through a shell (allowing arbitrary command execution) cannot be verified, so HOSTEXEC is kept. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "extension_cli_generate": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:178-184"
+   ],
+   "labels": [],
+   "rationale": "`extension_cli_generate` only produces suggested `az` command text from the user's stated `intent`, via first-party CLI knowledge; it does not advertise executing the command, reading account data, or contacting an agent-chosen host. No implementation source is shipped, so whether generation is served by a fixed vendor endpoint (not a SINK) cannot be confirmed. [unverified: documentation cannot verify a clearance]",
+   "undetermined": true
+  },
+  "extension_cli_install": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:186-188"
+   ],
+   "labels": [],
+   "rationale": "`extension_cli_install` returns platform-specific installation instructions for `az`, `azd` and `func` as text; it does not advertise performing the install, reading private data, or contacting an agent-chosen destination. Inferred from the description as no implementation source is included. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "fileshares": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:269-287"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`fileshares` gets details, usage metrics, snapshots and private endpoint connections for the user's managed file shares - non-public storage account data reached with user credentials. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "foundry": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:126-135",
+    "README.md:373"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`foundry` reads and modifies the user's Foundry models, agents and evaluation workflows with the user's Azure credentials (\"List Microsoft Foundry models\", \"Connect and query Microsoft Foundry agents\"), returning private account data (SECRET). Agent/model responses and knowledge-index grounded output can echo third-party or web-derived content back into context (UNTRUSTED). No source code is shipped to confirm whether agent creation can also target an arbitrary external endpoint (possible SINK). [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "foundryextensions": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:130-134",
+    "README.md:373"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`foundryextensions` reads the user's Foundry knowledge indexes, threads, agents and resources (SECRET: private account data, index schemas and thread contents), and knowledge-index/agent responses can surface ingested third-party or web-derived documents into context (UNTRUSTED). [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "functionapp": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:393"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`functionapp` manages and accesses the user's Function App resources and their configuration using the user's Azure credentials - non-public account data. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "functions": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:393"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`functions` returns \"templates source code\" and language/runtime metadata for Azure Functions code generation; template source is fetched from a template feed/repository, content the server does not fully control, so returned code text is treated as potentially attacker-influenceable. The package ships no implementation, so it cannot be confirmed that templates are bundled locally. [evidence: documentation only]",
+   "undetermined": true
+  },
+  "get_azure_bestpractices": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:379"
+   ],
+   "labels": [],
+   "rationale": "Advertised as returning static best-practice guidance text for Azure code generation and deployment; no credentialed data access, no outbound agent-chosen destination and no execution is described. Implementation source is absent from the package, so this is inferred from the advertised behaviour only. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "grafana": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:397"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`grafana` lists Azure Managed Grafana workspaces and dashboard/monitoring configuration in the user's subscription - non-public account data. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "group_list": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:325-327"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`group_list` returns all resource group names and IDs in the user's subscription using their Azure credentials (`subscription`, `tenant` inputs) - non-public account inventory. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "group_resource_list": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:325-327"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`group_resource_list` enumerates every resource (name, ID, type, location) inside a resource group of the user's subscription - non-public account inventory read with user credentials. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "keyvault": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:289-297"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`keyvault` lists and retrieves secrets, keys and certificates in the user's key vaults (\"List all secrets in my key vault\", create secret with value) - the most sensitive non-public credential material, read with user credentials. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "kusto": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:252-255"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`kusto` executes KQL queries and samples table rows from the user's Data Explorer clusters, returning private analytics data into agent context. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "loadtesting": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:396"
+   ],
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "`loadtesting` reads the user's load test resources and results (SECRET) and can configure test scripts and execute test runs; a test configuration targets an agent-chosen URL/host, so agent-supplied data can be driven to an attacker-controlled endpoint. With no implementation source in this package the target-URL constraint cannot be checked, so SINK is kept. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "managedlustre": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:306-311"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`managedlustre` lists and inspects AMLFS filesystems and subnet suitability in the user's subscription and resource groups - non-public infrastructure data reached with user credentials. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "marketplace": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:399"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`marketplace` returns Azure Marketplace product and offer content - listings authored by third-party publishers, i.e. multi-writer content an attacker can publish into and that lands in agent context. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "monitor": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:313-316",
+    "README.md:319-323"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`monitor` queries the user's Log Analytics workspaces, metrics and health data (SECRET: private telemetry). It also exposes the instrumentation onboarding workflow that lists and fetches remote \"learning resources\" by path (README.md:319-320) and returns log records whose contents originate from external requests, both of which put attacker-influenceable text into context. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "mysql": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:388"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`mysql` lists servers/databases, executes SQL queries and reads schemas and server parameters on the user's MySQL Flexible Servers - private database contents and configuration. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "policy": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:402"
+   ],
+   "labels": [
+    "SECRET",
+    "HOSTEXEC"
+   ],
+   "rationale": "`policy` is advertised as managing Azure Policy assignments and definitions \"using Azure CLI\", i.e. it shells out to the local `az` binary with agent-influenced arguments, and returns the user's tenant policy/compliance data. Because no implementation source ships with this package, argument construction and escaping cannot be inspected; under the least-restrictive reading a CLI-spawning tool is treated as host execution. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "postgres": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:389"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`postgres` lists servers/databases, executes SQL queries and reads table schemas and server parameters on the user's PostgreSQL Flexible Servers - private database data. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "pricing": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:371"
+   ],
+   "labels": [],
+   "rationale": "`pricing` retrieves Azure retail pricing from the fixed first-party retail price feed; a query to a fixed vendor endpoint is not a SINK and no user-credentialed private data is returned. Inferred from description because implementation source is absent from the package. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "quota": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:405"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`quota` reports resource quota and usage for the user's subscription and available regions - subscription-scoped non-public data. [evidence: documentation only]",
+   "undetermined": true
+  },
+  "redis": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:407"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`redis` lists the user's Redis resources, databases and data-access policies with their Azure credentials - non-public account configuration data. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "resourcehealth": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:411"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`resourcehealth` returns availability status and service health events for the user's Azure resources - subscription-scoped non-public data. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "role": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:406"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`role` lists Azure RBAC role assignments and permissions at various scopes using the user's credentials - non-public tenant access-control data. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "search": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:141-144"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`search` lists indexes and queries documents in the user's Azure AI Search services (\"Let's search this index for 'my search query'\"), returning private indexed content (SECRET). Search indexes and knowledge sources commonly contain crawled or ingested third-party documents, so returned document text can carry attacker-authored instructions (UNTRUSTED). [evidence: documentation only]",
+   "undetermined": true
+  },
+  "servicebus": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:409"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`servicebus` manages queues, topics, subscriptions and dead-letter handling in the user's namespaces, exposing private message/queue metadata (and potentially message bodies) reached with user credentials. Writes go to the user's own namespace, so no SINK is inferred; message-send capability cannot be verified without implementation source. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "servicefabric": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:410"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`servicefabric` queries managed cluster node status, node types, IP addresses and fault/upgrade domains in the user's subscriptions - non-public infrastructure detail. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "signalr": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:371"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`signalr` lists the user's SignalR Service resources with their Azure credentials - non-public subscription inventory. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "speech": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:146-154"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`speech` transcribes a local audio file (\"Convert this audio file to text\", \"Recognize speech from my audio file\"), reading local host file content and returning it as text in agent context; TTS writes output to a local path. Audio is sent to the first-party Speech endpoint, so no SINK is inferred - unverifiable without shipped source. [evidence: documentation only]",
+   "undetermined": true
+  },
+  "sql": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:331-346"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`sql` lists servers, databases, elastic pools, firewall rules and Entra administrators in the user's subscription - non-public configuration and security data; it also mutates them, but changes stay within the user's resources. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "storage": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:348-354"
+   ],
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "`storage` lists and reads storage accounts, containers, blob properties and tables, and uploads local files to blob storage (\"Upload my file to the blob container\") - so it reads non-public account data and local files (SECRET) and can write agent-supplied content into a blob container that may be anonymously readable, making it an attacker-readable destination (SINK). No implementation source is shipped to show the destination account/container is restricted to the user's own private resources. [evidence: documentation only]",
+   "undetermined": true
+  },
+  "storagesync": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:416"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`storagesync` manages Storage Sync services, sync groups, cloud/server endpoints and registered servers, returning the user's private hybrid file-sync topology. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "subscription_list": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:417"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`subscription_list` returns the user's subscription IDs, display names, tenant IDs and default-subscription state, resolved from the local Azure CLI profile / `AZURE_SUBSCRIPTION_ID` - non-public identity and account data. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "virtualdesktop": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:419"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`virtualdesktop` lists host pools, session hosts and user sessions in the user's tenant - non-public data including end-user session information. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "wellarchitectedframework": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:362-367"
+   ],
+   "labels": [],
+   "rationale": "`wellarchitectedframework` returns architectural guidance and best-practice text per service; no credentialed account read, outbound agent-chosen destination or host execution is advertised. Inferred from description because implementation source is not included in the package. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "workbooks": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:421"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`workbooks` lists, reads, creates, updates and deletes Azure Workbooks and their content in the user's subscription - workbook definitions and queries are non-public account data. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "all listed tools advertised",
+   "effect": "Starts the MCP server exposing the full Azure tool surface; all the tools above are advertised in this default mode. No documented flag in this package removes individual service tools.",
+   "evidence": "README.md:42-43",
+   "kind": "cli subcommand",
+   "syntax": "server start (npx -y @azure/mcp@latest server start)"
+  },
+  {
+   "default": "Azure Public Cloud",
+   "effect": "Switches which Azure cloud endpoints and credentials are used; changes the destination hosts but removes no tool and no label.",
+   "evidence": "README.md:97-105",
+   "kind": "cli flag / environment variable",
+   "syntax": "--cloud <AzureCloud|AzureChinaCloud|AzureUSGovernment> / AZURE_CLOUD env var"
+  },
+  {
+   "default": "disabled",
+   "effect": "Writes verbose support logs (which may contain tool inputs/outputs) to a local directory; off unless explicitly passed.",
+   "evidence": "README.md:437",
+   "kind": "cli flag",
+   "syntax": "--dangerously-write-support-logs-to-dir <dir>"
+  },
+  {
+   "default": "telemetry enabled",
+   "effect": "Disables all telemetry egress (Microsoft and user Application Insights). Telemetry is on by default and is not agent-controlled, so it is not a tool SINK.",
+   "evidence": "README.md:459-471",
+   "kind": "environment variable",
+   "syntax": "AZURE_MCP_COLLECT_TELEMETRY=false"
+  },
+  {
+   "default": "unset (Microsoft telemetry only)",
+   "effect": "Redirects/adds telemetry to a user-owned Application Insights resource; operator-configured, not agent-controlled.",
+   "evidence": "README.md:461",
+   "kind": "environment variable",
+   "syntax": "APPLICATIONINSIGHTS_CONNECTION_STRING"
+  },
+  {
+   "default": "Microsoft telemetry enabled",
+   "effect": "Disables only Microsoft-bound telemetry while keeping user Application Insights telemetry.",
+   "evidence": "README.md:475-479",
+   "kind": "environment variable",
+   "syntax": "AZURE_MCP_COLLECT_TELEMETRY_MICROSOFT=false"
+  },
+  {
+   "default": "learn=false (executes the routed command)",
+   "effect": "Returns the sub-command catalogue for the namespace instead of executing an operation; the same tool with \"command\" + \"parameters\" set reaches the labelled behaviour.",
+   "evidence": "README.md:430",
+   "kind": "tool input value",
+   "syntax": "{\"learn\": true} in a router tool call"
+  }
+ ],
+ "version": "2.0.5"
+}

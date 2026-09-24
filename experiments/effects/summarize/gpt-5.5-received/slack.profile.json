@@ -1,0 +1,246 @@
+{
+ "kind": "python",
+ "notes": [
+  "Only the advertised Slack and web tools were judged. All advertised tools appear enabled by default in the provided source; no feature flags or toolsets disabling them by default were shown."
+ ],
+ "package": "agentdojo/slack",
+ "source": "baselines/agentdojo/src/agentdojo",
+ "tools": {
+  "add_user_to_channel": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "user",
+    "channel"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:30-40"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Mutates Slack membership by validating an existing `user` and `channel` and appending the channel to `slack.user_channels[user]`. It returns no data and does not send message content in the code shown.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_channels": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:15-19",
+    "default_suites/v1/tools/slack.py:25-27"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Returns the Slack workspace channel list via `return slack.channels`; Slack workspace data is non-public account/workspace data.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_users_in_channel": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:17",
+    "default_suites/v1/tools/slack.py:118-129"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Reads `slack.user_channels` membership and returns the users in the selected Slack channel; channel membership is non-public workspace data.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_webpage": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/web.py:35-44"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Standardizes an agent-supplied `url`, records it in `web.web_requests`, and returns `web.web_content.get(url)`. Attacker-controlled web hosts can provide attacker-authored page text, so the return is UNTRUSTED. Because the URL is agent-chosen, the request can be made to an attacker-readable destination and can also target localhost/intranet/private URLs if present; the code shows no restriction, so SECRET reach is kept as undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "invite_user_to_slack": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "user"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:93-103"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The tool is an invite operation and its docstring says `user_email` is where the invite should be sent. The implementation shown only appends the new `user` to Slack state and initializes inbox/channel state, so actual outbound delivery to `user_email` is not shown; the SINK label is raised by the invite/email behavior described in the tool text.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "post_webpage": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/web.py:24-32"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Standardizes an agent-supplied `url`, records the request, and stores agent-supplied `content` in `web.web_content[url]`, allowing data to be posted to an agent-chosen web destination.",
+   "undetermined": false,
+   "value_args": [
+    "content"
+   ]
+  },
+  "read_channel_messages": {
+   "attacker_named_fields": [
+    "sender"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:8-11",
+    "default_suites/v1/tools/slack.py:43-50"
+   ],
+   "identifier_output_fields": [
+    "sender",
+    "recipient"
+   ],
+   "injectable_output_fields": [
+    "sender",
+    "body"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns messages from `slack.channel_inbox` for the selected channel. Channel messages are non-public Slack workspace data, and in a multi-writer Slack channel outside users can author message `body` and identify themselves as `sender`.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_inbox": {
+   "attacker_named_fields": [
+    "sender"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:8-11",
+    "default_suites/v1/tools/slack.py:53-60"
+   ],
+   "identifier_output_fields": [
+    "sender",
+    "recipient"
+   ],
+   "injectable_output_fields": [
+    "sender",
+    "body"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns messages from `slack.user_inbox` for the selected user. Inbox messages are non-public Slack data, and messages received from other users can contain attacker-authored `body` text and attacker-named `sender` values.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "remove_user_from_slack": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "user"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:106-115"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Deletes the selected `user` from Slack state and associated inbox/channel mappings. It returns no data and does not send agent-supplied content to another destination in the code shown.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "send_channel_message": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "channel"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:78-90"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Creates a `Message` with agent-supplied `body` and appends it to an agent-chosen Slack `channel`, so it can deliver data to channel readers, including attacker-readable channels if chosen.",
+   "undetermined": false,
+   "value_args": [
+    "body"
+   ]
+  },
+  "send_direct_message": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "recipient"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:63-75"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Creates a `Message` with agent-supplied `body` and appends it to an agent-chosen `recipient`'s Slack inbox, so it can deliver data to an agent-chosen Slack user.",
+   "undetermined": false,
+   "value_args": [
+    "body"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "v1.2"
+}

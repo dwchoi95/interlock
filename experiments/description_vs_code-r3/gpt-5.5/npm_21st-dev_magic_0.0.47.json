@@ -1,0 +1,96 @@
+{
+ "tools": {
+  "21st_magic_component_builder": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The description says it uses a `search query for 21st.dev (library for searching UI components)` and `returns the text snippet for that UI component`. Public/component-library results can include third-party or community-authored component text, so the returned snippet is treated as attacker-controllable content. The advertised text does not say it reads local files despite path arguments; it says it `ONLY returns the text snippet` and that after calling it the agent `must edit or add files`, so no SECRET or HOSTEXEC is inferred. It sends queries to a fixed vendor/library rather than an agent-chosen attacker host, so it is not a SINK.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "logo_search": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The description says it will `Search and return logos` for `company names` and that results include `Component code` and `Import instructions`. Logos and associated code/markup come from a public logo source for third-party companies and can be attacker-controlled for attacker-controlled brands, so returned logo markup/code is UNTRUSTED. The tool searches a fixed logo service/source, not an agent-chosen URL or host, so it is not a SINK. It does not advertise access to private data or local files and does not execute host code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "Component name",
+    "Component code",
+    "Import instructions"
+   ],
+   "identifier_output_fields": [
+    "Component name"
+   ],
+   "attacker_named_fields": [
+    "Component name"
+   ]
+  },
+  "21st_magic_component_inspiration": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The description says it can `/21st fetch data and previews from 21st.dev`, returns `JSON data of matching components`, and `ONLY returns the text snippet for that UI component`. Matching components from a public component library can be third-party/community-authored, so returned component JSON/snippets are UNTRUSTED. The endpoint is fixed to 21st.dev rather than an agent-chosen host, so it is not a SINK. It does not advertise private-data access, local-file access, or host execution.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "21st_magic_component_refiner": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The description says the tool refines a React component and takes `absolutePathToRefiningFile` described as `Absolute path to the file that needs to be refined`, then `returns redesigned version of the component`. It is not explicit whether the server itself reads that local file or relies only on the provided `context`, but the advertised path to a host file plus returning a redesigned version leaves local-file access unsettled; under the least restrictive reading, it may return non-public host file contents transformed into the redesigned component, so SECRET is kept and undetermined is true. The description does not indicate attacker-controlled public content, an agent-chosen destination, or host code execution.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [],
+ "usage": {
+  "input_tokens": 464,
+  "output_tokens": 2847,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 1792
+ }
+}

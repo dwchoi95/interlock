@@ -1,0 +1,386 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Only fragments of the bundle were provided; handlers for browser_close, browser_resize, browser_console_messages, browser_find, browser_press_key, browser_hover, browser_select_option, browser_drag, browser_fill_form, browser_handle_dialog, browser_wait_for, browser_take_screenshot and browser_run_code_unsafe are not in the excerpt, so those entries are marked undetermined where the label depends on unseen code and the least-restrictive (label-keeping) reading was used.",
+  "Most action tools call response.setIncludeSnapshot() (e.g. coreBundle.js:64621, 67084, 67321, 67336), so essentially every tool returns page content and therefore inherits UNTRUSTED (attacker-controlled page) and SECRET (authenticated/intranet page) reach.",
+  "browser_run_code_unsafe is advertised by default in this build and is self-described as RCE-equivalent in the Playwright server process, which makes the whole server host-exec capable regardless of the other tools.",
+  "dependency sources included: playwright-core@1.64.0-alpha-2026-09-14"
+ ],
+ "package": "@playwright/mcp",
+ "source": ".cache/sources/.views/npm_playwright_mcp_0.0.81_307d4f86916b",
+ "tools": {
+  "browser_click": {
+   "default_enabled": true,
+   "evidence": [
+    "coreBundle.js:64620-64640",
+    "coreBundle.js:64621"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`click` acts on a page element and `setIncludeSnapshot` returns the resulting page content (attacker-controlled text, or private content of an authenticated page). Clicking can submit data already present in the page but carries no agent payload itself, so no SINK label.",
+   "undetermined": false
+  },
+  "browser_close": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:894-898"
+   ],
+   "labels": [],
+   "rationale": "`browser_close` only closes the page; no source handler shown in the bundle and its schema takes no arguments, so it neither returns page content nor delivers data anywhere. [unverified: documentation cannot verify a clearance]",
+   "undetermined": true
+  },
+  "browser_console_messages": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:902-909"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns all console messages of the current page. A visited attacker page can emit arbitrary console text (UNTRUSTED), and messages from the user's authenticated / localhost pages are non-public data returned into the agent context (SECRET). Handler body is not in the provided excerpt, so the reading is kept least restrictive. [evidence: documentation only]",
+   "undetermined": true
+  },
+  "browser_drag": {
+   "default_enabled": true,
+   "evidence": [
+    "coreBundle.js:64643-64652"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`drag` performs drag-and-drop between two page elements; the response includes the page snapshot, returning attacker-controlled and authenticated page content. Handler body is not in the provided excerpt.",
+   "undetermined": true
+  },
+  "browser_drop": {
+   "default_enabled": true,
+   "evidence": [
+    "coreBundle.js:64798-64805",
+    "coreBundle.js:64803"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`drop` delivers agent-supplied `data` (arbitrary MIME-typed strings) and local files from `paths` into the page's drop handler; on an attacker page this is a direct exfiltration channel for both agent data and local file content. Response includes the page snapshot, returning attacker-controlled and authenticated page content.",
+   "undetermined": false
+  },
+  "browser_evaluate": {
+   "default_enabled": true,
+   "evidence": [
+    "coreBundle.js:66809-66814",
+    "coreBundle.js:66802-66807",
+    "coreBundle.js:66783"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`evaluate2` runs `eval` of agent-supplied code inside the page via `page.evaluate`/`locator.evaluate` and returns its result. Page DOM of authenticated or intranet/localhost sites is read back (SECRET), the returned value is attacker-controllable when the page is attacker-owned (UNTRUSTED), and the injected script can `fetch()` any attacker host with arbitrary agent data (SINK). Execution is confined to the browser page, so not HOSTEXEC.",
+   "undetermined": false
+  },
+  "browser_file_upload": {
+   "default_enabled": true,
+   "evidence": [
+    "coreBundle.js:64788-64793",
+    "coreBundle.js:64784"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`uploadFile` resolves client filenames and calls `fileChooser.setFiles(paths)`, pushing arbitrary local file contents into the currently open page - if that page is attacker-controlled this exfiltrates host files (SINK, and the file content is non-public data leaving the host). It also sets `setIncludeSnapshot`, returning page content (UNTRUSTED/SECRET).",
+   "undetermined": false
+  },
+  "browser_fill_form": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:958-963",
+    "coreBundle.js:69175-69187"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Fills multiple fields with agent-supplied values (same mechanism as `fill`/`browser_type`); values land in a page-controlled form that an attacker site can read or submit, so it is a SINK. Responses include the page snapshot, returning attacker-controlled and authenticated page content. Handler body not in the excerpt.",
+   "undetermined": true
+  },
+  "browser_find": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:967-973"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Searches the accessibility snapshot and returns matching nodes with surrounding context - i.e. page text. Attacker pages supply arbitrary text (UNTRUSTED) and the user's logged-in / intranet pages supply non-public content (SECRET). Handler body not in excerpt. [evidence: documentation only]",
+   "undetermined": true
+  },
+  "browser_handle_dialog": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:977-983",
+    "coreBundle.js:69306-69322"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Accepting/dismissing a dialog reports the page dialog state and (like other action tools, cf. `setIncludeSnapshot`) a fresh page snapshot, so attacker-page text and content of the user's authenticated pages flow back. `promptText` is handed to the page, but that is a narrow channel; handler body not present in the excerpt.",
+   "undetermined": true
+  },
+  "browser_hover": {
+   "default_enabled": true,
+   "evidence": [
+    "coreBundle.js:64754",
+    "README.md:987-993"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`hover` is part of the snapshot tool set and returns the page snapshot after hovering, bringing attacker-controlled page text and content of the user's authenticated pages into context. Handler body not in the excerpt.",
+   "undetermined": true
+  },
+  "browser_navigate": {
+   "default_enabled": true,
+   "evidence": [
+    "coreBundle.js:67313-67322",
+    "README.md:411"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`navigate` sends the browser to any agent-chosen URL via `checkUrlAndNavigate`, so data can be smuggled into the URL to an attacker host (SINK), and the resulting snapshot returns attacker-controlled page content (UNTRUSTED). With the user's persistent profile (or `--allow-unrestricted-file-access` for file://) it also renders authenticated / localhost / intranet content back into context (SECRET).",
+   "undetermined": false
+  },
+  "browser_navigate_back": {
+   "default_enabled": true,
+   "evidence": [
+    "coreBundle.js:67334-67337"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`goBack` re-renders a previous page and sets `setIncludeSnapshot`, returning that page's content - possibly an attacker page (UNTRUSTED) or the user's authenticated page (SECRET). No agent-chosen destination, so not a SINK.",
+   "undetermined": false
+  },
+  "browser_network_request": {
+   "default_enabled": true,
+   "evidence": [
+    "coreBundle.js:67571-67582",
+    "coreBundle.js:67491-67506",
+    "coreBundle.js:67481"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`request` returns full request/response headers and bodies (`saveResponseBody`, `renderRequestDetails`), which includes cookies and Authorization headers of the user's sessions and private response payloads (SECRET); response bodies from visited sites are attacker-controlled (UNTRUSTED).",
+   "undetermined": false
+  },
+  "browser_network_requests": {
+   "default_enabled": true,
+   "evidence": [
+    "coreBundle.js:67531-67554"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`requests` enumerates all recorded requests of the session, including URLs of intranet/authenticated endpoints (SECRET), and the URLs themselves come from visited pages an attacker may control (UNTRUSTED).",
+   "undetermined": false
+  },
+  "browser_press_key": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:1036-1041",
+    "coreBundle.js:69025-69033"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Presses a single key on the page; the follow-up response carries a page snapshot (attacker-controlled text, and content of the user's authenticated pages). Keystrokes can trigger a form submit but carry no agent payload themselves. Handler body not present in the excerpt.",
+   "undetermined": true
+  },
+  "browser_resize": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:1045-1051",
+    "coreBundle.js:69324-69333"
+   ],
+   "labels": [],
+   "rationale": "`browser_resize` only sets window width/height (`resize2` command maps to it); no data in or out.",
+   "undetermined": false
+  },
+  "browser_run_code_unsafe": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:1055-1061",
+    "coreBundle.js:69335-69346"
+   ],
+   "labels": [
+    "HOSTEXEC",
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Advertised as running an arbitrary JavaScript function in the Playwright server process and self-described as RCE-equivalent; `runCode2` maps the `run-code` command to `browser_run_code_unsafe` and can also load the code from a file. Arbitrary code in the server process is host execution, which implies reading host secrets, fetching attacker content and exfiltrating anywhere.",
+   "undetermined": false
+  },
+  "browser_select_option": {
+   "default_enabled": true,
+   "evidence": [
+    "coreBundle.js:64755",
+    "README.md:1065-1072"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`selectOption` chooses dropdown values in the page and returns the resulting snapshot (attacker-controlled / authenticated page content). Values are constrained to existing options, so it is not a meaningful exfiltration channel. Handler body not in the excerpt.",
+   "undetermined": true
+  },
+  "browser_snapshot": {
+   "default_enabled": true,
+   "evidence": [
+    "coreBundle.js:64590-64603"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`snapshot` captures the full accessibility tree of the current page via `setIncludeFullSnapshot`, returning attacker-controlled page text (UNTRUSTED) and the content of the user's logged-in / localhost pages (SECRET). The optional `filename` writes into the workspace, not a public destination.",
+   "undetermined": false
+  },
+  "browser_tabs": {
+   "default_enabled": true,
+   "evidence": [
+    "coreBundle.js:68055-68061",
+    "coreBundle.js:68075-68076"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`browserTabs` with `action: \"new\"` navigates the new tab to any agent-chosen URL through `checkUrlAndNavigate`, so agent data can be sent to an attacker host (SINK); it then renders tab headers/snapshots, returning attacker page titles/URLs (UNTRUSTED) and the user's authenticated page state (SECRET).",
+   "undetermined": false
+  },
+  "browser_take_screenshot": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:1088-1098",
+    "coreBundle.js:66762"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns a rendered image of the current page into the agent context: attacker-page pixels/text (UNTRUSTED) and views of the user's authenticated or intranet pages (SECRET). Images are added to the response as results (cf. `response2.addResult` for image payloads).",
+   "undetermined": false
+  },
+  "browser_type": {
+   "default_enabled": true,
+   "evidence": [
+    "coreBundle.js:67086-67089",
+    "coreBundle.js:67091-67094",
+    "coreBundle.js:67084"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`type` writes agent-supplied text into a page element with `locator2.fill`/`pressSequentially` and can press Enter to submit; on an attacker-controlled page this delivers arbitrary agent data to the attacker (SINK). `setIncludeSnapshot` returns page content, which is attacker-controllable and may be from the user's authenticated session. `lookupSecret` only masks configured secrets in the echoed code, it does not stop delivery.",
+   "undetermined": false
+  },
+  "browser_wait_for": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:1115-1122"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Waits for text to appear/disappear and returns the resulting page state, so attacker page text and content of the user's authenticated pages reach the agent. Handler body not in the provided excerpt, so labels kept. [evidence: documentation only]",
+   "undetermined": true
+  },
+  "browser_webmcp_call": {
+   "default_enabled": true,
+   "evidence": [
+    "coreBundle.js:64997-65000",
+    "coreBundle.js:64976"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`webmcpCall` serializes agent-supplied `params` and runs `callToolInPage` through `frame.evaluate`, handing that data to page-provided JavaScript (an attacker page can read and forward it - SINK), and returns the page-provided output which the tool itself declares untrusted.",
+   "undetermined": false
+  },
+  "browser_webmcp_list": {
+   "default_enabled": true,
+   "evidence": [
+    "coreBundle.js:64961-64969",
+    "coreBundle.js:64957"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`webmcpList` renders the tool listing registered by the page itself (`tab2.webmcpTools()`), i.e. names, descriptions and schemas fully controlled by whatever site is loaded - prime prompt-injection content.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "off (restricted to workspace roots; file:// navigation blocked)",
+   "effect": "When enabled, allows navigation to file:// URLs and file access outside workspace roots, widening the SECRET reach of browser_navigate/browser_snapshot/browser_evaluate and the file-reading reach of browser_file_upload/browser_drop. Default restricts filesystem access to workspace roots and blocks file:// navigation (but the README calls it a guardrail, not a security boundary).",
+   "evidence": "README.md:411",
+   "kind": "flag/env",
+   "syntax": "--allow-unrestricted-file-access / PLAYWRIGHT_MCP_ALLOW_UNRESTRICTED_FILE_ACCESS"
+  },
+  {
+   "default": "all origins allowed",
+   "effect": "Restricts which origins the browser may request, which can narrow the SINK/UNTRUSTED surface of navigation and page-driven fetches; explicitly documented as not a security boundary and not affecting redirects. Enforcement point is checkUrlAndNavigate.",
+   "evidence": "README.md:410",
+   "kind": "flag/env",
+   "syntax": "--allowed-origins <origins> / --blocked-origins <origins> (PLAYWRIGHT_MCP_ALLOWED_ORIGINS, PLAYWRIGHT_MCP_BLOCKED_ORIGINS)"
+  },
+  {
+   "default": "core capabilities only",
+   "effect": "Adds further tool groups (storage/cookie readers, network routing, devtools, pdf, vision). None of the tools judged here depend on it; all advertised tools above are core and enabled by default.",
+   "evidence": "README.md:415",
+   "kind": "flag/env",
+   "syntax": "--caps <caps> (vision, pdf, devtools, network, storage, config / PLAYWRIGHT_MCP_CAPS)"
+  },
+  {
+   "default": "no secrets file",
+   "effect": "Configured secret values are substituted/masked in tool responses (see lookupSecret use in browser_type); a convenience only, does not remove SECRET or SINK reach.",
+   "evidence": "README.md:445",
+   "kind": "flag/env",
+   "syntax": "--secrets <path> / PLAYWRIGHT_MCP_SECRETS_FILE"
+  },
+  {
+   "default": "persistent profile with the user's logged-in state",
+   "effect": "Runs with an in-memory profile instead of the persistent logged-in profile, reducing (but not eliminating, e.g. with --storage-state) the credentialed data reachable by page-reading tools.",
+   "evidence": "README.md:434",
+   "kind": "flag/env",
+   "syntax": "--isolated / PLAYWRIGHT_MCP_ISOLATED, --storage-state <path>"
+  }
+ ],
+ "version": "0.0.81"
+}

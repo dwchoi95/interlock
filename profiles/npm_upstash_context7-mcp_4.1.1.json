@@ -1,0 +1,74 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Neither tool exposes a URL, host, path, recipient or command argument; every network call targets `CONTEXT7_API_BASE_URL` (dist/lib/api.js:106, dist/lib/api.js:136), a build-time constant in dist/lib/constants.js (not included in the provided source). Read as a fixed vendor endpoint, hence no SINK label; if that constant were operator-overridable it would still not be agent-chosen per-call.",
+  "Tool arguments (`query`) are transmitted to the vendor as URL query parameters, and the tool descriptions explicitly warn against including secrets \u2014 this is a vendor telemetry/privacy consideration, not an attacker-readable destination.",
+  "The HTTP transport also exposes non-MCP routes (/ping, OAuth metadata proxy at dist/index.js:438-465, /.well-known/openai-apps-challenge) but these are server endpoints, not advertised tools.",
+  "`maybeElicitAuthSignIn` (dist/index.js:209, 222, 257) can send an elicitation prompt back to the client based on the upstream `X-Context7-Auth-Prompt` header (dist/lib/api.js:92-96) \u2014 vendor-driven UI text, not an exfiltration path."
+ ],
+ "package": "@upstash/context7-mcp",
+ "source": ".cache/sources/.views/npm_upstash_context7-mcp_4.1.1_2dbb1fce0840",
+ "tools": {
+  "query-docs": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:256",
+    "dist/lib/api.js:136-141",
+    "dist/lib/api.js:148-155",
+    "dist/index.js:259-266",
+    "README.md:1728"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`fetchLibraryContext` builds a URL on the fixed base `${CONTEXT7_API_BASE_URL}/v2/context` with `query` and `libraryId` as search params (`dist/lib/api.js:136-138`) and returns the raw response body text as tool content (`dist/lib/api.js:148-155`, `dist/index.js:263`). That body is crawled/community-contributed library documentation (README.md:1728), i.e. attacker-controllable prose and code snippets \u2192 UNTRUSTED. `libraryId` cannot redirect the request to an attacker host (it is only a query-string value on the vendor origin), so not a SINK; no host files, local URLs or private account data are read, so not SECRET; no process/eval execution, so not HOSTEXEC.",
+   "undetermined": false
+  },
+  "resolve-library-id": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:206",
+    "dist/lib/api.js:106-111",
+    "dist/lib/api.js:118-119",
+    "dist/index.js:220-231",
+    "README.md:1728"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "The handler calls `searchLibraries` which issues a GET to the fixed vendor endpoint `${CONTEXT7_API_BASE_URL}/v2/libs/search` with `query`/`libraryName` as URL search params (`dist/lib/api.js:106-108`) and returns the parsed JSON results straight into tool content via `formatSearchResults` (`dist/index.js:220-228`). Library names/descriptions in the Context7 index are community-contributed third-party content (README.md:1728), so returned text is attacker-influenceable \u2192 UNTRUSTED. The destination URL is a fixed vendor host, not agent-chosen, and the only argument-derived parts are query strings to that host, so this is not a SINK. Nothing local or credentialed is read back into context (only the user's API key is sent as a header via `generateHeaders`), so no SECRET; no shell/eval, so no HOSTEXEC.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "stdio",
+   "effect": "Selects stdio (default) vs an Express HTTP listener; both register the same two tools, so no label changes. In http mode requests to /mcp/oauth or with ?client=claude-code-plugin require a bearer/API key.",
+   "evidence": "dist/index.js:38-51, dist/index.js:353-389",
+   "kind": "CLI flag",
+   "syntax": "--transport <stdio|http>"
+  },
+  {
+   "default": "unset (anonymous upstream calls)",
+   "effect": "Supplies the Context7 API key used in upstream request headers; unlocks higher limits and private repositories, which can widen what documentation content is returned but does not add or remove labels here.",
+   "evidence": "dist/index.js:530, dist/lib/api.js:109",
+   "kind": "CLI flag / env var",
+   "syntax": "--api-key <key> / CONTEXT7_API_KEY"
+  },
+  {
+   "default": "unset (direct connection to the Context7 API)",
+   "effect": "Installs a global undici ProxyAgent so all upstream fetches are routed through the operator-specified proxy; does not let tool arguments choose a destination.",
+   "evidence": "dist/lib/api.js:45-75",
+   "kind": "env var",
+   "syntax": "HTTPS_PROXY / https_proxy / HTTP_PROXY / http_proxy"
+  },
+  {
+   "default": "unset",
+   "effect": "Causes the server to readFileSync the given local path at startup to build a custom CA bundle; it is startup config, not reachable from any tool argument, so it adds no tool label.",
+   "evidence": "dist/lib/api.js:50, dist/lib/api.js:57-62",
+   "kind": "env var",
+   "syntax": "NODE_EXTRA_CA_CERTS=<path>"
+  }
+ ],
+ "version": "4.1.1"
+}

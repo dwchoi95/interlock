@@ -1,0 +1,208 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All advertised tools are returned unconditionally by the `ListToolsRequestSchema` handler in build/index.js:101-378; there is no per-tool advertisement flag in that handler.",
+  "`DEFAULT_PARAMETERS` can override `tavily_search` request parameters before the call to Tavily, but it does not remove any tools or labels shown here (build/index.js:69-96 and build/index.js:534-539)."
+ ],
+ "package": "tavily-mcp",
+ "source": ".cache/sources/.views/npm_tavily-mcp_0.2.22_01f43efe7174",
+ "tools": {
+  "tavily_crawl": {
+   "attacker_named_fields": [
+    "page.url",
+    "page.favicon"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "build/index.js:235-236 defines `tavily_crawl` as crawling a website starting from a URL and extracting content.",
+    "build/index.js:240-242 declares caller-supplied `url`.",
+    "build/index.js:419-432 passes caller-supplied `url` and crawl options to `this.crawl`.",
+    "build/index.js:566-571 posts those params to the Tavily crawl endpoint and returns `response.data`.",
+    "build/index.js:870-888 formats returned `base_url`, crawled page `url`, `raw_content`, and `favicon` into the tool result."
+   ],
+   "identifier_output_fields": [
+    "response.base_url",
+    "page.url",
+    "page.favicon"
+   ],
+   "injectable_output_fields": [
+    "page.url",
+    "page.raw_content",
+    "page.favicon"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The caller controls the crawl root `url`, so the tool can cause requests to an agent-chosen host; if that URL is attacker-controlled, data encoded in the URL is delivered to an attacker-readable destination, making it a SINK. Crawled page URLs, content, and favicons can be authored by the target site, so output is UNTRUSTED. The code shows no restriction excluding localhost, intranet, or non-public URLs before forwarding to Tavily; if the backend accepts them, crawl results could expose non-public content or site structure, so SECRET is kept as undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "tavily_extract": {
+   "attacker_named_fields": [
+    "result.title",
+    "result.url",
+    "result.favicon",
+    "image",
+    "image.url"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "urls"
+   ],
+   "evidence": [
+    "build/index.js:194-195 defines `tavily_extract` as extracting content from URLs and returning raw page content.",
+    "build/index.js:199-203 declares caller-supplied `urls`.",
+    "build/index.js:409-416 passes caller-supplied `urls` and options to `this.extract`.",
+    "build/index.js:559-564 posts those params to the Tavily extract endpoint and returns `response.data`.",
+    "build/index.js:830-868 formats returned result `title`, `url`, `content`, `raw_content`, favicons, image URLs, and image descriptions into the tool result."
+   ],
+   "identifier_output_fields": [
+    "result.title",
+    "result.id",
+    "result.url",
+    "result.favicon",
+    "image",
+    "image.url"
+   ],
+   "injectable_output_fields": [
+    "result.title",
+    "result.url",
+    "result.content",
+    "result.raw_content",
+    "result.favicon",
+    "image",
+    "image.url",
+    "image.description"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The caller controls `urls`, so the tool can cause extraction/fetching of an agent-chosen URL; a URL pointing at an attacker host can carry agent-supplied data to an attacker-readable destination, making it a SINK. Returned page content and metadata are controlled by web page authors, making output UNTRUSTED. The schema/code impose no visible scheme, localhost, or intranet restriction on `urls`; if the Tavily backend accepts such URLs, the tool could return non-public URL contents, so SECRET is kept as undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "tavily_map": {
+   "attacker_named_fields": [
+    "page"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "build/index.js:305-306 defines `tavily_map` as mapping a website structure from a base URL and returning URLs found.",
+    "build/index.js:310-312 declares caller-supplied `url`.",
+    "build/index.js:440-449 passes caller-supplied `url` and map options to `this.map`.",
+    "build/index.js:573-578 posts those params to the Tavily map endpoint and returns `response.data`.",
+    "build/index.js:890-898 formats returned `base_url` and mapped page URLs into the tool result."
+   ],
+   "identifier_output_fields": [
+    "response.base_url",
+    "page"
+   ],
+   "injectable_output_fields": [
+    "page"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The caller controls `url`, so the tool can cause mapping requests to an agent-chosen host; an attacker-controlled URL can receive data encoded in the request target, making it a SINK. Returned link URLs can be controlled by the mapped site, so output is UNTRUSTED. The code does not show host/scheme filtering for localhost or intranet URLs; if Tavily accepts such targets, non-public site structure could be returned, so SECRET is kept as undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "tavily_research": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "build/index.js:358-359 defines `tavily_research` as gathering information from multiple sources and returning a detailed response.",
+    "build/index.js:457-460 passes caller-supplied `input` and `model` to `this.research`.",
+    "build/index.js:587-612 starts a Tavily research task, polls it, and returns `pollResponse.data.content`.",
+    "build/index.js:645-777 can alternatively stream research content from Tavily and assemble it into `content`.",
+    "build/index.js:900-904 returns the research `content` as the tool result."
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "The research report is based on information gathered from multiple web sources, which can include attacker-controllable public content, so output is UNTRUSTED. The tool sends `input` only to the fixed Tavily endpoint and has no URL/recipient destination argument, so it is not a SINK from the code shown.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "tavily_search": {
+   "attacker_named_fields": [
+    "result.title",
+    "result.url",
+    "result.favicon",
+    "image",
+    "image.url"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "build/index.js:105-106 defines `tavily_search` as searching the web and returning snippets/source URLs.",
+    "build/index.js:390-406 passes caller-supplied search parameters to `this.search`.",
+    "build/index.js:512-557 posts the search request to the Tavily search endpoint and returns `response.data`.",
+    "build/index.js:830-868 formats returned `answer`, result `title`, `url`, `content`, `raw_content`, favicons, image URLs, and image descriptions into the tool result."
+   ],
+   "identifier_output_fields": [
+    "result.title",
+    "result.id",
+    "result.url",
+    "result.favicon",
+    "image",
+    "image.url"
+   ],
+   "injectable_output_fields": [
+    "result.title",
+    "result.url",
+    "result.content",
+    "result.raw_content",
+    "result.favicon",
+    "image",
+    "image.url",
+    "image.description"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns web search results; arbitrary public web hosts can control result page titles, snippets/content, raw content, URLs, favicons, and image metadata, so output is UNTRUSTED. It sends the query only to the fixed Tavily endpoint, so it is not a SINK under the fixed-vendor-endpoint rule.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "If unset/empty, keyless mode is used; if set, the key is sent in Authorization headers and request bodies.",
+   "effect": "Sets `IS_KEYLESS` true. The server still advertises all tools, but logs that keyless mode is active and that only search and extract are available while other tools will return an API-key-required message; in such a no-key deployment the actual web/research reach of `tavily_crawl`, `tavily_map`, and `tavily_research` may be removed by the Tavily API.",
+   "evidence": "build/index.js:12-13 reads `process.env.TAVILY_API_KEY` and sets `IS_KEYLESS`; build/index.js:47-49 chooses keyless vs bearer-auth headers; build/index.js:54-56 logs the keyless availability limitation; build/index.js:532,562,569,576,590 conditionally include `api_key`.",
+   "kind": "environment variable",
+   "syntax": "TAVILY_API_KEY unset or empty"
+  },
+  {
+   "default": "false",
+   "effect": "Lists tool names/descriptions and exits instead of starting the MCP server, so no tools are callable in that invocation.",
+   "evidence": "build/index.js:937-948 defines `--list-tools` with default `false` and calls `listTools()`/`process.exit(0)` when set; build/index.js:949-951 starts the server otherwise.",
+   "kind": "command-line flag",
+   "syntax": "--list-tools"
+  }
+ ],
+ "version": "0.2.22"
+}

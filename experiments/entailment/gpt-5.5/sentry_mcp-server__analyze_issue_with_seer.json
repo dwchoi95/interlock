@@ -1,0 +1,18 @@
+{
+ "package": "@sentry/mcp-server",
+ "tool": "analyze_issue_with_seer",
+ "claimed": [
+  "SECRET",
+  "SINK",
+  "UNTRUSTED"
+ ],
+ "HOSTEXEC": "not_supported",
+ "SECRET": "supported",
+ "SINK": "not_supported",
+ "UNTRUSTED": "insufficient",
+ "reason": "The cited lines show the handler creating an API service from context and reading Sentry issue/autofix data via apiService.getIssue and apiService.getAutofixState, which supports SECRET as SaaS issue data being retrieved into the tool context. There is no arbitrary host code execution. The shown operations are reads to a Sentry API/allowed region endpoint, not delivery of agent-supplied data to an attacker-chosen destination, so SINK is not supported. Although issue data could in practice contain attacker-controlled content, these lines alone do not establish that the tool returns attacker-controllable content to the agent/user, so UNTRUSTED is insufficient.",
+ "usage": {
+  "input_tokens": 1085,
+  "output_tokens": 1462
+ }
+}

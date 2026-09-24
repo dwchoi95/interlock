@@ -1,0 +1,95 @@
+{
+ "tools": {
+  "browser_eval": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The description says this tool `does NOT drive the browser itself` and only `points you at agent-browser` and `tells you how to install it`; the actual browser automation would be done by commands the agent runs separately (`You then run its commands directly`). On the advertised text, the MCP tool itself is only informational and is not advertised as reading secrets, returning attacker-controlled content, sending data to an attacker-readable destination, or executing host code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "nextjs_docs": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool is advertised to find documentation for `THIS project`, using docs `inside the installed package at node_modules/next/dist/docs/`, and to return a local `path`. That reaches local project/package state and returns non-public host/project information, so SECRET applies. It `does NOT fetch documentation`, so the advertised tool is not a web fetcher or external sink. Exact output fields are not specified, so output identifiers are inferred from `path it returns`.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "path"
+   ],
+   "attacker_named_fields": []
+  },
+  "nextjs_index": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Discover[s] all running Next.js development servers` and returns local runtime details: `Server port, PID, and URL`, plus `Complete list of available MCP tools` with `Tool descriptions and input schemas`. This exposes non-public local process/dev-server state, so SECRET applies. It contacts Next.js MCP endpoints on discovered or specified dev-server ports, but the advertised destination is the local Next.js dev server rather than an attacker-chosen external host. The returned port/URL/tool names are identifiers usable in later calls. Exact result field names are not specified, so identifier fields are inferred from the described return contents.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "port",
+    "PID",
+    "URL",
+    "tools"
+   ],
+   "attacker_named_fields": []
+  },
+  "nextjs_call": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Call a specific MCP tool on a running Next.js development server`. Common tools include `Error diagnostics`, `Route information`, and `Build status`, which can expose non-public local application/runtime state, so SECRET applies. It can also perform `Cache management (clear caches)`, so it is a WRITE. The call is to a local dev server selected by `port` and a specific tool selected by `toolName`; `args` may carry the underlying tool arguments. The description does not enumerate all possible tools (`And more (varies by Next.js version)`), so the precise output fields and state-changing reach are undetermined, but the advertised text does not establish an attacker-readable external destination or arbitrary host code execution.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "port",
+    "toolName",
+    "args"
+   ],
+   "value_args": [
+    "args"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No source code or output schemas were provided; output field names are inferred only from advertised descriptions."
+ ],
+ "usage": {
+  "input_tokens": 696,
+  "output_tokens": 3860,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 1792
+ }
+}

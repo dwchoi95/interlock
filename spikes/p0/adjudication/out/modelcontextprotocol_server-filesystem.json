@@ -1,0 +1,150 @@
+{
+  "package": "@modelcontextprotocol/server-filesystem",
+  "version": "2026.8.31",
+  "source": "npm pack @modelcontextprotocol/server-filesystem@2026.8.31, tarball extracted and dist/*.js read (not installed, not executed)",
+  "tools": {
+    "read_file": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Deprecated alias of read_text_file; returns host file content from within allowed roots (local user data, not attacker-controlled under the primary model).",
+      "evidence": "dist/index.js:173 (handler dist/index.js:153-172, validatePath dist/lib.js:91-134)"
+    },
+    "read_text_file": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Reads full/head/tail text of a host file; returns host file content from within allowed roots (local user data, not attacker-controlled under the primary model).",
+      "evidence": "dist/index.js:180-196 (handler dist/index.js:153-172)"
+    },
+    "read_media_file": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns any host file within roots base64-encoded (image/audio/embedded resource).",
+      "evidence": "dist/index.js:224-257"
+    },
+    "read_multiple_files": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns contents of several host files within roots.",
+      "evidence": "dist/index.js:273-289"
+    },
+    "write_file": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Writes agent-supplied content to a local file inside roots and returns only a fixed success string; local files are not attacker-readable, so not SINK.",
+      "evidence": "dist/index.js:302-309, dist/lib.js:151-188"
+    },
+    "edit_file": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Applies edits and returns a git-style diff that includes original host file lines (also in dryRun).",
+      "evidence": "dist/index.js:326-332, dist/lib.js:207-263"
+    },
+    "create_directory": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "mkdir -p inside roots; returns a fixed success string.",
+      "evidence": "dist/index.js:345-352"
+    },
+    "list_directory": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns names of host directory entries (non-public host metadata).",
+      "evidence": "dist/index.js:365-374"
+    },
+    "list_directory_with_sizes": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns host directory entry names and sizes.",
+      "evidence": "dist/index.js:388-436"
+    },
+    "directory_tree": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns recursive JSON tree of host file names within roots.",
+      "evidence": "dist/index.js:450-488"
+    },
+    "move_file": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Renames within roots (fails if destination exists); returns a fixed success string echoing agent-supplied paths.",
+      "evidence": "dist/index.js:502-511, dist/lib.js:189-206"
+    },
+    "search_files": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns full host paths matching a glob within roots.",
+      "evidence": "dist/index.js:527-534, dist/lib.js:365-393"
+    },
+    "get_file_info": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns host file metadata (size, times, permissions).",
+      "evidence": "dist/index.js:547-556, dist/lib.js:136-147"
+    },
+    "list_allowed_directories": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns the absolute host paths of the current allowed roots (host metadata; labeled SECRET for consistency with other metadata tools, verdict-insensitive because read_text_file is always present).",
+      "evidence": "dist/index.js:567-572"
+    }
+  },
+  "value_conditions": [],
+  "notes": [
+    "No flag, env var or mode removes any tool or label: positional CLI args are only the allowed root directories (dist/index.js:17-50); there is no read-only switch. Docker ':ro' mounts (README.md:215) only block writes, which carry no label.",
+    "MCP roots replace CLI roots: if the client advertises the roots capability and returns >=1 valid directory, allowedDirectories is replaced entirely (dist/index.js:575-585, 600-610) and again on notifications/roots/list_changed (dist/index.js:587-598); if the client returns no valid roots, CLI roots are kept (dist/index.js:582-584). The root class recorded from CLI args may therefore not reflect effective access when the client supports roots.",
+    "Symlink escapes are blocked: validatePath does a lexical containment check, then realpath and re-check (dist/lib.js:99-116); for non-existent paths each existing component is realpath'd and re-checked (dist/lib.js:59-90,123); new files are created with flag 'wx' and overwrites use temp-file + atomic rename (dist/lib.js:155-166). No tool creates symlinks, so the agent cannot manufacture an escape; residual TOCTOU needs a concurrent local actor.",
+    "UNTRUSTED not assigned: all returned content is local files inside user-chosen roots, which PREREG's primary model treats as user-controlled even if a file originated from a third party (download, cloned repo). The secondary variant covers only user-credential stores, so secondary_extra is empty.",
+    "Not labeled HOSTEXEC: write_file/edit_file can plant files that another process may later execute (e.g., shell rc files or .git/hooks when a root covers them), but the server itself executes nothing; the same rule is applied to serena's file-editing tools.",
+    "Platform side channel not labeled: on macOS with a root of '/' (system-root class), realpath of /net/<host>/... can trigger the default automounter to contact an agent-chosen host; outside such roots the lexical check rejects the path before any I/O (dist/lib.js:104-107)."
+  ]
+}

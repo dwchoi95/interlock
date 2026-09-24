@@ -1,0 +1,1250 @@
+{
+ "tools": {
+  "core_list_project_teams": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns organization data using the authenticated Azure DevOps context: `Retrieve a list of teams for an Azure DevOps project` and `authenticated user`, so it can expose non-public account data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "core_list_projects": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns projects in `your Azure DevOps organization`, which may be non-public data available through the user's credentials.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "core_get_identity_ids": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves Azure DevOps identity information (`unique name, display name, email`) from the user's organization, which can be non-public account data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "displayName",
+    "uniqueName",
+    "email"
+   ],
+   "attacker_named_fields": []
+  },
+  "work": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves project/team work data such as `team settings`, `team capacity`, and `iterations`, which is non-public Azure DevOps project data reached with user credentials.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "path",
+    "team",
+    "iterationId",
+    "teamMemberId"
+   ],
+   "attacker_named_fields": []
+  },
+  "work_iteration_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `Create or assign iterations in an Azure DevOps project`; this writes agent-supplied iteration names/paths into a project. The description does not say whether the project is private or public, so attacker-readability is undetermined and the SINK label is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "team",
+    "iterations"
+   ],
+   "value_args": [
+    "iterations"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "path",
+    "identifier"
+   ],
+   "attacker_named_fields": []
+  },
+  "work_capacity_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `Update the team capacity of a team member for a specific iteration in a project`; it writes agent-supplied activities/days off to Azure DevOps. Public/readability is not specified, so SINK is kept as the least restrictive reading.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "team",
+    "teamMemberId",
+    "iterationId"
+   ],
+   "value_args": [
+    "activities",
+    "daysOff"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "teamMemberId",
+    "iterationId"
+   ],
+   "attacker_named_fields": []
+  },
+  "pipelines_build": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves build data for a project, including `issues`, `commits and work items associated with a build`, which can be non-public. Commit messages, work item titles, branch names, and build metadata may be authored by other contributors, so output can be untrusted.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "message",
+    "title",
+    "issues",
+    "commits",
+    "workItems",
+    "sourceVersionMessage"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "buildId",
+    "buildNumber",
+    "definitionId",
+    "queueId",
+    "repositoryId",
+    "branchName",
+    "commitId",
+    "workItemId",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "author",
+    "requestedFor"
+   ]
+  },
+  "pipelines_build_log": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves build logs, including `the text content of a specific log`; logs can contain non-public build output and text controlled by build scripts or repository contributors.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "content",
+    "text"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "logId",
+    "buildId",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "pipelines_definition": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves `pipeline definition data` and `revision history` for a project, which is non-public Azure DevOps project data. The advertised text does not clearly state that definition output includes attacker-authored text.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "definitionId",
+    "name",
+    "path",
+    "repositoryId",
+    "yamlFilename",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "pipelines_run": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves `pipeline run data for a project`; run data in Azure DevOps can be non-public account/project data. The description does not establish attacker-authored text in the returned run data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "runId",
+    "pipelineId",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "pipelines_artifact": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `Retrieve and download build artifacts`; artifacts may be non-public build outputs. Artifact names/content can be produced by contributor-controlled build inputs, so output may be untrusted. With `destinationPath`, it writes a local file, so kind is WRITE, but local saving is not an attacker-readable SINK by itself.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "destinationPath"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "content",
+    "artifactName"
+   ],
+   "identifier_output_fields": [
+    "artifactName",
+    "destinationPath",
+    "path",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "pipelines_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Performs `Write operations for pipelines and builds`, including `queue a new pipeline run`, `create a new YAML pipeline definition`, and `cancel, retry, or run a stage`. Agent-supplied variables, parameters, names, and repository settings are sent to Azure DevOps; public/readability is not specified, so SINK is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "pipelineId",
+    "name",
+    "folder",
+    "yamlPath",
+    "repositoryType",
+    "repositoryName",
+    "repositoryId",
+    "repositoryConnectionId",
+    "buildId",
+    "stageName"
+   ],
+   "value_args": [
+    "resources",
+    "stagesToSkip",
+    "templateParameters",
+    "variables",
+    "yamlOverride",
+    "name",
+    "folder",
+    "yamlPath",
+    "status",
+    "forceRetryAllJobs"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "runId",
+    "pipelineId",
+    "buildId",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "repo_repository": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves `repository data for an organization or project`; repository lists/details can be non-public Azure DevOps account data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "repositoryId",
+    "url",
+    "project"
+   ],
+   "attacker_named_fields": []
+  },
+  "repo_pull_request": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves `pull request data`, including labels, changed files, work item refs, and PR details; this may be non-public repository data. PR titles/descriptions/labels/source branches can be authored by contributors and are untrusted.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "labels",
+    "sourceRefName",
+    "targetRefName"
+   ],
+   "identifier_output_fields": [
+    "repositoryId",
+    "repository",
+    "pullRequestId",
+    "project",
+    "title",
+    "sourceRefName",
+    "targetRefName",
+    "commitId",
+    "workItemId",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "createdBy",
+    "created_by_user"
+   ]
+  },
+  "repo_pull_request_thread": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves `pull request thread and comment data`; PR comments are non-public if the repo is private and comment bodies/authors can be supplied by other users or external contributors.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "content",
+    "comments",
+    "text",
+    "status"
+   ],
+   "identifier_output_fields": [
+    "repositoryId",
+    "pullRequestId",
+    "project",
+    "threadId",
+    "authorEmail",
+    "authorDisplayName",
+    "id"
+   ],
+   "attacker_named_fields": [
+    "authorEmail",
+    "authorDisplayName",
+    "author"
+   ]
+  },
+  "repo_branch": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves branch data in a repository. Repository/branch data can be non-public, and branch names can be created by contributors (`list branches`, `list branches the current user has pushed to`), so identifiers may be untrusted.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "name",
+    "branchName"
+   ],
+   "identifier_output_fields": [
+    "repositoryId",
+    "project",
+    "branchName",
+    "name",
+    "commitId"
+   ],
+   "attacker_named_fields": [
+    "creator",
+    "pusher"
+   ]
+  },
+  "repo_file": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves `the text content of a file` or lists files/folders in a repository. Repo content may be non-public, and file contents, paths, branch/tag names can be authored by contributors.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "content",
+    "path",
+    "name"
+   ],
+   "identifier_output_fields": [
+    "repositoryId",
+    "path",
+    "project",
+    "version",
+    "versionType",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "repo_search_commits": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Searches commits across repositories; commit messages are explicitly searched (`Keywords to search for in commit messages`) and commit authors/branches are contributor-controlled. Results may include non-public repository data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "message",
+    "comment",
+    "searchText"
+   ],
+   "identifier_output_fields": [
+    "commitId",
+    "project",
+    "repository",
+    "branch",
+    "author",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "author"
+   ]
+  },
+  "repo_pull_request_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `create a pull request`, `update a pull request`, `add or remove pull request reviewers`, and `cast a vote`; it writes agent-supplied titles/descriptions/labels/votes into repository PRs. The text does not specify whether the destination repo/PR is private, so SINK is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "repositoryId",
+    "pullRequestId",
+    "project",
+    "sourceRefName",
+    "targetRefName",
+    "forkSourceRepositoryId",
+    "reviewerIds"
+   ],
+   "value_args": [
+    "title",
+    "description",
+    "workItems",
+    "labels",
+    "status",
+    "autoComplete",
+    "mergeStrategy",
+    "mergeCommitMessage",
+    "deleteSourceBranch",
+    "transitionWorkItems",
+    "bypassReason",
+    "reviewerAction",
+    "vote"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "pullRequestId",
+    "repositoryId",
+    "url",
+    "title"
+   ],
+   "attacker_named_fields": []
+  },
+  "repo_pull_request_thread_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `create a new comment thread on a pull request`, `reply to a comment`, and `update the status`; comment `content` is sent to a PR thread. PRs may be public/attacker-readable; the description does not rule that out.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "repositoryId",
+    "pullRequestId",
+    "project",
+    "threadId",
+    "filePath",
+    "rightFileStartLine",
+    "rightFileStartOffset",
+    "rightFileEndLine",
+    "rightFileEndOffset"
+   ],
+   "value_args": [
+    "content",
+    "status"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "threadId",
+    "commentId",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "repo_create_branch": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `Create a new branch in the repository`; branch names and selected source commits are written to an Azure DevOps repo. Public/readability of the repo is not specified, so SINK is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "repositoryId",
+    "branchName",
+    "sourceBranchName",
+    "sourceCommitId",
+    "project"
+   ],
+   "value_args": [
+    "branchName"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "branchName",
+    "repositoryId",
+    "commitId",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "wit_work_item": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves work items, comments, revisions, and work items relevant to the authenticated user; this can be non-public. Work item titles/descriptions/comments may be authored by other project participants, so output can be untrusted.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "fields",
+    "comments",
+    "text"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "ids",
+    "workItemId",
+    "project",
+    "team",
+    "iterationId",
+    "workItemType",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "author",
+    "createdBy",
+    "changedBy"
+   ]
+  },
+  "wit_query": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Runs saved or ad-hoc work item queries (`execute an ad-hoc WIQL query`) returning work item results, which can be non-public and may contain contributor-authored work item fields.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "fields",
+    "wiql",
+    "clauses"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "query",
+    "project",
+    "team",
+    "workItemId",
+    "path",
+    "name"
+   ],
+   "attacker_named_fields": [
+    "createdBy",
+    "changedBy"
+   ]
+  },
+  "wit_backlog": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves backlog levels and `work items in a specific backlog level`; backlog/work item data can be non-public, and work item titles/descriptions may be authored by project participants.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "fields"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "team",
+    "backlogId",
+    "id",
+    "workItemId",
+    "name"
+   ],
+   "attacker_named_fields": [
+    "createdBy",
+    "assignedTo"
+   ]
+  },
+  "wit_work_item_attachment": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Downloads a work item attachment and may return `base64-encoded resource`; attachments on bugs/work items can be non-public and their file names/content may be supplied by work item authors. With `savePath`, it writes locally but not to an attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "savePath"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "content",
+    "fileName"
+   ],
+   "identifier_output_fields": [
+    "attachmentId",
+    "fileName",
+    "savePath",
+    "path",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "wit_work_item_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `create a new work item`, `update fields`, and `create child work items`; agent-supplied field values, titles, and descriptions are stored in Azure DevOps. Public/readability is not specified, so SINK is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "id",
+    "workItemType",
+    "parentId",
+    "items"
+   ],
+   "value_args": [
+    "fields",
+    "updates",
+    "batchUpdates",
+    "items"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "workItemId",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "wit_work_item_comment_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `add a comment to a work item` or `update an existing comment`; `text` is written to a work item that may be public or otherwise attacker-readable. The description does not rule that out.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "workItemId",
+    "commentId"
+   ],
+   "value_args": [
+    "text",
+    "format"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "commentId",
+    "workItemId",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "wit_work_item_link_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can link/unlink work items and `add a repository, branch, commit, or build artifact link`; comments and artifact URLs/URIs can be stored in work item records. Public/readability is not specified, so SINK is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "updates",
+    "id",
+    "url",
+    "projectId",
+    "repositoryId",
+    "pullRequestId",
+    "workItemId",
+    "pullRequestProjectId",
+    "artifactUri",
+    "branchName",
+    "commitId",
+    "buildId",
+    "wikiId",
+    "pageId",
+    "pagePath",
+    "linkType"
+   ],
+   "value_args": [
+    "updates",
+    "comment"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "workItemId",
+    "url",
+    "artifactUri"
+   ],
+   "attacker_named_fields": []
+  },
+  "wiki": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves wiki data and `wiki page content`; wiki pages can be non-public, and page content/path/title may be authored by wiki contributors. The `url` is described as Azure DevOps wiki URL patterns, not arbitrary host fetching.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "content",
+    "path",
+    "title"
+   ],
+   "identifier_output_fields": [
+    "wikiIdentifier",
+    "project",
+    "path",
+    "url",
+    "pageId",
+    "name"
+   ],
+   "attacker_named_fields": [
+    "author"
+   ]
+  },
+  "wiki_upsert_page": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `Create or update a wiki page with content`; the `content` is stored in an Azure DevOps wiki that may be public/attacker-readable. The description does not specify privacy, so SINK is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "wikiIdentifier",
+    "path",
+    "project",
+    "etag",
+    "branch"
+   ],
+   "value_args": [
+    "content"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "wikiIdentifier",
+    "path",
+    "url",
+    "etag"
+   ],
+   "attacker_named_fields": []
+  },
+  "testplan": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves `test plan, suite, and case data for a project`, which can be non-public Azure DevOps project data. The advertised text does not establish attacker-authored returned text.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "project",
+    "planId",
+    "suiteId",
+    "id",
+    "name",
+    "continuationToken"
+   ],
+   "attacker_named_fields": []
+  },
+  "testplan_show_test_results_from_build_id": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns test results for a build, including `test case titles, error messages, stack traces, and outcomes`; build/test output may be non-public and error messages/stack traces can be influenced by code or tests.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "errorMessage",
+    "stackTrace",
+    "outcome"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "buildid",
+    "testRunId",
+    "testResultId",
+    "testCaseId"
+   ],
+   "attacker_named_fields": []
+  },
+  "testplan_test_plan_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `create a new test plan`; agent-supplied `name` and `description` are stored in Azure DevOps. The description does not state whether test plan data is private, so SINK is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "iteration",
+    "areaPath"
+   ],
+   "value_args": [
+    "name",
+    "description",
+    "startDate",
+    "endDate"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "planId",
+    "id",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "testplan_test_suite_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `create a new test suite in a test plan` and `add existing test cases`; agent-supplied suite names/test case IDs are written. Public/readability is unspecified, so SINK is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "planId",
+    "parentSuiteId",
+    "suiteId",
+    "testCaseIds"
+   ],
+   "value_args": [
+    "name"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "suiteId",
+    "planId",
+    "id",
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "testplan_test_case_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `create a new test case work item` and `update steps`; agent-supplied `title` and `steps` are stored. The description does not rule out public/attacker-readable projects, so SINK is kept.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "areaPath",
+    "iterationPath",
+    "testsWorkItemId",
+    "id"
+   ],
+   "value_args": [
+    "title",
+    "priority",
+    "steps"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "workItemId",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "search_code": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Searches Azure DevOps repositories for code; repository contents can be non-public and code/search snippets, paths, branch names, and repository text can be authored by contributors.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "content",
+    "snippet",
+    "path"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "repository",
+    "path",
+    "branch",
+    "fileName",
+    "url"
+   ],
+   "attacker_named_fields": []
+  },
+  "search_wiki": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Searches Azure DevOps Wiki pages; wiki content can be non-public and page titles/content/snippets are contributor-authored.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "content",
+    "snippet",
+    "title"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "wiki",
+    "path",
+    "pageId",
+    "url",
+    "title"
+   ],
+   "attacker_named_fields": [
+    "author"
+   ]
+  },
+  "search_workitem": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Searches work items (`Search text to find in work items`); work item data can be non-public and titles/descriptions/comments may be authored by other project users.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "title",
+    "description",
+    "fields",
+    "snippet"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "workItemId",
+    "project",
+    "areaPath",
+    "workItemType",
+    "state",
+    "assignedTo",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "createdBy",
+    "assignedTo"
+   ]
+  },
+  "advsec_get_alerts": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves `Advanced Security alerts for a repository`, including `secret alerts`; this can expose non-public security findings and secrets. Alert locations/messages may derive from repository contents controlled by contributors, so output can be untrusted.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "ruleName",
+    "message",
+    "filePath",
+    "ref"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "repository",
+    "alertId",
+    "id",
+    "ruleId",
+    "ruleName",
+    "toolName",
+    "ref",
+    "continuationToken"
+   ],
+   "attacker_named_fields": []
+  },
+  "advsec_get_alert_details": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Gets `detailed information about a specific Advanced Security alert`; details may include non-public security/secret information, and file paths/code-derived alert text can be contributor-controlled.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "ruleName",
+    "message",
+    "filePath",
+    "ref",
+    "details"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "repository",
+    "alertId",
+    "id",
+    "ruleId",
+    "toolName",
+    "ref",
+    "url"
+   ],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No source code or output schemas were provided; output field names are inferred from the advertised descriptions and input identifiers. Where a write goes to Azure DevOps records that might be public or shared, SINK is kept with undetermined=true because the descriptions do not state destination visibility."
+ ],
+ "usage": {
+  "input_tokens": 16720,
+  "output_tokens": 8528,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

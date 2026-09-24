@@ -1,0 +1,261 @@
+{
+ "kind": "python",
+ "notes": [
+  "Only the advertised tools were judged. No feature flags, capability gates, or toolsets that disable these advertised tools by default are shown in the provided source."
+ ],
+ "package": "agentdojo/slack",
+ "source": "baselines/agentdojo/src/agentdojo",
+ "tools": {
+  "add_user_to_channel": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "user",
+    "channel"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:30-40"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`add_user_to_channel` acts on an agent-supplied `user` and `channel` and appends the channel to `slack.user_channels[user]`, granting that chosen user access/membership to the chosen channel.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_channels": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:14-19",
+    "default_suites/v1/tools/slack.py:25-27"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`get_channels` returns `slack.channels`, a Slack workspace data structure. Channel names are workspace identifiers and may be non-public Slack data; in a multi-writer Slack workspace, channel names can also be outside-party-controlled identifiers.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_users_in_channel": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "channel"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:118-129"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`get_users_in_channel` returns the user names whose `user_channels` contain the chosen `channel`. Channel membership is non-public Slack workspace data, and user names are outside-party-chosen workspace identifiers.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_webpage": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/web.py:16-21",
+    "default_suites/v1/tools/web.py:35-44"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`get_webpage` accepts an agent-supplied `url`, records it in `web.web_requests`, and returns `web.web_content.get(url)`. The returned page content can be attacker-controlled for attacker-controlled URLs. Because there is no URL restriction in `standardize_url`, the code does not rule out access to localhost/intranet-style entries, so SECRET is kept under the least-restrictive reading. The agent-chosen `url` is also a request destination and can encode data in the requested URL.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "invite_user_to_slack": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "user"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:93-103"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`invite_user_to_slack` is advertised and documented as inviting a user to the Slack workspace with `user_email`; the implementation adds the agent-supplied `user` to `slack.users` and initializes that user's inbox and channel membership. The implementation does not read `user_email`, so the exact external invite delivery is not settled by code.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "post_webpage": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/web.py:16-21",
+    "default_suites/v1/tools/web.py:24-32"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`post_webpage` accepts an agent-supplied `url` and `content`, records the URL in `web.web_requests`, and stores the content at `web.web_content[url]`, so it can deliver arbitrary agent-supplied content to an agent-chosen URL/host.",
+   "undetermined": false,
+   "value_args": [
+    "content"
+   ]
+  },
+  "read_channel_messages": {
+   "attacker_named_fields": [
+    "sender",
+    "recipient"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "channel"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:8-11",
+    "default_suites/v1/tools/slack.py:43-50"
+   ],
+   "identifier_output_fields": [
+    "sender",
+    "recipient"
+   ],
+   "injectable_output_fields": [
+    "body"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`read_channel_messages` returns `slack.channel_inbox` messages for the chosen `channel`. Slack channel messages can be non-public workspace data, and each returned `Message.body` may be authored by other Slack users in the multi-writer channel.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_inbox": {
+   "attacker_named_fields": [
+    "sender",
+    "recipient"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "user"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:8-11",
+    "default_suites/v1/tools/slack.py:53-60"
+   ],
+   "identifier_output_fields": [
+    "sender",
+    "recipient"
+   ],
+   "injectable_output_fields": [
+    "body"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`read_inbox` returns `slack.user_inbox` messages for the chosen `user`. User inbox messages can be non-public Slack data, and returned `Message.body` content may be authored by outside Slack users.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "remove_user_from_slack": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "user"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:106-115"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "`remove_user_from_slack` mutates Slack state by removing the chosen `user` and deleting that user's inbox and channel membership, but it does not return data or deliver agent-supplied content to an attacker-readable destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "send_channel_message": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "channel"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:78-90"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`send_channel_message` takes an agent-supplied `channel` and `body`, constructs a `Message`, and appends it to `slack.channel_inbox[channel]`, delivering agent-supplied text to a chosen channel that may be attacker-readable.",
+   "undetermined": false,
+   "value_args": [
+    "body"
+   ]
+  },
+  "send_direct_message": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "recipient"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:63-75"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`send_direct_message` takes an agent-supplied `recipient` and `body`, constructs a `Message`, and appends it to `slack.user_inbox[recipient]`, delivering agent-supplied text to a chosen Slack recipient.",
+   "undetermined": false,
+   "value_args": [
+    "body"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "v1.2"
+}

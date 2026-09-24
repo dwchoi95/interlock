@@ -1,0 +1,85 @@
+{
+ "kind": "pypi",
+ "notes": [
+  "All five advertised tools reach only AWS-operated hosts: docs.aws.amazon.com / awsdocs-neuron.readthedocs-hosted.com for page fetches, proxy.search.docs.aws.com for search, api.contentrecs.docs.aws.com for recommendations.",
+  "`enforce_redirect_allowlist` (util.py:165-186) explicitly blocks the classic redirect-to-link-local/metadata escape that `follow_redirects=True` would otherwise permit, which is why the read tools get no SECRET label.",
+  "Residual, unlabeled risk: `recommend` does not validate its `url` argument at all (server_aws.py:696-699) \u2014 arbitrary agent text is placed in the `path` query parameter of the fixed AWS recommendations endpoint. Because the scheme/host prefix is a literal constant and a `?` already precedes the injected value, the destination host cannot be changed, so this is not treated as a SINK.",
+  "The neuron docs host is on the readthedocs-hosted.com platform, but the allowlist regex pins the exact `awsdocs-neuron` subdomain (server_utils.py:40), an AWS-published docs project, so it is not treated as attacker-controllable content."
+ ],
+ "package": "awslabs.aws-documentation-mcp-server",
+ "source": ".cache/sources/.views/pypi_awslabs.aws-documentation-mcp-server_1.2.1_b3663971d142",
+ "tools": {
+  "read_documentation": {
+   "default_enabled": true,
+   "evidence": [
+    "server_aws.py:184-193",
+    "server_utils.py:38-48",
+    "server_utils.py:87-95",
+    "util.py:165-186"
+   ],
+   "labels": [],
+   "rationale": "`read_documentation` validates `url` against `supported_domains_regex` (`^https?://docs\\.aws\\.amazon\\.com/` plus the neuron readthedocs regex) and requires a `.html` suffix (server_aws.py:184-193), then fetches via `_docs_client`, whose `enforce_redirect_allowlist` response hook re-checks every redirect `Location` against `COMMERCIAL_ALLOWED_DOMAIN_REGEXES` (server_utils.py:44-48, util.py:173-184). The host is therefore pinned to AWS-published public documentation: no file://, localhost or intranet reach (no SECRET), no attacker-chosen destination for the agent-supplied URL or `query_id` (no SINK), and the returned markdown comes from a first-party vendor docs site rather than a multi-writer/attacker-controllable source (no UNTRUSTED). No code execution.",
+   "undetermined": false
+  },
+  "read_sections": {
+   "default_enabled": true,
+   "evidence": [
+    "server_aws.py:260-269",
+    "server_utils.py:180-199",
+    "util.py:173-184"
+   ],
+   "labels": [],
+   "rationale": "Same domain allowlist and `.html` check as `read_documentation` (server_aws.py:260-269); `read_sections_impl` only appends url-quoted `sections` parameters to the allow-listed URL and fetches with the redirect-revalidating client (server_utils.py:180-199). Content returned is public AWS documentation HTML converted to markdown, so no SECRET/UNTRUSTED/SINK reach.",
+   "undetermined": false
+  },
+  "recommend": {
+   "default_enabled": true,
+   "evidence": [
+    "server_aws.py:50",
+    "server_aws.py:699-707",
+    "util.py:368-420"
+   ],
+   "labels": [],
+   "rationale": "`recommend` interpolates the caller-supplied `url_str` only into the query string of the hardcoded `RECOMMENDATIONS_API_URL` (`https://api.contentrecs.docs.aws.com/v1/recommendations?path=...`, server_aws.py:699), so the network destination cannot be chosen by the agent even though `url_str` itself is unvalidated \u2014 a fixed vendor endpoint is not a SINK. The response is parsed by `parse_recommendation_results` into AWS doc URLs/titles/abstracts (util.py:368-420), first-party public content; no local or credentialed data is read.",
+   "undetermined": false
+  },
+  "search_documentation": {
+   "default_enabled": true,
+   "evidence": [
+    "server_aws.py:49",
+    "server_aws.py:483-499",
+    "server_aws.py:624-634"
+   ],
+   "labels": [],
+   "rationale": "The request goes only to the hardcoded `SEARCH_API_URL` = `https://proxy.search.docs.aws.com/search` (server_aws.py:49, 490-499); `search_phrase`/`search_intent` are sent to that fixed vendor endpoint, which the rules say is not a SINK. Results are AWS-curated documentation titles, excerpts and URLs (server_aws.py:624-634), i.e. first-party public content, not attacker-writable, and nothing user-private is read.",
+   "undetermined": false
+  },
+  "search_table": {
+   "default_enabled": true,
+   "evidence": [
+    "server_aws.py:365-374",
+    "server_utils.py:262-282"
+   ],
+   "labels": [],
+   "rationale": "`search_table` enforces the same `supported_domains_regex` allowlist and `.html` suffix (server_aws.py:365-374) and `search_table_impl` fetches the allow-listed doc URL with `quote`-escaped `query`/`section` params through `_docs_client` (server_utils.py:262-282). Output is parsed rows from the public AWS docs page; destination host is fixed to AWS docs, so no sink, secret data, or attacker-controlled content.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "A Chrome-like UA string suffixed with ModelContextProtocol/<version> (AWS Documentation Server)",
+   "effect": "Overrides the base User-Agent string sent with documentation fetches; does not change which hosts are reachable or any label.",
+   "evidence": "server_utils.py:58-64",
+   "kind": "environment variable",
+   "syntax": "MCP_USER_AGENT=<string>"
+  },
+  {
+   "default": "COMMERCIAL_ALLOWED_DOMAIN_REGEXES for the advertised tools",
+   "effect": "Selects the fetch allowlist; the advertised commercial tools always pass the commercial allowlist, pinning fetches to docs.aws.amazon.com and awsdocs-neuron.readthedocs-hosted.com. The China entrypoint (server_aws_cn.py) exposes a different tool set (read_documentation, get_available_services) that is not advertised here.",
+   "evidence": "server_utils.py:38-41",
+   "kind": "code-level parameter / alternate server entrypoint",
+   "syntax": "allowed_domain_regexes=COMMERCIAL_ALLOWED_DOMAIN_REGEXES (impl default) vs CN_ALLOWED_DOMAIN_REGEXES (china entrypoint)"
+  }
+ ],
+ "version": "1.2.1"
+}

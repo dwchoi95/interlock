@@ -1,0 +1,116 @@
+[
+ {
+  "tool": "ai_tutor",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`ai_tutor` is in `STABLE_TOOLS` and reads a bundled resource `../resources/ai-tutor.md` before returning it. The cited code does not show access to user/local project data, attacker-controlled content, an attacker-readable destination, or host code execution."
+ },
+ {
+  "tool": "get_best_practices",
+  "code": [
+   "SECRET"
+  ],
+  "description": [],
+  "code_verified": true,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "workspacePath"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "When `workspacePath` is supplied, `get_best_practices` resolves and reads the user's installed `@angular/core/package.json`, follows its `angular.bestPractices.path` within the package, reads that host file with `readFile`, and returns its `content` as text. Returning local host file contents is SEC"
+ },
+ {
+  "tool": "search_documentation",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "version"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`search_documentation` sends `query` to a fixed Algolia application/index and, if requested, fetches only `angular.dev` or subdomains from the top hit. A query to a fixed vendor endpoint is not a SINK under the rules, and the URL fetched is not an agent-chosen arbitrary host. The cited code does not"
+ },
+ {
+  "tool": "find_examples",
+  "code": [
+   "SECRET"
+  ],
+  "description": [],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "workspacePath"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`find_examples` can select runtime or version-specific example databases, opens database files with `new DatabaseSync(path, { readOnly: true })`, and returns `queryDatabase(...)` results with example fields such as `content`. Reading and returning data from local host databases is SECRET. The implem"
+ },
+ {
+  "tool": "list_projects",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`list_projects` walks local roots with `readdir`/`stat`, finds local `angular.json` files, reads local `package.json` files to determine Angular versions, loads workspace configuration, and returns workspace/project metadata including paths and project names. This returns non-public local filesystem"
+ },
+ {
+  "tool": "onpush_zoneless_migration",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "fileOrDirPath"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`onpush_zoneless_migration` accepts an arbitrary local `fileOrDirPath`, stats it, globs `*.ts` files for directories, parses files via `createSourceFile`, reads source text with `getFullText`, and returns analysis/migration results from helper functions. This reaches and can return information deriv"
+ }
+]

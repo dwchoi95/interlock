@@ -1,0 +1,829 @@
+[
+ {
+  "tool": "core_list_project_teams",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Uses the authenticated Azure DevOps connection (`connectionProvider`, `getCoreApi`) to return project teams from the user's organization via `coreApi.getTeams`, which is SaaS data reached with the user's credentials."
+ },
+ {
+  "tool": "core_list_projects",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Uses the authenticated Azure DevOps connection to return projects in the user's organization via `coreApi.getProjects`."
+ },
+ {
+  "tool": "core_get_identity_ids",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Searches identities with the user's credentials using `searchIdentities` and returns identity IDs, display names, and descriptors from the user's Azure DevOps organization."
+ },
+ {
+  "tool": "work",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads work/iteration/team settings/capacity data from Azure DevOps APIs using the authenticated connection (`getWorkApi`, `getWorkItemTrackingApi`), returning non-public organization data."
+ },
+ {
+  "tool": "work_iteration_write",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "team",
+   "iterations"
+  ],
+  "annotations": {},
+  "rationale_code": "Creates project iterations or assigns iterations to a team via authenticated Azure DevOps APIs (`createOrUpdateClassificationNode`, `postTeamIteration`) and returns the created/assigned records. This stores agent-supplied iteration names/paths/dates in a shared Azure DevOps project; whether an attac"
+ },
+ {
+  "tool": "work_capacity_write",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "team",
+   "teamMemberId",
+   "iterationId"
+  ],
+  "annotations": {},
+  "rationale_code": "Updates a team member's capacity in Azure DevOps using `workApi.updateCapacityWithIdentityRef` and returns the updated capacity. This writes agent-supplied capacity and days-off data to a shared project/team; code does not determine target visibility."
+ },
+ {
+  "tool": "pipelines_build",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads build reports and changes from Azure DevOps with the user's credentials. Build changes can include commit/work-item data authored by repository contributors, so returned content can be attacker-controlled in a multi-writer project."
+ },
+ {
+  "tool": "pipelines_build_log",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads build logs with `getBuildLogLines` and returns them as external content. Build logs are produced by repository/pipeline code and can contain attacker-authored text in a multi-writer repository."
+ },
+ {
+  "tool": "pipelines_definition",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads build definitions and revisions from Azure DevOps. Pipeline names, paths, YAML filenames, and revisions can be authored by project contributors, so output can include untrusted content."
+ },
+ {
+  "tool": "pipelines_run",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads pipeline run data using the authenticated Pipelines API. Run metadata may include contributor-supplied variables, branch names, commit messages, and other pipeline-provided text."
+ },
+ {
+  "tool": "pipelines_artifact",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "destinationPath"
+  ],
+  "annotations": {},
+  "rationale_code": "Lists or downloads build artifacts using the user's Azure DevOps credentials. Artifact names and ZIP contents are produced by builds and can be controlled by repository/pipeline contributors. When `destinationPath` is supplied, it writes the artifact ZIP to the local filesystem."
+ },
+ {
+  "tool": "pipelines_write",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "pipelineId",
+   "name",
+   "folder",
+   "yamlPath",
+   "repositoryType",
+   "repositoryName",
+   "repositoryId",
+   "repositoryConnectionId",
+   "buildId",
+   "stageName"
+  ],
+  "annotations": {},
+  "rationale_code": "Queues pipeline runs, creates pipeline definitions, or updates build stages through authenticated Azure DevOps APIs. Agent-supplied variables, parameters, YAML overrides, names, repository settings, and stage updates are sent to Azure DevOps. Returned run/definition data may include repository/pipel"
+ },
+ {
+  "tool": "repo_repository",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads repositories in an Azure DevOps project through `gitApi.getRepositories` using the user's credentials."
+ },
+ {
+  "tool": "repo_pull_request",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads pull requests and related data from Azure DevOps. PR titles/descriptions/source branches and creator identity can be authored by repository contributors; `trimPullRequest` returns `title`, optional `description`, `createdBy`, and refs."
+ },
+ {
+  "tool": "repo_pull_request_thread",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads PR threads/comments. Comment `content` and `author` fields are authored by PR participants, so output is attacker-controllable in a multi-writer repository."
+ },
+ {
+  "tool": "repo_branch",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads branch refs from Azure DevOps. Branch names are returned and can be created/named by repository contributors."
+ },
+ {
+  "tool": "repo_file",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads repository file contents and directory entries using the user's credentials. File contents, paths, filenames, and commit IDs are controlled by repository contributors."
+ },
+ {
+  "tool": "repo_search_commits",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Posts a commit-search query to Azure DevOps Search using the user's token and returns the response. Commit messages/authors and refs in results are contributor-authored."
+ },
+ {
+  "tool": "repo_pull_request_write",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "repositoryId",
+   "pullRequestId",
+   "project",
+   "sourceRefName",
+   "targetRefName",
+   "reviewerIds"
+  ],
+  "annotations": {},
+  "rationale_code": "Creates/updates PRs, reviewers, labels, autocomplete, status, and votes in Azure DevOps. Agent-supplied title/description/labels/messages/reviewer IDs are stored or used to modify shared PR records. Returned PR data may include existing contributor-authored title/description. Code does not determine"
+ },
+ {
+  "tool": "repo_pull_request_thread_write",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "repositoryId",
+   "pullRequestId",
+   "project",
+   "threadId",
+   "filePath",
+   "rightFileStartLine",
+   "rightFileEndLine"
+  ],
+  "annotations": {},
+  "rationale_code": "Creates/replies to PR comment threads or updates thread status using `createThread`, `createComment`, and `updateThread`. Agent-supplied `content` is stored in PR comments; returned thread data can include contributor-authored comments. Target visibility is not determined by the code."
+ },
+ {
+  "tool": "repo_create_branch",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "repositoryId",
+   "branchName",
+   "sourceBranchName",
+   "sourceCommitId",
+   "project"
+  ],
+  "annotations": {},
+  "rationale_code": "Creates a Git ref in an Azure DevOps repository by calling `gitApi.updateRefs` with an agent-supplied branch name/source. This writes to a shared repository; code does not determine target visibility."
+ },
+ {
+  "tool": "wit_work_item",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads work items, comments, revisions, iteration work items, and type metadata with the user's credentials. Work item fields and comments are authored by project participants and may be attacker-controlled."
+ },
+ {
+  "tool": "wit_query",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads saved queries or executes WIQL using the authenticated Work Item Tracking API. Query results can include work item titles/fields authored by project participants; WIQL results are returned as external content."
+ },
+ {
+  "tool": "wit_backlog",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads backlog levels and backlog work items from Azure DevOps. Backlog/work item names and references can include participant-authored content."
+ },
+ {
+  "tool": "wit_work_item_attachment",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "savePath"
+  ],
+  "annotations": {},
+  "rationale_code": "Downloads attachment content from Azure DevOps with the user's credentials. Attachment filenames and content are supplied by work item participants. With `savePath`, the tool writes the attachment to a local relative path."
+ },
+ {
+  "tool": "wit_work_item_write",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "id",
+   "parentId",
+   "batchUpdates"
+  ],
+  "annotations": {},
+  "rationale_code": "Creates or updates work items, batches updates, and creates children under a parent. Agent-supplied field values/titles/descriptions are stored in Azure DevOps. Returned work item objects may include existing participant-authored fields. Target visibility is not determined by the code."
+ },
+ {
+  "tool": "wit_work_item_comment_write",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "workItemId",
+   "commentId"
+  ],
+  "annotations": {},
+  "rationale_code": "Adds or updates work item comments by sending agent-supplied `text` to Azure DevOps comment endpoints. The returned comment response can include participant-authored/comment text. Code does not determine whether the work item is attacker-readable."
+ },
+ {
+  "tool": "wit_work_item_link_write",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "updates",
+   "id",
+   "url",
+   "projectId",
+   "repositoryId",
+   "pullRequestId",
+   "workItemId",
+   "pullRequestProjectId",
+   "artifactUri",
+   "branchName",
+   "commitId",
+   "buildId",
+   "wikiId",
+   "pageId",
+   "pagePath"
+  ],
+  "annotations": {},
+  "rationale_code": "Adds/removes links and artifact links on work items. Agent-supplied link targets, artifact URIs, and comments are stored on Azure DevOps work items. `unlink` returns existing relations/work item data that may include participant-authored link attributes. Target visibility is not determined by the co"
+ },
+ {
+  "tool": "wiki",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads wiki lists, page metadata, and page content using the user's credentials. Wiki page paths, names, and content are authored by wiki contributors; `get_page_content` returns external wiki page content."
+ },
+ {
+  "tool": "wiki_upsert_page",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "wikiIdentifier",
+   "path",
+   "project",
+   "etag",
+   "branch"
+  ],
+  "annotations": {},
+  "rationale_code": "Creates or updates a wiki page by PUTing agent-supplied `content` to an Azure DevOps wiki page path. This stores data in a shared wiki; code does not determine whether the wiki is attacker-readable."
+ },
+ {
+  "tool": "testplan",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads test plans/suites/cases from Azure DevOps with the user's token. Test plan/suite/case names and case data are project-authored and can be attacker-controlled in a multi-writer project."
+ },
+ {
+  "tool": "testplan_show_test_results_from_build_id",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads test results for a build. Test titles, error messages, stack traces, automated test names/storage are produced by test code and can be contributor-controlled."
+ },
+ {
+  "tool": "testplan_test_plan_write",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project"
+  ],
+  "annotations": {},
+  "rationale_code": "Creates a test plan in Azure DevOps using agent-supplied `name`, `iteration`, `description`, dates, and area path. Target project visibility is not determined by the code."
+ },
+ {
+  "tool": "testplan_test_suite_write",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "planId",
+   "parentSuiteId",
+   "suiteId",
+   "testCaseIds"
+  ],
+  "annotations": {},
+  "rationale_code": "Creates suites or adds test cases to suites in Azure DevOps. Agent-supplied suite name and case IDs are stored/used to modify shared test plans; target visibility is not determined by the code."
+ },
+ {
+  "tool": "testplan_test_case_write",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "id",
+   "testsWorkItemId"
+  ],
+  "annotations": {},
+  "rationale_code": "Creates test case work items or updates test steps by writing agent-supplied titles/steps/paths/priority to Azure DevOps work items. Target visibility is not determined by the code."
+ },
+ {
+  "tool": "search_code",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Searches Azure DevOps code with the user's token and fetches matching Git items including content. Search results and file contents/paths are repository-contributor controlled."
+ },
+ {
+  "tool": "search_wiki",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Searches Azure DevOps wiki content using the user's token and returns raw search results. Wiki page titles/snippets/content are contributor-authored."
+ },
+ {
+  "tool": "search_workitem",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Searches Azure DevOps work items with the user's token and returns raw search results. Work item titles/descriptions/fields are participant-authored."
+ },
+ {
+  "tool": "advsec_get_alerts",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads Advanced Security alerts from an authenticated Azure DevOps repository. Alerts can include secret/code/dependency findings and repository-derived paths/messages/snippets, which can be contributor-controlled and may expose non-public security data. [unverified: no cited span contains the tool n"
+ },
+ {
+  "tool": "advsec_get_alert_details",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Reads detailed Advanced Security alert data for a repository using the user's credentials. Details may include repository-derived locations/messages/snippets and secret alert information. [unverified: no cited span contains the tool name or a backticked identifier]"
+ }
+]

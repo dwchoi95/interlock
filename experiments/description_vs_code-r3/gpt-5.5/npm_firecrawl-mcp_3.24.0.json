@@ -1,0 +1,824 @@
+{
+ "tools": {
+  "firecrawl_scrape": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It can `Retrieve and extract content from one supplied URL` and return page formats, so attacker-controlled web pages can enter context. The supplied `url` is an agent-chosen destination, and `Browser actions may change the live page` with interactive actions, so it can send data/side effects to a site. SECRET is undetermined because the text does not restrict schemes or network scope; under the least-restrictive reading a supplied URL could be `file://`, localhost, or intranet content that Firecrawl can reach.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "url",
+    "actions",
+    "profile"
+   ],
+   "value_args": [
+    "formats",
+    "jsonOptions",
+    "queryOptions",
+    "screenshotOptions",
+    "actions",
+    "profile"
+   ],
+   "injectable_output_fields": [
+    "markdown",
+    "html",
+    "rawHtml",
+    "screenshot",
+    "links",
+    "summary",
+    "changeTracking",
+    "branding",
+    "json",
+    "query",
+    "audio",
+    "metadata"
+   ],
+   "identifier_output_fields": [
+    "url",
+    "links",
+    "metadata",
+    "title"
+   ],
+   "attacker_named_fields": [
+    "url",
+    "links",
+    "metadata",
+    "title"
+   ]
+  },
+  "firecrawl_map": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It can `Enumerate URLs indexed under one website` and returns `matching URLs`, which a site owner can author. The `url` selects an agent-chosen website, so the request can target an attacker-readable host. SECRET is undetermined because the description does not say the website URL is limited to public internet hosts; it may enumerate non-public reachable sites.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "firecrawl_search": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It `Search[es] web, news, or image sources` and developer sources such as `GitHub issues`, `repository READMEs`, and documentation, returning result titles, snippets, descriptions, URLs, and optionally extracted page content. These public and multi-writer sources are attacker-controllable. Queries go to a fixed Firecrawl/search endpoint, so this is not treated as a SINK.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "snippets",
+    "highlights",
+    "data.developer",
+    "web results",
+    "news results",
+    "image results"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "url",
+    "title"
+   ],
+   "attacker_named_fields": [
+    "url",
+    "title"
+   ]
+  },
+  "firecrawl_search_feedback": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It records feedback for a prior `firecrawl_search` and the response reports refund and `daily-cap status`, which are authenticated team/accounting data. It sends to a fixed Firecrawl endpoint rather than an attacker-chosen destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "searchId"
+   ],
+   "value_args": [
+    "rating",
+    "valuableSources",
+    "missingContent",
+    "querySuggestions"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "firecrawl_feedback": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It submits feedback for a Firecrawl job and returns `submission status, feedback ID, and accounting fields`, which are non-public account/job data. The destination is the fixed Firecrawl feedback service, not an attacker-chosen host.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "endpoint",
+    "jobId"
+   ],
+   "value_args": [
+    "rating",
+    "issues",
+    "tags",
+    "note",
+    "valuableSources",
+    "missingContent",
+    "querySuggestions",
+    "url",
+    "pageNumbers",
+    "metadata"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "feedback ID"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_crawl": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It starts a crawl at a `website URL` and returns `page data`, so web content can be attacker-controlled. The start URL and `webhook` are agent-chosen destinations, and scrape actions can be interactive. SECRET is undetermined because the text does not restrict the URL to public hosts, so reachable intranet/localhost content is possible under the least-restrictive reading.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "url",
+    "includePaths",
+    "excludePaths",
+    "webhook",
+    "scrapeOptions"
+   ],
+   "value_args": [
+    "prompt",
+    "webhookHeaders",
+    "scrapeOptions"
+   ],
+   "injectable_output_fields": [
+    "data",
+    "page data",
+    "markdown",
+    "html",
+    "rawHtml",
+    "links",
+    "summary",
+    "changeTracking",
+    "branding",
+    "json",
+    "query",
+    "metadata"
+   ],
+   "identifier_output_fields": [
+    "crawl ID",
+    "status",
+    "page URLs",
+    "links"
+   ],
+   "attacker_named_fields": [
+    "page URLs",
+    "links"
+   ]
+  },
+  "firecrawl_check_crawl_status": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It reads `Firecrawl job state` for an `existing crawl ID` and returns `available results`; that job state is non-public account data, and the results can include attacker-authored page content collected by the crawl.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "available results",
+    "page data"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "status",
+    "page URLs"
+   ],
+   "attacker_named_fields": [
+    "page URLs"
+   ]
+  },
+  "firecrawl_extract": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The deprecated entry point extracts from supplied `urls` and may use web search when URLs are not known, so returned web content is attacker-controllable. The supplied URLs are agent-chosen destinations. SECRET is undetermined because the text does not restrict URL schemes or reachable networks.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "urls"
+   ],
+   "value_args": [
+    "prompt",
+    "schema"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "firecrawl_agent": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It starts a web research job from a `prompt` and optional `seed URLs`; the agent can `search, navigate, read pages`, so supplied URLs can cause requests to agent-chosen hosts. This call `returns only a job ID`, not the web content itself.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "urls"
+   ],
+   "value_args": [
+    "prompt",
+    "schema"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "job ID"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_agent_status": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It retrieves progress and `result data` for a `firecrawl_agent` job ID, which is non-public job state. Completed research results may come from searched and read web pages, so they can contain attacker-authored content.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "result data"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "status",
+    "result URLs"
+   ],
+   "attacker_named_fields": [
+    "result URLs"
+   ]
+  },
+  "firecrawl_interact": {
+   "labels": [
+    "HOSTEXEC",
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It can `navigate a page, click controls, fill fields, or run browser code` and `code can run as Bash, Python, or Node`. Because the advertised text does not state that this code is confined to a remote vendor sandbox, HOSTEXEC is kept under the least-restrictive reading, which implies SECRET, UNTRUSTED, and SINK. It also acts on a `live site`, can create `persistent external side effects`, and returns `execution output, stdout/stderr` and session URLs.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "url",
+    "scrapeId",
+    "prompt",
+    "code"
+   ],
+   "value_args": [
+    "prompt",
+    "code",
+    "language",
+    "scrapeOptions"
+   ],
+   "injectable_output_fields": [
+    "execution output",
+    "stdout",
+    "stderr",
+    "session viewing URLs"
+   ],
+   "identifier_output_fields": [
+    "scrapeId",
+    "session viewing URLs",
+    "exit status"
+   ],
+   "attacker_named_fields": [
+    "session viewing URLs"
+   ]
+  },
+  "firecrawl_interact_stop": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It only stops the live session associated with a `scrapeId` and returns a `success confirmation`; no attacker-controlled content, non-public data, attacker destination, or host execution is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "scrapeId"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "firecrawl_parse": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It can parse a `filePath` and `Local MCP reads filePath from the server filesystem`, so it can return local file contents, which are SECRET. The threat model does not treat the user's local files as attacker-controlled, and remote web URLs are directed to `firecrawl_scrape`.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "uploadRef",
+    "links"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_monitor_create": {
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It creates a monitor in the authenticated account and `Returns the created monitor`, which is non-public SaaS data. The monitor `schedules future network checks` and can send `email or webhook notifications`, so page targets, emails, and webhook URLs can deliver data to attacker-readable destinations.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "body",
+    "page",
+    "pages",
+    "queries",
+    "includeDomains",
+    "excludeDomains",
+    "email",
+    "webhookUrl"
+   ],
+   "value_args": [
+    "body",
+    "goal",
+    "name",
+    "scheduleText",
+    "timezone",
+    "email",
+    "webhookUrl",
+    "queries"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "page",
+    "pages",
+    "queries",
+    "email",
+    "webhookUrl"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_monitor_list": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It lists `monitors for the authenticated account` and returns monitor records and pagination metadata, which are non-public SaaS account data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "page",
+    "pages",
+    "queries",
+    "email",
+    "webhookUrl"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_monitor_get": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It retrieves one monitor by ID, including `configuration and current state`, from the authenticated account; that is non-public SaaS data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "page",
+    "pages",
+    "queries",
+    "email",
+    "webhookUrl"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_monitor_update": {
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It patches an existing account monitor and returns the updated monitor, so it exposes non-public SaaS data. The body can change `targets`, `webhook`, and `notifications`, creating attacker-readable destinations for future checks or notifications.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "id",
+    "body"
+   ],
+   "value_args": [
+    "body"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "page",
+    "pages",
+    "queries",
+    "email",
+    "webhookUrl"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_monitor_delete": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It permanently deletes a monitor by ID in the authenticated account and returns deletion status; existence/status of the account record is non-public SaaS data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "id"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_monitor_run": {
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It queues a check for an account monitor and returns the queued check, which is non-public SaaS job data. It `starts network work for the monitor's configured targets`; SINK is kept because an agent can select a monitor ID whose configured targets were created or updated to attacker-readable destinations, although the destination is indirect through the ID.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "id"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "checkId",
+    "status"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_monitor_checks": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It lists `historical checks for a monitor` and returns check summaries and pagination metadata for the authenticated account, which are non-public SaaS data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "checkId",
+    "status"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_monitor_check": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It retrieves one monitor check and its `page-level results`; those are non-public account history. Results can include markdown diffs, JSON previous/current values, and a `current snapshot` from monitored web pages, which may be attacker-authored.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "unified text diff",
+    "previous",
+    "current",
+    "current snapshot",
+    "page-level results"
+   ],
+   "identifier_output_fields": [
+    "next",
+    "page URLs",
+    "pageStatus",
+    "field paths"
+   ],
+   "attacker_named_fields": [
+    "page URLs",
+    "field paths"
+   ]
+  },
+  "firecrawl_research_search_papers": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It searches public scientific sources such as `PubMed, bioRxiv, medRxiv` and `arXiv` and returns paper titles, authors, and abstracts; paper authors and publishers can control this content.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "titles",
+    "authors",
+    "abstracts"
+   ],
+   "identifier_output_fields": [
+    "canonical IDs",
+    "titles",
+    "authors"
+   ],
+   "attacker_named_fields": [
+    "titles",
+    "authors"
+   ]
+  },
+  "firecrawl_research_inspect_paper": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It retrieves metadata for an arXiv/PMC/PMID/DOI paper and returns `title, abstract, authors, categories, source IDs, and dates as markdown`; those public paper fields can be author/publisher controlled.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "abstract",
+    "authors",
+    "categories"
+   ],
+   "identifier_output_fields": [
+    "paperId",
+    "title",
+    "authors",
+    "categories",
+    "source IDs",
+    "dates"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "authors",
+    "source IDs"
+   ]
+  },
+  "firecrawl_research_related_papers": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It finds citation-graph candidates and returns `ranked candidates`; those candidates are public papers whose titles/authors/metadata can be attacker-authored.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "ranked candidates"
+   ],
+   "identifier_output_fields": [
+    "paperId",
+    "titles",
+    "authors"
+   ],
+   "attacker_named_fields": [
+    "titles",
+    "authors"
+   ]
+  },
+  "firecrawl_research_read_paper": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It retrieves `in-body passages` from indexed papers; paper full text is public third-party content and can be author-controlled.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "passages",
+    "notice"
+   ],
+   "identifier_output_fields": [
+    "paperId"
+   ],
+   "attacker_named_fields": []
+  },
+  "firecrawl_research_search_github": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It searches indexed public `GitHub issue, pull-request, and README content` and returns snippets and matched markdown; public GitHub content is multi-writer and attacker-controllable.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "snippet",
+    "full matched markdown",
+    "repository",
+    "URL"
+   ],
+   "identifier_output_fields": [
+    "repository",
+    "URL"
+   ],
+   "attacker_named_fields": [
+    "repository",
+    "URL"
+   ]
+  },
+  "firecrawl_developer_search": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "It searches developer sources including `GitHub issues`, `merged pull requests`, `repository READMEs`, and documentation, returning URLs, titles, and matched passages; these public/multi-writer sources can be attacker-controlled.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "matched passages in markdown",
+    "URL"
+   ],
+   "identifier_output_fields": [
+    "ID",
+    "source type",
+    "URL",
+    "title"
+   ],
+   "attacker_named_fields": [
+    "URL",
+    "title"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "syntax": "lockdown: true",
+   "kind": "flag",
+   "effect": "For scrape-style options, the description says this requests `lockdown cache-only retrieval`, which can remove live fetching of the target host for that call, though cached attacker-controlled content may still be returned.",
+   "default": "",
+   "evidence": "description"
+  },
+  {
+   "syntax": "safe mode",
+   "kind": "mode",
+   "effect": "For crawl, the description says `Webhooks and interactive scrape actions are unavailable in safe mode`, reducing those SINK/WRITE routes, though the crawl still starts network work for the configured URL.",
+   "default": "",
+   "evidence": "description"
+  }
+ ],
+ "notes": [
+  "All judgements are based only on the advertised descriptions and schemas. Where URL scheme or network reach was not specified, URL-reading tools are treated under the least-restrictive reading for SECRET and marked undetermined.",
+  "Search-style query arguments to fixed Firecrawl/vendor endpoints are not treated as SINK destinations."
+ ],
+ "usage": {
+  "input_tokens": 741,
+  "output_tokens": 11028,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 9984
+ }
+}

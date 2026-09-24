@@ -1,0 +1,677 @@
+[
+ {
+  "tool": "search_docs",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [],
+  "code_verified": true,
+  "hidden": [
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Search docs",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`ht({contentApiClient})` executes `e.query({query:o})` with the agent-supplied `graphql_query`; the client `V.#o` issues a `fetch` to the fixed `contentApiUrl` (default `https://supabase.com/docs/api/graphql`) and returns the response body into context. The endpoint is a fixed vendor host and the qu"
+ },
+ {
+  "tool": "list_organizations",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "List organizations",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`list_organizations` calls `e.listOrganizations()` on the platform client authenticated with the user's Supabase access token, returning the user's private org list into context."
+ },
+ {
+  "tool": "get_organization",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "id"
+  ],
+  "annotations": {
+   "title": "Get organization details",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`get_organization` calls `e.getOrganization(t)` with the user's credentials and returns organization details including subscription plan - non-public account data."
+ },
+ {
+  "tool": "list_projects",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "List projects",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`list_projects` returns `await e.listProjects()`, the user's private project inventory (ids, regions, status) fetched with their credentials."
+ },
+ {
+  "tool": "get_project",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "id"
+  ],
+  "annotations": {
+   "title": "Get project details",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`get_project` returns `await e.getProject(t)` - the user's project metadata reached with their account credentials."
+ },
+ {
+  "tool": "get_cost",
+  "code": [],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "organization_id"
+  ],
+  "annotations": {
+   "title": "Get cost of new resources",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`ee(e,i)` reads the org plan and project list only to compute a numeric price; the tool output schema `Qt` exposes only `type`, `amount`, `recurrence`, so no private data, attacker content, or outbound destination is reachable."
+ },
+ {
+  "tool": "confirm_cost",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Confirm cost understanding",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`confirm_cost` only hashes its own arguments via `M(t)` (SHA-256 of the JSON) and returns a confirmation id; no I/O at all."
+ },
+ {
+  "tool": "create_project",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "organization_id",
+   "region"
+  ],
+  "annotations": {
+   "title": "Create project",
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`create_project` calls `e.createProject({name,region,organization_id})` against the Supabase management API. It writes to the user's own account (not an attacker-readable destination), returns only the newly created project record, and ingests no external content. Blocked entirely when `readOnly` is"
+ },
+ {
+  "tool": "pause_project",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project_id"
+  ],
+  "annotations": {
+   "title": "Pause project",
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`pause_project` calls `e.pauseProject(t)` and returns `{success:true}`; state-changing on the user's own account but no data in or out."
+ },
+ {
+  "tool": "restore_project",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project_id"
+  ],
+  "annotations": {
+   "title": "Restore project",
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`restore_project` calls `e.restoreProject(t)` and returns `{success:true}`; no data read into context and no attacker-reachable destination."
+ },
+ {
+  "tool": "list_tables",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project_id",
+   "schemas"
+  ],
+  "annotations": {
+   "title": "List tables",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`list_tables` runs the generated catalog query `st(l)` through `e.executeSql(r,{...,read_only:!0})` against the user's project database and returns schema, table, column names and comments - private database metadata. [unverified: no cited span contains the tool name or a backticked identifier]"
+ },
+ {
+  "tool": "list_extensions",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project_id"
+  ],
+  "annotations": {
+   "title": "List extensions",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`list_extensions` executes the `ot` extension catalog query via `e.executeSql` against the user's database and returns installed extension state - non-public project data."
+ },
+ {
+  "tool": "list_migrations",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project_id"
+  ],
+  "annotations": {
+   "title": "List migrations",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`list_migrations` returns `await e.listMigrations(r)` - the user's private migration history (names/versions) from their project. [unverified: no cited span contains the tool name or a backticked identifier]"
+ },
+ {
+  "tool": "apply_migration",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project_id"
+  ],
+  "annotations": {
+   "title": "Apply migration",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "`apply_migration` passes an arbitrary agent-supplied `query` to `e.applyMigration(r,{name:l,query:c})`, i.e. unconstrained SQL (DDL and DML) on the user's Postgres. Arbitrary SQL can read any table (SECRET) and, on Supabase Postgres where outbound extensions such as `pg_net`/`http` can be enabled, c"
+ },
+ {
+  "tool": "execute_sql",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project_id"
+  ],
+  "annotations": {
+   "title": "Execute SQL",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "`execute_sql` forwards the agent's raw `query` to `e.executeSql(l,{query:r,read_only:n})` and returns the rows wrapped by `Q()`. Arbitrary SELECTs over the user's database are returned into context (SECRET); the server itself wraps the output in `<untrusted-data-...>` boundaries because rows contain"
+ },
+ {
+  "tool": "query_logs",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project_id"
+  ],
+  "annotations": {
+   "title": "Query project logs",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`query_logs` runs an agent-supplied ClickHouse/BigQuery `sql` string through `t(r,{sql:l,...})` (`debugging.queryLogs`) over the project's log stream and returns `Q(b)`. Logs are private project telemetry (SECRET) and contain request paths, headers, bodies and edge-function console output produced b"
+ },
+ {
+  "tool": "get_advisors",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project_id",
+   "type"
+  ],
+  "annotations": {
+   "title": "Get project advisors",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`get_advisors` calls `e.getSecurityAdvisors(r)` / `e.getPerformanceAdvisors(r)` with the user's credentials and returns lint findings referencing the project's private schema objects. [unverified: no cited span contains the tool name or a backticked identifier]"
+ },
+ {
+  "tool": "get_project_url",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project_id"
+  ],
+  "annotations": {
+   "title": "Get project URL",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`get_project_url` returns `await e.getProjectUrl(t)`, the project's API endpoint retrieved from the user's authenticated account; it identifies a private project resource even though the URL is later embedded in clients. [unverified: no cited span contains the tool name or a backticked identifier]"
+ },
+ {
+  "tool": "get_publishable_keys",
+  "code": [
+   "SECRET"
+  ],
+  "description": [],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project_id"
+  ],
+  "annotations": {
+   "title": "Get publishable keys",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`get_publishable_keys` returns `await e.getPublishableKeys(t)` - API key material (`api_key` strings, legacy anon JWTs) fetched with the user's management credentials and pulled into the agent context. [unverified: no cited span contains the tool name or a backticked identifier]"
+ },
+ {
+  "tool": "generate_typescript_types",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project_id"
+  ],
+  "annotations": {
+   "title": "Generate TypeScript types",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`generate_typescript_types` returns `e.generateTypescriptTypes(t)`, a full type definition of the user's private database schema. [unverified: no cited span contains the tool name or a backticked identifier]"
+ },
+ {
+  "tool": "list_edge_functions",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project_id"
+  ],
+  "annotations": {
+   "title": "List Edge Functions",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`list_edge_functions` returns `await e.listEdgeFunctions(i)` - the private inventory of the project's deployed functions. [unverified: no cited span contains the tool name or a backticked identifier]"
+ },
+ {
+  "tool": "get_edge_function",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project_id",
+   "function_slug"
+  ],
+  "annotations": {
+   "title": "Get Edge Function",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`get_edge_function` returns `await e.getEdgeFunction(i,r)`, described as retrieving file contents - the user's private function source code enters the context. [unverified: no cited span contains the tool name or a backticked identifier]"
+ },
+ {
+  "tool": "deploy_edge_function",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project_id",
+   "name",
+   "entrypoint_path",
+   "import_map_path"
+  ],
+  "annotations": {
+   "title": "Deploy Edge Function",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`deploy_edge_function` uploads agent-supplied `files` content via `e.deployEdgeFunction(i,{...,verify_jwt:d,files:b})`. The deployed function is served at a project URL that the agent can make publicly reachable (`verify_jwt` is agent-settable to false), so arbitrary agent-supplied data is delivered"
+ },
+ {
+  "tool": "create_branch",
+  "code": [],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project_id"
+  ],
+  "annotations": {
+   "title": "Create branch",
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`create_branch` calls `e.createBranch(r,{name:l})` after cost confirmation; it only returns the new branch record for the user's own project and reads no external content. Disabled in read-only mode."
+ },
+ {
+  "tool": "list_branches",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project_id"
+  ],
+  "annotations": {
+   "title": "List branches",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`list_branches` returns `await e.listBranches(r)` - private branch metadata (ids, project refs, status) from the user's account. [unverified: no cited span contains the tool name or a backticked identifier]"
+ },
+ {
+  "tool": "delete_branch",
+  "code": [],
+  "description": [],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "branch_id"
+  ],
+  "annotations": {
+   "title": "Delete branch",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`delete_branch` calls `e.deleteBranch(r)` and returns `{success:true}`; destructive to the user's resources but no data flows in or out. [unverified: no cited span contains the tool name or a backticked identifier]"
+ },
+ {
+  "tool": "merge_branch",
+  "code": [],
+  "description": [],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "branch_id"
+  ],
+  "annotations": {
+   "title": "Merge branch",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`merge_branch` calls `e.mergeBranch(r)`, promoting existing branch migrations/functions into the user's production project. It ships no agent-supplied payload to an attacker-readable place and returns only `{success:true}`. [unverified: no cited span contains the tool name or a backticked identifier"
+ },
+ {
+  "tool": "reset_branch",
+  "code": [],
+  "description": [],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "branch_id",
+   "migration_version"
+  ],
+  "annotations": {
+   "title": "Reset branch",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`reset_branch` calls `e.resetBranch(r,{migration_version:l})` and returns `{success:true}`; no data read or emitted. [unverified: no cited span contains the tool name or a backticked identifier]"
+ },
+ {
+  "tool": "rebase_branch",
+  "code": [],
+  "description": [],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "branch_id"
+  ],
+  "annotations": {
+   "title": "Rebase branch",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`rebase_branch` calls `e.rebaseBranch(r)` and returns `{success:true}`; no data read or emitted. [unverified: no cited span contains the tool name or a backticked identifier]"
+ }
+]

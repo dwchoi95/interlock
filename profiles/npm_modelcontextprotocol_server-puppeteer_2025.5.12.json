@@ -1,0 +1,151 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All seven tools are unconditionally advertised by the ListTools handler; there is no toolset/flag gating (dist/index.js:417-419).",
+  "`handleToolCall` calls `ensureBrowser(args)` before the switch, so launchOptions/allowDangerous are honoured on every tool call, not just puppeteer_navigate (dist/index.js:184). The low-level Server request handler does no inputSchema validation (dist/index.js:420), so extra properties are not stripped by this server.",
+  "Attacker-controlled page console output is accumulated into `consoleLogs` and exposed via the `console://logs` resource with an update notification, giving an untrusted-content channel independent of tool results (dist/index.js:146-153, 393-400).",
+  "Screenshots are also exposed as `screenshot://<name>` resources containing page pixels (dist/index.js:402-413)."
+ ],
+ "package": "@modelcontextprotocol/server-puppeteer",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-puppeteer_2025.5.12_3b8b5b87279b",
+ "tools": {
+  "puppeteer_click": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:236",
+    "dist/index.js:184",
+    "dist/index.js:120",
+    "dist/index.js:143"
+   ],
+   "labels": [
+    "SINK",
+    "HOSTEXEC"
+   ],
+   "rationale": "`page.click(args.selector)` actuates the live page: on an attacker-controlled page it submits forms or follows links, delivering whatever was previously typed into the page (see `puppeteer_fill`) to the attacker's server, so it completes an exfiltration path. HOSTEXEC is kept because `ensureBrowser(args)` is invoked for every tool call with the unvalidated argument object, letting `launchOptions.executablePath`/`args` reach `puppeteer.launch`; undetermined because that relies on extra, unadvertised properties being passed through.",
+   "undetermined": true
+  },
+  "puppeteer_evaluate": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:331",
+    "dist/index.js:342",
+    "dist/index.js:184",
+    "dist/index.js:143"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK",
+    "HOSTEXEC"
+   ],
+   "rationale": "`page.evaluate(args.script)` runs arbitrary JavaScript in the page and returns both the result and captured console output, so it can read the DOM/cookies/localStorage of a `file://`, localhost, intranet or logged-in page (SECRET), returns attacker-page-derived text (UNTRUSTED), and can issue `fetch`/image/navigation requests to any attacker host carrying agent data (SINK). Page-confined JS alone is not host execution, but HOSTEXEC is kept because `ensureBrowser(args)` at line 184 merges any supplied `launchOptions` (e.g. `executablePath`) into `puppeteer.launch` for this tool too, and the browser may be launched with sandbox-disabling args in the Docker default (`docker_args`).",
+   "undetermined": true
+  },
+  "puppeteer_fill": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:257",
+    "dist/index.js:184",
+    "dist/index.js:143"
+   ],
+   "labels": [
+    "SINK",
+    "HOSTEXEC"
+   ],
+   "rationale": "`page.type(args.selector, args.value)` places agent-supplied text into an input on an agent/attacker-chosen page; combined with a click or an auto-submitting field this delivers that data to an attacker-readable destination. HOSTEXEC is kept for the same `ensureBrowser(args)` pass-through of `launchOptions` into `puppeteer.launch` (line 184/143), undetermined because it depends on unadvertised properties surviving the client/SDK.",
+   "undetermined": true
+  },
+  "puppeteer_hover": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:299",
+    "dist/index.js:184",
+    "dist/index.js:143"
+   ],
+   "labels": [
+    "HOSTEXEC"
+   ],
+   "rationale": "`page.hover` only moves the pointer and returns a fixed confirmation string, so it returns no page data and carries no agent payload off-host by itself; however `handleToolCall` still routes its arguments through `ensureBrowser(args)`, so an attached `launchOptions.executablePath` would be merged into `puppeteer.launch` and execute an arbitrary host binary. Undetermined because this uses properties not present in the advertised schema.",
+   "undetermined": true
+  },
+  "puppeteer_navigate": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:187",
+    "dist/index.js:184",
+    "dist/index.js:120",
+    "dist/index.js:143",
+    "dist/index.js:146-153"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK",
+    "HOSTEXEC"
+   ],
+   "rationale": "`page.goto(args.url)` navigates the real browser to any agent-supplied URL, including `http://localhost`, intranet hosts and `file://` targets, and the resulting page state is readable via `puppeteer_screenshot`/`puppeteer_evaluate`; the fetch itself is an outbound request to an attacker-chosen host whose URL/path can carry agent data, so it is a SINK. Attacker-controlled page content also flows back into context through the `console://logs` resource populated by the `page.on(\"console\")` hook installed in `ensureBrowser`. HOSTEXEC because `launchOptions` is an arbitrary object deep-merged (`deepMerge`) into `puppeteer.launch(...)`, and puppeteer honours `executablePath`/`args`, so the agent can start an arbitrary host binary; the `DANGEROUS_ARGS` check only screens a fixed list of sandbox-weakening flags and never inspects `executablePath`.",
+   "undetermined": false
+  },
+  "puppeteer_screenshot": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:200-202",
+    "dist/index.js:222-229",
+    "dist/index.js:184",
+    "dist/index.js:143"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "HOSTEXEC"
+   ],
+   "rationale": "`page.screenshot` returns the rendered content of whatever page the browser is on - which may be a `file://`, localhost/intranet page or a site where the user is logged in - as image or base64 text in the tool result (SECRET), and equally may be an attacker-controlled web page rendering injected instructions (UNTRUSTED). HOSTEXEC is kept because `handleToolCall` calls `ensureBrowser(args)` for every tool with the raw request arguments (line 184), so a `launchOptions.executablePath` passed alongside `name` still reaches `puppeteer.launch`; the low-level Server handler at line 420 performs no inputSchema enforcement. Undetermined only in that this depends on the host SDK not rejecting extra properties.",
+   "undetermined": true
+  },
+  "puppeteer_select": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:278",
+    "dist/index.js:184",
+    "dist/index.js:143"
+   ],
+   "labels": [
+    "SINK",
+    "HOSTEXEC"
+   ],
+   "rationale": "`page.select(args.selector, args.value)` sets agent-chosen form state on the current (possibly attacker-controlled) page, which can be submitted to the attacker's host; a change handler can trigger the submission directly. HOSTEXEC retained via the `ensureBrowser(args)` -> `puppeteer.launch` launch-option path, undetermined for the same reason as the other non-navigate tools.",
+   "undetermined": true
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "unset -> '{}'",
+   "effect": "JSON-parsed and deep-merged as the base of the launch config; operator-set defaults can be overridden by tool-supplied launchOptions because the tool object is the merge source (wins on conflicts).",
+   "evidence": "dist/index.js:114",
+   "kind": "env",
+   "syntax": "PUPPETEER_LAUNCH_OPTIONS='{\"headless\":true,...}'"
+  },
+  {
+   "default": "unset -> guard active for the listed args only",
+   "effect": "Disables the DANGEROUS_ARGS guard globally, permitting --no-sandbox/--disable-web-security/--ignore-certificate-errors etc. Note the guard never blocked executablePath, so it does not remove HOSTEXEC either way.",
+   "evidence": "dist/index.js:124",
+   "kind": "env",
+   "syntax": "ALLOW_DANGEROUS=true"
+  },
+  {
+   "default": "false",
+   "effect": "Same as ALLOW_DANGEROUS for a single call: lets the agent pass sandbox-weakening Chrome flags.",
+   "evidence": "dist/index.js:124-127",
+   "kind": "argument",
+   "syntax": "allowDangerous: true (tool argument)"
+  },
+  {
+   "default": "unset -> { headless: false }",
+   "effect": "Switches launch defaults to headless with --no-sandbox --single-process --no-zygote, i.e. the browser itself runs unsandboxed by default in the published Docker image.",
+   "evidence": "dist/index.js:141-143",
+   "kind": "env",
+   "syntax": "DOCKER_CONTAINER=true"
+  }
+ ],
+ "version": "2025.5.12"
+}

@@ -1,0 +1,138 @@
+[
+ {
+  "tool": "get_project_registries",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Handler calls `l(process.cwd())` which calls `oa` to load the project's `components.json` and returns the configured registry keys (`Object.keys(t.registries)`) into the agent context; it also calls `u`/`ia` which inspects the local project (package-manager detection). This is local, non-public host"
+ },
+ {
+  "tool": "list_items_in_registries",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "registries"
+  ],
+  "annotations": {},
+  "rationale_code": "Uses `Za` to resolve registries from the local config and then `_a(s,{...useCache:!1})` to fetch item indexes from those registries, formatting names/descriptions via `_` into the agent context. Registry content is third-party/community-hosted data per the threat model, hence UNTRUSTED. Registry tar"
+ },
+ {
+  "tool": "search_items_in_registries",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "registries"
+  ],
+  "annotations": {},
+  "rationale_code": "Calls `_a(s,{query:r.query,...})` against registries resolved by `Za` from `components.json` and returns fetched item names/descriptions via `_` to the agent. Remote/community registry content is attacker-controllable, so UNTRUSTED. The `query` is only used against fetched registry indexes / configu"
+ },
+ {
+  "tool": "view_items_in_registries",
+  "code": [
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "items"
+  ],
+  "annotations": {},
+  "rationale_code": "Passes the agent-supplied `items` strings straight into `ma(r.items,{config:...,useCache:!1})`, which resolves and fetches registry items and returns their file metadata/contents through `E` into context - remote registry content is attacker-controllable (UNTRUSTED). The resolver `ma` lives in the u"
+ },
+ {
+  "tool": "get_item_examples_from_registries",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "registries"
+  ],
+  "annotations": {},
+  "rationale_code": "Searches configured registries with `_a(a,{query:r.query,...})` and then fetches the matched items with `ma(p,{config:i,useCache:!1})`, embedding full remote file contents (`R` prints ```tsx blocks of `s.content`) into the agent context. That is third-party registry content, so UNTRUSTED. The fetch "
+ },
+ {
+  "tool": "get_add_command_for_items",
+  "code": [],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "items"
+  ],
+  "annotations": {},
+  "rationale_code": "Only string-builds a CLI command via `u`, which prefixes the detected package-manager runner (`ia(process.cwd())`) and echoes the agent's own `items`. No network request, no file content returned beyond a package-manager name, no execution (the command is text only)."
+ },
+ {
+  "tool": "get_audit_checklist",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Returns a hardcoded static checklist string; no I/O, no credentials, no network."
+ }
+]

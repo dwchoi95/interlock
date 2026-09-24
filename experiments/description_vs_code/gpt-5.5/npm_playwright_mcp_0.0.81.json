@@ -1,0 +1,562 @@
+{
+ "tools": {
+  "browser_close": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Close the page` changes browser state, but the advertised text does not say it returns data or sends agent-supplied data to an attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_resize": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Resize the browser window` sends agent-supplied `Width` and `Height` into the browser environment; an attacker-controlled current page can observe window size/resize events.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "width",
+    "height"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_console_messages": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Returns all console messages`; console messages from a private/authenticated, local, or intranet page can contain non-public data, and messages from an attacker-controlled page are attacker-authored. `File name to save the console messages to` also means the tool can write a local file.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "filename"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_handle_dialog": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Handle a dialog` with `The text of the prompt` can deliver agent-supplied prompt text to the page that created the dialog, which may be attacker-controlled.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "promptText"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_evaluate": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Evaluate JavaScript expression on page or element` can return data read from the current page, including non-public authenticated/local/intranet content or attacker-authored page content. The supplied `function` can also execute page JavaScript that sends agent-supplied data onward; this is page-context execution, not advertised host RCE. `File name to save the result to` can write locally.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "target",
+    "filename"
+   ],
+   "value_args": [
+    "function"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_file_upload": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Upload one or multiple files` using `absolute paths to the files to upload` can send local file contents to the current web page, which may be attacker-controlled.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "paths"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_drop": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Drop files or MIME-typed data onto an element` can deliver local files from `paths` or agent-supplied MIME `data` to a page element; the current page may be attacker-controlled.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "target",
+    "paths"
+   ],
+   "value_args": [
+    "data"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_find": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Search the accessibility snapshot of the current page` and return `matching snapshot nodes` can reveal non-public page text from authenticated/local/intranet pages, while attacker-controlled pages can author the returned snippets.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_fill_form": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Fill multiple form fields` sends each field `Value to fill in the field` into the current web page; an attacker-controlled page can read submitted or DOM-entered values.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "fields"
+   ],
+   "value_args": [
+    "fields"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_press_key": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Press a key on the keyboard` sends the agent-supplied `Name of the key to press or a character to generate` to the current page, which may be attacker-controlled.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "key"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_type": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Type text into editable element` sends agent-supplied `Text to type into the element` to the current page, and `submit` may submit it; an attacker-controlled page can read it.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "target"
+   ],
+   "value_args": [
+    "text"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_navigate": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Navigate to a URL` with agent-supplied `URL to navigate to` makes a request to an agent-chosen URL/host, which can be attacker-readable.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_navigate_back": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Go back to the previous page in the history` changes browser state, but the advertised text has no call argument selecting an attacker destination and does not say it returns page content.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_network_requests": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Returns a numbered list of network requests since loading the page`; network requests from authenticated/local/intranet pages can reveal non-public URLs and metadata, and attacker-controlled pages can cause attacker-chosen requests/URLs to appear. `File name to save the network requests to` can write locally.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "filename"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_network_request": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Returns full details (headers and body) of a single network request`; request/response headers and bodies can include non-public authenticated data, while attacker-controlled servers/pages can author response content. `File name to save the result to` can write locally.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "index",
+    "filename"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_run_code_unsafe": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK",
+    "HOSTEXEC"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The description says `Unsafe: executes arbitrary JavaScript in the Playwright server process and is RCE-equivalent`; arbitrary host execution is HOSTEXEC and implies ability to read secrets, consume untrusted data, and send data to attacker-readable destinations. The `code` is executable content; `filename` can select a local file to load code from.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "filename"
+   ],
+   "value_args": [
+    "code"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_take_screenshot": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Take a screenshot of the current page` can capture non-public authenticated/local/intranet page contents, or attacker-controlled page visuals. The text says screenshots are saved via `filename` or into an output directory, so this changes local state.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "target",
+    "filename"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_snapshot": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Capture accessibility snapshot of the current page` returns page structure/text, which can include non-public authenticated/local/intranet content or attacker-authored content. `Save snapshot to a file` can write locally.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "target",
+    "filename"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_click": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Perform click on a web page` sends an agent-chosen click interaction, including `button` and `modifiers`, to the current page; an attacker-controlled page can observe the interaction.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "target"
+   ],
+   "value_args": [
+    "button",
+    "modifiers"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_drag": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Perform drag and drop between two elements` sends an agent-chosen drag/drop interaction to the current web page, which may be attacker-controlled and observable.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "startTarget",
+    "endTarget"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_hover": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Hover over element on page` sends an agent-chosen hover interaction to the current web page; an attacker-controlled page can observe that interaction.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "target"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_select_option": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Select an option in a dropdown` sends agent-supplied `values` to the current page, which may be attacker-controlled.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "target"
+   ],
+   "value_args": [
+    "values"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_tabs": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`List, create, close, or select a browser tab` can list tab state, exposing non-public page URLs/titles from authenticated/local/intranet pages or attacker-authored titles/URLs. With `url` for `new`, it can navigate to an agent-chosen attacker-readable URL/host.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "action",
+    "index",
+    "url"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_wait_for": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Wait for text to appear or disappear` observes whether specified text is present in the current page; that page state can be non-public on authenticated/local/intranet pages. The advertised output is not attacker-authored text, so UNTRUSTED is not applied.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_webmcp_list": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`List the WebMCP tools registered by the page, across all frames` returns page-provided tool metadata; private/local/intranet pages may expose non-public metadata, and attacker-controlled pages can author registered tool names/descriptions/schemas.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "browser_webmcp_call": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Call a WebMCP tool registered by the page`; sending `params` to a page-registered tool delivers agent-supplied data to the page, which may be attacker-controlled. The description explicitly says `The tool output is page-provided and untrusted`, and private/local/intranet pages may return non-public data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "name",
+    "frame"
+   ],
+   "value_args": [
+    "params"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "Judged only from the advertised tool names, descriptions, schemas, and annotations. No source-code behavior was assumed.",
+  "Local file writes via `filename` are treated as WRITE state changes, but not as SINKs because the threat model does not make the attacker able to read the user's local files by default."
+ ],
+ "usage": {
+  "input_tokens": 5374,
+  "output_tokens": 8867,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

@@ -1,0 +1,287 @@
+[
+ {
+  "tool": "git_status",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "repo_path"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`call_tool` opens the agent-supplied local `repo_path` as a Git repository, subject only to optional repository restriction, and `git_status` returns `repo.git.status()` in the tool response. This can reveal non-public local repository metadata and file names. The status text can also contain reposi"
+ },
+ {
+  "tool": "git_diff_unstaged",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "repo_path"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`call_tool` opens the local `repo_path`, and `git_diff_unstaged` returns `repo.git.diff(...)` for unstaged working-tree changes. The diff can contain non-public local file contents. Diff text, paths, and hunks can also be authored by contributors to third-party or multi-writer repository content."
+ },
+ {
+  "tool": "git_diff_staged",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "repo_path"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`call_tool` opens the local `repo_path`, and `git_diff_staged` returns `repo.git.diff(..., \"--cached\")` for staged changes. The diff can expose non-public staged file contents. Diff text, paths, and hunks can also be contributor-authored in third-party or multi-writer repository content."
+ },
+ {
+  "tool": "git_diff",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "repo_path",
+   "target"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`call_tool` opens the local `repo_path`, and `git_diff` validates `target` then returns `repo.git.diff(...)` against that revision. The diff can expose non-public repository contents. Diff hunks, paths, commit/ref-selected content, and the echoed target may include contributor- or attacker-authored "
+ },
+ {
+  "tool": "git_commit",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "repo_path"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`git_commit` writes a new local commit with the supplied `message` via `repo.index.commit(message)` and returns only the resulting commit hash. The code does not send data to an attacker-readable destination and does not return repository contents."
+ },
+ {
+  "tool": "git_add",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "repo_path",
+   "files"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`git_add` stages selected local repository paths using `repo.git.add`. It changes only local repository index state and returns a fixed success string, with no repository contents or attacker-readable delivery shown in the code."
+ },
+ {
+  "tool": "git_reset",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "repo_path"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`git_reset` calls `repo.index.reset()` to unstage local changes and returns a fixed string. The code changes local repository state but does not return secrets, untrusted repository text, or send data to an attacker-readable destination."
+ },
+ {
+  "tool": "git_log",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "repo_path"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`git_log` reads local commit history from `repo.git.log(...)` or `repo.iter_commits(...)` and returns hashes, authors, dates, and messages. This can reveal non-public local repository history. Commit authors and messages can be authored by outside contributors in third-party/multi-writer repositorie"
+ },
+ {
+  "tool": "git_create_branch",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "repo_path",
+   "branch_name",
+   "base_branch"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`git_create_branch` writes a local branch and returns the new `branch_name` and `base.name`; if `base_branch` is omitted, `base` is `repo.active_branch`, so the response can reveal local repository branch metadata. Branch/ref names can also be attacker-authored in third-party or multi-writer reposit"
+ },
+ {
+  "tool": "git_checkout",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "repo_path",
+   "branch_name"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`git_checkout` validates and checks out the supplied `branch_name`, changing local repository working-tree/HEAD state, and returns only the supplied branch name in a success string. The code does not return repository contents or send data to an attacker-readable destination."
+ },
+ {
+  "tool": "git_show",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "repo_path",
+   "revision"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`git_show` reads a local commit selected by `revision` and returns commit hash, author, date, message, file paths, and patch contents. This can reveal non-public local repository contents and history. Commit messages, author fields, paths, and patch text can be authored by outside contributors in th"
+ },
+ {
+  "tool": "git_branch",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "repo_path",
+   "branch_type",
+   "contains",
+   "not_contains"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`git_branch` runs `repo.git.branch(...)` and returns branch information from the local repository. This can reveal non-public local branch/ref names. Branch names can also be attacker-authored when listing remote/all branches from third-party or multi-writer repositories."
+ }
+]

@@ -1,0 +1,1271 @@
+{
+ "package": "github-mcp-server",
+ "version": "v1.12.1",
+ "source": "git worktree at tag v1.12.1 of the github/github-mcp-server clone; read pkg/github/*.go, pkg/inventory, pkg/lockdown, pkg/http, cmd/github-mcp-server/main.go, README.md and docs/{remote-server,server-configuration,scope-filtering}.md",
+ "tools": {
+  "actions_get": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/actions.go:412"
+  },
+  "actions_list": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/actions.go:205"
+  },
+  "actions_run_trigger": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/actions.go:534"
+  },
+  "add_comment_to_pending_review": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/pullrequests.go:2393"
+  },
+  "add_issue_comment": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/issues.go:1369"
+  },
+  "add_issue_comment_reaction": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/issues_granular.go:1674"
+  },
+  "add_issue_reaction": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/issues_granular.go:1592"
+  },
+  "add_pull_request_review_comment": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/pullrequests_granular.go:567"
+  },
+  "add_pull_request_review_comment_reaction": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/pullrequests_granular.go:823"
+  },
+  "add_reply_to_pull_request_comment": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/pullrequests.go:1214"
+  },
+  "add_sub_issue": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/issues_granular.go:1076"
+  },
+  "assign_copilot_to_issue": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/copilot.go:169"
+  },
+  "assign_copilot_to_issue_with_intent": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/copilot.go:531"
+  },
+  "create_branch": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/repositories.go:1503"
+  },
+  "create_gist": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/gists.go:175"
+  },
+  "create_issue": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/issues_granular.go:120"
+  },
+  "create_or_update_file": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/repositories.go:411"
+  },
+  "create_pull_request": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/pullrequests.go:654"
+  },
+  "create_pull_request_review": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/pullrequests_granular.go:379"
+  },
+  "create_repository": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/repositories.go:644"
+  },
+  "create_repository_ruleset": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/rulesets.go:656"
+  },
+  "custom_properties_read": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Returns private account/org/repo config or alert data via the PAT (SECRET); vendor/maintainer-authored, so UNTRUSTED only under the secondary variant when collaborators/end-users author the records.",
+   "evidence": "pkg/github/custom_properties.go:29"
+  },
+  "custom_properties_write": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/custom_properties.go:143"
+  },
+  "delete_file": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/repositories.go:1308"
+  },
+  "delete_pending_pull_request_review": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/pullrequests_granular.go:512"
+  },
+  "delete_repository": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/repositories.go:747"
+  },
+  "discussion_comment_write": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/discussions.go:594"
+  },
+  "dismiss_notification": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/notifications.go:170"
+  },
+  "find_duplicate": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/find_duplicate.go:78"
+  },
+  "fork_repository": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/repositories.go:1209"
+  },
+  "get_code_quality_finding": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/code_quality.go:24"
+  },
+  "get_code_scanning_alert": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/code_scanning.go:24"
+  },
+  "get_commit": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/repositories.go:33"
+  },
+  "get_dependabot_alert": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Returns private account/org/repo config or alert data via the PAT (SECRET); vendor/maintainer-authored, so UNTRUSTED only under the secondary variant when collaborators/end-users author the records.",
+   "evidence": "pkg/github/dependabot.go:25"
+  },
+  "get_discussion": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/discussions.go:290"
+  },
+  "get_discussion_comments": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/discussions.go:398"
+  },
+  "get_file_blame": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/repositories.go:2753"
+  },
+  "get_file_contents": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/repositories.go:990"
+  },
+  "get_gist": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/gists.go:115"
+  },
+  "get_global_security_advisory": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Returns the public GitHub Advisory Database (vendor-curated); neither non-public nor attacker-authored.",
+   "evidence": "pkg/github/security_advisories.go:335"
+  },
+  "get_job_logs": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/actions.go:651"
+  },
+  "get_label": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/labels.go:30"
+  },
+  "get_latest_release": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/repositories.go:2185"
+  },
+  "get_me": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns private account/org/repo config or alert data via the PAT (SECRET); vendor/maintainer-authored, so UNTRUSTED only under the secondary variant when collaborators/end-users author the records.",
+   "evidence": "pkg/github/context_tools.go:49"
+  },
+  "get_notification_details": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/notifications.go:338"
+  },
+  "get_release_by_tag": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/repositories.go:2260"
+  },
+  "get_repository_tree": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/git.go:47"
+  },
+  "get_secret_scanning_alert": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Returns private account/org/repo config or alert data via the PAT (SECRET); vendor/maintainer-authored, so UNTRUSTED only under the secondary variant when collaborators/end-users author the records.",
+   "evidence": "pkg/github/secret_scanning.go:25"
+  },
+  "get_tag": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/repositories.go:1949"
+  },
+  "get_team_members": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns private account/org/repo config or alert data via the PAT (SECRET); vendor/maintainer-authored, so UNTRUSTED only under the secondary variant when collaborators/end-users author the records.",
+   "evidence": "pkg/github/context_tools.go:233"
+  },
+  "get_teams": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns private account/org/repo config or alert data via the PAT (SECRET); vendor/maintainer-authored, so UNTRUSTED only under the secondary variant when collaborators/end-users author the records.",
+   "evidence": "pkg/github/context_tools.go:130"
+  },
+  "issue_dependency_read": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/issue_dependencies.go:57"
+  },
+  "issue_dependency_write": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/issue_dependencies.go:195"
+  },
+  "issue_read": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/issues.go:827"
+  },
+  "issue_write": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/issues.go:2410"
+  },
+  "label_write": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/labels.go:234"
+  },
+  "list_branches": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/repositories.go:319"
+  },
+  "list_code_scanning_alerts": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/code_scanning.go:141"
+  },
+  "list_commits": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/repositories.go:183"
+  },
+  "list_dependabot_alerts": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Returns private account/org/repo config or alert data via the PAT (SECRET); vendor/maintainer-authored, so UNTRUSTED only under the secondary variant when collaborators/end-users author the records.",
+   "evidence": "pkg/github/dependabot.go:134"
+  },
+  "list_discussion_categories": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Returns private account/org/repo config or alert data via the PAT (SECRET); vendor/maintainer-authored, so UNTRUSTED only under the secondary variant when collaborators/end-users author the records.",
+   "evidence": "pkg/github/discussions.go:997"
+  },
+  "list_discussions": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/discussions.go:133"
+  },
+  "list_gists": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/gists.go:26"
+  },
+  "list_global_security_advisories": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Returns the public GitHub Advisory Database (vendor-curated); neither non-public nor attacker-authored.",
+   "evidence": "pkg/github/security_advisories.go:25"
+  },
+  "list_issue_fields": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns private account/org/repo config or alert data via the PAT (SECRET); vendor/maintainer-authored, so UNTRUSTED only under the secondary variant when collaborators/end-users author the records.",
+   "evidence": "pkg/github/issue_fields.go:110"
+  },
+  "list_issue_types": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns private account/org/repo config or alert data via the PAT (SECRET); vendor/maintainer-authored, so UNTRUSTED only under the secondary variant when collaborators/end-users author the records.",
+   "evidence": "pkg/github/issues.go:1266"
+  },
+  "list_issues": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/issues.go:3395"
+  },
+  "list_label": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/labels.go:136"
+  },
+  "list_notifications": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/notifications.go:33"
+  },
+  "list_org_repository_security_advisories": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Returns private account/org/repo config or alert data via the PAT (SECRET); vendor/maintainer-authored, so UNTRUSTED only under the secondary variant when collaborators/end-users author the records.",
+   "evidence": "pkg/github/security_advisories.go:396"
+  },
+  "list_pull_requests": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/pullrequests.go:1375"
+  },
+  "list_releases": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/repositories.go:2082"
+  },
+  "list_repository_collaborators": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns private account/org/repo config or alert data via the PAT (SECRET); vendor/maintainer-authored, so UNTRUSTED only under the secondary variant when collaborators/end-users author the records.",
+   "evidence": "pkg/github/repositories.go:3056"
+  },
+  "list_repository_security_advisories": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Returns private account/org/repo config or alert data via the PAT (SECRET); vendor/maintainer-authored, so UNTRUSTED only under the secondary variant when collaborators/end-users author the records.",
+   "evidence": "pkg/github/security_advisories.go:221"
+  },
+  "list_secret_scanning_alerts": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Returns private account/org/repo config or alert data via the PAT (SECRET); vendor/maintainer-authored, so UNTRUSTED only under the secondary variant when collaborators/end-users author the records.",
+   "evidence": "pkg/github/secret_scanning.go:137"
+  },
+  "list_starred_repositories": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/repositories.go:2360"
+  },
+  "list_tags": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/repositories.go:1858"
+  },
+  "manage_notification_subscription": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/notifications.go:413"
+  },
+  "manage_repository_notification_subscription": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/notifications.go:510"
+  },
+  "mark_all_notifications_read": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/notifications.go:246"
+  },
+  "merge_pull_request": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/pullrequests.go:1530"
+  },
+  "projects_get": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/projects.go:455"
+  },
+  "projects_list": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/projects.go:290"
+  },
+  "projects_write": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/projects.go:734"
+  },
+  "pull_request_read": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/pullrequests.go:73"
+  },
+  "pull_request_review_write": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/pullrequests.go:1856"
+  },
+  "push_files": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/repositories.go:1616"
+  },
+  "remove_sub_issue": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/issues_granular.go:1150"
+  },
+  "repository_ruleset_read": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Returns private account/org/repo config or alert data via the PAT (SECRET); vendor/maintainer-authored, so UNTRUSTED only under the secondary variant when collaborators/end-users author the records.",
+   "evidence": "pkg/github/rulesets.go:99"
+  },
+  "reprioritize_sub_issue": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/issues_granular.go:1219"
+  },
+  "request_copilot_review": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/copilot.go:887"
+  },
+  "request_pull_request_reviewers": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/pullrequests_granular.go:284"
+  },
+  "resolve_review_thread": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/pullrequests_granular.go:707"
+  },
+  "search_code": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/search.go:224"
+  },
+  "search_commits": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/search.go:553"
+  },
+  "search_issues": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/issues.go:1885"
+  },
+  "search_orgs": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Returns public search results whose text (bios/descriptions) is attacker-controllable; not private.",
+   "evidence": "pkg/github/search.go:511"
+  },
+  "search_pull_requests": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/pullrequests.go:1658"
+  },
+  "search_repositories": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/search.go:53"
+  },
+  "search_users": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns public search results whose text (bios/descriptions) is attacker-controllable; not private.",
+   "evidence": "pkg/github/search.go:469"
+  },
+  "set_issue_fields": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/issues_granular.go:1345"
+  },
+  "star_repository": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/repositories.go:2504"
+  },
+  "sub_issue_write": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/issues.go:1578"
+  },
+  "submit_pending_pull_request_review": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/pullrequests_granular.go:448"
+  },
+  "ui_get": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Read tool: can target the PAT's private repos (SECRET) and third-party public repos whose issue/PR/comment/code/discussion/gist/CI content is attacker-authored (UNTRUSTED).",
+   "evidence": "pkg/github/ui_tools.go:36"
+  },
+  "unresolve_review_thread": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/pullrequests_granular.go:779"
+  },
+  "unstar_repository": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/repositories.go:2570"
+  },
+  "update_gist": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/gists.go:277"
+  },
+  "update_issue_assignees": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/issues_granular.go:286"
+  },
+  "update_issue_body": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/issues_granular.go:263"
+  },
+  "update_issue_labels": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/issues_granular.go:504"
+  },
+  "update_issue_milestone": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/issues_granular.go:687"
+  },
+  "update_issue_state": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/issues_granular.go:895"
+  },
+  "update_issue_title": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/issues_granular.go:243"
+  },
+  "update_issue_type": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/issues_granular.go:729"
+  },
+  "update_pull_request": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/pullrequests.go:915"
+  },
+  "update_pull_request_body": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/pullrequests_granular.go:132"
+  },
+  "update_pull_request_branch": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/pullrequests.go:1707"
+  },
+  "update_pull_request_draft_state": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/pullrequests_granular.go:179"
+  },
+  "update_pull_request_state": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write/side-effect tool carrying no free-form agent data to an attacker-readable destination (metadata, state, reaction, star, subscription, ref, or destructive op).",
+   "evidence": "pkg/github/pullrequests_granular.go:152"
+  },
+  "update_pull_request_title": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": false,
+   "undetermined": false,
+   "rationale": "Write tool: publishes agent-supplied free-form text (issue/PR/comment/review body, file/gist content, commit msg, label, project status, workflow inputs, or Copilot task) to a destination that can be public and attacker-readable.",
+   "evidence": "pkg/github/pullrequests_granular.go:112"
+  }
+ },
+ "value_conditions": [
+  {
+   "syntax": "--read-only / GITHUB_READ_ONLY / X-MCP-Readonly header / URL path /readonly (and /x/{toolset}/readonly, /x/all/readonly)",
+   "kind": "flag",
+   "effect": "Removes every tool whose annotation ReadOnlyHint!=true (inventory drops !IsReadOnly under readOnly). Eliminates all SINK tools (create_*/update_*/add_*_comment/merge_*/push_files/label_write/projects_write/actions_run_trigger/assign_copilot_*/gist writes), leaving only reads => package loses SINK and the SECRET+UNTRUSTED+SINK triple is broken. Read-only takes precedence over --tools.",
+   "default": "absent => read-write: all write tools present.",
+   "evidence": "pkg/inventory/filters.go:44 (r.readOnly && !tool.IsReadOnly()); pkg/inventory/server_tool.go:121 IsReadOnly=Annotations.ReadOnlyHint; docs/server-configuration.md:13,28"
+  },
+  {
+   "syntax": "--toolsets / GITHUB_TOOLSETS / X-MCP-Toolsets header / URL path /x/{toolset} (single) or /x/all",
+   "kind": "flag",
+   "effect": "Restricts enabled toolsets. Default (nil) = context,repos,issues,pull_requests,users,copilot. Selecting a subset removes the labels contributed only by omitted toolsets (e.g. a read-only-only toolset, or dropping repos/issues/pull_requests removes their SINK writes). 'all' enables every toolset.",
+   "default": "absent => the six default toolsets above (README default list omits copilot but code marks copilot Default:true).",
+   "evidence": "pkg/inventory/builder.go:322-374; pkg/github/tools.go:28-149 (Default:true metadata); pkg/github/tools_test.go:22-31 default expansion; pkg/http/handler.go:167-176 URL paths; docs/remote-server.md:122-137"
+  },
+  {
+   "syntax": "--lockdown-mode / GITHUB_LOCKDOWN_MODE / X-MCP-Lockdown header",
+   "kind": "flag",
+   "effect": "Best-effort content filter (NOT a security boundary): only issue_read(get)/pull_request_read(get,get_diff,get_files,get_commits) error, and issue_read/pull_request_read comment/review/sub-issue sub-methods drop items authored by users lacking push access (trusted bots github-actions[bot]/copilot exempt). It does NOT touch search_issues/list_issues/get_file_contents/get_discussion/get_gist/list_notifications/actions logs etc., so UNTRUSTED remains in the package. Does not change what the credential can read/write.",
+   "default": "absent => no content filtering (UNTRUSTED fully present). HTTP header is an upper bound: cannot relax operator-set lockdown.",
+   "evidence": "pkg/lockdown/lockdown.go:135-164 IsSafeContent, :109-111 trusted bots; pkg/github/issues.go:918-1191, pkg/github/pullrequests.go:187-594; README.md:1653-1692"
+  },
+  {
+   "syntax": "--tools / GITHUB_TOOLS / X-MCP-Tools ; --exclude-tools / GITHUB_EXCLUDE_TOOLS / X-MCP-Exclude-Tools",
+   "kind": "flag",
+   "effect": "--tools is an additive allow-list bypassing toolset gating (still subject to read-only); with --tools and no --toolsets only those tools register. --exclude-tools removes named tools regardless of other settings (highest precedence). Either can drop specific SECRET/UNTRUSTED/SINK tools.",
+   "default": "absent => toolset defaults apply.",
+   "evidence": "pkg/inventory/builder.go:117-179 WithTools/WithExcludeTools; pkg/github/server.go:152-164 ResolvedEnabledToolsets; docs/server-configuration.md:11-12,30"
+  },
+  {
+   "syntax": "classic-PAT scope filtering (automatic) ; --insiders / GITHUB_INSIDERS / X-MCP-Insiders / /insiders ; --features / X-MCP-Features / ?features=",
+   "kind": "flag",
+   "effect": "Classic-PAT (ghp_) scopes auto-hide tools needing absent scopes (read-only public-repo tools always shown); fine-grained/App tokens => no filtering. Insiders and --features (allow-listed flags only) turn ON extra/granular tool variants (e.g. issues_granular swaps consolidated issue_write for single-field update_issue_* granular tools), changing which named tools appear but not the label union.",
+   "default": "absent => no scope filtering unless a classic PAT is detected; insiders off; granular variants off (consolidated issue_write/update_pull_request/pull_request_review_write active).",
+   "evidence": "pkg/github/feature_flags.go:44-71 AllowedFeatureFlags/InsidersFeatureFlags; internal/ghmcp/server.go:186,340-360 scope filtering; pkg/http/handler.go:178-200; docs/scope-filtering.md; docs/remote-server.md:60-137"
+  }
+ ],
+ "notes": [
+  "Snapshot covers ALL 121 tools; default toolsets (context,repos,issues,pull_requests,users,copilot) enable a subset. default_enabled reflects: in a default toolset AND not feature-gated-off. Granular issue/PR tools, get_file_blame, find_duplicate, issue_dependency_*, and ui_get are OFF by default; the consolidated issue_write/sub_issue_write/update_pull_request/pull_request_review_write/add_comment_to_pending_review are ON by default.",
+  "Default-enabled label union = {SECRET, UNTRUSTED, SINK}: e.g. get_file_contents/issue_read (SECRET+UNTRUSTED) and add_issue_comment/create_issue/create_pull_request/issue_write/create_or_update_file (SINK). => UNSAFE at default with no flags.",
+  "Auth: PAT (GITHUB_PERSONAL_ACCESS_TOKEN) or GitHub App or OAuth; the token can access the user's PRIVATE repos, so repo/issue/PR read tools are SECRET. The same tools can be pointed at arbitrary third-party PUBLIC repos, so they are also UNTRUSTED.",
+  "Results are passed through pkg/sanitize (HTML/invisible-char/code-fence neutralisation) and optional IFC labels, but sanitisation does not strip attacker instructions from text => UNTRUSTED stands.",
+  "Global security advisories (list/get_global_security_advisory) read the public vendor GHSA DB => no label. Repo/org security advisories are private drafts => SECRET.",
+  "Reaction/state/metadata writes (reactions, labels/assignees/milestone/type/state, branch/ref ops, subscriptions, stars, dependency links, request_reviewers, resolve/unresolve thread, delete_file, delete_repository, fork) carry no free-form agent payload to an attacker-readable place => no SINK. actions_run_trigger IS a SINK: run_workflow takes agent inputs and triggers CI that can make arbitrary outbound network calls (vendor sandbox, not HOSTEXEC).",
+  "Remote api.githubcopilot.com / ghcr.io image share this code: URL paths /, /readonly, /insiders, /readonly/insiders, /x/{toolset}[/readonly][/insiders], /x/all[...]; headers X-MCP-Toolsets, X-MCP-Tools, X-MCP-Exclude-Tools, X-MCP-Readonly, X-MCP-Lockdown, X-MCP-Insiders, X-MCP-Features; query ?features=. URL values take precedence over headers. Remote-only toolsets (copilot_spaces, github_support_docs_search) are not in this snapshot.",
+  "assign_copilot_to_issue / assign_copilot_to_issue_with_intent are labelled SINK conservatively: they dispatch the Copilot coding agent with agent-supplied custom_instructions that can drive a PR on a public repo; if that reach is considered internal-only these would drop to no-label."
+ ]
+}

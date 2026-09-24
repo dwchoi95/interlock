@@ -1,0 +1,239 @@
+{
+ "tools": {
+  "slack_list_channels": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads Slack workspace data: `List public or pre-defined channels in the workspace with pagination`, so the returned channel list is SaaS data reached with the user's Slack access and may be non-public to the internet. Channel names/metadata in a workspace can be created or changed by workspace participants; the advertised text does not specify who authors returned channel fields, so on the least-restrictive reading channel identifiers/names may contain attacker-controlled text.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "channels[].name"
+   ],
+   "identifier_output_fields": [
+    "channels[].id",
+    "channels[].name",
+    "cursor"
+   ],
+   "attacker_named_fields": [
+    "channels[].name"
+   ]
+  },
+  "slack_post_message": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can send agent-supplied text to a Slack destination: `Post a new message to a Slack channel`. The destination is selected by `channel_id` (`The ID of the channel to post to`) and the sent content is `text` (`The message text to post`). A Slack channel may be readable by other workspace participants, so this is a SINK.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "channel_id"
+   ],
+   "value_args": [
+    "text"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "slack_reply_to_thread": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can send agent-supplied text as a Slack reply: `Reply to a specific message thread in Slack`. The destination/record is selected by `channel_id` (`The ID of the channel containing the thread`) and `thread_ts` (`The timestamp of the parent message`), and the sent content is `text` (`The reply text`). A Slack thread may be readable by other workspace participants, so this is a SINK.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "channel_id",
+    "thread_ts"
+   ],
+   "value_args": [
+    "text"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "slack_add_reaction": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool writes a reaction into Slack: `Add a reaction emoji to a message`. The target record is selected by `channel_id` (`The ID of the channel containing the message`) and `timestamp` (`The timestamp of the message to react to`), and the stored value is `reaction` (`The name of the emoji reaction`). This writes agent-supplied data to a Slack message that may be readable by others, so it is a SINK.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "channel_id",
+    "timestamp"
+   ],
+   "value_args": [
+    "reaction"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "slack_get_channel_history": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads Slack message content: `Get recent messages from a channel`, selected by `channel_id` (`The ID of the channel`). Channel history in the user's Slack workspace is SaaS data reached with the user's credentials and may be non-public, so it is SECRET. Slack channels are multi-writer message sources; the returned messages may include text and sender identifiers authored by other participants, so they are UNTRUSTED. The advertisement does not provide an output schema, so exact returned field names are inferred conservatively.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "messages[].text",
+    "messages[].user_id",
+    "messages[].username"
+   ],
+   "identifier_output_fields": [
+    "messages[].timestamp",
+    "messages[].thread_ts",
+    "messages[].user_id",
+    "messages[].username"
+   ],
+   "attacker_named_fields": [
+    "messages[].user_id",
+    "messages[].username"
+   ]
+  },
+  "slack_get_thread_replies": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads Slack thread content: `Get all replies in a message thread`, selected by `channel_id` (`The ID of the channel containing the thread`) and `thread_ts` (`The timestamp of the parent message`). Thread replies in the user's Slack workspace are SaaS data reached with the user's credentials and may be non-public, so they are SECRET. Slack threads are multi-writer message sources; replies may include text and sender identifiers authored by other participants, so they are UNTRUSTED. The advertisement does not provide an output schema, so exact returned field names are inferred conservatively.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "replies[].text",
+    "replies[].user_id",
+    "replies[].username"
+   ],
+   "identifier_output_fields": [
+    "replies[].timestamp",
+    "replies[].thread_ts",
+    "replies[].user_id",
+    "replies[].username"
+   ],
+   "attacker_named_fields": [
+    "replies[].user_id",
+    "replies[].username"
+   ]
+  },
+  "slack_get_users": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads workspace directory/profile data: `Get a list of all users in the workspace with their basic profile information`. A Slack workspace user list and profiles are SaaS data reached with the user's credentials and may be non-public, so they are SECRET. Profile fields such as names and other basic profile information can be authored by the corresponding users; the advertised text does not constrain authorship, so on the least-restrictive reading the returned profile text/identifiers may be attacker-controlled and UNTRUSTED.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "users[].profile",
+    "users[].name",
+    "users[].display_name",
+    "users[].real_name",
+    "users[].email"
+   ],
+   "identifier_output_fields": [
+    "users[].user_id",
+    "users[].name",
+    "users[].display_name",
+    "users[].real_name",
+    "users[].email",
+    "cursor"
+   ],
+   "attacker_named_fields": [
+    "users[].name",
+    "users[].display_name",
+    "users[].real_name",
+    "users[].email"
+   ]
+  },
+  "slack_get_user_profile": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads a user's Slack profile: `Get detailed profile information for a specific user`, selected by `user_id` (`The ID of the user`). Detailed profile information in the user's Slack workspace is SaaS data reached with the user's credentials and may be non-public, so it is SECRET. Profile fields are generally authored by the profile owner; the advertised text does not constrain returned fields or authorship, so on the least-restrictive reading profile text and user-chosen identifiers may be attacker-controlled and UNTRUSTED.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "profile",
+    "name",
+    "display_name",
+    "real_name",
+    "status_text",
+    "title",
+    "email"
+   ],
+   "identifier_output_fields": [
+    "user_id",
+    "name",
+    "display_name",
+    "real_name",
+    "email"
+   ],
+   "attacker_named_fields": [
+    "name",
+    "display_name",
+    "real_name",
+    "email"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "Read tools contact Slack as a fixed vendor service; their selector arguments such as channel_id, user_id, cursor, limit, and thread_ts are not destination_args for READ tools because they do not choose an arbitrary host or URL.",
+  "No tool is advertised as disabled by default."
+ ],
+ "usage": {
+  "input_tokens": 1840,
+  "output_tokens": 5291,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

@@ -1,0 +1,197 @@
+{
+ "tools": {
+  "tools_documentation": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool only says it will `Get documentation for n8n MCP tools` and has a read-only annotation. The advertised text does not indicate access to private user data, attacker-controlled external content, arbitrary network destinations, writes, or host execution.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "search_nodes": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches `n8n nodes` and can include `real-world configuration examples from popular templates`; its schema also advertises `community` node sources. Community registries/templates can contain attacker-authored public content, so returned node descriptions/examples must be treated as untrusted. It is read-only and search terms/filters do not choose an arbitrary host destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "name",
+    "description",
+    "examples"
+   ],
+   "identifier_output_fields": [
+    "nodeType",
+    "name",
+    "examples",
+    "operations"
+   ],
+   "attacker_named_fields": [
+    "nodeType",
+    "name",
+    "examples"
+   ]
+  },
+  "get_node": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns node `docs`, schemas, properties, and can `Include real-world configuration examples from templates`. Because nodes may include community nodes and template examples are public/third-party content, documentation, property text, and examples may be attacker-authored. It is read-only and the `nodeType` argument selects a node, not an arbitrary network destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "description",
+    "docs",
+    "properties",
+    "examples"
+   ],
+   "identifier_output_fields": [
+    "nodeType",
+    "name",
+    "displayName",
+    "properties",
+    "versions",
+    "examples"
+   ],
+   "attacker_named_fields": [
+    "nodeType",
+    "name",
+    "displayName",
+    "properties",
+    "examples"
+   ]
+  },
+  "validate_node": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool only advertises local-style validation of an agent-supplied `node configuration` and returns `errors/warnings/suggestions`. The description does not say it reads private data, fetches attacker-controlled content, writes state, sends to an attacker-chosen destination, or executes host code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "get_template": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves a workflow `template by ID` and can return a `complete workflow JSON`. Public workflow templates are third-party/attacker-authorable content, so workflow names, node parameters, connections, and embedded URLs/text may be untrusted. It is read-only and `templateId` selects a record rather than an arbitrary network destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "name",
+    "description",
+    "author",
+    "nodes",
+    "connections",
+    "workflow"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "author",
+    "nodes",
+    "connections",
+    "url",
+    "workflow"
+   ],
+   "attacker_named_fields": [
+    "name",
+    "author",
+    "nodes",
+    "connections",
+    "workflow"
+   ]
+  },
+  "search_templates": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches workflow `templates`, including keyword search and summaries mined from `2700+ templates`, and the schema exposes returned fields such as `name`, `description`, and `author`. Public template search results are third-party/attacker-authorable content. The tool is read-only; query/filter arguments select records from the template index, not an arbitrary network destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "name",
+    "description",
+    "author",
+    "metadata",
+    "nodes"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "author",
+    "nodes",
+    "url",
+    "metadata"
+   ],
+   "attacker_named_fields": [
+    "name",
+    "author",
+    "nodes",
+    "metadata"
+   ]
+  },
+  "validate_workflow": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool advertises `Full workflow validation` of an agent-supplied `complete workflow JSON` and returns `errors/warnings/fixes`. The description does not indicate private-data access, fetching attacker-controlled external content, state changes, transmission to an attacker-chosen destination, or host code execution; `validateExpressions` is described as syntax/reference validation, not execution.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No output schemas were advertised, so output field names are inferred from the tool descriptions and input schemas. No advertised flag, environment variable, URL path, or header disables tools or removes labels."
+ ],
+ "usage": {
+  "input_tokens": 3296,
+  "output_tokens": 5322,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

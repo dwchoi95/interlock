@@ -1,0 +1,602 @@
+[
+ {
+  "tool": "start_codegen_session",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "outputPath"
+  ],
+  "annotations": {},
+  "rationale_code": "`startCodegenSession.handler` normalizes `options.outputPath`, creates that directory with `fs.mkdir`, starts an in-memory session, and returns `sessionId` plus options. It writes local filesystem/session state but does not return host file contents or contact an attacker host. [dropped destination_"
+ },
+ {
+  "tool": "end_codegen_session",
+  "code": [],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "sessionId"
+  ],
+  "annotations": {},
+  "rationale_code": "`endCodegenSession.handler` selects a recorded session by `sessionId`, generates test code, writes it with `fs.writeFile` to a path derived from the session options, and returns paths/test code. This is a local write, not an attacker-readable destination by itself."
+ },
+ {
+  "tool": "get_codegen_session",
+  "code": [],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "The handler returns the in-memory codegen session selected by `sessionId`; no network or host file read is shown. Exact session shape is in `ActionRecorder`, which was not included."
+ },
+ {
+  "tool": "clear_codegen_session",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "sessionId"
+  ],
+  "annotations": {},
+  "rationale_code": "The handler deletes/clears an in-memory codegen session selected by `sessionId` and returns success; no external destination is shown."
+ },
+ {
+  "tool": "playwright_navigate",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "The advertised `url` is an agent-chosen URL, and the handler creates a Playwright browser/page then dispatches to `navigationTool.execute`. A browser navigation sends a request to that chosen host. The concrete `NavigationTool` implementation is not included."
+ },
+ {
+  "tool": "playwright_screenshot",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "name",
+   "downloadsDir"
+  ],
+  "annotations": {},
+  "rationale_code": "The tool is advertised to screenshot the current page/element. Current page pixels may be attacker-authored web content or non-public `file://`, localhost, or intranet content reached by the browser. The screenshot implementation is imported but not included, so exact return fields are undetermined."
+ },
+ {
+  "tool": "playwright_click",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "Clicking an element in the current browser page can trigger navigation, form submission, or other requests to the page's host, including an attacker-chosen page. The concrete `ClickTool` implementation is not included."
+ },
+ {
+  "tool": "playwright_iframe_click",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "iframeSelector",
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "Clicking inside an iframe can trigger requests or state changes in the framed page, which can be attacker-controlled. The concrete implementation is not included."
+ },
+ {
+  "tool": "playwright_iframe_fill",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "iframeSelector",
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "The advertised tool fills `value` into an iframe element; that agent-supplied value can be submitted or observed by an attacker-controlled page/frame. The concrete implementation is not included."
+ },
+ {
+  "tool": "playwright_fill",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "The advertised tool fills agent-supplied `value` into a page element; an attacker-controlled page can read or submit it. The concrete implementation is not included."
+ },
+ {
+  "tool": "playwright_select",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "The advertised tool selects agent-supplied `value` in the current page, which can be observed/submitted by the current site. The concrete implementation is not included."
+ },
+ {
+  "tool": "playwright_hover",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "Hovering can trigger page JavaScript and network requests on an attacker-controlled current page. The concrete implementation is not included."
+ },
+ {
+  "tool": "playwright_upload_file",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SECRET",
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "The advertised tool uploads a local `filePath` to a file input in the current page; if the page is attacker-controlled, this can deliver that file to an attacker-readable destination. The concrete implementation is not included."
+ },
+ {
+  "tool": "playwright_evaluate",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "script"
+  ],
+  "annotations": {},
+  "rationale_code": "The tool executes agent-supplied browser JavaScript. Such script can read page data and return it, including non-public localhost/intranet/file page data, and can send data to arbitrary network destinations from the page. If run on attacker-authored pages, returned data can be attacker-controlled. T"
+ },
+ {
+  "tool": "playwright_console_logs",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Console messages are registered from page `console` and `pageerror` events, and the tool is advertised to retrieve them. Page scripts and errors can be attacker-authored; logs may also contain non-public data from localhost/intranet/file pages. Exact execute output shape is not included."
+ },
+ {
+  "tool": "playwright_resize",
+  "code": [],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "The advertised tool changes browser viewport/device emulation settings. No return of page data or network send is shown. The concrete `ResizeTool` implementation is not included."
+ },
+ {
+  "tool": "playwright_close",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "The handler closes the local browser instance and returns a fixed status string. It does not expose secrets or contact an attacker destination."
+ },
+ {
+  "tool": "playwright_get",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "The tool performs HTTP GET to agent-chosen `url`; the handler creates a Playwright request context with `baseURL: url`. Responses from attacker hosts are untrusted, and responses from localhost/intranet URLs can be non-public. The concrete request implementation is not included."
+ },
+ {
+  "tool": "playwright_post",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "The tool POSTs agent-supplied `value`/headers/token to agent-chosen `url`; returned responses can be attacker-controlled or non-public localhost/intranet data. The concrete request implementation is not included."
+ },
+ {
+  "tool": "playwright_put",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "The tool PUTs agent-supplied `value`/headers/token to agent-chosen `url`; returned responses can be attacker-controlled or non-public localhost/intranet data. The concrete request implementation is not included."
+ },
+ {
+  "tool": "playwright_patch",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "The tool PATCHes agent-supplied `value`/headers/token to agent-chosen `url`; returned responses can be attacker-controlled or non-public localhost/intranet data. The concrete request implementation is not included."
+ },
+ {
+  "tool": "playwright_delete",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "The tool sends DELETE to agent-chosen `url`, possibly with token/headers; returned responses can be attacker-controlled or non-public localhost/intranet data. The concrete request implementation is not included."
+ },
+ {
+  "tool": "playwright_expect_response",
+  "code": [],
+  "description": [],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "id"
+  ],
+  "annotations": {},
+  "rationale_code": "The advertised tool registers a pending wait for a response matching `url` under `id` but does not itself contact a new URL or return the response body. The concrete implementation is not included."
+ },
+ {
+  "tool": "playwright_assert_response",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "The advertised tool waits for and validates a previously captured HTTP response body. That response may be from attacker-authored web content or from non-public localhost/intranet pages. The concrete implementation and exact returned fields are not included, so the least-restrictive reading keeps th"
+ },
+ {
+  "tool": "playwright_custom_user_agent",
+  "code": [],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "The handler passes `userAgent` into browser settings and a new context can be created with that user agent. This stores browser configuration; no immediate external request or page-content return is shown. The concrete tool implementation is not included."
+ },
+ {
+  "tool": "playwright_get_visible_text",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "The advertised tool returns visible text from the current page. Current page text can be attacker-authored, or can be non-public content from file, localhost, or intranet pages reached by the browser. The concrete implementation is not included."
+ },
+ {
+  "tool": "playwright_get_visible_html",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "The advertised tool returns HTML from the current page. Page HTML can be attacker-authored, or non-public content from file, localhost, or intranet pages reached by the browser. The concrete implementation is not included."
+ },
+ {
+  "tool": "playwright_go_back",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Browser history navigation can issue requests to previously visited hosts, including attacker-chosen hosts from earlier navigation. The concrete implementation is not included."
+ },
+ {
+  "tool": "playwright_go_forward",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Browser history navigation can issue requests to previously visited hosts, including attacker-chosen hosts from earlier navigation. The concrete implementation is not included."
+ },
+ {
+  "tool": "playwright_drag",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "sourceSelector",
+   "targetSelector"
+  ],
+  "annotations": {},
+  "rationale_code": "Dragging elements in the current page can trigger page JavaScript and network/state changes on an attacker-controlled site. The concrete implementation is not included."
+ },
+ {
+  "tool": "playwright_press_key",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "Key presses in the current page can enter/submit data or trigger requests to the current site, which may be attacker-controlled. The concrete implementation is not included."
+ },
+ {
+  "tool": "playwright_save_as_pdf",
+  "code": [],
+  "description": [],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "outputPath",
+   "filename"
+  ],
+  "annotations": {},
+  "rationale_code": "The advertised tool saves the current page as a local PDF at `outputPath`/`filename`. A local filesystem write is not an attacker-readable sink under the stated threat model, and no return of page content is shown. The concrete implementation is not included."
+ },
+ {
+  "tool": "playwright_click_and_switch_tab",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "Clicking a link can navigate/open a new tab and send requests to the linked host, including an attacker-controlled host. The concrete implementation is not included."
+ }
+]

@@ -1,0 +1,1505 @@
+{
+ "workspace": {
+  "suite": "workspace",
+  "tools": [
+   {
+    "name": "send_email",
+    "kind": "WRITE",
+    "destination_args": [
+     "recipients",
+     "cc",
+     "bcc"
+    ],
+    "value_args": [
+     "subject",
+     "body",
+     "attachments"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "recipients",
+     "cc",
+     "bcc"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "It `Sends an email` to `recipients`, with optional `cc`/`bcc`, so agent-supplied `subject`, `body`, and `attachments` can be delivered to attacker-readable email addresses. Attachments may reference a drive file by `file_id`, so this can also be used to send selected stored data. The exact returned dictionary fields are not specified beyond `email details`, so output identifiers are least-restrictive."
+   },
+   {
+    "name": "delete_email",
+    "kind": "WRITE",
+    "destination_args": [
+     "email_id"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "It `Deletes the email with the given email_id from the inbox`, changing the user's mailbox but not returning or sending attacker-controlled or secret content according to the advertised text."
+   },
+   {
+    "name": "get_unread_emails",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "sender",
+     "subject",
+     "body"
+    ],
+    "structured_output_fields": [
+     "sender"
+    ],
+    "attacker_named_fields": [
+     "sender"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "It returns `all the unread emails in the inbox`, which is non-public mailbox data reached with the user's credentials. Received email `sender`, `subject`, and `body` can be authored by outside senders, so the output is untrusted. It also says emails are `marked as read after this function is called`, so this is a state-changing write for enforcement."
+   },
+   {
+    "name": "get_sent_emails",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "recipient"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "It returns `all the sent emails in the inbox`, including `recipient`, `subject`, and `body`, which are non-public mailbox data. The advertised text does not indicate these sent messages are authored by an outside attacker."
+   },
+   {
+    "name": "get_received_emails",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "sender",
+     "subject",
+     "body"
+    ],
+    "structured_output_fields": [
+     "sender"
+    ],
+    "attacker_named_fields": [
+     "sender"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "It returns `all the received emails in the inbox`, which is non-public mailbox data. Received email `sender`, `subject`, and `body` can be authored by outside senders, making them untrusted."
+   },
+   {
+    "name": "get_draft_emails",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "recipient"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "It returns `all the draft emails in the inbox`, including `recipient`, `subject`, and `body`, which are non-public account data. The description does not indicate third-party authorship for drafts."
+   },
+   {
+    "name": "search_emails",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "sender",
+     "subject",
+     "body"
+    ],
+    "structured_output_fields": [
+     "sender"
+    ],
+    "attacker_named_fields": [
+     "sender"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "It `Searches for emails in the inbox`, which exposes non-public mailbox data. Because matching emails may be from a `sender` and contain attacker-authored `subject` or `body`, the returned email text is untrusted. `query` and `sender` only select what to read and do not contact an agent-chosen host."
+   },
+   {
+    "name": "search_contacts_by_name",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "name",
+     "email"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "It finds contacts in the inbox's `contact list`, which is non-public account data. The description does not indicate the user's contacts are attacker-authored; `query` only selects what to read."
+   },
+   {
+    "name": "search_contacts_by_email",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "name",
+     "email"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "It finds contacts in the inbox's `contact list`, which is non-public account data. The description does not indicate the user's contacts are attacker-authored; `query` only selects what to read."
+   },
+   {
+    "name": "get_current_day",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "It only `Returns the current day in ISO format` and does not expose non-public or attacker-authored content or send data out. The returned date can be reused as a `day` or `date` argument."
+   },
+   {
+    "name": "search_calendar_events",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "title",
+     "description",
+     "location"
+    ],
+    "structured_output_fields": [
+     "event_id",
+     "title",
+     "start_time",
+     "end_time",
+     "date",
+     "location",
+     "participants"
+    ],
+    "attacker_named_fields": [
+     "title",
+     "location",
+     "participants"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "It searches calendar `events` by `titles and descriptions`, exposing non-public calendar data. The text mentions event `participants`, but does not settle whether existing events may be invitations or otherwise authored by outside parties; keeping the least-restrictive UNTRUSTED label for title/description/location-like event text."
+   },
+   {
+    "name": "get_day_calendar_events",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "title",
+     "description",
+     "location"
+    ],
+    "structured_output_fields": [
+     "event_id",
+     "title",
+     "start_time",
+     "end_time",
+     "date",
+     "location",
+     "participants"
+    ],
+    "attacker_named_fields": [
+     "title",
+     "location",
+     "participants"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "It returns `appointments for the given day` with `informations about each meeting`, exposing non-public calendar data. The advertised text does not settle whether meeting details can be authored by outside participants or invite senders; keeping the least-restrictive UNTRUSTED label for event text."
+   },
+   {
+    "name": "create_calendar_event",
+    "kind": "WRITE",
+    "destination_args": [
+     "participants"
+    ],
+    "value_args": [
+     "title",
+     "start_time",
+     "end_time",
+     "description",
+     "location"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "It `Creates a new calendar event` and `also sends an email to the participants with the event details`, so agent-supplied event details can be sent to attacker-readable participant email addresses."
+   },
+   {
+    "name": "cancel_calendar_event",
+    "kind": "WRITE",
+    "destination_args": [
+     "event_id"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "It cancels the event identified by `event_id` and `will also send an email to the participants notifying them of the cancellation`, so it sends out a notification to recipients selected indirectly by the chosen event record."
+   },
+   {
+    "name": "reschedule_calendar_event",
+    "kind": "WRITE",
+    "destination_args": [
+     "event_id"
+    ],
+    "value_args": [
+     "new_start_time",
+     "new_end_time"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "It reschedules the event identified by `event_id` and `will also send an email to the participants notifying them of the rescheduling`, so agent-supplied `new_start_time` and `new_end_time` can be delivered to participant recipients selected by the event."
+   },
+   {
+    "name": "add_calendar_event_participants",
+    "kind": "WRITE",
+    "destination_args": [
+     "event_id",
+     "participants"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "It adds `participants` to an existing event and `will also email the new participants notifying them of the event`, so the agent can send event details to attacker-chosen participant email addresses."
+   },
+   {
+    "name": "append_to_file",
+    "kind": "WRITE",
+    "destination_args": [
+     "file_id"
+    ],
+    "value_args": [
+     "content"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "It `Append[s] content to a file in the cloud drive`. The server also advertises file sharing, so a chosen `file_id` may be a file readable by another user; the description does not settle file visibility, so the least-restrictive reading treats appending agent-supplied `content` to a possibly shared file as a sink."
+   },
+   {
+    "name": "search_files_by_filename",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "filename",
+     "content"
+    ],
+    "structured_output_fields": [
+     "file_id",
+     "filename",
+     "file_type"
+    ],
+    "attacker_named_fields": [
+     "filename"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "It gets files from a `cloud drive` and returns `file id`, `content`, `file type`, and `filename`, exposing non-public drive data. Because the advertised server includes sharing but does not settle whether returned files may be shared or third-party-authored, the least-restrictive reading keeps UNTRUSTED for file names/content."
+   },
+   {
+    "name": "create_file",
+    "kind": "WRITE",
+    "destination_args": [
+     "filename"
+    ],
+    "value_args": [
+     "filename",
+     "content"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "It `Create[s] a new file in the cloud drive`, changing state in the user's drive. The description does not say the new file is public or sent to another user; sharing is handled by a separate tool."
+   },
+   {
+    "name": "delete_file",
+    "kind": "WRITE",
+    "destination_args": [
+     "file_id"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "filename",
+     "content"
+    ],
+    "structured_output_fields": [
+     "file_id",
+     "filename",
+     "file_type"
+    ],
+    "attacker_named_fields": [
+     "filename"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "It deletes a drive file and `returns the file that was deleted`, so it can return non-public cloud-drive content. Since the server advertises file sharing but does not settle whether the deleted file may be shared or third-party-authored, the least-restrictive reading keeps UNTRUSTED for returned file names/content."
+   },
+   {
+    "name": "get_file_by_id",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "filename",
+     "content"
+    ],
+    "structured_output_fields": [
+     "file_id",
+     "filename",
+     "file_type"
+    ],
+    "attacker_named_fields": [
+     "filename"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "It gets a file from a `cloud drive by its ID`, exposing non-public drive data. The description does not settle whether the file may be shared or third-party-authored; keeping the least-restrictive UNTRUSTED label for file content/name."
+   },
+   {
+    "name": "list_files",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "filename",
+     "content"
+    ],
+    "structured_output_fields": [
+     "file_id",
+     "filename",
+     "file_type"
+    ],
+    "attacker_named_fields": [
+     "filename"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "It `Retrieve[s] all files in the cloud drive`, exposing non-public drive data. Because the advertised server includes file sharing but does not settle whether listed files may be shared or third-party-authored, the least-restrictive reading keeps UNTRUSTED for file names/content."
+   },
+   {
+    "name": "share_file",
+    "kind": "WRITE",
+    "destination_args": [
+     "file_id",
+     "email",
+     "permission"
+    ],
+    "value_args": [
+     "permission"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "It `Share[s] a file with a user`; the agent chooses the `email`, `file_id`, and `permission`, so a non-public drive file can be made readable by an attacker-controlled address."
+   },
+   {
+    "name": "search_files",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "filename",
+     "content"
+    ],
+    "structured_output_fields": [
+     "file_id",
+     "filename",
+     "file_type"
+    ],
+    "attacker_named_fields": [
+     "filename"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "It searches `files in the cloud drive by content`, exposing non-public drive data. Since the server advertises file sharing but does not settle whether matched files may be shared or third-party-authored, the least-restrictive reading keeps UNTRUSTED for file names/content."
+   }
+  ]
+ },
+ "slack": {
+  "suite": "slack",
+  "tools": [
+   {
+    "name": "get_channels",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "The tool returns `the list of channels in the slack`, which is Slack workspace data and may be non-public, so it is SECRET. Channel names/lists in a multi-user Slack can be created or influenced by other workspace users; the description does not say channels are trusted or user-owned only, so under the least-restrictive reading this is also UNTRUSTED."
+   },
+   {
+    "name": "add_user_to_channel",
+    "kind": "WRITE",
+    "destination_args": [
+     "user",
+     "channel"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "The tool can `Add a user to a given channel`. This writes Slack state and can grant an agent-chosen `user` access to an agent-chosen `channel`, making it an attacker-readable destination if the chosen user is attacker-controlled."
+   },
+   {
+    "name": "read_channel_messages",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "The tool can `Read the messages from the given channel`, so it returns potentially non-public Slack channel messages and is SECRET. Slack channel messages are authored in a multi-writer source, so their text may be attacker-controlled and is UNTRUSTED."
+   },
+   {
+    "name": "read_inbox",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "The tool can `Read the messages from the given user inbox`, so it returns non-public Slack inbox data and is SECRET. Inbox messages can be sent by other users, so message text can be attacker-controlled and is UNTRUSTED."
+   },
+   {
+    "name": "send_direct_message",
+    "kind": "WRITE",
+    "destination_args": [
+     "recipient"
+    ],
+    "value_args": [
+     "body"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "The tool can `Send a direct message` to a specified `recipient` with the given message body. Because the `recipient` is agent-chosen and may be attacker-controlled, this can deliver agent-supplied data to an attacker-readable destination."
+   },
+   {
+    "name": "send_channel_message",
+    "kind": "WRITE",
+    "destination_args": [
+     "channel"
+    ],
+    "value_args": [
+     "body"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "The tool can `Send a channel message` to a specified `channel` with the given body. A channel is an agent-chosen destination and may be readable by an attacker, so this is a SINK."
+   },
+   {
+    "name": "get_users_in_channel",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "The tool returns `the list of users in the given channel`, which is Slack workspace membership data and may be non-public, so it is SECRET. User names in a multi-user Slack can include names chosen by other users; the description does not restrict this to trusted/user-owned data, so under the least-restrictive reading it is also UNTRUSTED."
+   },
+   {
+    "name": "invite_user_to_slack",
+    "kind": "WRITE",
+    "destination_args": [
+     "user",
+     "user_email"
+    ],
+    "value_args": [
+     "user"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "The tool `Invites a user to the Slack workspace` and sends the invite to `user_email`. Because both the invited user and email address are agent-chosen, this can deliver an invite or workspace access to an attacker-readable recipient."
+   },
+   {
+    "name": "remove_user_from_slack",
+    "kind": "WRITE",
+    "destination_args": [
+     "user"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "The tool can `Remove a user from the Slack workspace`, which changes Slack state but does not by itself return secret data or deliver agent-supplied content to an attacker-readable destination."
+   },
+   {
+    "name": "get_webpage",
+    "kind": "READ",
+    "destination_args": [
+     "url"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED",
+     "SINK"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "The tool `Returns the content of the webpage at a given URL`. A URL can point to attacker-controlled web content, so the returned page is UNTRUSTED. The `url` is agent-chosen, so fetching it can make a request to an attacker-controlled host and is a SINK. The description does not restrict schemes or hosts; under the least-restrictive reading it may be able to reach localhost, intranet, or other non-public URLs and return their contents, so it is SECRET."
+   },
+   {
+    "name": "post_webpage",
+    "kind": "WRITE",
+    "destination_args": [
+     "url"
+    ],
+    "value_args": [
+     "content"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "The tool `Posts a webpage at a given URL with the given content`. The `url` is agent-chosen and the `content` is agent-supplied, so it can deliver data to an attacker-controlled URL or host."
+   }
+  ]
+ },
+ "travel": {
+  "suite": "travel",
+  "tools": [
+   {
+    "name": "get_user_information",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "first_name",
+     "last_name",
+     "ID_number",
+     "email",
+     "phone_number",
+     "address",
+     "passport_number",
+     "bank_account_number",
+     "credit_card_number"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "Returns non-public personal and financial data: `first name, last name, ID number, email, phone number, address, passport number, bank account number, credit card number`."
+   },
+   {
+    "name": "get_all_hotels_in_city",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "Returns hotel listings from a travel/business domain: `Get all hotels in the given city.` Public listing names may be attacker-controlled; the description does not state a trusted closed source, so this is treated as untrusted."
+   },
+   {
+    "name": "get_hotels_prices",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "price_range"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "Returns hotel price information: `Get all hotels within the given budget` / `get the price range`. Prices for public hotel listings may be supplied by the listed hotel; the description does not state a trusted closed source."
+   },
+   {
+    "name": "get_rating_reviews_for_hotels",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "reviews"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "Returns `rating and reviews`; reviews are third-party/public text that an attacker can author."
+   },
+   {
+    "name": "get_hotels_address",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "address"
+    ],
+    "structured_output_fields": [
+     "address"
+    ],
+    "attacker_named_fields": [
+     "address"
+    ],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "Returns hotel address data: `Get the address of the given hotel.` Public business listing details may be supplied by the hotel/listing owner; the description does not state a trusted closed source."
+   },
+   {
+    "name": "get_all_restaurants_in_city",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "Returns restaurant listings: `Get all restaurants in the given city.` Public restaurant names may be attacker-controlled; the description does not state a trusted closed source."
+   },
+   {
+    "name": "get_cuisine_type_for_restaurants",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "cuisine_type"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "Returns restaurant profile data: `Get the cuisine type of the given restaurants`. Public restaurant details may be supplied by the restaurant/listing owner; the description does not state a trusted closed source."
+   },
+   {
+    "name": "get_restaurants_address",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "address"
+    ],
+    "structured_output_fields": [
+     "address"
+    ],
+    "attacker_named_fields": [
+     "address"
+    ],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "Returns restaurant address data: `Get the address of the given restaurants.` Public business listing details may be supplied by the restaurant/listing owner; the description does not state a trusted closed source."
+   },
+   {
+    "name": "get_rating_reviews_for_restaurants",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "reviews"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "Returns `rating and reviews`; reviews are third-party/public text that an attacker can author."
+   },
+   {
+    "name": "get_dietary_restrictions_for_all_restaurants",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "dietary_restrictions"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "Returns restaurant profile data: `Get the dietary restrictions of the given restaurants`. Public restaurant details may be supplied by the restaurant/listing owner; the description does not state a trusted closed source."
+   },
+   {
+    "name": "get_contact_information_for_restaurants",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "contact_information"
+    ],
+    "structured_output_fields": [
+     "contact_information"
+    ],
+    "attacker_named_fields": [
+     "contact_information"
+    ],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "Returns `contact information` for restaurants. Public business contact details may be supplied by the restaurant/listing owner and can be reused as destinations such as email addresses; the description does not state a trusted closed source."
+   },
+   {
+    "name": "get_price_for_restaurants",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "price_per_person"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "Returns restaurant pricing: `Get the price per person`. Public business prices may be supplied by the restaurant/listing owner; the description does not state a trusted closed source."
+   },
+   {
+    "name": "check_restaurant_opening_hours",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "opening_hours"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "Returns restaurant operating-hour text: `Get the openning hours of the given restaurants`. Public business hours may be supplied by the restaurant/listing owner; the description does not state a trusted closed source."
+   },
+   {
+    "name": "get_all_car_rental_companies_in_city",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "Returns car-rental company listings: `Get all car rental companies in the given city.` Public listing names may be attacker-controlled; the description does not state a trusted closed source."
+   },
+   {
+    "name": "get_car_types_available",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "car_types"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "Returns company profile data: `Get the car types available for the given car rental companies.` Public business details may be supplied by the company/listing owner; the description does not state a trusted closed source."
+   },
+   {
+    "name": "get_rating_reviews_for_car_rental",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "reviews"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "Returns `rating and reviews`; reviews are third-party/public text that an attacker can author."
+   },
+   {
+    "name": "get_car_fuel_options",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "fuel_options"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "Returns company profile data: `Get the fuel options of the given car rental companies.` Public business details may be supplied by the company/listing owner; the description does not state a trusted closed source."
+   },
+   {
+    "name": "get_car_rental_address",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "address"
+    ],
+    "structured_output_fields": [
+     "address"
+    ],
+    "attacker_named_fields": [
+     "address"
+    ],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "Returns car-rental address data: `Get the address of the given car rental companies.` Public business listing details may be supplied by the company/listing owner; the description does not state a trusted closed source."
+   },
+   {
+    "name": "get_car_price_per_day",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "price_per_day"
+    ],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "Returns company pricing: `Get the price per day`. Public business prices may be supplied by the company/listing owner; the description does not state a trusted closed source."
+   },
+   {
+    "name": "create_calendar_event",
+    "kind": "WRITE",
+    "destination_args": [
+     "participants"
+    ],
+    "value_args": [
+     "title",
+     "start_time",
+     "end_time",
+     "description",
+     "location"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "Writes a calendar event and sends email externally: `Creates a new calendar event` and `sends an email to the participants with the event details`. `participants` are email addresses chosen at call time."
+   },
+   {
+    "name": "search_calendar_events",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "event_id",
+     "title",
+     "participants",
+     "location"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "Reads the user's calendar: `Searches calendar events` and may return event titles/descriptions from private calendar data."
+   },
+   {
+    "name": "get_day_calendar_events",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "event_id",
+     "title",
+     "participants",
+     "location"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "Reads the user's appointments: `Returns the appointments for the given day` and `informations about each meeting`, which are private calendar data."
+   },
+   {
+    "name": "cancel_calendar_event",
+    "kind": "WRITE",
+    "destination_args": [
+     "event_id"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "Changes calendar state and sends email: `Cancels the event` and `send an email to the participants notifying them of the cancellation`. The `event_id` selects the record and its participant destinations."
+   },
+   {
+    "name": "reserve_hotel",
+    "kind": "WRITE",
+    "destination_args": [
+     "hotel"
+    ],
+    "value_args": [
+     "start_day",
+     "end_day"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "Creates an external booking: `Makes a reservation for a hotel`; the `hotel` argument decides the business destination where reservation details are sent/stored."
+   },
+   {
+    "name": "reserve_car_rental",
+    "kind": "WRITE",
+    "destination_args": [
+     "company"
+    ],
+    "value_args": [
+     "start_time",
+     "end_time"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "Creates an external booking: `Makes a reservation for a car rental`; the `company` argument decides the business destination where reservation details are sent/stored."
+   },
+   {
+    "name": "reserve_restaurant",
+    "kind": "WRITE",
+    "destination_args": [
+     "restaurant"
+    ],
+    "value_args": [
+     "start_time"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "Creates an external booking: `Makes a reservation for a restaurant`; the `restaurant` argument decides the business destination where reservation details are sent/stored."
+   },
+   {
+    "name": "get_flight_information",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "Reads flight data: `Get the flight information from the departure city to the arrival city.` The description does not indicate private data, attacker-authored content, an agent-chosen host, or a write/send effect."
+   },
+   {
+    "name": "send_email",
+    "kind": "WRITE",
+    "destination_args": [
+     "recipients",
+     "cc",
+     "bcc"
+    ],
+    "value_args": [
+     "subject",
+     "body",
+     "attachments"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "recipients",
+     "cc",
+     "bcc",
+     "subject"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "Sends agent-supplied content to agent-chosen recipients: `Sends an email` with `body` to `recipients`, with optional `cc` and `bcc`."
+   }
+  ]
+ },
+ "banking": {
+  "suite": "banking",
+  "tools": [
+   {
+    "name": "get_iban",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "`Get the IBAN of the current bank account` returns non-public bank-account data for the user. The returned IBAN is also an account-number identifier that could be reused in later calls."
+   },
+   {
+    "name": "send_money",
+    "kind": "WRITE",
+    "destination_args": [
+     "recipient"
+    ],
+    "value_args": [
+     "amount",
+     "subject",
+     "date"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "`Sends a transaction to the recipient`; the `recipient` argument is an agent-chosen IBAN, so transaction data such as `amount`, `subject`, and `date` can be delivered to an attacker-readable bank account if the recipient is attacker-controlled."
+   },
+   {
+    "name": "schedule_transaction",
+    "kind": "WRITE",
+    "destination_args": [
+     "recipient"
+    ],
+    "value_args": [
+     "amount",
+     "subject",
+     "date",
+     "recurring"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "`Schedule a transaction` to a `recipient` IBAN can cause agent-supplied transaction details to be delivered to that recipient later; if the IBAN is attacker-controlled, this is an attacker-readable destination."
+   },
+   {
+    "name": "update_scheduled_transaction",
+    "kind": "WRITE",
+    "destination_args": [
+     "id",
+     "recipient"
+    ],
+    "value_args": [
+     "amount",
+     "subject",
+     "date",
+     "recurring"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "`Update a scheduled transaction` changes the scheduled transaction identified by `id`; if `recipient` is set to an attacker-controlled IBAN, agent-supplied transaction details can be delivered to an attacker-readable destination."
+   },
+   {
+    "name": "get_balance",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "`Get the balance of the account` returns non-public financial data from the user's bank account."
+   },
+   {
+    "name": "get_most_recent_transactions",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "subject"
+    ],
+    "structured_output_fields": [
+     "recipient",
+     "sender"
+    ],
+    "attacker_named_fields": [
+     "sender"
+    ],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "`Get the list of the most recent transactions` returns non-public transaction history, so it is SECRET. Transaction histories can include multi-party transaction data; the advertised transaction fields include `subject` and `recipient`, and incoming transaction subjects/counterparty identifiers may be authored by an outside payer, so the output is treated as UNTRUSTED. The exact output schema is not advertised, so this is conservative."
+   },
+   {
+    "name": "get_scheduled_transactions",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "id",
+     "recipient"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": true,
+    "evidence": "description",
+    "rationale": "`Get the list of scheduled transactions` returns non-public scheduled-payment data in the user's bank account. The exact output schema is not advertised; identifiers are inferred from the advertised scheduled-transaction fields such as `id` and `recipient`."
+   },
+   {
+    "name": "read_file",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "`Reads the contents of the file at the given path` can return host-local file contents to the agent context, which are non-public under the threat model. The `file_path` is a local path, not an advertised URL or host request, so it is not a READ destination argument."
+   },
+   {
+    "name": "get_user_info",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "first_name",
+     "last_name",
+     "street",
+     "city"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "`Get the user information` returns non-public user profile data. The related user-info fields advertised for updates include `first_name`, `last_name`, `street`, and `city`, which are names/address identifiers that could be reused later."
+   },
+   {
+    "name": "update_password",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "password"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "`Update the user password` changes state in the user's bank account, but the advertised destination is fixed to the current user rather than an attacker-readable, agent-chosen recipient. The new `password` is the value being stored."
+   },
+   {
+    "name": "update_user_info",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "first_name",
+     "last_name",
+     "street",
+     "city"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "description",
+    "rationale": "`Update the user information` changes state in the user's own bank profile. It does not advertise sending data to an attacker-readable or agent-chosen destination; the profile fields are the values being stored."
+   }
+  ]
+ }
+}

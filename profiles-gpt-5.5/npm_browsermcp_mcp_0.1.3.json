@@ -1,0 +1,333 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All advertised tools are included unconditionally in `snapshotTools` and passed to `createServerWithTools` at dist/index.js:714-734. The tools require a connected browser/WebSocket at runtime, but they remain advertised by default."
+ ],
+ "package": "@browsermcp/mcp",
+ "source": ".cache/sources/.views/npm_browsermcp_mcp_0.1.3_efad870ca57d",
+ "tools": {
+  "browser_click": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "element",
+    "ref"
+   ],
+   "evidence": [
+    "dist/index.js:307-310",
+    "dist/index.js:564-574",
+    "dist/index.js:379-393",
+    "dist/index.js:714-734"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`browser_click` sends the selected `element`/`ref` to the browser to perform a click. A click can deliver an agent-chosen interaction to the current web page and may trigger page/network actions readable by that site, so it is a SINK. It then returns a page snapshot, which can contain private or attacker-controlled content.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "browser_get_console_logs": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:353-356",
+    "dist/index.js:512-519",
+    "dist/index.js:714-734"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`browser_get_console_logs` requests browser console logs and returns them as JSON-stringified text. Console logs may contain non-public page/account data, and scripts on attacker-controlled pages can author console log content.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "browser_go_back": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:274-278",
+    "dist/index.js:429-432",
+    "dist/index.js:379-393",
+    "dist/index.js:714-734"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`browser_go_back` changes browser history state and, in the advertised configuration, returns `captureAriaSnapshot` for the resulting page. That snapshot can contain non-public browser-accessible page data or attacker-controlled page content.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "browser_go_forward": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:279-283",
+    "dist/index.js:450-453",
+    "dist/index.js:379-393",
+    "dist/index.js:714-734"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`browser_go_forward` changes browser history state and, in the advertised configuration, returns `captureAriaSnapshot` for the resulting page. That snapshot can contain non-public browser-accessible page data or attacker-controlled page content.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "browser_hover": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "element",
+    "ref"
+   ],
+   "evidence": [
+    "dist/index.js:326-329",
+    "dist/index.js:606-616",
+    "dist/index.js:379-393",
+    "dist/index.js:714-734"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`browser_hover` sends the selected `element`/`ref` to the browser to perform a hover. That delivers an agent-chosen interaction event to the current page, which an attacker-controlled page can observe, so it is a SINK. It then returns a page snapshot, which can contain private or attacker-controlled content.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "browser_navigate": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "dist/index.js:267-272",
+    "dist/index.js:407-411",
+    "dist/index.js:379-393",
+    "dist/index.js:714-734"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`browser_navigate` parses an agent-supplied `url` and sends it to the connected browser; with the advertised snapshot configuration it then returns `captureAriaSnapshot`, including page URL, title, and accessibility snapshot. Navigating to an arbitrary URL is a request to an agent-chosen host (SINK), and the returned page content may be private browser-accessible data or attacker-controlled web content.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "browser_press_key": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:291-298",
+    "dist/index.js:490-497",
+    "dist/index.js:714-734"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`browser_press_key` sends the agent-supplied `key` to the browser. If focus is in a web page, that key event or generated character is observable by the current site, including an attacker-controlled site, so it is a SINK. The returned text is only an echo/status string from the tool.",
+   "undetermined": false,
+   "value_args": [
+    "key"
+   ]
+  },
+  "browser_screenshot": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:348-351",
+    "dist/index.js:529-539",
+    "dist/index.js:714-734"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "data"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`browser_screenshot` requests a screenshot from the browser and returns it as PNG image data. The screenshot may reveal non-public browser-accessible page content, and its pixels may be controlled by an attacker-controlled web page.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "browser_select_option": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "element",
+    "ref"
+   ],
+   "evidence": [
+    "dist/index.js:339-346",
+    "dist/index.js:648-658",
+    "dist/index.js:379-393",
+    "dist/index.js:714-734"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`browser_select_option` sends selected `values` and target `element`/`ref` to the browser, changing page form state that the current site can observe, so it is a SINK. It then returns a page snapshot, which can contain private or attacker-controlled content.",
+   "undetermined": false,
+   "value_args": [
+    "values"
+   ]
+  },
+  "browser_snapshot": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:300-305",
+    "dist/index.js:548-555",
+    "dist/index.js:379-393",
+    "dist/index.js:714-734"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`browser_snapshot` returns `captureAriaSnapshot`, which fetches the browser URL, title, and accessibility snapshot via `getUrl`, `getTitle`, and `browser_snapshot`. Current page content may be private account/local/intranet content or attacker-controlled web content, and the snapshot contains later-usable element references and page identifiers.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "browser_type": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "element",
+    "ref"
+   ],
+   "evidence": [
+    "dist/index.js:331-337",
+    "dist/index.js:627-637",
+    "dist/index.js:379-393",
+    "dist/index.js:714-734"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`browser_type` sends `text` plus the target `element`/`ref` to the browser, typing agent-supplied content into a web page; the current site can read typed data, so it is a SINK. It then returns a page snapshot, which can contain private or attacker-controlled content.",
+   "undetermined": false,
+   "value_args": [
+    "text"
+   ]
+  },
+  "browser_wait": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:284-289",
+    "dist/index.js:471-478",
+    "dist/index.js:714-734"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "`browser_wait` sends only a wait duration to the connected browser and returns a fixed status string. The code does not return page content or send data to an agent-chosen external destination.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [],
+ "version": "0.1.3"
+}

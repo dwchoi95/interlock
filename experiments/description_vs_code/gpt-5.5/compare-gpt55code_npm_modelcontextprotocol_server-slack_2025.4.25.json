@@ -1,0 +1,155 @@
+[
+ {
+  "tool": "slack_list_channels",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`slack_list_channels` is advertised by default and uses the configured Slack bot token in `Authorization` headers to call Slack `conversations.list` or `conversations.info`, returning the raw Slack API response in `content[0].text`. That reaches workspace channel data with the user's/bot's Slack cre"
+ },
+ {
+  "tool": "slack_post_message",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "channel_id"
+  ],
+  "annotations": {},
+  "rationale_code": "`slack_post_message` is advertised by default and sends an agent-supplied `text` value to Slack `chat.postMessage` for the agent-supplied `channel_id`. A Slack channel may be readable by other workspace users or other channel participants, so this can deliver agent-supplied data to an attacker-reada"
+ },
+ {
+  "tool": "slack_reply_to_thread",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "channel_id",
+   "thread_ts"
+  ],
+  "annotations": {},
+  "rationale_code": "`slack_reply_to_thread` is advertised by default and sends agent-supplied `text` to Slack `chat.postMessage` with agent-supplied `channel_id` and `thread_ts`. The channel and thread identify where the reply is posted, and the posted reply may be readable by other workspace users or participants, so "
+ },
+ {
+  "tool": "slack_add_reaction",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "channel_id",
+   "timestamp"
+  ],
+  "annotations": {},
+  "rationale_code": "`slack_add_reaction` is advertised by default and sends an agent-supplied `reaction` to Slack `reactions.add` for the message identified by `channel_id` and `timestamp`. That writes visible state to a Slack message that may be readable by other workspace users or participants, so it is a SINK."
+ },
+ {
+  "tool": "slack_get_channel_history",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "channel_id"
+  ],
+  "annotations": {},
+  "rationale_code": "`slack_get_channel_history` is advertised by default and uses the Slack bot token to call `conversations.history` for `channel_id`, returning the raw Slack API response. Channel history is Slack workspace data reached with the user's/bot's credentials, so it is SECRET. Slack channel messages are mul"
+ },
+ {
+  "tool": "slack_get_thread_replies",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "channel_id",
+   "thread_ts"
+  ],
+  "annotations": {},
+  "rationale_code": "`slack_get_thread_replies` is advertised by default and uses the Slack bot token to call `conversations.replies` for `channel_id` and `thread_ts`, returning the raw Slack API response. Thread replies are Slack workspace data reached with the user's/bot's credentials, so they are SECRET. Thread messa"
+ },
+ {
+  "tool": "slack_get_users",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`slack_get_users` is advertised by default and uses the Slack bot token to call `users.list`, returning workspace user/profile data from Slack. That is SaaS data reached with the user's/bot's credentials, so it is SECRET. User profile fields and names may be authored by workspace users, so the retur"
+ },
+ {
+  "tool": "slack_get_user_profile",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "user_id"
+  ],
+  "annotations": {},
+  "rationale_code": "`slack_get_user_profile` is advertised by default and uses the Slack bot token to call `users.profile.get` for `user_id`, returning Slack profile data. That is Slack workspace/SaaS data reached with the user's/bot's credentials, so it is SECRET. Profile text such as display names, real names, titles"
+ }
+]

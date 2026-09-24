@@ -1,0 +1,48 @@
+{
+  "package": "next-devtools-mcp",
+  "version": "0.4.0",
+  "source": "npm pack next-devtools-mcp@0.4.0, extracted with tar in scratchpad adj-browser/ (not installed or run). dist/ is plain tsc output. nextjs_call is a generic proxy to the Next.js dev server's own /_next/mcp endpoint, so to see what it can reach, next@16.3.5 (npm latest on 2026-09-16) was also packed and its dist/server/mcp/tools/* read. Evidence paths are relative to adj-browser/, ND = next-devtools-mcp-0.4.0/package/dist, NX = next-16.3.5/package/dist/server/mcp.",
+  "tools": {
+    "browser_eval": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Does not drive a browser. It runs two fixed shell probes (`command -v agent-browser`, `agent-browser --version`) with no agent input and returns static install/usage instructions; the agent's optional task string is only echoed back.",
+      "evidence": "ND/tools/browser-eval.js:25-47 (execSync of constant commands), 48-75 (static JSON instructions)"
+    },
+    "nextjs_docs": {
+      "labels": ["SECRET"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Reads <project_path>/node_modules/next/package.json and <project_path>/package.json at an agent-chosen host path. It returns the installed version or the declared dependencies.next/devDependencies.next string (which can be a private git or URL specifier) plus whether the docs directory exists, i.e. a host-file-derived value. It fetches nothing.",
+      "evidence": "ND/tools/nextjs-docs.js:43-68 (fs.readFileSync of package.json files, declared string returned), 69-114 (project_path || process.cwd(); version and existsSync result returned)"
+    },
+    "nextjs_index": {
+      "labels": ["SECRET"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Probes localhost (or NEXT_DEVTOOLS_HOST) ports 3000-3010 and next-server processes, or one agent-chosen port on that fixed host, with a JSON-RPC tools/list. It returns local process command lines, ports and the dev server's tool list, all local, non-public data. The destination host is not agent-chosen, so no SINK. Tool descriptions come from the local Next.js (vendor code), so no UNTRUSTED.",
+      "evidence": "ND/tools/nextjs_index.js:59-90, 91-155 (servers incl. command, tools returned); ND/_internal/nextjs-runtime-manager.js:10 (MCP_HOST fixed from env, default localhost), 29-56 (POST http(s)://MCP_HOST:port/_next/mcp), 194-241 (find-process cmd lines), 324-376 (common ports + process discovery)"
+    },
+    "nextjs_call": {
+      "labels": ["SECRET"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Forwards an agent-chosen toolName and args as JSON-RPC tools/call to http(s)://localhost:<port>/_next/mcp and returns the result. The host is fixed, so no SINK. In Next.js 16.3.5 the endpoint's tools (get_errors, get_logs, get_routes, get_page_metadata, get_project_metadata, get_compilation_issues, compile_route, get_server_action_by_id, get_request_insights) return local project and runtime data, and none fetches agent URLs or runs agent code.",
+      "evidence": "ND/tools/nextjs_call.js:44-79; ND/_internal/nextjs-runtime-manager.js:242-296 (fetch to `${protocol}://${MCP_HOST}:${port}/_next/mcp`), 307-319 (tools/call name+arguments); NX/tools/get-errors.js:43-44, get-logs.js:20-26, get-routes.js:33-34, get-page-metadata.js:27-28, get-project-metadata.js:13-38, get-compilation-issues.js:22-23, compile-route.js:27-28, get-server-action-by-id.js:17-42, get-request-insights.js:20-21"
+    }
+  },
+  "value_conditions": [],
+  "notes": [
+    "The server takes no CLI flags: process.argv is never parsed by dist/index.js. All 4 tools are always registered (ND/index.js:17, 34-48), and no tool or label can be switched off.",
+    "Env vars read: NEXT_DEVTOOLS_HOST (nextjs-runtime-manager.js:10) changes the fixed host that nextjs_index and nextjs_call talk to; default localhost. It removes no label. NODE_TLS_REJECT_UNAUTHORIZED=0 relaxes TLS for https dev servers (nextjs-runtime-manager.js:16-24). NEXT_TELEMETRY_DISABLED=1 turns off telemetry (telemetry/telemetry-storage.js:107).",
+    "Package-level union at default is {SECRET}: no UNTRUSTED, no SINK, no HOSTEXEC. There is no browser automation in 0.4.0; browser_eval only tells the agent to install and run the separate agent-browser CLI through its own shell, and that capability belongs to the client's shell tool, not to this server.",
+    "Telemetry goes to the fixed vendor endpoint https://telemetry.nextjs.org/api/v1/record (telemetry/telemetry-storage.js:7, 115), so it is not SINK under PREREG.",
+    "nextjs_call's reach depends on the user's installed Next.js version, because the tool list is served by the dev server rather than this package. Labels assume the Next.js 16.3.5 tool set. A future Next.js MCP tool that fetches external URLs would make nextjs_call a SINK without any change to this package.",
+    "The agent-chosen port lets nextjs_index and nextjs_call POST JSON-RPC to any localhost port, a limited local SSRF. Responses are returned only if they parse as an SSE 'data:' JSON-RPC message (nextjs-runtime-manager.js:270-280), which is consistent with SECRET; the destination is not attacker-readable."
+  ]
+}

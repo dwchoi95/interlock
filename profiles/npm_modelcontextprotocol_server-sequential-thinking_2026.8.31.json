@@ -1,0 +1,34 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Only one tool is advertised and it is unconditionally registered; there are no toolset flags or gating in dist/index.js:24-115.",
+  "`dist/lib.js` (implementation of `processThought`) was not supplied; the judgement relies on the handler at dist/index.js:104-114 and the numeric-only `outputSchema` at dist/index.js:97-103. If `lib.js` performed file or network I/O, labels could change, but nothing in the provided code imports fs, child_process, or any HTTP client.",
+  "`resolvePackageVersion` reads the package's own package.json via `createRequire` (dist/version.js:19) \u2014 an internal, non-tool-reachable read of the server's own metadata."
+ ],
+ "package": "@modelcontextprotocol/server-sequential-thinking",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-sequential-thinking_2026.8.31_52b4d7b543f3",
+ "tools": {
+  "sequentialthinking": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:104-114",
+    "dist/index.js:105",
+    "dist/index.js:97-103",
+    "dist/index.js:23"
+   ],
+   "labels": [],
+   "rationale": "`sequentialthinking` is the only registered tool (`server.registerTool` at dist/index.js:24). Its handler simply calls `thinkingServer.processThought(args)` (dist/index.js:105) on an in-process `SequentialThinkingServer` instance (dist/index.js:23) and returns the parsed JSON (dist/index.js:110-113). The declared `outputSchema` (dist/index.js:97-103) returns only bookkeeping counters (`thoughtNumber`, `totalThoughts`, `nextThoughtNeeded`, `branches`, `thoughtHistoryLength`) \u2014 no file, database, or credentialed data (no SECRET), no attacker-controlled fetch or external content ingestion (no UNTRUSTED), no outbound request/write to any agent-chosen destination (no SINK), and no process spawning or eval (no HOSTEXEC). Transport is stdio only (dist/index.js:117) and the only side-effect visible in this source is `console.error` diagnostics (dist/index.js:119). `dist/lib.js`, which contains `processThought`, was not included in the provided source, so the in-memory-only behaviour is inferred from the handler's schema and usage.",
+   "undetermined": true
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "unset, i.e. thought logging enabled to stderr",
+   "effect": "Per README, suppresses logging of thought contents (stderr formatting inside lib.js); does not add or remove any tool or data reach",
+   "evidence": "README.md:130",
+   "kind": "env",
+   "syntax": "DISABLE_THOUGHT_LOGGING=true"
+  }
+ ],
+ "version": "2026.8.31"
+}

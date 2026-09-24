@@ -1,0 +1,547 @@
+[
+ {
+  "tool": "API-get-user",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Get User",
+   "readOnlyHint": true
+  },
+  "rationale_code": "No package source was provided, so behavior is undetermined. Conservatively, `API-get-user` reads Notion user data using the user's integration credentials, which may include non-public workspace/profile data (`SECRET`). A returned user's profile fields such as name/avatar can be authored by that us"
+ },
+ {
+  "tool": "API-get-users",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Get Users",
+   "readOnlyHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, listing Notion users exposes non-public workspace membership/profile data (`SECRET`). Individual users can author profile names/avatars (`UNTRUSTED`). [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-get-self",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Get Self",
+   "readOnlyHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, `API-get-self` returns token/bot identity information for the user's Notion integration, which is non-public account metadata (`SECRET`). No attacker-authored output is shown by the advertised schema. [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-post-search",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Post Search",
+   "destructiveHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, search reads Notion pages/data sources accessible with the user's credentials (`SECRET`). Search results include titles/properties that collaborators or other Notion authors may control (`UNTRUSTED`). Despite POST naming/destructiveHint, the advertised operati"
+ },
+ {
+  "tool": "API-get-block-children",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Get Block Children",
+   "readOnlyHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, the tool reads child blocks from Notion content reachable with the user's credentials (`SECRET`). Block rich text and similar content may be written by collaborators or other third parties (`UNTRUSTED`). [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-patch-block-children",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "block_id",
+   "after"
+  ],
+  "annotations": {
+   "title": "Patch Block Children",
+   "destructiveHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, appending `children` writes agent-supplied content to the Notion block/page selected by `block_id` and optionally `after`; if that location is shared or attacker-readable, this is a `SINK`. The response may include non-public Notion object data (`SECRET`) and "
+ },
+ {
+  "tool": "API-retrieve-a-block",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Retrieve A Block",
+   "readOnlyHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, retrieving a Notion block reads non-public workspace content (`SECRET`), and block text/media metadata can be authored by collaborators or other third parties (`UNTRUSTED`). [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-update-a-block",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "block_id"
+  ],
+  "annotations": {
+   "title": "Update A Block",
+   "destructiveHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, updating the block selected by `block_id` can store agent-supplied block content/flags in Notion (`SINK` if the block is attacker-readable). The returned block may expose non-public Notion data (`SECRET`) and collaborator-authored content (`UNTRUSTED`). [unver"
+ },
+ {
+  "tool": "API-delete-a-block",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "block_id"
+  ],
+  "annotations": {
+   "title": "Delete A Block",
+   "destructiveHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, deleting/archiving the block selected by `block_id` changes Notion state. The response may return the deleted block object, exposing non-public Notion data (`SECRET`) and any collaborator-authored block content (`UNTRUSTED`). It does not itself advertise sendi"
+ },
+ {
+  "tool": "API-retrieve-a-page",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Retrieve A Page",
+   "readOnlyHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, retrieving a page reads non-public Notion page metadata/properties (`SECRET`). Page titles/properties can be authored by collaborators or third parties (`UNTRUSTED`). [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-patch-page",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "page_id"
+  ],
+  "annotations": {
+   "title": "Patch Page",
+   "destructiveHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, updating the page selected by `page_id` stores agent-supplied properties/icon/cover or changes page visibility/state in Notion (`SINK` if the page is attacker-readable). The response may expose non-public page data (`SECRET`) and collaborator-authored properti"
+ },
+ {
+  "tool": "API-post-page",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "parent"
+  ],
+  "annotations": {
+   "title": "Post Page",
+   "destructiveHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, creating a page stores agent-supplied `properties`, `children`, `icon`, and `cover` under the selected `parent`; if that parent is shared/attacker-readable, this is a `SINK`. The response may include non-public Notion metadata (`SECRET`) and page property/cont"
+ },
+ {
+  "tool": "API-retrieve-a-page-property",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Retrieve A Page Property",
+   "readOnlyHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, reading a page property item exposes non-public Notion data (`SECRET`). Property values such as title/rich text/select values can be collaborator-authored (`UNTRUSTED`). [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-retrieve-a-comment",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Retrieve A Comment",
+   "readOnlyHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, comments on a Notion page/block are non-public SaaS data reachable with the user's credentials (`SECRET`). Comment text and commenter identity can be authored by other users, including attackers in shared spaces (`UNTRUSTED`). [unverified: no citation with a f"
+ },
+ {
+  "tool": "API-create-a-comment",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "parent"
+  ],
+  "annotations": {
+   "title": "Create A Comment",
+   "destructiveHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, creating a comment stores agent-supplied `rich_text` on the page selected by `parent`; if the page is shared/attacker-readable, this is a `SINK`. The response may expose non-public comment/page metadata (`SECRET`) and comment text/author data (`UNTRUSTED`). [u"
+ },
+ {
+  "tool": "API-query-data-source",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Query Data Source",
+   "destructiveHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, querying a Notion data source/database reads rows/pages and properties accessible with the user's credentials (`SECRET`). Row properties/content can be authored by collaborators or third parties (`UNTRUSTED`). Despite destructiveHint, the advertised operation "
+ },
+ {
+  "tool": "API-retrieve-a-data-source",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Retrieve A Data Source",
+   "readOnlyHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, retrieving a data source exposes non-public Notion database/data-source metadata and schema (`SECRET`). Data-source title/description/property names may be collaborator-authored (`UNTRUSTED`). [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-update-a-data-source",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "data_source_id"
+  ],
+  "annotations": {
+   "title": "Update A Data Source",
+   "destructiveHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, updating the data source selected by `data_source_id` stores agent-supplied title/description/schema in Notion (`SINK` if shared/attacker-readable). The response may expose non-public data-source metadata (`SECRET`) and collaborator-authored schema/title text "
+ },
+ {
+  "tool": "API-create-a-data-source",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "parent"
+  ],
+  "annotations": {
+   "title": "Create A Data Source",
+   "destructiveHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, creating a data source stores agent-supplied `properties` and `title` under the selected `parent`; if the parent is shared/attacker-readable, this is a `SINK`. The response may include non-public Notion metadata (`SECRET`) and schema/title text (`UNTRUSTED`). "
+ },
+ {
+  "tool": "API-list-data-source-templates",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "List Data Source Templates",
+   "readOnlyHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, listing templates reads non-public Notion data-source template metadata/content (`SECRET`). Template titles/content may be authored by collaborators or third parties (`UNTRUSTED`). [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-retrieve-a-database",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Retrieve A Database",
+   "readOnlyHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, retrieving a Notion database exposes non-public database metadata/schema (`SECRET`). Database title/description/property names may be collaborator-authored (`UNTRUSTED`). [unverified: no citation with a file:line reference]"
+ },
+ {
+  "tool": "API-move-page",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "page_id",
+   "parent"
+  ],
+  "annotations": {
+   "title": "Move Page",
+   "destructiveHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, moving `page_id` to a selected `parent` changes where an existing page is available; if moved into an attacker-readable/shared parent, the operation can expose page data (`SINK`). The response may include non-public page metadata (`SECRET`) and collaborator-au"
+ },
+ {
+  "tool": "API-retrieve-page-markdown",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Retrieve Page Markdown",
+   "readOnlyHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, retrieving a Notion page as Markdown reads page content and possibly meeting transcripts accessible with the user's credentials (`SECRET`). Markdown content is free text that collaborators or other page authors may control (`UNTRUSTED`). [unverified: no citati"
+ },
+ {
+  "tool": "API-update-page-markdown",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "page_id"
+  ],
+  "annotations": {
+   "title": "Update Page Markdown",
+   "destructiveHint": true
+  },
+  "rationale_code": "No source was provided. Conservatively, this tool writes agent-supplied Markdown edits to the page selected by `page_id`; if the page is shared/attacker-readable, it is a `SINK`. The operation may read/return existing page content for update/conflict handling, exposing non-public data (`SECRET`) and"
+ }
+]

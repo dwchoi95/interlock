@@ -1,0 +1,121 @@
+{
+ "kind": "npm",
+ "notes": [
+  "No advertised tool is shown behind a feature flag, disabled toolset, or capability gate in the provided source, so all are treated as default enabled.",
+  "`absolutePathToProjectDirectory` is declared for `21st_magic_component_builder` but is not destructured or used by `execute` in dist/tools/create-ui.js:31, so it is not listed as a destination or value argument."
+ ],
+ "package": "@21st-dev/magic",
+ "source": ".cache/sources/.views/npm_21st-dev_magic_0.0.47_f93e342c7230",
+ "tools": {
+  "21st_magic_component_builder": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/create-ui.js:31-38 shows `execute` accepts `absolutePathToCurrentFile`, reads it with `getContentOfFile(absolutePathToCurrentFile)`, and posts the resulting `fileContent` plus `message`, `searchQuery`, and `context` to `/api/create-ui-variation`.",
+    "dist/tools/create-ui.js:52-58 receives remote `data` from `CallbackServer.promptUser` seeded with the API response data.",
+    "dist/tools/create-ui.js:62-107 returns `componentData.code` inside the MCP `text` result."
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`21st_magic_component_builder` can read a host file selected by `absolutePathToCurrentFile` and send its contents as `fileContent` to the fixed 21st.dev API. The returned component text is derived from remote API/callback data (`response.data` / `componentData.code`), so it may contain non-public file-derived content and outside-authored component/code text. The destination is fixed (`twentyFirstClient.post('/api/create-ui-variation', ...)`) rather than an agent-chosen attacker host, so this is not a SINK under the given definition. `open('https://21st.dev/settings/billing')` is also a fixed URL, not arbitrary host execution.",
+   "undetermined": true,
+   "value_args": [
+    "message",
+    "searchQuery",
+    "absolutePathToCurrentFile",
+    "context"
+   ]
+  },
+  "21st_magic_component_inspiration": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/fetch-ui.js:18-23 posts `message` and `searchQuery` to `/api/fetch-ui` using `twentyFirstClient`.",
+    "dist/tools/fetch-ui.js:24-30 returns the remote `data.text` as the MCP `text` result."
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`21st_magic_component_inspiration` returns text from the remote 21st.dev API based on a component search. That output can be outside-authored UI/component content, so it is UNTRUSTED. It sends `message` and `searchQuery` to a fixed vendor endpoint, which makes the tool WRITE, but the destination is not agent-chosen and therefore is not a SINK.",
+   "undetermined": true,
+   "value_args": [
+    "message",
+    "searchQuery"
+   ]
+  },
+  "21st_magic_component_refiner": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/refine-ui.js:23-29 reads the host file at `absolutePathToRefiningFile` with `getContentOfFile` and posts it as `fileContent` to `/api/refine-ui` with `userMessage` and `context`.",
+    "dist/tools/refine-ui.js:30-36 returns the remote `data.text` as the MCP `text` result."
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`21st_magic_component_refiner` can read a local file selected by `absolutePathToRefiningFile` and send that file content to the fixed 21st.dev refine API. The returned `data.text` is remote-generated and may include non-public file-derived content as well as outside-authored/generated UI code or instructions. The network destination is fixed by `twentyFirstClient.post('/api/refine-ui', ...)`, so it is not a SINK under the agent-chosen-destination rule.",
+   "undetermined": true,
+   "value_args": [
+    "userMessage",
+    "absolutePathToRefiningFile",
+    "context"
+   ]
+  },
+  "logo_search": {
+   "attacker_named_fields": [
+    "icon"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/logo-search.js:41-52 fetches logo search results from the public `https://api.svgl.app` endpoint.",
+    "dist/tools/logo-search.js:167-171 takes `logo.route` from that API response, fetches SVG content from `svgUrl`, and converts it.",
+    "dist/tools/logo-search.js:173-177 places `logo.title`, `logo.url`, and formatted SVG/code into the result content.",
+    "dist/tools/logo-search.js:232-254 returns a JSON string containing the generated `icons`, including `icon` and `code` fields.",
+    "dist/tools/logo-search.js:101-143 and dist/tools/logo-search.js:195-210 write test results to a local `test-results/logo-search-...json` file."
+   ],
+   "identifier_output_fields": [
+    "icon"
+   ],
+   "injectable_output_fields": [
+    "text",
+    "icon",
+    "code",
+    "setup"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`logo_search` returns SVG/code and names obtained from an external/public logo API and from URLs contained in that API response, so the returned text can include outside-authored content. It also writes a local test-results file, making it WRITE, but the filename is generated internally and is not public or attacker-readable by itself, so that local write is not a SINK. Requests go to a fixed API or to `logo.route` supplied by the API, not directly to a URL argument chosen by the agent.",
+   "undetermined": true,
+   "value_args": [
+    "queries",
+    "format"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "0.0.47"
+}

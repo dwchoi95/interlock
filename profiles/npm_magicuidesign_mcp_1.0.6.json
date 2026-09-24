@@ -1,0 +1,94 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All eight tools have empty input schemas (`{}` at dist/server.js:12 and dist/server.js:182), so the agent cannot steer any request target, path or recipient \u2014 no SINK surface exists.",
+  "No environment variables, config flags, filesystem access or child-process use appear anywhere in dist/server.js; transport is stdio only (dist/server.js:210-216). Category tools are registered unconditionally at startup, so all are enabled by default; even if registration throws, the server still connects (dist/server.js:213-217).",
+  "The only remote host referenced in the shipped code is `magicui.design` (dist/server.js:43,147), a single first-party vendor registry; `dist/utils/index.js` and `dist/utils/formatters.js` were not included, so the exact URLs and any additional network behaviour could not be verified."
+ ],
+ "package": "@magicuidesign/mcp",
+ "source": ".cache/sources/.views/npm_magicuidesign_mcp_1.0.6_858c86aa8a6d",
+ "tools": {
+  "getAnimations": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/server.js:182",
+    "dist/server.js:96"
+   ],
+   "labels": [],
+   "rationale": "Hard-coded single component `blur-fade` fetched from the fixed Magic UI registry via `fetchComponentDetails`/`fetchExampleDetails` (`dist/server.js:143-148`). No parameters, no secrets, no sink, no exec. Undetermined because `./utils/index.js` is missing from the source.",
+   "undetermined": true
+  },
+  "getBackgrounds": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/server.js:182",
+    "dist/server.js:124-133"
+   ],
+   "labels": [],
+   "rationale": "Category tool with empty schema; handler `fetchComponentsByCategory` fetches only hard-coded background component names from the fixed Magic UI registry (`dist/server.js:136-172`). No SECRET/SINK/HOSTEXEC surface. Undetermined because the fetch implementation in `./utils/index.js` is absent from the supplied source. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "getButtons": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/server.js:182",
+    "dist/server.js:115-123"
+   ],
+   "labels": [],
+   "rationale": "Category tool with empty schema returning vendor-registry component source for a hard-coded button list (`dist/server.js:143-156`). Nothing attacker-writable, private, exfiltrating or executing. Undetermined because `./utils/index.js` is not provided. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "getComponents": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/server.js:182",
+    "dist/server.js:143-148"
+   ],
+   "labels": [],
+   "rationale": "Registered in the loop over `componentCategories` (`dist/server.js:180-204`) with an empty input schema; it calls `fetchComponentDetails` and `fetchExampleDetails` for a hard-coded list of component names (`dist/server.js:62-82`) and returns their file contents. Destination/source is the fixed Magic UI registry (`magicui.design`, see `dist/server.js:43,147`), a single vendor, so returned component source is not attacker-controllable under the threat model; no local/credentialed data is read, no agent-chosen URL or recipient exists (no tool parameters), and no code is executed on the host. Undetermined because the fetch helpers in `./utils/index.js` are not included in the source provided.",
+   "undetermined": true
+  },
+  "getDeviceMocks": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/server.js:182",
+    "dist/server.js:83"
+   ],
+   "labels": [],
+   "rationale": "Same generated handler as the other category tools: hard-coded names `safari, iphone-15-pro, android` fetched from the fixed Magic UI registry via `fetchComponentDetails` (`dist/server.js:143`). No parameters, no host/credential access, no exec. Undetermined only because `./utils/index.js` is not supplied. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "getSpecialEffects": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/server.js:182",
+    "dist/server.js:84-95"
+   ],
+   "labels": [],
+   "rationale": "Category tool over a hard-coded component list; handler calls `fetchComponentsByCategory` which only reads the vendor registry (`dist/server.js:136-172`). Empty input schema means nothing agent-supplied leaves the process, no private data is read, no host execution. Undetermined because the fetch layer in `./utils/index.js` is not in the provided source. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "getTextAnimations": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/server.js:182",
+    "dist/server.js:97-114"
+   ],
+   "labels": [],
+   "rationale": "Same generated category handler; only a fixed list of component names is resolved against vendor registry data already loaded at startup (`dist/server.js:175-179`). No agent input, no credentialed/local reads, no execution. Undetermined because the fetch helpers are not included. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "getUIComponents": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/server.js:14",
+    "dist/server.js:4"
+   ],
+   "labels": [],
+   "rationale": "Calls `fetchUIComponents()` (imported from `./utils/index.js`, source not included) and returns the JSON into context. From the code visible, the registry is Magic UI's own site (`magicui.design` appears as the only host in `dist/server.js:43` and the install strings at `dist/server.js:147`), i.e. a fixed first-party vendor endpoint, not a multi-writer/attacker-controlled source, so no UNTRUSTED. No local files, credentials or private data are read (no fs/env use anywhere in the file), so no SECRET. The tool takes no arguments (`{}` schema at `dist/server.js:12`) so no agent-supplied data can be exfiltrated: no SINK. No process/exec use: no HOSTEXEC. Marked undetermined because `utils/index.js` is not in the provided source and could in principle fetch an agent-/config-chosen URL.",
+   "undetermined": true
+  }
+ },
+ "value_conditions": [],
+ "version": "1.0.6"
+}

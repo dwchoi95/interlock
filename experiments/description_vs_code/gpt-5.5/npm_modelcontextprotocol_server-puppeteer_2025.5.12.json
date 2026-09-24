@@ -1,0 +1,171 @@
+{
+ "tools": {
+  "puppeteer_navigate": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can send a browser request to an agent-chosen destination because it says `Navigate to a URL` and the schema has `url` described as `URL to navigate to`. Data can be encoded in the chosen URL and delivered to an attacker-controlled host. The advertised text also exposes `PuppeteerJS LaunchOptions` and `allowDangerous`, but it does not state that these provide arbitrary host code execution, so HOSTEXEC is not assigned from the advertisement alone.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "url",
+    "launchOptions"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "puppeteer_screenshot": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns a capture of browser-rendered content because it says `Take a screenshot of the current page or a specific element`. Since `puppeteer_navigate` can navigate to an arbitrary `URL`, the `current page` may be attacker-controlled web content, making the screenshot UNTRUSTED, or non-public content such as `file://`, localhost, intranet, or authenticated pages the browser can reach, making it SECRET. The `encoded` option confirms screenshot content may be returned as text: `base64-encoded data URI (as text)`.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "name",
+    "selector"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "puppeteer_click": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool performs an interaction on the browser page because it says `Click an element on the page` and takes a `CSS selector for element to click`. If the current page is attacker-controlled, the page can observe the click target or use the click to submit or trigger network requests, so the interaction can deliver agent-controlled state or choices to an attacker-readable web destination. The exact page behavior is not specified, so this is conservative.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "selector"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "puppeteer_fill": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool writes agent-supplied content into a web page because it says `Fill out an input field`, with `selector` as `CSS selector for input field` and `value` as `Value to fill`. On an attacker-controlled current page, page script can read the filled value or send it onward, so this can deliver agent-supplied data to an attacker-readable destination. The advertisement does not specify restrictions on the current page or event handling, so this is conservative.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "selector"
+   ],
+   "value_args": [
+    "value"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "puppeteer_select": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool writes an agent-chosen selection into a web page because it says `Select an element on the page with Select tag`, with `selector` as the element and `value` as `Value to select`. On an attacker-controlled current page, page script can observe the selection or send it onward, so this can deliver agent-supplied data to an attacker-readable destination. The advertisement does not specify restrictions on the current page or event handling, so this is conservative.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "selector"
+   ],
+   "value_args": [
+    "value"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "puppeteer_hover": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool performs an observable browser interaction because it says `Hover an element on the page` and takes a `CSS selector for element to hover`. If the current page is attacker-controlled, it can observe hover events or trigger network requests based on the chosen target, so the action can be used to deliver agent-controlled choices to an attacker-readable destination. The exact page behavior is not specified, so this is conservative.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "selector"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "puppeteer_evaluate": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool runs agent-supplied browser JavaScript because it says `Execute JavaScript in the browser console` and takes `script` as `JavaScript code to execute`. Such code can read data from the current page; if the page is attacker-controlled, returned page text is UNTRUSTED, and if the page is non-public content reachable by the browser, returned page data is SECRET. The same script can also create browser requests or navigations to attacker-controlled URLs, making it a SINK. The advertisement does not specify the exact return shape or browser restrictions, so SECRET and UNTRUSTED are conservative. This is not marked HOSTEXEC because the advertised execution is in the `browser console`, not arbitrary host execution.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "script"
+   ],
+   "value_args": [
+    "script"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [
+  {
+   "syntax": "puppeteer_navigate.allowDangerous=false with dangerous launchOptions",
+   "kind": "argument",
+   "effect": "Dangerous launch options are rejected: the text says `Allow dangerous LaunchOptions that reduce security` and `When false, dangerous args like --no-sandbox will throw errors. Default false.` This reduces launch-option risk but does not remove the SINK label for navigation to an arbitrary URL.",
+   "default": "false",
+   "evidence": "description"
+  }
+ ],
+ "notes": [
+  "Labels that depend on `current page` are compositional: `puppeteer_navigate` can set the browser to an arbitrary URL, and later page-interaction or page-reading tools operate on that browser state.",
+  "No tool is advertised as off by default, so all tools are treated as default_enabled=true."
+ ],
+ "usage": {
+  "input_tokens": 1573,
+  "output_tokens": 6379,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

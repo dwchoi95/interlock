@@ -1,0 +1,232 @@
+{
+ "kind": "npm",
+ "notes": [
+  "The supplied `dist/mcp-server.js` is minified and heavily truncated; several tool implementations delegate to helper functions (`Nt`, `an`, `mn`, `on`, `Jt`) whose bodies are not included. Those tools are marked `undetermined` where output shape or internal behavior cannot be fully verified from the provided source.",
+  "Local file writes are classified as `WRITE` for enforcement, but they are not labeled `SINK` because the provided code does not show writes to attacker-readable public destinations or agent-chosen network hosts."
+ ],
+ "package": "task-master-ai",
+ "source": ".cache/sources/.views/npm_task-master-ai_0.42.0_1156fbe9deef",
+ "tools": {
+  "expand_task": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "id",
+    "file",
+    "projectRoot",
+    "tag"
+   ],
+   "evidence": [
+    "dist/mcp-server.js:44 defines `expand_task`, resolves the task file with `T({projectRoot:e.projectRoot,file:e.file},t)`, computes a complexity report path with `D({...e,tag:r},t)`, calls `Jt({tasksJsonPath:a,id:e.id,num:e.num,research:e.research,prompt:e.prompt,...})`, and returns its result.",
+    "dist/mcp-server.js:44 describes `research` as `Use research role for generation`."
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`expand_task` reads a selected local task from the user's task database and writes generated subtasks back to that project, returning the delegated result. That can expose non-public project task details. If `research` is enabled, generated content may include public research/search material, which can be attacker-controlled. The exact return schema from `Jt` is not shown.",
+   "undetermined": true,
+   "value_args": [
+    "prompt",
+    "num"
+   ]
+  },
+  "get_task": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp-server.js:44 registers `get_task:Nt` in the MCP tool map and includes it in the default core tool list `$n`.",
+    "dist/assets/AGENTS.md:132-135 documents `get_task`/`show` as viewing detailed task information.",
+    "dist/assets/AGENTS.md:289-301 documents returned task fields such as `id`, `title`, `description`, `status`, `priority`, `dependencies`, `details`, `testStrategy`, and `subtasks`."
+   ],
+   "identifier_output_fields": [
+    "id",
+    "title",
+    "status",
+    "priority",
+    "dependencies",
+    "subtasks[].id",
+    "subtasks[].title",
+    "subtasks[].status"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "The implementation body for `Nt` is not present in the supplied excerpt, so this is partially undetermined. The advertised tool and bundled documentation indicate that `get_task` returns detailed task information from the user's Task Master project, which is non-public project data. No evidence shows an agent-chosen network destination or state change.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_tasks": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp-server.js:36 defines `get_tasks` with `projectRoot` and calls `n.tasks.list(...)`, then returns `data:{tasks:c,...}` from the task store."
+   ],
+   "identifier_output_fields": [
+    "data.tasks[].id",
+    "data.tasks[].title",
+    "data.tasks[].status",
+    "data.tasks[].subtasks[].id",
+    "data.tasks[].subtasks[].title",
+    "data.tasks[].subtasks[].status",
+    "tag"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`get_tasks` reads the user's Task Master task data for the selected project/tag via `n.tasks.list` and returns the task objects in `data.tasks`; project task data is non-public local/SaaS project data. The code shown does not contact an agent-chosen URL and does not write state.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "next_task": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp-server.js:44 defines `next_task`, resolves a tasks file with `de(e,n)`, optionally resolves a complexity report with `fe({...e,tag:r},n)`, calls `an({tasksJsonPath:a,reportPath:o,...})`, and returns `result:s`."
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`next_task` reads the user's local task database and optional complexity report to return the next task recommendation. That project task data is non-public. The exact structure of `s` is not shown in the provided source, so output-field classification is limited to fields visible in the wrapper code.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "parse_prd": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "projectRoot",
+    "tag",
+    "output"
+   ],
+   "evidence": [
+    "dist/mcp-server.js:44 defines `parse_prd` with `input`, `projectRoot`, `output`, `research`, and other parameters, then calls `on({...e,tag:a},...)` and returns its result.",
+    "dist/mcp-server.js:44 describes `parse_prd` as parsing a Product Requirements Document text file to generate tasks and describes `research` as enabling the research role.",
+    "dist/assets/AGENTS.md:397-405 lists `parse_prd` among AI-powered operations."
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`parse_prd` reads a local PRD selected by `input` and generates/writes tasks to the selected project/output path; generated task output can reveal non-public PRD/project information. With `research` enabled, task generation may incorporate public research/search content, which is attacker-controllable under the threat model. The code shown delegates to `on`, so exact output fields are not visible.",
+   "undetermined": true,
+   "value_args": [
+    "numTasks"
+   ]
+  },
+  "set_task_status": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "projectRoot",
+    "id",
+    "tag"
+   ],
+   "evidence": [
+    "dist/mcp-server.js:36 defines `set_task_status`, parses `id`, `status`, `projectRoot`, and `tag`, calls `n.tasks.updateStatus(r,i,o)` for each id, and returns `data:{message:...,tasks:s}`.",
+    "dist/mcp-server.js:44 includes `set_task_status` in the default core tool list `$n`."
+   ],
+   "identifier_output_fields": [
+    "data.tasks[].id",
+    "data.tasks[].oldStatus",
+    "data.tasks[].newStatus"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`set_task_status` updates one or more task records in the user's project task store and returns update results including prior/new task status data. This exposes non-public project metadata. It writes only to the task store selected by project/tag/id; the provided code does not show delivery to an attacker-readable destination.",
+   "undetermined": false,
+   "value_args": [
+    "status"
+   ]
+  },
+  "update_subtask": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "id",
+    "file",
+    "projectRoot",
+    "tag"
+   ],
+   "evidence": [
+    "dist/mcp-server.js:44 defines `update_subtask`, resolves a tasks file with `T({projectRoot:e.projectRoot,file:e.file},t)`, calls `mn({tasksJsonPath:o,id:e.id,prompt:e.prompt,research:e.research,...})`, and returns `result:s`.",
+    "dist/mcp-server.js:44 describes `research` as `Use Perplexity AI for research-backed updates`."
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`update_subtask` writes agent-supplied `prompt` content into a selected local task/subtask record and returns the result from `mn`. Because it operates on local task files, the returned result may include non-public project task data. When `research` is enabled, the tool uses Perplexity-backed research; search/research results can include attacker-controllable public web content, so returned/stored text is treated as untrusted. The exact return schema and `mn` internals are not shown.",
+   "undetermined": true,
+   "value_args": [
+    "prompt"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "applies when the variable is absent or blank",
+   "effect": "The server defaults to `core`; all seven advertised tools here are enabled by default.",
+   "evidence": "dist/mcp-server.js:44 `nr()` returns `core` when `process.env.TASK_MASTER_TOOLS` is missing/blank; `$n` contains `get_tasks`, `next_task`, `get_task`, `set_task_status`, `update_subtask`, `parse_prd`, and `expand_task`.",
+   "kind": "environment variable",
+   "syntax": "`TASK_MASTER_TOOLS` unset or empty"
+  },
+  {
+   "default": "not required because unset/empty also defaults to `core`",
+   "effect": "Loads the core tool list `$n`, which includes all seven advertised tools here.",
+   "evidence": "dist/mcp-server.js:44 `rr` handles `case 'core': case 'lean': a=$n` and `$n` lists the seven advertised tools.",
+   "kind": "environment variable",
+   "syntax": "`TASK_MASTER_TOOLS=core` or `TASK_MASTER_TOOLS=lean`"
+  },
+  {
+   "default": "off unless set",
+   "effect": "Loads `er`, which extends `$n`; all seven advertised tools here remain enabled.",
+   "evidence": "dist/mcp-server.js:44 defines `er=[...$n,...]` and `rr` handles `case 'standard': a=er`.",
+   "kind": "environment variable",
+   "syntax": "`TASK_MASTER_TOOLS=standard`"
+  },
+  {
+   "default": "off unless set",
+   "effect": "Loads all tools in `$`; all seven advertised tools here remain enabled.",
+   "evidence": "dist/mcp-server.js:44 `rr` handles `case 'all': a=Object.keys($)` and `$` maps these advertised tool names.",
+   "kind": "environment variable",
+   "syntax": "`TASK_MASTER_TOOLS=all`"
+  },
+  {
+   "default": "off unless set to a non-mode comma-separated list",
+   "effect": "Loads only the named valid tools; any advertised tool omitted from the custom list is not enabled.",
+   "evidence": "dist/mcp-server.js:44 `rr` splits the env value on commas, resolves each name against `Object.keys($)`, and sets `a=Array.from(t)`.",
+   "kind": "environment variable",
+   "syntax": "`TASK_MASTER_TOOLS=<comma-separated tool names>`"
+  }
+ ],
+ "version": "0.42.0"
+}

@@ -1,0 +1,18 @@
+{
+ "package": "chrome-devtools-mcp",
+ "tool": "evaluate_script",
+ "claimed": [
+  "SECRET",
+  "SINK",
+  "UNTRUSTED"
+ ],
+ "HOSTEXEC": "not_supported",
+ "SECRET": "supported",
+ "SINK": "supported",
+ "UNTRUSTED": "supported",
+ "reason": "The cited lines say the tool evaluates an arbitrary JavaScript function in a target browser page or service worker and returns the result as JSON. That is browser/page-context execution, not arbitrary host execution, so HOSTEXEC is not supported. Because page-context JavaScript can read page DOM/data such as title or innerText and use the page/session context, returning that result can expose non-public page/SaaS data to the agent, supporting SECRET. The example includes `fetch(\"example.com\")`, showing the evaluated script can make requests to agent-chosen web destinations, supporting SINK. Returned values can also come from the target page or fetched web content, which may be attacker-controlled, supporting UNTRUSTED.",
+ "usage": {
+  "input_tokens": 1429,
+  "output_tokens": 1729
+ }
+}

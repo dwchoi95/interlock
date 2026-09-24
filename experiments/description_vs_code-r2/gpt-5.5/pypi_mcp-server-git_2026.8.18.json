@@ -1,0 +1,274 @@
+{
+ "tools": {
+  "git_status": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Shows the working tree status` for a caller-supplied local repository path, so it can return non-public repository/file metadata from the host into the agent context (SECRET). Git working-tree status may include branch names and file paths from repository content; the description does not restrict the repository to user-authored content, so attacker-authored names/content in a multi-writer or third-party repo are possible (UNTRUSTED; undetermined because provenance is not specified).",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "git_diff_unstaged": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Shows changes in the working directory that are not yet staged`, which can return local host repository file contents/diffs (SECRET). Diff text and paths may include attacker-authored code or filenames if the repo/worktree contains third-party or multi-writer content; the advertised text does not rule that out (UNTRUSTED; undetermined).",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "git_diff_staged": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Shows changes that are staged for commit`, so it can return staged local repository file contents/diffs from the host (SECRET). Staged diffs and file paths can include third-party or multi-writer content, and the description does not say all content is user-authored (UNTRUSTED; undetermined).",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "git_diff": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Shows differences between branches or commits` in the supplied repository, so it can return non-public commit/file contents from a local/private repo (SECRET). Branches or commits may contain attacker-authored code, commit data, or filenames in a multi-writer/third-party repo; the description does not settle provenance (UNTRUSTED; undetermined).",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "git_commit": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Records changes to the repository`, which changes local repository state. The advertised text does not say it sends data to a remote or attacker-readable destination, and it does not advertise arbitrary code execution or returning secrets.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "repo_path"
+   ],
+   "value_args": [
+    "message"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "git_add": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Adds file contents to the staging area`, which changes local repository/index state. The advertised text does not say it returns the file contents or sends them to any remote or attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "repo_path",
+    "files"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "git_reset": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Unstages all staged changes`, so it changes local repository/index state. The advertised text does not indicate returning non-public contents or sending data to an attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "repo_path"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "git_log": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Shows the commit logs` for a local repository, which can reveal non-public commit history, messages, authors, branch/ref identifiers, and timestamps from a private repo (SECRET). Commit messages, author names, and related metadata may be authored by other contributors; the description does not restrict logs to trusted authors (UNTRUSTED; undetermined).",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "git_create_branch": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Creates a new branch from an optional base branch`, which writes local repository metadata. The advertised text does not say it sends data to a remote or attacker-readable destination or returns secret data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "repo_path",
+    "branch_name"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "git_checkout": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Switches branches`, which changes local repository/worktree state. The advertised text does not say it sends data out, returns file contents, or executes arbitrary code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "repo_path",
+    "branch_name"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "git_show": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Shows the contents of a commit`, so it can return non-public file contents and commit metadata from a local/private repository (SECRET). Commit contents, messages, author names, and filenames may be attacker-authored in a multi-writer or third-party repository; the description does not specify trusted provenance (UNTRUSTED; undetermined).",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "git_branch": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `List Git branches`, including `local`, `remote`, or `all`, so it can reveal non-public branch names/refs in a private local repository (SECRET). Remote or multi-writer branch names can be chosen by other parties, and the description does not rule that out (UNTRUSTED; undetermined).",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No output schemas are advertised, so output field classifications use `return` for free-text results whose advertised descriptions imply they contain content or identifiers such as diffs, commit data, file paths, or branch names.",
+  "No tool is labeled SINK because the advertised descriptions cover local Git operations only and do not mention pushing, network requests, posting to public repositories, or other attacker-readable destinations.",
+  "No tool is labeled HOSTEXEC because the advertised descriptions do not mention arbitrary command execution."
+ ],
+ "usage": {
+  "input_tokens": 2590,
+  "output_tokens": 4541,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

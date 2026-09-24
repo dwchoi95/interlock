@@ -1,0 +1,29 @@
+{
+  "package": "@modelcontextprotocol/server-brave-search",
+  "version": "0.6.2",
+  "source": "npm pack @modelcontextprotocol/server-brave-search@0.6.2, tar xzf (not installed/run) in scratchpad adj-docs/modelcontextprotocol-server-brave-search-0.6.2/package/. The package ships only dist/index.js (274 lines, unminified). Paths below are relative to that package dir.",
+  "tools": {
+    "brave_web_search": {
+      "labels": ["UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "The query only goes to the hard-coded Brave API host (api.search.brave.com), a fixed vendor endpoint, so this is not a SINK. The tool returns web search result titles, descriptions and URLs, which the threat model counts as attacker-controllable.",
+      "evidence": "dist/index.js:107-130 (fixed URL https://api.search.brave.com/res/v1/web/search, q=query; returns title/description/url of data.web.results); dist/index.js:225-235 (handler)"
+    },
+    "brave_local_search": {
+      "labels": ["UNTRUSTED"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Requests go only to fixed Brave API endpoints, so this is not a SINK. It returns third-party business listings (names, descriptions, hours) and falls back to web search results, which are attacker-influenceable.",
+      "evidence": "dist/index.js:132-161 (fixed api.search.brave.com web/search with result_filter=locations; fallback to performWebSearch at :152-154); dist/index.js:162-195 (fixed /res/v1/local/pois and /local/descriptions); dist/index.js:196-213 (formats poi.name, address, phone, descriptions); dist/index.js:236-245 (handler)"
+    }
+  },
+  "value_conditions": [],
+  "notes": [
+    "Flags, toolset selection and read-only switches: none. Both tools are always listed (dist/index.js:215-217).",
+    "BRAVE_API_KEY is required. Without it the process exits at startup (dist/index.js:68-72), so no tools are served. It is not listed as a value condition because the variable can come from the inherited environment rather than the MCP config. It is sent only as the X-Subscription-Token header to the fixed Brave host.",
+    "No agent-supplied URL is ever fetched, and no file, database or local network access exists. The only outbound hosts are api.search.brave.com paths."
+  ]
+}

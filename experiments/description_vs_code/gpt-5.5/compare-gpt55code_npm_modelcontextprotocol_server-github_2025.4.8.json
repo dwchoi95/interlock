@@ -1,0 +1,600 @@
+[
+ {
+  "tool": "create_or_update_file",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "path",
+   "branch",
+   "sha"
+  ],
+  "annotations": {},
+  "rationale_code": "`create_or_update_file` is advertised to create/update repository files and is dispatched to `files.createOrUpdateFile(args.owner, args.repo, args.path, args.content, args.message, args.branch, args.sha)`. It can write agent-supplied `content` and `message` into an agent-selected GitHub repository/p"
+ },
+ {
+  "tool": "search_repositories",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "query"
+  ],
+  "annotations": {},
+  "rationale_code": "`search_repositories` sends `args.query` to `repository.searchRepositories` and returns serialized search results. GitHub repository search results can include public attacker-controlled repository metadata/content, so output is UNTRUSTED. With the user's GitHub token, repository search may also inc"
+ },
+ {
+  "tool": "create_repository",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "name"
+  ],
+  "annotations": {},
+  "rationale_code": "`create_repository` is advertised to create a repository in the user's account and dispatches `repository.createRepository(args)`. Creating a repository, including a public one with agent-supplied name/description, stores data where attackers may read it, so it is a SINK. It returns created reposito"
+ },
+ {
+  "tool": "get_file_contents",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "path",
+   "branch"
+  ],
+  "annotations": {},
+  "rationale_code": "`get_file_contents` calls `files.getFileContents(args.owner, args.repo, args.path, args.branch)` and returns serialized contents. It can read private repository files using the user's token, so it is SECRET. It can also read public repository files/directories whose contents, paths, and names are at"
+ },
+ {
+  "tool": "push_files",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "branch",
+   "files"
+  ],
+  "annotations": {},
+  "rationale_code": "`push_files` dispatches `files.pushFiles(args.owner, args.repo, args.branch, args.files, args.message)` to push multiple files. It writes agent-supplied file paths/content and commit message to an agent-selected repository/branch, which may be public and attacker-readable, so it is a SINK. The retur"
+ },
+ {
+  "tool": "create_issue",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "assignees",
+   "milestone",
+   "labels"
+  ],
+  "annotations": {},
+  "rationale_code": "`create_issue` extracts `owner`/`repo` and sends the remaining options to `issues.createIssue(owner, repo, options)`. It stores agent-supplied issue `title`, `body`, labels, and assignments in an agent-selected repository, potentially public and attacker-readable, so it is a SINK. It returns GitHub "
+ },
+ {
+  "tool": "create_pull_request",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "head",
+   "base"
+  ],
+  "annotations": {},
+  "rationale_code": "`create_pull_request` dispatches `pulls.createPullRequest(args)` using repository, branch, title, and body arguments. It creates a PR in an agent-selected repository with agent-supplied text, which may be public and attacker-readable, so it is a SINK. Returned PR details may be from private reposito"
+ },
+ {
+  "tool": "fork_repository",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "organization"
+  ],
+  "annotations": {},
+  "rationale_code": "`fork_repository` calls `repository.forkRepository(args.owner, args.repo, args.organization)` and returns fork details. It creates a fork in the user's account or selected organization, so it changes GitHub state and can publish data to an attacker-readable public destination, making it a SINK. Fork"
+ },
+ {
+  "tool": "create_branch",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "branch",
+   "from_branch"
+  ],
+  "annotations": {},
+  "rationale_code": "`create_branch` dispatches `branches.createBranchFromRef(args.owner, args.repo, args.branch, args.from_branch)`. Creating a branch changes an agent-selected repository and can publish a new ref in a public repo, so it is a SINK. Returned branch/reference details may be private GitHub data when used "
+ },
+ {
+  "tool": "list_commits",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "sha"
+  ],
+  "annotations": {},
+  "rationale_code": "`list_commits` calls `commits.listCommits(args.owner, args.repo, args.page, args.perPage, args.sha)` and returns serialized commits. It can list commits in private repositories via the user's token, so it is SECRET. Commit messages, author names, branch names, and public repository history can be at"
+ },
+ {
+  "tool": "list_issues",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "labels",
+   "since",
+   "sort",
+   "state",
+   "direction"
+  ],
+  "annotations": {},
+  "rationale_code": "`list_issues` calls `issues.listIssues(owner, repo, options)` and returns issue details. Issues in private repositories are non-public data reached with the user's credentials, so it is SECRET. Public issue titles, bodies, labels, and authors are attacker-controllable in multi-writer repositories, s"
+ },
+ {
+  "tool": "update_issue",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "issue_number",
+   "assignees",
+   "milestone",
+   "labels",
+   "state"
+  ],
+  "annotations": {},
+  "rationale_code": "`update_issue` extracts `owner`, `repo`, and `issue_number`, then calls `issues.updateIssue(owner, repo, issue_number, options)`. It changes an existing issue and can store agent-supplied title/body/state/labels in a public repository, so it is a SINK. It returns updated issue details from GitHub, i"
+ },
+ {
+  "tool": "add_issue_comment",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "issue_number"
+  ],
+  "annotations": {},
+  "rationale_code": "`add_issue_comment` calls `issues.addIssueComment(owner, repo, issue_number, body)`. It posts agent-supplied `body` text to an agent-selected issue, potentially public and attacker-readable, so it is a SINK. The returned comment details can be from a private repository issue accessed with the user's"
+ },
+ {
+  "tool": "search_code",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "q"
+  ],
+  "annotations": {},
+  "rationale_code": "`search_code` calls `search.searchCode(args)` and returns code search results. Code search can expose private code accessible with the user's token, so it is SECRET. Public code search results include attacker-authored repository code and paths, so they are UNTRUSTED."
+ },
+ {
+  "tool": "search_issues",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "q"
+  ],
+  "annotations": {},
+  "rationale_code": "`search_issues` calls `search.searchIssues(args)` and returns matching issues/PRs. It may search private issue/PR data visible to the user's token, so it is SECRET. Public issue and PR titles, bodies, comments, and authors are attacker-controllable, so output is UNTRUSTED."
+ },
+ {
+  "tool": "search_users",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "q"
+  ],
+  "annotations": {},
+  "rationale_code": "`search_users` calls `search.searchUsers(args)` and returns GitHub user search results. GitHub user profiles, names, logins, and profile metadata are public and user-authored, so results are UNTRUSTED. The provided source does not show this returning non-public user-account data, so SECRET is not ap"
+ },
+ {
+  "tool": "get_issue",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "issue_number"
+  ],
+  "annotations": {},
+  "rationale_code": "`get_issue` calls `issues.getIssue(args.owner, args.repo, args.issue_number)` and returns issue details. It can retrieve private repository issues with the user's credentials, so it is SECRET. Public issue titles, bodies, labels, and author identities can be attacker-authored, so it is UNTRUSTED."
+ },
+ {
+  "tool": "get_pull_request",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "pull_number"
+  ],
+  "annotations": {},
+  "rationale_code": "`get_pull_request` calls `pulls.getPullRequest(args.owner, args.repo, args.pull_number)` and returns PR details. Private PR data is SECRET. Public PR titles, bodies, branch names, authors, diffs, and review status can be supplied or influenced by external contributors, so returned data is UNTRUSTED."
+ },
+ {
+  "tool": "list_pull_requests",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "state",
+   "head",
+   "base",
+   "sort",
+   "direction"
+  ],
+  "annotations": {},
+  "rationale_code": "`list_pull_requests` calls `pulls.listPullRequests(owner, repo, options)` and returns pull request details. It can list private repository PRs with the user's token, so it is SECRET. Public PR titles, bodies, branches, and authors are contributor-controlled, so output is UNTRUSTED."
+ },
+ {
+  "tool": "create_pull_request_review",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "pull_number",
+   "commit_id",
+   "comments"
+  ],
+  "annotations": {},
+  "rationale_code": "`create_pull_request_review` calls `pulls.createPullRequestReview(owner, repo, pull_number, options)`. It posts review body text, review event, and optional line comments to an agent-selected PR, potentially public and attacker-readable, so it is a SINK. The returned review details may be from a pri"
+ },
+ {
+  "tool": "merge_pull_request",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "pull_number",
+   "merge_method"
+  ],
+  "annotations": {},
+  "rationale_code": "`merge_pull_request` calls `pulls.mergePullRequest(owner, repo, pull_number, options)`. Merging changes repository state and can publish agent-supplied merge commit title/message to a public repository, so it is a SINK. Returned merge details may involve private repositories reached with the user's "
+ },
+ {
+  "tool": "get_pull_request_files",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "pull_number"
+  ],
+  "annotations": {},
+  "rationale_code": "`get_pull_request_files` calls `pulls.getPullRequestFiles(args.owner, args.repo, args.pull_number)` and returns changed files including patches according to the README. Private PR file changes are SECRET. Public PR file names and patch contents can be attacker-authored, so output is UNTRUSTED."
+ },
+ {
+  "tool": "get_pull_request_status",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "pull_number"
+  ],
+  "annotations": {},
+  "rationale_code": "`get_pull_request_status` calls `pulls.getPullRequestStatus(args.owner, args.repo, args.pull_number)` and returns combined status/check details. Private repository status information is SECRET. Status contexts, descriptions, target URLs, and check outputs for public PRs can be produced by external s"
+ },
+ {
+  "tool": "update_pull_request_branch",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "pull_number",
+   "expected_head_sha"
+  ],
+  "annotations": {},
+  "rationale_code": "`update_pull_request_branch` calls `pulls.updatePullRequestBranch(owner, repo, pull_number, expected_head_sha)` and returns `{ success: true }`. Updating a PR branch changes repository/PR state, so it is a SINK. The action operates on private PRs accessible with the user's token, so the tool can rea"
+ },
+ {
+  "tool": "get_pull_request_comments",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "pull_number"
+  ],
+  "annotations": {},
+  "rationale_code": "`get_pull_request_comments` calls `pulls.getPullRequestComments(args.owner, args.repo, args.pull_number)` and returns review comments. Private PR comments are SECRET. Public review comments, author names, and referenced paths/positions can be attacker-authored, so output is UNTRUSTED."
+ },
+ {
+  "tool": "get_pull_request_reviews",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "owner",
+   "repo",
+   "pull_number"
+  ],
+  "annotations": {},
+  "rationale_code": "`get_pull_request_reviews` calls `pulls.getPullRequestReviews(args.owner, args.repo, args.pull_number)` and returns PR reviews. Private review data is SECRET. Public review bodies, states, and reviewer identities are authored by repository participants or contributors, so output is UNTRUSTED."
+ }
+]

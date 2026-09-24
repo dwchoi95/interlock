@@ -1,0 +1,169 @@
+{
+ "kind": "pypi",
+ "notes": [
+  "All twelve tools are returned unconditionally by `list_tools` (server.py:321-456), so every tool is default-enabled.",
+  "No tool performs any network operation (no fetch/push/remote add), so there is no SINK anywhere in this server; all git invocations go through GitPython with argument-vector calls and explicit leading-'-' rejection, so no shell/flag-injection HOSTEXEC path is visible.",
+  "`git.Repo(repo_path)` at server.py:495 runs before the name match, so path validation applies uniformly to all tools.",
+  "`repo.index.commit` (server.py:129) and `repo.git.checkout` (server.py:220) can trigger repository hooks, but hooks reside in the user's own .git directory and are not transferred by clone, so HOSTEXEC is not attributed."
+ ],
+ "package": "mcp-server-git",
+ "source": ".cache/sources/.views/pypi_mcp-server-git_2026.8.18_8128d1e45dc4",
+ "tools": {
+  "git_add": {
+   "default_enabled": true,
+   "evidence": [
+    "server.py:132-153",
+    "server.py:534"
+   ],
+   "labels": [],
+   "rationale": "`git_add` stages files; paths are resolved and checked with `relative_to(repo_root)` so staging is confined to the repository working tree, and the tool returns only a fixed success string. No data leaves the host and no code is executed.",
+   "undetermined": false
+  },
+  "git_branch": {
+   "default_enabled": true,
+   "evidence": [
+    "server.py:273-305",
+    "server.py:586-595"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`git_branch` returns `repo.git.branch` output including local branch names (private repo metadata, SECRET) and, with `branch_type` 'remote'/'all', remote-tracking branch names that are chosen by whoever controls the upstream (UNTRUSTED). `contains`/`not_contains` are guarded against leading '-'.",
+   "undetermined": false
+  },
+  "git_checkout": {
+   "default_enabled": true,
+   "evidence": [
+    "server.py:214-221",
+    "server.py:572"
+   ],
+   "labels": [],
+   "rationale": "`git_checkout` runs `repo.git.checkout` on a ref validated by `rev_parse` and rejecting leading '-'; it mutates the local working tree but returns only a status string and reaches no external destination. Post-checkout hooks live in the user's own .git directory (not clone-transferred), so no HOSTEXEC is claimed.",
+   "undetermined": false
+  },
+  "git_commit": {
+   "default_enabled": true,
+   "evidence": [
+    "server.py:128-130",
+    "server.py:527"
+   ],
+   "labels": [],
+   "rationale": "`git_commit` calls `repo.index.commit` which only writes a commit object into the local repository; there is no push, network call or externally readable destination, so no SINK. It returns only the commit hash, so no private data is surfaced.",
+   "undetermined": false
+  },
+  "git_create_branch": {
+   "default_enabled": true,
+   "evidence": [
+    "server.py:200-212",
+    "server.py:561-565"
+   ],
+   "labels": [],
+   "rationale": "`git_create_branch` only creates a local ref via `repo.create_head` and returns a status string; leading '-' is rejected so no git flag injection. No exfiltration path and no private data returned.",
+   "undetermined": false
+  },
+  "git_diff": {
+   "default_enabled": true,
+   "evidence": [
+    "server.py:120-126",
+    "server.py:520-524"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`git_diff` returns the patch text between the working tree and an arbitrary ref, which is private local repository content (SECRET). The target ref may be a remote-tracking branch or an imported/merged commit from a public upstream, so the returned patch text can contain third-party attacker-authored content (UNTRUSTED). Undetermined because the code does not constrain which refs may be diffed; the least restrictive reading is kept.",
+   "undetermined": true
+  },
+  "git_diff_staged": {
+   "default_enabled": true,
+   "evidence": [
+    "server.py:117-118",
+    "server.py:513-517"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`git_diff_staged` returns the staged diff (`--cached`), exposing local file contents from the user's repository.",
+   "undetermined": false
+  },
+  "git_diff_unstaged": {
+   "default_enabled": true,
+   "evidence": [
+    "server.py:114-115",
+    "server.py:506-510"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`git_diff_unstaged` returns `repo.git.diff` output, i.e. the literal contents of uncommitted local file changes, into the agent's context.",
+   "undetermined": false
+  },
+  "git_log": {
+   "default_enabled": true,
+   "evidence": [
+    "server.py:159-198",
+    "server.py:549-558"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`git_log` returns commit hashes, author names and commit messages from the user's local repository (SECRET). Commit messages and author fields in a repository that tracks a public/third-party upstream are authored by other parties, so the text returned can carry attacker-controlled instructions (UNTRUSTED). Timestamps are guarded against leading '-' flag injection, so no argument-injection escalation.",
+   "undetermined": false
+  },
+  "git_reset": {
+   "default_enabled": true,
+   "evidence": [
+    "server.py:155-157",
+    "server.py:541"
+   ],
+   "labels": [],
+   "rationale": "`git_reset` calls `repo.index.reset()`, a purely local index mutation returning a constant string; nothing is read out or sent anywhere.",
+   "undetermined": false
+  },
+  "git_show": {
+   "default_enabled": true,
+   "evidence": [
+    "server.py:225-250",
+    "server.py:579"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`git_show` returns the full patch body of an arbitrary revision (`d.diff` decoded) plus author and message, i.e. private local repository file contents (SECRET). Any commit reachable in the repo may originate from a third-party/public upstream, making the returned diff and message text attacker-controllable (UNTRUSTED).",
+   "undetermined": false
+  },
+  "git_status": {
+   "default_enabled": true,
+   "evidence": [
+    "server.py:495",
+    "server.py:111-112",
+    "server.py:499-503"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`git_status` opens the caller-supplied `repo_path` with `git.Repo` and returns `repo.git.status()` output, exposing local working-tree state (file names, untracked paths) from the user's filesystem into the agent context. With no `--repository` restriction any repo path on the host can be read (`validate_repo_path` returns early when `allowed_repository is None`).",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "unset (repository is None \u2192 `validate_repo_path` returns immediately, no restriction)",
+   "effect": "When set, `validate_repo_path` requires every `repo_path` argument to resolve inside the given repository, narrowing SECRET reads to that one tree; when unset, any git repository on the host filesystem can be opened and read.",
+   "evidence": "server.py:252-270",
+   "kind": "cli-arg",
+   "syntax": "serve(repository=<Path>) / --repository <path> CLI argument"
+  },
+  {
+   "default": "advisory only; no enforcement",
+   "effect": "`list_repos` enumerates repos from client roots, but it is never used by `call_tool`, so roots do not restrict which repository paths tools may open.",
+   "evidence": "server.py:458-485",
+   "kind": "capability",
+   "syntax": "client roots capability (ListRootsResult)"
+  }
+ ],
+ "version": "2026.8.18"
+}

@@ -1,0 +1,168 @@
+[
+ {
+  "tool": "tools_documentation",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "topic"
+  ],
+  "annotations": {
+   "title": "Tools Documentation",
+   "readOnlyHint": true,
+   "idempotentHint": true
+  },
+  "rationale_code": "`getToolsDocumentation` only returns static strings compiled into the package (`toolsDocumentation` map and the hardcoded code-node guides). No host files, no credentials, no network egress, no execution."
+ },
+ {
+  "tool": "search_nodes",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "query",
+   "mode",
+   "source"
+  ],
+  "annotations": {
+   "title": "Search Nodes",
+   "readOnlyHint": true,
+   "idempotentHint": true
+  },
+  "rationale_code": "`searchNodes` reads the bundled node database, which explicitly includes community/npm-published nodes (`source: 'community'|'verified'` filter in the schema, `isCommunity`/`authorName`/`npmDownloads` fields per dist/mcp/tool-docs/discovery/search-nodes.js:32) and, with `includeExamples`, returns `p"
+ },
+ {
+  "tool": "get_node",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "nodeType",
+   "mode",
+   "fromVersion",
+   "toVersion",
+   "propertyQuery"
+  ],
+  "annotations": {
+   "title": "Get Node Info",
+   "readOnlyHint": true,
+   "idempotentHint": true
+  },
+  "rationale_code": "`getNodeDocumentation` returns the `documentation`/`description`/`ai_documentation_summary` columns for any node type, and `handleInfoMode` with `includeExamples` returns template-derived example configs (same path as `getNodeEssentials`). Node docs/descriptions cover community npm nodes and templat"
+ },
+ {
+  "tool": "validate_node",
+  "code": [],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "nodeType",
+   "mode",
+   "profile"
+  ],
+  "annotations": {
+   "title": "Validate Node Config",
+   "readOnlyHint": true,
+   "idempotentHint": true
+  },
+  "rationale_code": "`validateNodeMinimal`/`validateNodeConfig` only compare agent-supplied `config` against the local node property schema and return errors/warnings; `sanitizeValidationResult` reduces output to structured verdict fields. No network call, no credentialed read, no execution. Property display names echoe"
+ },
+ {
+  "tool": "get_template",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "templateId",
+   "mode"
+  ],
+  "annotations": {
+   "title": "Get Template",
+   "readOnlyHint": true,
+   "idempotentHint": true
+  },
+  "rationale_code": "`getTemplate` returns the complete workflow JSON (nodes, parameters, code, URLs, author text) of a template from the community template library documented as '2,700+ curated workflows' submitted by third parties. Arbitrary community-authored text and node parameters land in the agent context, so UNT"
+ },
+ {
+  "tool": "search_templates",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "searchMode",
+   "query",
+   "nodeTypes",
+   "task",
+   "category",
+   "complexity",
+   "maxSetupMinutes",
+   "minSetupMinutes",
+   "requiredService",
+   "targetAudience"
+  ],
+  "annotations": {
+   "title": "Search Templates",
+   "readOnlyHint": true,
+   "idempotentHint": true
+  },
+  "rationale_code": "All search modes (`listNodeTemplates`, `getTemplatesForTask`, `searchTemplatesByMetadata`, `searchTemplates`, `getWorkflowPatterns`) return community template records - names, descriptions, author names and URLs - which are third-party authored content and therefore attacker-influenceable text in th"
+ },
+ {
+  "tool": "validate_workflow",
+  "code": [],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Validate Workflow",
+   "readOnlyHint": true,
+   "idempotentHint": true
+  },
+  "rationale_code": "`validateWorkflow` validates the agent-supplied workflow object against the local node repository and returns a sanitized verdict (`valid`, `errors`, `warnings`, `summary`). Expressions are parsed, not executed; no network egress, no credentialed or host-file read."
+ }
+]

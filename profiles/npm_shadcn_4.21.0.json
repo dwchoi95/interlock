@@ -1,0 +1,103 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All tools are advertised unconditionally in the single ListTools handler with no flags or toolset gating, so every tool is default_enabled.",
+  "The registry-loading helpers `oa`, `Za`, `_a`, `ma`, `ia` and the wrapper `R$1` are imported from `./chunk-B2MD6U5O.js`, which was not provided; exact URL construction, credential/header handling (e.g. registry auth tokens) and whether raw URLs are accepted as items/registries cannot be verified from this file.",
+  "`R$1(()=>I(n),{onGitHubAuthNotice:N})` suggests GitHub-authenticated registry access may occur, which could mean user credentials are used for fetches; not verifiable here."
+ ],
+ "package": "shadcn",
+ "source": ".cache/sources/.views/npm_shadcn_4.21.0_addf9cf0084b",
+ "tools": {
+  "get_add_command_for_items": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-TWAHNSYO.js:58",
+    "dist/chunk-TWAHNSYO.js:1"
+   ],
+   "labels": [],
+   "rationale": "Only string-builds a CLI command via `u`, which prefixes the detected package-manager runner (`ia(process.cwd())`) and echoes the agent's own `items`. No network request, no file content returned beyond a package-manager name, no execution (the command is text only).",
+   "undetermined": false
+  },
+  "get_audit_checklist": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-TWAHNSYO.js:58",
+    "dist/chunk-TWAHNSYO.js:67"
+   ],
+   "labels": [],
+   "rationale": "Returns a hardcoded static checklist string; no I/O, no credentials, no network.",
+   "undetermined": false
+  },
+  "get_item_examples_from_registries": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-TWAHNSYO.js:49"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Searches configured registries with `_a(a,{query:r.query,...})` and then fetches the matched items with `ma(p,{config:i,useCache:!1})`, embedding full remote file contents (`R` prints ```tsx blocks of `s.content`) into the agent context. That is third-party registry content, so UNTRUSTED. The fetch targets are derived from the local registry config and from registry-returned `addCommandArgument` values rather than from agent-supplied URLs, so no agent data is delivered to an agent-chosen destination; it does not surface local user files.",
+   "undetermined": false
+  },
+  "get_project_registries": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-TWAHNSYO.js:1",
+    "dist/chunk-TWAHNSYO.js:28",
+    "dist/chunk-TWAHNSYO.js:34"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Handler calls `l(process.cwd())` which calls `oa` to load the project's `components.json` and returns the configured registry keys (`Object.keys(t.registries)`) into the agent context; it also calls `u`/`ia` which inspects the local project (package-manager detection). This is local, non-public host-file content, so SECRET. No network fetch and no agent-chosen destination, so no UNTRUSTED/SINK. The exact extent of config data read by `oa` is not visible in this chunk, so the label is kept under the least-restrictive reading.",
+   "undetermined": true
+  },
+  "list_items_in_registries": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-TWAHNSYO.js:41",
+    "dist/chunk-TWAHNSYO.js:1"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Uses `Za` to resolve registries from the local config and then `_a(s,{...useCache:!1})` to fetch item indexes from those registries, formatting names/descriptions via `_` into the agent context. Registry content is third-party/community-hosted data per the threat model, hence UNTRUSTED. Registry targets come from the user's local `components.json`, and no agent-supplied data is delivered to an agent-chosen host in this handler beyond the configured registry endpoints, so no SINK; config reading here only surfaces registry names already supplied by the agent/config, so no SECRET.",
+   "undetermined": false
+  },
+  "search_items_in_registries": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-TWAHNSYO.js:41",
+    "dist/chunk-TWAHNSYO.js:1"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Calls `_a(s,{query:r.query,...})` against registries resolved by `Za` from `components.json` and returns fetched item names/descriptions via `_` to the agent. Remote/community registry content is attacker-controllable, so UNTRUSTED. The `query` is only used against fetched registry indexes / configured registry endpoints, which is a fixed (config-chosen) destination rather than an agent-chosen attacker host, so no SINK.",
+   "undetermined": false
+  },
+  "view_items_in_registries": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-TWAHNSYO.js:41",
+    "dist/chunk-TWAHNSYO.js:43"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Passes the agent-supplied `items` strings straight into `ma(r.items,{config:...,useCache:!1})`, which resolves and fetches registry items and returns their file metadata/contents through `E` into context - remote registry content is attacker-controllable (UNTRUSTED). The resolver `ma` lives in the un-shown chunk `chunk-B2MD6U5O.js`; shadcn item specifiers conventionally also accept absolute URLs, so an agent-chosen item string may cause an outbound HTTP request to an arbitrary host with agent-chosen data in it. Under the least-restrictive reading that is a SINK, and it is marked undetermined because the resolution code is not available here.",
+   "undetermined": true
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "Registry set comes from the user's local components.json; with `@shadcn` (the default public registry) content is still remote third-party data.",
+   "effect": "If no registries are configured, `Za` returns an empty list and the list/search/examples tools return a 'No registries are configured' message without any network fetch, removing UNTRUSTED for those calls; conversely, which third-party hosts are contacted is entirely determined by this file.",
+   "evidence": "dist/chunk-TWAHNSYO.js:41",
+   "kind": "config file",
+   "syntax": "components.json `registries` section in process.cwd()"
+  }
+ ],
+ "version": "4.21.0"
+}

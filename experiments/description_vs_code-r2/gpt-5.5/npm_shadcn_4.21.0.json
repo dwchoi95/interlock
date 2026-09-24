@@ -1,0 +1,173 @@
+{
+ "tools": {
+  "get_project_registries": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads and returns configured registry names from the local project file: `Get configured registry names from components.json`. Local project files are host files and may be non-public. No public-only limitation is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "list_items_in_registries": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads registry data: `List items from registries` and can use registries from local configuration: `every registry configured in components.json`. Registry contents may be third-party or attacker-controlled, so returned item listings are UNTRUSTED. The description does not say registries are public-only; configured registries could be private, localhost, or intranet, so under the least-restrictive reading it may return non-public registry data, making it SECRET. This private-registry reach is not settled by the text.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "search_items_in_registries": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches registry data: `Search for components in registries using fuzzy matching` and requires local registry configuration: `requires components.json`. Registry item `names and descriptions` can be authored by third-party registry publishers, so results are UNTRUSTED. The description does not restrict registries to public endpoints; configured registries could be private, localhost, or intranet, so under the least-restrictive reading the tool may return non-public registry data, making it SECRET. This is not settled by the text.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "name",
+    "description",
+    "return"
+   ],
+   "identifier_output_fields": [
+    "name",
+    "return"
+   ],
+   "attacker_named_fields": [
+    "name",
+    "return"
+   ]
+  },
+  "view_items_in_registries": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns registry item details, including source-like content: `View detailed information about specific registry items including the name, description, type and files content`. Registry item metadata and file contents can be authored by third-party registry publishers, so they are UNTRUSTED. The text does not say registries are public-only; under the least-restrictive reading item data may come from private, localhost, or intranet registries, so the tool may return SECRET data. This private-registry reach is not settled by the text.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "name",
+    "description",
+    "type",
+    "files content",
+    "return"
+   ],
+   "identifier_output_fields": [
+    "name",
+    "type",
+    "return"
+   ],
+   "attacker_named_fields": [
+    "name",
+    "type",
+    "return"
+   ]
+  },
+  "get_item_examples_from_registries": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool finds and returns registry examples and code: `Find usage examples and demos with their complete code` and `Returns full implementation code with dependencies`. Registry examples, code, and dependency names can be third-party authored, so the output is UNTRUSTED. The description does not restrict registries to public endpoints; under the least-restrictive reading examples could come from private, localhost, or intranet registries, so the tool may return SECRET data. This is not settled by the text.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "dependencies",
+    "return"
+   ],
+   "attacker_named_fields": [
+    "dependencies",
+    "return"
+   ]
+  },
+  "get_add_command_for_items": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool only advertises returning a CLI command string: `Get the shadcn CLI add command for specific items in a registry` and says it is `useful for adding one or more components to your project`. It does not advertise executing the command, writing state, contacting an attacker-chosen destination, or returning registry contents. Any item identifiers are supplied as inputs rather than advertised as data the tool fetches from an outside party.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "get_audit_checklist": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool advertises returning a checklist: `use this tool for a quick checklist to verify that everything is working as expected`. It does not advertise reading non-public data, returning third-party content, writing state, sending data, or executing code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No output schemas are advertised, so output field names are inferred from the tool descriptions. No advertised annotations or text indicate any tool is disabled by default."
+ ],
+ "usage": {
+  "input_tokens": 2187,
+  "output_tokens": 4776,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

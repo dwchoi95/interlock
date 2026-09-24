@@ -1,0 +1,70 @@
+{
+ "tools": {
+  "resolve-library-id": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns matching public library/package records: `returns matching libraries`, with fields including `Name`, `Description`, `Versions`, and `Library ID`. Public package/product metadata and documentation registry entries can be authored by outside parties, so returned descriptions/names/IDs may be attacker-controllable. It is not SECRET because the advertised source is Context7 library/package metadata, not private user data. It is not SINK because although `The query is sent to the Context7 API for processing`, that is a fixed vendor endpoint, not an agent-chosen attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "libraryName"
+   ],
+   "value_args": [
+    "query",
+    "libraryName"
+   ],
+   "injectable_output_fields": [
+    "Name",
+    "Description"
+   ],
+   "identifier_output_fields": [
+    "Library ID",
+    "Name",
+    "Versions"
+   ],
+   "attacker_named_fields": [
+    "Library ID",
+    "Name",
+    "Versions"
+   ]
+  },
+  "query-docs": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Retrieves and queries up-to-date documentation and code examples from Context7 for any programming library or framework`. Public documentation and code examples for arbitrary libraries/frameworks can include third-party or attacker-authored content, so the returned documentation/examples are UNTRUSTED. It is not SECRET because it retrieves documentation, not private user data. It is not SINK because although `The query is sent to the Context7 API for processing`, that is a fixed vendor endpoint, not an agent-chosen attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "libraryId"
+   ],
+   "value_args": [
+    "query"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "Both tools advertise read-only annotations, but their input schema says the query is sent to the Context7 API, so kind is WRITE under the rule that sending data out of the agent context is WRITE."
+ ],
+ "usage": {
+  "input_tokens": 2055,
+  "output_tokens": 1472,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

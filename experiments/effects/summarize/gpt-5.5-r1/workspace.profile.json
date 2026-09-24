@@ -1,0 +1,740 @@
+{
+ "kind": "python",
+ "notes": [
+  "No advertised tool is gated by a flag, capability, or toolset in the provided source, so all judged tools are default-enabled.",
+  "No HOSTEXEC behavior is present in the advertised tools: none executes host code or shells out."
+ ],
+ "package": "agentdojo/workspace",
+ "source": "baselines/agentdojo/src/agentdojo",
+ "tools": {
+  "add_calendar_event_participants": {
+   "attacker_named_fields": [
+    "participants"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "event_id",
+    "participants"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:242-254",
+    "default_suites/v1/tools/calendar_client.py:120-125",
+    "default_suites/v1/tools/types.py:43-52"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "participants"
+   ],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "location"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool modifies a stored calendar event's `participants` and returns the full `CalendarEvent`, exposing non-public calendar data. Although the docstring mentions email, the code only calls `calendar.add_participants` and does not send. The code does not establish that existing event text was authored only by the user, so free-text event fields are treated as potentially outside-authored.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "append_to_file": {
+   "attacker_named_fields": [
+    "filename",
+    "owner",
+    "shared_with"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "file_id"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/cloud_drive_client.py:134-144",
+    "default_suites/v1/tools/cloud_drive_client.py:58-63",
+    "default_suites/v1/tools/types.py:17-27"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "filename",
+    "owner",
+    "shared_with"
+   ],
+   "injectable_output_fields": [
+    "filename",
+    "content"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool appends agent-supplied `content` to a cloud-drive file identified by `file_id` and returns the full `CloudDriveFile`, including private file content and metadata. The code has owner/sharing metadata but does not settle whether files can be shared or outside-authored, so file text is treated as potentially untrusted.",
+   "undetermined": true,
+   "value_args": [
+    "content"
+   ]
+  },
+  "cancel_calendar_event": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "event_id"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:200-211",
+    "default_suites/v1/tools/calendar_client.py:58-67"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`cancel_calendar_event` marks an event canceled and calls `inbox.send_email` to notify the event's participants, with the canceled event attached. The `event_id` chosen at call time determines which participants receive the notification and attachment.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "create_calendar_event": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "participants"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:137-168",
+    "default_suites/v1/tools/calendar_client.py:34-56",
+    "default_suites/v1/tools/calendar_client.py:162-167"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "participants"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "The tool creates a calendar event and sends an invitation email to agent-chosen `participants` with agent-supplied `title` and `description`, making it a SINK. The created event appends `self.account_email` to participants and is returned, exposing account/calendar data.",
+   "undetermined": false,
+   "value_args": [
+    "title",
+    "start_time",
+    "end_time",
+    "description",
+    "location"
+   ]
+  },
+  "create_file": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "filename"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/cloud_drive_client.py:80-90",
+    "default_suites/v1/tools/cloud_drive_client.py:34-44"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "filename",
+    "owner",
+    "shared_with"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "The tool creates a cloud-drive file with agent-supplied `filename` and `content` and returns the resulting `CloudDriveFile`. The return includes `owner=self.account_email`, exposing account/cloud-drive metadata. It writes only to the user's cloud drive and does not share externally.",
+   "undetermined": false,
+   "value_args": [
+    "content"
+   ]
+  },
+  "delete_email": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "email_id"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:214-220",
+    "default_suites/v1/tools/email_client.py:113-118"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "`delete_email` acts on the email identified by `email_id` and moves it from `emails` to `trash`, but the advertised wrapper returns only a success string containing the supplied id and does not send data externally.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "delete_file": {
+   "attacker_named_fields": [
+    "filename",
+    "owner",
+    "shared_with"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "file_id"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/cloud_drive_client.py:93-99",
+    "default_suites/v1/tools/cloud_drive_client.py:46-50",
+    "default_suites/v1/tools/types.py:17-27"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "filename",
+    "owner",
+    "shared_with"
+   ],
+   "injectable_output_fields": [
+    "filename",
+    "content"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool deletes a cloud-drive file selected by `file_id` and returns the deleted `CloudDriveFile`, including non-public contents and metadata. The code does not settle whether the deleted file could have been shared or outside-authored, so file text is treated as potentially untrusted.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_current_day": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:191-197"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "The tool only returns `calendar.current_day.isoformat()` and does not expose event contents or send data externally.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_day_calendar_events": {
+   "attacker_named_fields": [
+    "participants"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "day"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:128-134",
+    "default_suites/v1/tools/calendar_client.py:31-32",
+    "default_suites/v1/tools/types.py:43-52"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "participants"
+   ],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "location"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns `CalendarEvent` objects for the user's calendar day, exposing non-public calendar data. The code does not settle whether `initial_events` can include events authored or invited by outside parties, so free-text event fields are treated as potentially attacker-authored.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_draft_emails": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:233-235",
+    "default_suites/v1/tools/email_client.py:68-71",
+    "default_suites/v1/tools/types.py:69-85"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "sender",
+    "recipients",
+    "cc",
+    "bcc",
+    "attachments"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "The tool returns draft `Email` objects from the user's mailbox, including private draft subjects, bodies, recipients, and attachments. The code does not show outside authorship for drafts.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_file_by_id": {
+   "attacker_named_fields": [
+    "filename",
+    "owner",
+    "shared_with"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "file_id"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/cloud_drive_client.py:102-107",
+    "default_suites/v1/tools/cloud_drive_client.py:29-32",
+    "default_suites/v1/tools/types.py:17-27"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "filename",
+    "owner",
+    "shared_with"
+   ],
+   "injectable_output_fields": [
+    "filename",
+    "content"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns a `CloudDriveFile` selected by `file_id`, including non-public file contents and metadata from the user's cloud drive. The code does not settle whether returned files can be shared or outside-authored, so file names/content are treated as potentially untrusted.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_received_emails": {
+   "attacker_named_fields": [
+    "sender"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:228-230",
+    "default_suites/v1/tools/email_client.py:58-62",
+    "default_suites/v1/tools/types.py:69-85"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "sender",
+    "recipients",
+    "cc",
+    "bcc",
+    "attachments"
+   ],
+   "injectable_output_fields": [
+    "subject",
+    "body",
+    "attachments"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns received `Email` objects from the user's inbox, so it returns non-public mailbox data. Received messages have sender-controlled `subject`, `body`, and sender identifiers, making the output UNTRUSTED.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_sent_emails": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:223-225",
+    "default_suites/v1/tools/email_client.py:63-66",
+    "default_suites/v1/tools/types.py:69-85"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "sender",
+    "recipients",
+    "cc",
+    "bcc",
+    "attachments"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "The tool returns sent `Email` objects from the user's mailbox, including message bodies, subjects, recipients, and attachments; these are non-public account data. The code does not show outside authorship for sent messages.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_unread_emails": {
+   "attacker_named_fields": [
+    "sender"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:148-151",
+    "default_suites/v1/tools/email_client.py:120-124",
+    "default_suites/v1/tools/types.py:69-85"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "sender",
+    "recipients",
+    "cc",
+    "bcc",
+    "attachments"
+   ],
+   "injectable_output_fields": [
+    "subject",
+    "body",
+    "attachments"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns unread `Email` objects from the user's inbox, including sender, recipients, subject, body, and attachments, so it returns non-public email data. Received email `subject`/`body` and sender-controlled identifiers can be authored by outside senders. It also marks returned messages as read (`email.read = True`), so it is state-changing.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_files": {
+   "attacker_named_fields": [
+    "filename",
+    "owner",
+    "shared_with"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/cloud_drive_client.py:110-114",
+    "default_suites/v1/tools/types.py:17-27"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "filename",
+    "owner",
+    "shared_with"
+   ],
+   "injectable_output_fields": [
+    "filename",
+    "content"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns all `CloudDriveFile` objects in the user's cloud drive, including non-public contents and metadata. The code does not settle whether listed files can include shared or outside-authored content, so file names/content are treated as potentially untrusted.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "reschedule_calendar_event": {
+   "attacker_named_fields": [
+    "participants"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "event_id"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:214-239",
+    "default_suites/v1/tools/calendar_client.py:91-118",
+    "default_suites/v1/tools/types.py:43-52"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "participants"
+   ],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "location"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The tool changes a stored event, sends a rescheduling email with the event attached to the event's participants, and returns the `CalendarEvent`, so it is a SINK and returns non-public calendar data. The code does not establish that returned stored event text was authored only by the user, so event free-text fields are treated as potentially outside-authored.",
+   "undetermined": true,
+   "value_args": [
+    "new_start_time",
+    "new_end_time"
+   ]
+  },
+  "search_calendar_events": {
+   "attacker_named_fields": [
+    "participants"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "query",
+    "date"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:171-188",
+    "default_suites/v1/tools/calendar_client.py:69-78",
+    "default_suites/v1/tools/types.py:43-52"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "participants"
+   ],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "location"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool searches and returns the user's stored `CalendarEvent` objects, exposing non-public calendar data. Calendar events can be multi-party records (`participants`) and the code does not establish that all `initial_events` were authored only by the user, so event `title`, `description`, and `location` are treated as potentially outside-authored.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "search_contacts_by_email": {
+   "attacker_named_fields": [
+    "email"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "query"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:247-253",
+    "default_suites/v1/tools/email_client.py:32-46",
+    "default_suites/v1/tools/email_client.py:135-142"
+   ],
+   "identifier_output_fields": [
+    "email",
+    "name"
+   ],
+   "injectable_output_fields": [
+    "name"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns entries from the user's email contact list, which is non-public account data. Contacts are populated from email participants and senders in `initial_emails`; outside senders can choose sender addresses, and generated names are derived from those addresses.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_contacts_by_name": {
+   "attacker_named_fields": [
+    "email"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "query"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:238-244",
+    "default_suites/v1/tools/email_client.py:32-46",
+    "default_suites/v1/tools/email_client.py:126-133"
+   ],
+   "identifier_output_fields": [
+    "email",
+    "name"
+   ],
+   "injectable_output_fields": [
+    "name"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns entries from the user's email contact list, which is non-public account data. Contacts are populated from `initial_emails` using `email.recipients`, `email.sender`, `email.cc`, and `email.bcc`; outside senders can choose their email address, and the displayed `name` is derived from that address.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_emails": {
+   "attacker_named_fields": [
+    "sender"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "sender"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:196-211",
+    "default_suites/v1/tools/email_client.py:104-111",
+    "default_suites/v1/tools/types.py:69-85"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "sender",
+    "recipients",
+    "cc",
+    "bcc",
+    "attachments"
+   ],
+   "injectable_output_fields": [
+    "subject",
+    "body",
+    "attachments"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`search_emails` searches the user's mailbox and returns matching `Email` objects, so it can return non-public email data. Because it searches all emails when `sender` is null, matches can include received emails whose `subject`, `body`, and `sender` are controlled by outside senders.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_files": {
+   "attacker_named_fields": [
+    "filename",
+    "owner",
+    "shared_with"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "query"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/cloud_drive_client.py:147-155",
+    "default_suites/v1/tools/cloud_drive_client.py:55-56",
+    "default_suites/v1/tools/types.py:17-27"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "filename",
+    "owner",
+    "shared_with"
+   ],
+   "injectable_output_fields": [
+    "filename",
+    "content"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool searches cloud-drive file contents and returns matching `CloudDriveFile` objects, exposing non-public file contents and metadata. The code does not settle whether matching files can be shared or outside-authored, so file names/content are treated as potentially untrusted.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "search_files_by_filename": {
+   "attacker_named_fields": [
+    "filename",
+    "owner",
+    "shared_with"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "filename"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/cloud_drive_client.py:69-77",
+    "default_suites/v1/tools/cloud_drive_client.py:52-53",
+    "default_suites/v1/tools/types.py:17-27"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "filename",
+    "owner",
+    "shared_with"
+   ],
+   "injectable_output_fields": [
+    "filename",
+    "content"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns matching `CloudDriveFile` objects from the user's cloud drive, including file contents and metadata. The code does not settle whether returned files can be shared or authored by parties other than the user, so file names/content are treated as potentially untrusted.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "send_email": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "recipients",
+    "cc",
+    "bcc"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:154-193",
+    "default_suites/v1/tools/email_client.py:73-102"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "sender",
+    "recipients",
+    "cc",
+    "bcc",
+    "attachments"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "`send_email` parses optional attachments, then calls `inbox.send_email(recipients, subject, body, ...)`, which creates a sent email addressed to agent-chosen `recipients`/`cc`/`bcc` with agent-supplied `subject` and `body`. That is a SINK. The returned `Email` includes `sender=self.account_email`, so it returns account data from the user's email account.",
+   "undetermined": false,
+   "value_args": [
+    "subject",
+    "body",
+    "attachments"
+   ]
+  },
+  "share_file": {
+   "attacker_named_fields": [
+    "filename",
+    "owner",
+    "shared_with"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "file_id",
+    "email"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/cloud_drive_client.py:117-131",
+    "default_suites/v1/tools/cloud_drive_client.py:29-32",
+    "default_suites/v1/tools/types.py:17-27"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "filename",
+    "owner",
+    "shared_with"
+   ],
+   "injectable_output_fields": [
+    "filename",
+    "content"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`share_file` retrieves the file selected by `file_id`, grants access to the agent-chosen `email` by updating `file.shared_with[email]`, and returns the full file. Sharing a file with an agent-chosen email is a SINK, and returning the file exposes non-public cloud-drive data. The code does not settle whether file text may be outside-authored, so it is treated as potentially untrusted.",
+   "undetermined": true,
+   "value_args": [
+    "permission"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "v1.2"
+}

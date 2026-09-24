@@ -1,0 +1,530 @@
+{
+  "package": "serena",
+  "version": "v1.7.0",
+  "source": "git clone --depth 1 --branch v1.7.0 https://github.com/oraios/serena (commit 949a27ef1e5fda1a6e7b561e777bcece345c6ffd; v1.7.0 is the GitHub 'Latest' release, 2026-08-09); tools enumerated statically from concrete Tool subclasses in src/serena/tools/*.py following ToolRegistry rules (src/serena/tools/tools_base.py:593-604); not installed or executed",
+  "tools": {
+    "execute_shell_command": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED",
+        "SINK",
+        "HOSTEXEC"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Runs an arbitrary agent-supplied command with subprocess.Popen(shell=True) in any cwd (absolute allowed), with no sandbox, and returns stdout/stderr.",
+      "evidence": "src/serena/tools/cmd_tools.py:38-52, src/serena/util/shell.py:28-42"
+    },
+    "activate_project": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Activates any registered project or any host directory path (auto-registers it) and returns its root path, memory names and project.yml initial_prompt, which widens all file tools to that directory.",
+      "evidence": "src/serena/tools/config_tools.py:29-39, src/serena/agent.py:1338-1362, src/serena/agent.py:1074-1105"
+    },
+    "get_current_config": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns registered project names, active project, modes and tools (host metadata).",
+      "evidence": "src/serena/tools/config_tools.py:62-66, src/serena/agent.py:1384-1424"
+    },
+    "open_dashboard": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Opens Serena's own localhost dashboard URL in the browser and returns that URL; fixed local destination.",
+      "evidence": "src/serena/tools/config_tools.py:12-19"
+    },
+    "remove_project": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Removes a project from the global config; returns a fixed string.",
+      "evidence": "src/serena/tools/config_tools.py:47-54"
+    },
+    "read_file": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns content of a file inside the active project (symlinks are deliberately followed, src/serena/project.py:294-311).",
+      "evidence": "src/serena/tools/file_tools.py:43-55"
+    },
+    "create_text_file": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Creates/overwrites a file inside the project root and returns a fixed message (per-edit diagnostics disabled, tools_base.py:471).",
+      "evidence": "src/serena/tools/file_tools.py:71-91"
+    },
+    "list_dir": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns file and directory names under a project path.",
+      "evidence": "src/serena/tools/file_tools.py:112-132"
+    },
+    "find_file": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns project file paths matching a mask.",
+      "evidence": "src/serena/tools/file_tools.py:149-170"
+    },
+    "replace_content": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Literal/regex replacement in a project file; returns 'OK' (diagnostics disabled).",
+      "evidence": "src/serena/tools/file_tools.py:208-215, src/serena/tools/tools_base.py:471,502-503"
+    },
+    "replace_in_files": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Multi-file replacement whose dry-run/guard output returns line diffs of host file content.",
+      "evidence": "src/serena/tools/file_tools.py:274-318, src/serena/tools/file_tools.py:352-389"
+    },
+    "delete_lines": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Deletes lines in a project file; returns 'OK'.",
+      "evidence": "src/serena/tools/file_tools.py:471-474"
+    },
+    "replace_lines": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Replaces lines in a project file; returns 'OK'.",
+      "evidence": "src/serena/tools/file_tools.py:503-508"
+    },
+    "insert_at_line": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Inserts content in a project file; returns 'OK'.",
+      "evidence": "src/serena/tools/file_tools.py:536-540"
+    },
+    "search_for_pattern": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Regex search over project files returning matched lines with context.",
+      "evidence": "src/serena/tools/file_tools.py:575-659"
+    },
+    "write_memory": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Writes a markdown memory to <project>/.serena/memories or ~/.serena/memories/global; returns a fixed message.",
+      "evidence": "src/serena/tools/memory_tools.py:15-35, src/serena/memories/memory_manager.py:213-220"
+    },
+    "read_memory": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns content of a local memory file (project or global).",
+      "evidence": "src/serena/tools/memory_tools.py:43-47, src/serena/memories/memory_manager.py:204-211"
+    },
+    "list_memories": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns names of project and global memories (host metadata).",
+      "evidence": "src/serena/tools/memory_tools.py:55-59, src/serena/memories/memory_manager.py:292-310"
+    },
+    "delete_memory": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Deletes a memory file; returns a status string.",
+      "evidence": "src/serena/tools/memory_tools.py:67-71"
+    },
+    "rename_memory": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Renames a memory and updates references; returns a status string.",
+      "evidence": "src/serena/tools/memory_tools.py:79-91"
+    },
+    "edit_memory": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Regex/literal edit of a memory; returns a fixed success string.",
+      "evidence": "src/serena/tools/memory_tools.py:99-122, src/serena/memories/memory_manager.py:371-404"
+    },
+    "list_queryable_projects": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Returns registered project names and host root paths.",
+      "evidence": "src/serena/tools/query_project_tools.py:14-37"
+    },
+    "query_project": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Runs any non-editing Serena tool against another registered project (via the localhost project server or in-process) and returns its output; applies no active/exposed check (query_project_tools.py:55-65).",
+      "evidence": "src/serena/tools/query_project_tools.py:46-65"
+    },
+    "restart_language_server": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Restarts language servers; returns 'OK'.",
+      "evidence": "src/serena/tools/symbol_tools.py:28-33"
+    },
+    "get_symbols_overview": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns the symbol structure of a project file: returns project source symbols/code from host files.",
+      "evidence": "src/serena/tools/symbol_tools.py:43-91"
+    },
+    "find_symbol": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns matching symbols, optionally with full source bodies: returns project source symbols/code from host files.",
+      "evidence": "src/serena/tools/symbol_tools.py:144-245"
+    },
+    "find_referencing_symbols": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns referencing symbols with surrounding code lines: returns project source symbols/code from host files.",
+      "evidence": "src/serena/tools/symbol_tools.py:260-339"
+    },
+    "find_implementations": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns implementing symbols and locations: returns project source symbols/code from host files.",
+      "evidence": "src/serena/tools/symbol_tools.py:348-396"
+    },
+    "find_declaration": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns the defining symbol, optionally with its body: returns project source symbols/code from host files.",
+      "evidence": "src/serena/tools/symbol_tools.py:404-479"
+    },
+    "get_diagnostics_for_file": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns language-server diagnostics (messages about project code) for a file.",
+      "evidence": "src/serena/tools/symbol_tools.py:489-533"
+    },
+    "get_diagnostics_for_symbol": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Returns language-server diagnostics for a symbol.",
+      "evidence": "src/serena/tools/symbol_tools.py:541-582"
+    },
+    "replace_symbol_body": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Replaces a symbol body in a project file; returns 'OK'.",
+      "evidence": "src/serena/tools/symbol_tools.py:590-615"
+    },
+    "insert_after_symbol": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Inserts code after a symbol; returns 'OK'.",
+      "evidence": "src/serena/tools/symbol_tools.py:623-641"
+    },
+    "insert_before_symbol": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Inserts code before a symbol; returns 'OK'.",
+      "evidence": "src/serena/tools/symbol_tools.py:649-667"
+    },
+    "rename_symbol": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "LSP rename across the codebase; returns a status message with the change count only.",
+      "evidence": "src/serena/tools/symbol_tools.py:676-695, src/serena/code_editor.py:414-415"
+    },
+    "safe_delete_symbol": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Deletes a symbol or returns the file paths and line numbers of its references (host metadata).",
+      "evidence": "src/serena/tools/symbol_tools.py:699-738"
+    },
+    "onboarding": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Seeds a memory-maintenance memory from a shipped template and returns a static onboarding prompt (only platform.system() interpolated).",
+      "evidence": "src/serena/tools/workflow_tools.py:15-29"
+    },
+    "initial_instructions": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns the system prompt, which embeds global memory names and the active project's activation message (root path, memory names, project initial_prompt).",
+      "evidence": "src/serena/tools/workflow_tools.py:40-46, src/serena/agent.py:1019-1056"
+    },
+    "serena_info": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Returns a static shipped help text for a fixed topic.",
+      "evidence": "src/serena/tools/workflow_tools.py:54-63"
+    },
+    "jet_brains_find_symbol": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Returns symbols/bodies from the JetBrains plugin: returns project source symbols/code from host files; optional; exposed only with the JetBrains backend (internal mode adds it, src/serena/resources/config/internal_modes/jetbrains.yml); default backend is LSP.",
+      "evidence": "src/serena/tools/jetbrains_tools.py:26-138"
+    },
+    "jet_brains_move": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": true,
+      "rationale": "Moves a symbol via the IDE and returns the plugin's response JSON, whose schema lives in the closed-source plugin; assumed to include affected locations; optional; exposed only with the JetBrains backend (internal mode adds it, src/serena/resources/config/internal_modes/jetbrains.yml); default backend is LSP.",
+      "evidence": "src/serena/tools/jetbrains_tools.py:150-192"
+    },
+    "jet_brains_safe_delete": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": true,
+      "rationale": "Safe-deletes via the IDE and returns the plugin's response JSON (e.g. blocking usages; plugin schema not in the repo); optional; exposed only with the JetBrains backend (internal mode adds it, src/serena/resources/config/internal_modes/jetbrains.yml); default backend is LSP.",
+      "evidence": "src/serena/tools/jetbrains_tools.py:200-232"
+    },
+    "jet_brains_inline_symbol": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": true,
+      "rationale": "Inlines via the IDE and returns the plugin's response JSON (plugin schema not in the repo); optional; exposed only with the JetBrains backend (internal mode adds it, src/serena/resources/config/internal_modes/jetbrains.yml); default backend is LSP.",
+      "evidence": "src/serena/tools/jetbrains_tools.py:240-265"
+    },
+    "jet_brains_find_referencing_symbols": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Returns references with code context from the IDE: returns project source symbols/code from host files; optional; exposed only with the JetBrains backend (internal mode adds it, src/serena/resources/config/internal_modes/jetbrains.yml); default backend is LSP.",
+      "evidence": "src/serena/tools/jetbrains_tools.py:275-330"
+    },
+    "jet_brains_get_symbols_overview": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Returns a file's symbol overview from the IDE: returns project source symbols/code from host files; optional; exposed only with the JetBrains backend (internal mode adds it, src/serena/resources/config/internal_modes/jetbrains.yml); default backend is LSP.",
+      "evidence": "src/serena/tools/jetbrains_tools.py:340-406"
+    },
+    "jet_brains_type_hierarchy": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Returns project type hierarchies from the IDE; optional; exposed only with the JetBrains backend (internal mode adds it, src/serena/resources/config/internal_modes/jetbrains.yml); default backend is LSP.",
+      "evidence": "src/serena/tools/jetbrains_tools.py:447-502"
+    },
+    "jet_brains_find_declaration": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Returns the declaration (optionally with its body) from the IDE; optional; exposed only with the JetBrains backend (internal mode adds it, src/serena/resources/config/internal_modes/jetbrains.yml); default backend is LSP.",
+      "evidence": "src/serena/tools/jetbrains_tools.py:510-535"
+    },
+    "jet_brains_find_implementations": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Returns implementations from the IDE; optional; exposed only with the JetBrains backend (internal mode adds it, src/serena/resources/config/internal_modes/jetbrains.yml); default backend is LSP.",
+      "evidence": "src/serena/tools/jetbrains_tools.py:542-557"
+    },
+    "jet_brains_rename": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": true,
+      "rationale": "Renames via the IDE and returns the plugin's result JSON (plugin schema not in the repo); optional; exposed only with the JetBrains backend (internal mode adds it, src/serena/resources/config/internal_modes/jetbrains.yml); default backend is LSP.",
+      "evidence": "src/serena/tools/jetbrains_tools.py:564-593"
+    },
+    "jet_brains_debug": {
+      "labels": [
+        "SECRET",
+        "UNTRUSTED",
+        "SINK",
+        "HOSTEXEC"
+      ],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": true,
+      "rationale": "Sends arbitrary agent-supplied Groovy/Java to a persistent debugger REPL in the JetBrains IDE, which can start run configurations and evaluate code (resources/config/prompt_templates/info_prompts.yml:3-62); the evaluator is in the closed-source plugin, so host-JVM reach is labeled per the least-restrictive default; optional; exposed only with the JetBrains backend (internal mode adds it, src/serena/resources/config/internal_modes/jetbrains.yml); default backend is LSP.",
+      "evidence": "src/serena/tools/jetbrains_tools.py:602-623, src/serena/jetbrains/jetbrains_plugin_client.py:656-669"
+    },
+    "jet_brains_run_inspections": {
+      "labels": [
+        "SECRET"
+      ],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Returns IDE inspection findings (messages and locations in project code); optional; exposed only with the JetBrains backend (internal mode adds it, src/serena/resources/config/internal_modes/jetbrains.yml); default backend is LSP.",
+      "evidence": "src/serena/tools/jetbrains_tools.py:631-665"
+    },
+    "jet_brains_list_inspections": {
+      "labels": [],
+      "secondary_extra": [],
+      "default_enabled": false,
+      "undetermined": false,
+      "rationale": "Returns the IDE's catalogue of available inspection types (product metadata, not user data); optional; exposed only with the JetBrains backend (internal mode adds it, src/serena/resources/config/internal_modes/jetbrains.yml); default backend is LSP.",
+      "evidence": "src/serena/tools/jetbrains_tools.py:673-696"
+    }
+  },
+  "value_conditions": [
+    {
+      "syntax": "--context <name> (or --context=<name>); names claude-code | ide | vscode | codex | grok | codebuddy | junie | copilot-cli | antigravity | jb-ai-assistant | jb-copilot-plugin (legacy alias ide-assistant -> claude-code)",
+      "kind": "flag",
+      "effect": "Each listed context puts execute_shell_command in excluded_tools. That removes it from the exposed MCP tool list for the session (base toolset is computed once at startup and only exposed tools are registered), which drops HOSTEXEC and with it UNTRUSTED and SINK. Under the default LSP backend the remaining union is {SECRET}. The same contexts also drop create_text_file and read_file; claude-code/ide/vscode/codex/grok/codebuddy/junie/antigravity/jb-ai-assistant also drop list_dir/find_file, and some drop search_for_pattern or replace_content (no union change). desktop-app, agent, oaicompat-agent and chatgpt remove nothing label-relevant. A custom YAML path or unknown name is undetermined and falls back to least restrictive.",
+      "default": "desktop-app (constants.py DEFAULT_CONTEXT), which excludes nothing: execute_shell_command is exposed, so the union is {SECRET, UNTRUSTED, SINK, HOSTEXEC}",
+      "evidence": "src/serena/cli.py:237-239, src/serena/constants.py:24, src/serena/resources/config/contexts/desktop-app.yml:11, src/serena/resources/config/contexts/claude-code.yml:39, src/serena/resources/config/contexts/ide.yml:14, src/serena/resources/config/contexts/codex.yml:15, src/serena/agent.py:765-766,812, src/serena/mcp.py:289-307, src/serena/config/context_mode.py:235-244"
+    },
+    {
+      "syntax": "--mode planning | --mode onboarding | --add-mode planning | --add-mode onboarding (repeatable; --mode replaces config default_modes, --add-mode adds)",
+      "kind": "flag",
+      "effect": "Excludes execute_shell_command (planning also excludes create_text_file, replace_content, symbol edits) from the active tool set for the whole session, so calls are rejected as 'not active'. This removes HOSTEXEC/UNTRUSTED/SINK under the LSP backend. The CLI selection is re-applied after every project activation. Unless the context is single-project and a project is given at startup, the tool stays listed but inactive. Caveat: a project.yml listing execute_shell_command in included_optional_tools would re-activate it (local user file). --mode no-memories / benchmark remove memory tools with no union change. Other modes (interactive, editing, one-shot, no-onboarding, query-projects) remove nothing label-relevant.",
+      "default": "No CLI modes; config template base_modes [interactive, editing] and empty default_modes exclude only optional line-editing tools, so execute_shell_command stays active",
+      "evidence": "src/serena/cli.py:240-257,376-378, src/serena/resources/config/modes/planning.yml:13, src/serena/resources/config/modes/onboarding.yml:16, src/serena/agent.py:1111-1145, src/serena/agent.py:774-790, src/serena/tools/tools_base.py:358-361"
+    },
+    {
+      "syntax": "--language-backend LSP (versus --language-backend JetBrains)",
+      "kind": "flag",
+      "effect": "LSP guarantees none of the 13 jet_brains_* tools are exposed, notably jet_brains_debug, which is HOSTEXEC (undetermined). JetBrains adds them through the internal jetbrains mode and removes the LSP symbol tools. This matters mainly with contexts that exclude execute_shell_command, because none of them exclude jet_brains_debug.",
+      "default": "Taken from ~/.serena/serena_config.yml language_backend (per-project override possible for a startup project); shipped template and dataclass default are LSP, so jet_brains_* are not enabled",
+      "evidence": "src/serena/cli.py:258-263,385, src/serena/mcp.py:370-371, src/serena/agent.py:1116-1118, src/serena/resources/config/internal_modes/jetbrains.yml, src/serena/resources/serena_config.template.yml:8"
+    }
+  ],
+  "notes": [
+    "Tag used: v1.7.0 (commit 949a27ef1e5fda1a6e7b561e777bcece345c6ffd). 52 tool classes are registered: 29 default-enabled and 23 optional (ToolMarkerOptional). Tool names come from class names (tools_base.py:193-199).",
+    "Default for `serena start-mcp-server` with no --context: context desktop-app (constants.py:24; cli.py:238), excluded_tools: [] (contexts/desktop-app.yml:11). The server exposes the default toolset minus context/base-mode exclusions (agent.py:740-814), so execute_shell_command is exposed and active.",
+    "HOSTEXEC: only execute_shell_command (default) and jet_brains_debug (JetBrains backend only; plugin-side evaluator not in the repo, so undetermined). No other tool spawns processes or makes agent-directed network requests; the other outbound calls are fixed vendor/localhost endpoints (usage ping https://oraios-software.de/serena_usage.php, suppressed by SERENA_USAGE_REPORTING=false, agent.py:724-737; JetBrains plugin at 127.0.0.1; dashboard at localhost). None is SINK.",
+    "Project-file settings that remove labels but are invisible in MCP client configs (so unknown, treated as least restrictive): project.yml read_only: true strips every ToolMarkerCanEdit tool, including execute_shell_command, from the active set (agent.py:1141-1142, 185-196; project.template.yml:115). project.yml and ~/.serena/serena_config.yml excluded_tools/fixed_tools apply the same way. Global config applies to exposure (agent.py:765); project config applies to exposure only for single-project contexts with a startup project (agent.py:797-809), otherwise to the active set (agent.py:1140). SERENA_HOME (serena_config.py:63-66) or ~/.serena/contexts|modes/<name>.yml can override built-in context/mode definitions by name (context_mode.py:89-92,219-222).",
+    "--project <path> or --project-from-cwd with a single-project context (single_project: true in claude-code, ide, vscode, grok, codebuddy, junie, copilot-cli, antigravity, jb-*) removes activate_project and get_current_config and applies mode/project exclusions to exposure (agent.py:770,797-809). No union change on its own.",
+    "Scope of file access: file tools check paths lexically against the active project root but deliberately follow symlinks (project.py:294-311). In non-single-project contexts (including the default), activate_project accepts any host directory (agent.py:1352-1353), so SECRET covers arbitrary host files, not just the configured project.",
+    "Memories live in <project>/.serena/memories (location template project_serena_folder_location) and ~/.serena/memories/global (serena_config.py:114-116; memory_manager.py:44-46,173-197). Names are confined by a '..'/absolute check and a lexical containment check. read_only_memory_patterns only blocks memory writes. Like other local files they are not UNTRUSTED under the primary model, even though repos may commit .serena/memories written by collaborators. The secondary variant does not cover local files.",
+    "Indirect execution not labeled (same rule as server-filesystem): 1) file-editing tools can modify code that language servers or builds later execute; 2) activating a project runs its project.yml activation_command via shell=True, but only when the project path matches trusted_project_path_patterns (agent.py:1269-1297). Freshly generated configs set that list to [] (template line 218), while pre-existing configs missing the key default to ['**'] (serena_config.py:924, 1051-1060).",
+    "Platform side channels not labeled: on Windows, activate_project (os.path.isdir before validation, serena_config.py:1222), list_dir (existence check before validation, file_tools.py:112) and create_text_file (resolve/exists before validation, file_tools.py:74-75) would touch an agent-chosen UNC host (SMB/WebDAV/DNS). On macOS, /net/<host> automount paths passed to activate_project behave similarly. These are OS path-resolution effects rather than tool functions; flagged for the lead author's spot-check.",
+    "query_project calls tool.apply directly without the active/exposed check (query_project_tools.py:55-65). Any non-editing tool can therefore run against a registered project even when a context or mode excluded it. That changes no labels, because execute_shell_command is ToolMarkerCanEdit and is rejected by the is_readonly assert. jet_brains_debug is not marked CanEdit, so under the JetBrains backend it is reachable through query_project. query_project is optional (enabled via --mode query-projects or included_optional_tools)."
+  ]
+}

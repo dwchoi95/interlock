@@ -1,0 +1,167 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All twelve tools are unconditionally registered in `snapshotTools` (dist/index.js:716-727) and passed to `createServerWithTools` (dist/index.js:729-736); there are no flags, env vars or toolsets gating them.",
+  "Every tool is a thin relay over a websocket to the Browser MCP browser extension (dist/index.js:125-137, 205-211). Actual reach therefore depends on the extension's permissions for the connected tab; whether `file://` or localhost pages can be driven is not settled in this source, so the broadest (SECRET) reading is kept for the snapshot/screenshot/console tools.",
+  "`killProcessOnPort` runs `execSync` with a shell command at startup (dist/index.js:169-181, 184-190), but the port is the fixed default 9009 and is not reachable from any tool argument, so no tool gets HOSTEXEC from it.",
+  "If no extension tab is connected, tools throw `noConnectionMessage` (dist/index.js:110-118); this is an availability condition, not a capability restriction."
+ ],
+ "package": "@browsermcp/mcp",
+ "source": ".cache/sources/.views/npm_browsermcp_mcp_0.1.3_efad870ca57d",
+ "tools": {
+  "browser_click": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:564-567",
+    "dist/index.js:378-397"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`click` sends `browser_click` to the extension and then returns `captureAriaSnapshot` content, exposing the resulting page (user's session data \u2192 SECRET; attacker page text \u2192 UNTRUSTED). The click itself carries only an element reference, no agent-authored payload, so it is not itself an exfiltration channel.",
+   "undetermined": false
+  },
+  "browser_get_console_logs": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:512-520"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`getConsoleLogs` returns the connected tab's console output verbatim (`consoleLogs.map((log) => JSON.stringify(log))`). Logs of an authenticated app can contain private data/tokens (SECRET) and any page script \u2014 including an attacker's \u2014 can write arbitrary strings to the console (UNTRUSTED).",
+   "undetermined": false
+  },
+  "browser_go_back": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:450-453",
+    "dist/index.js:378-397"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`goBack` is registered with snapshot=true (`goBack(true)` at line 717) and returns `captureAriaSnapshot`, i.e. the URL, title and full accessibility snapshot of whatever page the user's logged-in browser lands on: private session content (SECRET) and possibly attacker-authored page text (UNTRUSTED). No agent-supplied data leaves the host.",
+   "undetermined": false
+  },
+  "browser_go_forward": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:450-459",
+    "dist/index.js:378-397",
+    "dist/index.js:719"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`goForward(true)` returns `captureAriaSnapshot` content for the resulting page \u2014 the user's authenticated browser content (SECRET) and potentially attacker-controlled page text (UNTRUSTED).",
+   "undetermined": false
+  },
+  "browser_hover": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:606-609",
+    "dist/index.js:378-397"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`hover` returns `captureAriaSnapshot` output after hovering, so page content of the connected tab reaches the agent: private authenticated content (SECRET) and attacker-authored page text (UNTRUSTED).",
+   "undetermined": false
+  },
+  "browser_navigate": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:407-409",
+    "dist/index.js:410-412",
+    "dist/index.js:378-397",
+    "dist/index.js:717"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`navigate` forwards an agent-chosen `url` over the websocket to the browser extension (`context.sendSocketMessage(\"browser_navigate\", { url })`), so the agent can cause the user's real browser to issue a request to any attacker-chosen host, with data smuggled in the URL path/query \u2014 a SINK. It is registered as `navigate(true)` so it then calls `captureAriaSnapshot`, returning the page URL, title and accessibility tree; on an attacker page that is attacker-controlled text (UNTRUSTED), and on an authenticated/intranet/localhost/file: page it is the user's private content read with the user's browser session (SECRET).",
+   "undetermined": false
+  },
+  "browser_press_key": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:490-501"
+   ],
+   "labels": [],
+   "rationale": "`pressKey` forwards a single key name to the extension and returns only the fixed string `Pressed key ${key}`; no page content is returned and no agent-authored payload of meaningful size leaves the host.",
+   "undetermined": false
+  },
+  "browser_screenshot": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:529-542"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`screenshot` returns a PNG of the current tab into the agent context: pixels of the user's logged-in page (SECRET) and, when the tab shows attacker content, attacker-chosen rendered text/instructions (UNTRUSTED).",
+   "undetermined": false
+  },
+  "browser_select_option": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:648-651",
+    "dist/index.js:378-397"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`selectOption` sets dropdown values in the page and returns `captureAriaSnapshot` content: user's private page content (SECRET) and attacker-authored page text (UNTRUSTED). The selected values are constrained to existing option values, so it is not treated as a general exfiltration channel.",
+   "undetermined": false
+  },
+  "browser_snapshot": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:554-556",
+    "dist/index.js:378-397"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`snapshot.handle` calls `captureAriaSnapshot`, which asks the extension for `getUrl`, `getTitle` and `browser_snapshot` of the currently connected tab. That tab may be an authenticated SaaS/intranet/localhost page (SECRET) or an attacker-controlled web page whose text is injected into the agent context (UNTRUSTED).",
+   "undetermined": false
+  },
+  "browser_type": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:627-629",
+    "dist/index.js:630-638",
+    "dist/index.js:331-338"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`type` sends agent-supplied `text` into an editable element of the live page and can press Enter (`submit` in `TypeTool`), so arbitrary agent data can be posted into an attacker-readable destination (attacker-hosted form, public comment box, search query) \u2014 SINK. It also returns `captureAriaSnapshot` content afterwards, yielding the user's authenticated page data (SECRET) and attacker-controlled page text (UNTRUSTED).",
+   "undetermined": false
+  },
+  "browser_wait": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:471-481"
+   ],
+   "labels": [],
+   "rationale": "`wait2` only sleeps in the browser and returns a fixed confirmation string; it reads nothing and sends nothing outward.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [],
+ "version": "0.1.3"
+}

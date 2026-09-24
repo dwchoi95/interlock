@@ -1,0 +1,274 @@
+{
+ "tools": {
+  "find_organizations": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns non-public Sentry account data because it can `Find organizations that the user has access to in Sentry` and `View organizations in Sentry`. It exposes identifiers for later calls because it can `Find an organization's slug` and other tool descriptions say the `regionUrl` can be found from organization details. No attacker-controlled source or agent-chosen URL is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "slug",
+    "name",
+    "regionUrl"
+   ],
+   "attacker_named_fields": []
+  },
+  "find_projects": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns non-public Sentry account data because it can `Find projects in Sentry` and `View projects in a Sentry organization`. It can contact a caller-supplied host through `regionUrl`, described as `The region URL for the organization you're querying` and usable for `self-hosted Sentry installations`; that makes it a SINK and also means a hostile self-hosted endpoint could return attacker-authored content. Project `name` or `slug` are identifiers because the tool is used to `Find a project's slug`.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "regionUrl"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "slug",
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "update_issue": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Changes Sentry state because it can `Update a Sentry issue's status or assignment`, `resolve, reopen, assign, or ignore an issue`, and may post `reason` as `a comment on the issue's activity feed`. It can write to a caller-selected issue via `issueUrl` or `organizationSlug` plus `issueId`, and can contact a caller-supplied URL/host via `issueUrl` or `regionUrl`, so it is a SINK. The issue and any response may contain non-public Sentry data and attacker-influenced issue content; the exact return shape is not advertised, so SECRET/UNTRUSTED output reach is conservative.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "organizationSlug",
+    "regionUrl",
+    "issueId",
+    "issueUrl",
+    "assignedTo"
+   ],
+   "value_args": [
+    "status",
+    "assignedTo",
+    "ignoreMode",
+    "ignoreDurationMinutes",
+    "ignoreCount",
+    "ignoreWindowMinutes",
+    "ignoreUserCount",
+    "ignoreUserWindowMinutes",
+    "reason"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "search_events": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns non-public Sentry telemetry because it can `Search Sentry events and replays` across `errors`, `logs`, `spans`, `metrics`, `profiles`, and `replays`. Event, log, replay, trace, and profile data commonly include attacker-controlled application/user input; the description explicitly mentions `Application log entries`, `Session replay results`, `visited pages`, and `replay users`, so output is UNTRUSTED. It can contact a caller-supplied `regionUrl`, making it a SINK. Returned identifiers include issue, profile, replay, user, and page/URL-like fields mentioned in the description.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "regionUrl"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "issue",
+    "profile IDs",
+    "replay users",
+    "visited pages",
+    "replay IDs",
+    "trace IDs",
+    "span IDs"
+   ],
+   "attacker_named_fields": [
+    "replay users"
+   ]
+  },
+  "analyze_issue_with_seer": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "May create analysis state because it `Starts new AI analysis if needed` and returns `Root cause analysis`, `Specific file locations and line numbers`, `Concrete code fixes`, and `actual code snippets`, which are non-public Sentry/code data. The analysis is based on production issue data that may include attacker-controlled error/log content, so its text can be attacker-influenced. It can contact or address a caller-supplied issue URL/region through `issueUrl` and `regionUrl`, so it is a SINK. The exact validation of those URLs is not advertised, so the arbitrary-host aspect is conservative.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "organizationSlug",
+    "regionUrl",
+    "issueId",
+    "issueUrl"
+   ],
+   "value_args": [
+    "instruction"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "file locations",
+    "line numbers"
+   ],
+   "attacker_named_fields": []
+  },
+  "search_issues": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns non-public grouped Sentry issue data because it can `Search for grouped issues/problems in Sentry` and returns `grouped issues with metadata like title, status, and user count`. Issue titles and metadata can be derived from production errors and user/application input, so they are UNTRUSTED. It can contact a caller-supplied `regionUrl`, making it a SINK. The returned issues and `title` can be used as later identifiers or selectors.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "regionUrl"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "return"
+   ],
+   "identifier_output_fields": [
+    "issue",
+    "title",
+    "status",
+    "user count"
+   ],
+   "attacker_named_fields": []
+  },
+  "get_sentry_resource": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Fetches non-public Sentry resources because it can `Fetch a Sentry resource` and supports `issues, events, traces, spans, agent conversations, replays, monitors, preprod snapshots, and snapshot images`. These resources can include attacker-controlled event/log/replay/page content, transcripts, screenshots, or image metadata, so output is UNTRUSTED. It accepts a caller-supplied `url` described as `Sentry URL`, which can determine the contacted host, so it is a SINK; whether non-Sentry hosts are rejected is not advertised. Returned resource identifiers include the described `issue shortId`, `event ID`, `trace ID`, `agent conversation ID`, `replay ID`, `monitor slug`, `snapshot artifact ID`, and snapshot `image_file_name`.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "issue shortId",
+    "event ID",
+    "trace ID",
+    "agent conversation ID",
+    "replay ID",
+    "monitor slug",
+    "snapshot artifact ID",
+    "image_file_name",
+    "URL"
+   ],
+   "attacker_named_fields": []
+  },
+  "search_sentry_tools": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Only searches the `available Sentry MCP tool catalog by name and description` and returns tool `name and schema`. The advertised text does not say it fetches user account resources, attacker-controlled content, contacts agent-chosen hosts, or changes state. Its returned tool names and schemas are identifiers for `execute_sentry_tool`.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name",
+    "schema"
+   ],
+   "attacker_named_fields": []
+  },
+  "execute_sentry_tool": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Executes arbitrary available Sentry operations because it can `Execute an available Sentry MCP tool discovered through search_sentry_tools` and `Call a Sentry operation returned by search_sentry_tools`. Since the catalog may include `long-tail inspection`, `project management`, `documentation lookup`, `preprod snapshots`, `attachments`, `DSNs`, `releases`, `teams`, and `issue-specific pivots`, this wrapper can reach non-public Sentry data, attacker-influenced resources such as events/attachments/snapshots, and URL- or destination-taking tools discovered in the catalog. The exact hidden tool set and return schema are not advertised, so the labels and output fields are conservative.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "name",
+    "arguments"
+   ],
+   "value_args": [
+    "arguments"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "All evidence entries are `description` because no source code or runtime behavior is provided. Labels are based only on advertised tool names, descriptions, schemas, and annotations."
+ ],
+ "usage": {
+  "input_tokens": 900,
+  "output_tokens": 8230,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 5888
+ }
+}

@@ -1,0 +1,273 @@
+{
+ "tools": {
+  "read_file": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns host-file contents: `Read the complete contents of a file as text`; host files are non-public data in the threat model.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "read_text_file": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns local filesystem file contents: `Read the complete contents of a file from the file system as text` and `Only works within allowed directories`; host files are non-public data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "read_media_file": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns local file contents, encoded: `Read a file and return it as a base64-encoded content block with its MIME type` and `Only works within allowed directories`; host files are non-public data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "read_multiple_files": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns contents of multiple local files: `Read the contents of multiple files simultaneously` and `Only works within allowed directories`; host files are non-public data. It also returns each file `with its path as a reference`, which is an identifier usable in later file calls.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "path"
+   ],
+   "attacker_named_fields": []
+  },
+  "write_file": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Writes local filesystem state: `Create a new file or completely overwrite an existing file with new content` and `Only works within allowed directories`. The advertised text does not show an attacker-readable/public/network destination, so it is not labeled SINK.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "path"
+   ],
+   "value_args": [
+    "content"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "edit_file": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Edits a local text file and returns file-derived output: `Make line-based edits to a text file` and `Returns a git-style diff showing the changes made`; such a diff can reveal non-public host-file content or matching file text. The write target is selected by `path`, while `edits` carries replacement content.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "path"
+   ],
+   "value_args": [
+    "edits"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "create_directory": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Changes local filesystem state: `Create a new directory or ensure a directory exists` and `Only works within allowed directories`. The description does not advertise returning non-public contents or sending data to an attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "path"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "list_directory": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns local filesystem metadata: `Get a detailed listing of all files and directories in a specified path` and `Only works within allowed directories`; filenames and directory structure on the host are non-public data. The returned listing contains file/directory names usable as later path components.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "list_directory_with_sizes": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns local filesystem metadata, including sizes: `Get a detailed listing of all files and directories in a specified path, including sizes` and `Only works within allowed directories`; host filenames, directory structure, and sizes are non-public data. The returned listing contains identifiers usable as later path components.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "directory_tree": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns recursive local filesystem structure: `Get a recursive tree view of files and directories as a JSON structure` and `Only works within allowed directories`; host directory structure and names are non-public data. The advertised output includes each entry's `name`, usable as a later path component.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "move_file": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Changes local filesystem state: `Move or rename files and directories` and `Both source and destination must be within allowed directories`. It does not advertise returning file contents or sending data to a public/attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "source",
+    "destination"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "search_files": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns local filesystem paths: `Recursively search for files and directories matching a pattern`, `Returns full paths to all matching items`, and `Only searches within allowed directories`; host paths and directory structure are non-public data. The returned full paths are identifiers usable in later file calls.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "get_file_info": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns local file/directory metadata: `Retrieve detailed metadata about a file or directory` including `size, creation time, last modified time, permissions, and type`; host filesystem metadata is non-public data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "list_allowed_directories": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns local accessible directory paths: `Returns the list of directories that this server is allowed to access`; host directory paths/configuration are non-public data, and the returned directories are identifiers usable in later file calls.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "All tools are default_enabled because the advertised text does not say any tool is off by default.",
+  "Local filesystem writes are not labeled SINK because the descriptions restrict them to `allowed directories` and do not advertise any public, attacker-readable, URL, host, repository, messaging, or network destination.",
+  "No outputs are labeled UNTRUSTED because the advertised reach is the user's local filesystem; under the supplied threat model the attacker does not control the user's local files."
+ ],
+ "usage": {
+  "input_tokens": 233,
+  "output_tokens": 4909,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 2816
+ }
+}

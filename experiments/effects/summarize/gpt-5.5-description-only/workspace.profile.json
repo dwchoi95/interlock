@@ -1,0 +1,587 @@
+{
+ "kind": "python",
+ "notes": [
+  "No advertised text says any tool is disabled by default, so all tools are treated as default_enabled=true.",
+  "Search/filter arguments such as email queries, contact names, calendar dates, and file search strings are not destination_args because they only select what to read."
+ ],
+ "package": "agentdojo/workspace",
+ "source": "(description only)",
+ "tools": {
+  "add_calendar_event_participants": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "event_id",
+    "participants"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "It adds `participants` to an existing event and `will also email the new participants notifying them of the event`, so the agent can send event details to attacker-chosen participant email addresses.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "append_to_file": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "file_id"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "It `Append[s] content to a file in the cloud drive`. The server also advertises file sharing, so a chosen `file_id` may be a file readable by another user; the description does not settle file visibility, so the least-restrictive reading treats appending agent-supplied `content` to a possibly shared file as a sink.",
+   "undetermined": true,
+   "value_args": [
+    "content"
+   ]
+  },
+  "cancel_calendar_event": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "event_id"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "It cancels the event identified by `event_id` and `will also send an email to the participants notifying them of the cancellation`, so it sends out a notification to recipients selected indirectly by the chosen event record.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "create_calendar_event": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "participants"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "It `Creates a new calendar event` and `also sends an email to the participants with the event details`, so agent-supplied event details can be sent to attacker-readable participant email addresses.",
+   "undetermined": false,
+   "value_args": [
+    "title",
+    "start_time",
+    "end_time",
+    "description",
+    "location"
+   ]
+  },
+  "create_file": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "filename"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "It `Create[s] a new file in the cloud drive`, changing state in the user's drive. The description does not say the new file is public or sent to another user; sharing is handled by a separate tool.",
+   "undetermined": false,
+   "value_args": [
+    "filename",
+    "content"
+   ]
+  },
+  "delete_email": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "email_id"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "It `Deletes the email with the given email_id from the inbox`, changing the user's mailbox but not returning or sending attacker-controlled or secret content according to the advertised text.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "delete_file": {
+   "attacker_named_fields": [
+    "filename"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "file_id"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "file_id",
+    "filename",
+    "file_type"
+   ],
+   "injectable_output_fields": [
+    "filename",
+    "content"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "It deletes a drive file and `returns the file that was deleted`, so it can return non-public cloud-drive content. Since the server advertises file sharing but does not settle whether the deleted file may be shared or third-party-authored, the least-restrictive reading keeps UNTRUSTED for returned file names/content.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_current_day": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "It only `Returns the current day in ISO format` and does not expose non-public or attacker-authored content or send data out. The returned date can be reused as a `day` or `date` argument.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_day_calendar_events": {
+   "attacker_named_fields": [
+    "title",
+    "location",
+    "participants"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "event_id",
+    "title",
+    "start_time",
+    "end_time",
+    "date",
+    "location",
+    "participants"
+   ],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "location"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "It returns `appointments for the given day` with `informations about each meeting`, exposing non-public calendar data. The advertised text does not settle whether meeting details can be authored by outside participants or invite senders; keeping the least-restrictive UNTRUSTED label for event text.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_draft_emails": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "recipient"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "It returns `all the draft emails in the inbox`, including `recipient`, `subject`, and `body`, which are non-public account data. The description does not indicate third-party authorship for drafts.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_file_by_id": {
+   "attacker_named_fields": [
+    "filename"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "file_id",
+    "filename",
+    "file_type"
+   ],
+   "injectable_output_fields": [
+    "filename",
+    "content"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "It gets a file from a `cloud drive by its ID`, exposing non-public drive data. The description does not settle whether the file may be shared or third-party-authored; keeping the least-restrictive UNTRUSTED label for file content/name.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_received_emails": {
+   "attacker_named_fields": [
+    "sender"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "sender"
+   ],
+   "injectable_output_fields": [
+    "sender",
+    "subject",
+    "body"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "It returns `all the received emails in the inbox`, which is non-public mailbox data. Received email `sender`, `subject`, and `body` can be authored by outside senders, making them untrusted.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_sent_emails": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "recipient"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "It returns `all the sent emails in the inbox`, including `recipient`, `subject`, and `body`, which are non-public mailbox data. The advertised text does not indicate these sent messages are authored by an outside attacker.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_unread_emails": {
+   "attacker_named_fields": [
+    "sender"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "sender"
+   ],
+   "injectable_output_fields": [
+    "sender",
+    "subject",
+    "body"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "It returns `all the unread emails in the inbox`, which is non-public mailbox data reached with the user's credentials. Received email `sender`, `subject`, and `body` can be authored by outside senders, so the output is untrusted. It also says emails are `marked as read after this function is called`, so this is a state-changing write for enforcement.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_files": {
+   "attacker_named_fields": [
+    "filename"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "file_id",
+    "filename",
+    "file_type"
+   ],
+   "injectable_output_fields": [
+    "filename",
+    "content"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "It `Retrieve[s] all files in the cloud drive`, exposing non-public drive data. Because the advertised server includes file sharing but does not settle whether listed files may be shared or third-party-authored, the least-restrictive reading keeps UNTRUSTED for file names/content.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "reschedule_calendar_event": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "event_id"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "It reschedules the event identified by `event_id` and `will also send an email to the participants notifying them of the rescheduling`, so agent-supplied `new_start_time` and `new_end_time` can be delivered to participant recipients selected by the event.",
+   "undetermined": false,
+   "value_args": [
+    "new_start_time",
+    "new_end_time"
+   ]
+  },
+  "search_calendar_events": {
+   "attacker_named_fields": [
+    "title",
+    "location",
+    "participants"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "event_id",
+    "title",
+    "start_time",
+    "end_time",
+    "date",
+    "location",
+    "participants"
+   ],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "location"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "It searches calendar `events` by `titles and descriptions`, exposing non-public calendar data. The text mentions event `participants`, but does not settle whether existing events may be invitations or otherwise authored by outside parties; keeping the least-restrictive UNTRUSTED label for title/description/location-like event text.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "search_contacts_by_email": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "name",
+    "email"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "It finds contacts in the inbox's `contact list`, which is non-public account data. The description does not indicate the user's contacts are attacker-authored; `query` only selects what to read.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_contacts_by_name": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "name",
+    "email"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "It finds contacts in the inbox's `contact list`, which is non-public account data. The description does not indicate the user's contacts are attacker-authored; `query` only selects what to read.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_emails": {
+   "attacker_named_fields": [
+    "sender"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "sender"
+   ],
+   "injectable_output_fields": [
+    "sender",
+    "subject",
+    "body"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "It `Searches for emails in the inbox`, which exposes non-public mailbox data. Because matching emails may be from a `sender` and contain attacker-authored `subject` or `body`, the returned email text is untrusted. `query` and `sender` only select what to read and do not contact an agent-chosen host.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_files": {
+   "attacker_named_fields": [
+    "filename"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "file_id",
+    "filename",
+    "file_type"
+   ],
+   "injectable_output_fields": [
+    "filename",
+    "content"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "It searches `files in the cloud drive by content`, exposing non-public drive data. Since the server advertises file sharing but does not settle whether matched files may be shared or third-party-authored, the least-restrictive reading keeps UNTRUSTED for file names/content.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "search_files_by_filename": {
+   "attacker_named_fields": [
+    "filename"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "file_id",
+    "filename",
+    "file_type"
+   ],
+   "injectable_output_fields": [
+    "filename",
+    "content"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "It gets files from a `cloud drive` and returns `file id`, `content`, `file type`, and `filename`, exposing non-public drive data. Because the advertised server includes sharing but does not settle whether returned files may be shared or third-party-authored, the least-restrictive reading keeps UNTRUSTED for file names/content.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "send_email": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "recipients",
+    "cc",
+    "bcc"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "recipients",
+    "cc",
+    "bcc"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "It `Sends an email` to `recipients`, with optional `cc`/`bcc`, so agent-supplied `subject`, `body`, and `attachments` can be delivered to attacker-readable email addresses. Attachments may reference a drive file by `file_id`, so this can also be used to send selected stored data. The exact returned dictionary fields are not specified beyond `email details`, so output identifiers are least-restrictive.",
+   "undetermined": true,
+   "value_args": [
+    "subject",
+    "body",
+    "attachments"
+   ]
+  },
+  "share_file": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "file_id",
+    "email",
+    "permission"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "It `Share[s] a file with a user`; the agent chooses the `email`, `file_id`, and `permission`, so a non-public drive file can be made readable by an attacker-controlled address.",
+   "undetermined": false,
+   "value_args": [
+    "permission"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "v1.2"
+}

@@ -1,0 +1,57 @@
+{
+ "tools": {
+  "execute_sql": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can read from the database because it can `Execute SQL queries on the sqlite database`; database contents reached by the user's configured database access are non-public, so SECRET. It can also return row text from arbitrary queries; whether the sqlite database contains multi-writer or third-party attacker-authored rows is not settled by the advertised text, so under the least-restrictive reading it is treated as UNTRUSTED and undetermined. It is not marked SINK because `sqlite database` indicates a local/configured database, not an attacker-readable destination or agent-chosen host. It is not HOSTEXEC because the advertised capability is SQL execution, not arbitrary host code execution. The call is WRITE because `SQL to execute (multiple statements separated by ;)` may include mutating statements. The `sql` argument decides what records/tables are changed and can also contain values to store. The result schema is not advertised; arbitrary SQL result rows may include usable identifiers, so `return` is listed as an identifier output.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "sql"
+   ],
+   "value_args": [
+    "sql"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "search_objects": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Search and list database objects on the sqlite database`; schema/table/view/column/index metadata for the user's sqlite database is non-public database information, so SECRET. It is read-only and only searches/list objects, so it is not a SINK or HOSTEXEC. It is not marked UNTRUSTED because the advertised text only covers database object metadata, not multi-writer row content or attacker-authored public content. Search/filter inputs such as `pattern`, `schema`, and `table` select what to read and do not contact an agent-chosen host, so there are no destination arguments. Returned object names are identifiers that can be used in later calls, so `return` is listed as identifier output.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [],
+ "usage": {
+  "input_tokens": 1477,
+  "output_tokens": 2572,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

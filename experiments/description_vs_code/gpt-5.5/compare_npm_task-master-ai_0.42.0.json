@@ -1,0 +1,172 @@
+[
+ {
+  "tool": "get_tasks",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "projectRoot",
+   "tag"
+  ],
+  "annotations": {
+   "title": "Get Tasks",
+   "readOnlyHint": true
+  },
+  "rationale_code": "`jt` registers `get_tasks`, which calls `n.tasks.list({tag,filter,includeSubtasks})` with the user's project root/credentials and returns the full task objects (titles, details, test strategies) into the agent context \u2014 non-public local/account data. No outbound agent-chosen destination, no exec."
+ },
+ {
+  "tool": "next_task",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "file",
+   "complexityReport",
+   "projectRoot",
+   "tag"
+  ],
+  "annotations": {
+   "title": "Next Task",
+   "readOnlyHint": true
+  },
+  "rationale_code": "`Fn` registers `next_task`; it resolves `tasksJsonPath` via `de(e,n)` and a complexity report path from agent-supplied `file`/`complexityReport` and returns the found task data, i.e. local project file content, into context."
+ },
+ {
+  "tool": "get_task",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "id",
+   "projectRoot",
+   "tag"
+  ],
+  "annotations": {
+   "title": "Get Task",
+   "readOnlyHint": true
+  },
+  "rationale_code": "`get_task` is registered from the tool registry `$` (mapped to `Nt`) and per its schema/description returns detailed task content for the given ids from the user's project store. Implementation body is not visible in the provided excerpt, so the read-of-local-data reading is kept."
+ },
+ {
+  "tool": "set_task_status",
+  "code": [],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "id",
+   "projectRoot",
+   "tag"
+  ],
+  "annotations": {
+   "title": "Set Task Status",
+   "destructiveHint": true
+  },
+  "rationale_code": "`Lt` registers `set_task_status`; it only calls `n.tasks.updateStatus(r,i,o)` and returns old/new status strings. It mutates the local task store but delivers nothing to an attacker-readable destination, returns no substantive private content, and executes no code."
+ },
+ {
+  "tool": "update_subtask",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "id",
+   "file",
+   "projectRoot",
+   "tag"
+  ],
+  "annotations": {
+   "title": "Update Subtask",
+   "destructiveHint": true
+  },
+  "rationale_code": "`Jn` registers `update_subtask`, calling `mn({tasksJsonPath,id,prompt,research,...})` and returning the operation result which includes the updated subtask content read from the user's local tasks file (SECRET). With `research:true` (documented as 'Use Perplexity AI for research-backed updates', AGE"
+ },
+ {
+  "tool": "parse_prd",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "input",
+   "projectRoot",
+   "tag",
+   "output"
+  ],
+  "annotations": {
+   "title": "Parse PRD",
+   "destructiveHint": true
+  },
+  "rationale_code": "`In` registers `parse_prd`; `input` is an agent-chosen absolute path to any file which is read and its derived content returned as generated tasks (`on({...e,tag:a},...)`), so arbitrary local file content reaches the agent context (SECRET). With `research:true` the research role (Perplexity online m"
+ },
+ {
+  "tool": "expand_task",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "id",
+   "file",
+   "projectRoot",
+   "tag"
+  ],
+  "annotations": {
+   "title": "Expand Task",
+   "destructiveHint": true
+  },
+  "rationale_code": "`kn` registers `expand_task`, resolving `tasksJsonPath` via `T({projectRoot,file})` and a complexity report path, then calling `Jt(...)` which returns task/subtask content from the user's local project store (SECRET). The `research` flag routes generation through the research (web-search) role, so r"
+ }
+]

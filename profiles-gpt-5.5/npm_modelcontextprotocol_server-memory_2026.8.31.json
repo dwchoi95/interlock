@@ -1,0 +1,227 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All advertised tools are registered unconditionally in `dist/index.js`; no flag or capability shown removes any of them by default.",
+  "`MEMORY_FILE_PATH=<path>` changes which local JSONL file is read and written; if unset, the default is `memory.jsonl` in the server directory. This changes the local secret store location but does not remove any advertised tool or label (dist/index.js:10-18, dist/index.js:20-42).",
+  "The server also registers a `memory://knowledge-graph` resource, but this assessment covers only the advertised tools requested."
+ ],
+ "package": "@modelcontextprotocol/server-memory",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-memory_2026.8.31_59ad4662270d",
+ "tools": {
+  "add_observations": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "observations"
+   ],
+   "evidence": [
+    "dist/index.js:133-145",
+    "dist/index.js:307-312",
+    "dist/index.js:52-54",
+    "dist/index.js:108-109"
+   ],
+   "identifier_output_fields": [
+    "results[].entityName",
+    "results[].addedObservations"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`addObservations` loads the local graph, looks up `entityName`, throws if missing, filters out already-present observation contents, saves, and returns `addedObservations`. The success/error and filtered output can reveal non-public local memory state for guessed entity names or observations. It writes only to the local memory file.",
+   "undetermined": false,
+   "value_args": [
+    "observations"
+   ]
+  },
+  "create_entities": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "entities"
+   ],
+   "evidence": [
+    "dist/index.js:117-122",
+    "dist/index.js:253-258",
+    "dist/index.js:52-54",
+    "dist/index.js:108-109"
+   ],
+   "identifier_output_fields": [
+    "entities[].name"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`createEntities` loads the local memory graph, filters out entities whose `name` already exists, saves the graph, and returns only `newEntities`. Thus the output can reveal non-public membership information from the local memory file for agent-supplied candidate names, while also writing to that local file. It does not send data to an attacker-readable destination.",
+   "undetermined": false,
+   "value_args": [
+    "entities"
+   ]
+  },
+  "create_relations": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "relations"
+   ],
+   "evidence": [
+    "dist/index.js:124-131",
+    "dist/index.js:277-282",
+    "dist/index.js:52-54",
+    "dist/index.js:108-109"
+   ],
+   "identifier_output_fields": [
+    "relations[].from",
+    "relations[].to",
+    "relations[].relationType"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`createRelations` loads the local memory graph, filters out relations already present by `from`, `to`, and `relationType`, saves the graph, and returns only `newRelations`. This can reveal non-public relation membership in the local memory file for guessed relations. It writes only to the configured local memory file, not to an attacker-readable sink.",
+   "undetermined": false,
+   "value_args": [
+    "relations"
+   ]
+  },
+  "delete_entities": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "entityNames"
+   ],
+   "evidence": [
+    "dist/index.js:147-152",
+    "dist/index.js:332-338",
+    "dist/index.js:108-109"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "`deleteEntities` changes the local memory graph by removing matching entity names and associated relations, then returns a fixed success message. The code does not return graph contents or send data to an attacker-readable destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "delete_observations": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "deletions"
+   ],
+   "evidence": [
+    "dist/index.js:153-162",
+    "dist/index.js:360-366",
+    "dist/index.js:108-109"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "`deleteObservations` changes the local memory graph by removing matching observation strings from selected entities, then returns a fixed success message. It does not return local graph contents or deliver data to an attacker-readable destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "delete_relations": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "relations"
+   ],
+   "evidence": [
+    "dist/index.js:163-169",
+    "dist/index.js:385-390",
+    "dist/index.js:108-109"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "`deleteRelations` changes the local memory graph by removing matching relations, then returns a fixed success message. It does not return local graph contents or write to an attacker-readable location.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "open_nodes": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:52-73",
+    "dist/index.js:191-206",
+    "dist/index.js:456-460"
+   ],
+   "identifier_output_fields": [
+    "entities[].name",
+    "entities[].observations",
+    "relations[].from",
+    "relations[].to",
+    "relations[].relationType"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`openNodes` loads the local memory graph and returns selected entities plus relations touching them. The returned graph data comes from the non-public local memory file. The `names` argument only selects records to read and is not a network destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_graph": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:52-73",
+    "dist/index.js:170-172",
+    "dist/index.js:408-412"
+   ],
+   "identifier_output_fields": [
+    "entities[].name",
+    "entities[].observations",
+    "relations[].from",
+    "relations[].to",
+    "relations[].relationType"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`readGraph` returns `loadGraph()`, and `loadGraph` reads and parses the configured local memory file with `fs.readFile(this.memoryFilePath, \"utf-8\")`. The tool returns the entire non-public local knowledge graph.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_nodes": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:52-73",
+    "dist/index.js:174-189",
+    "dist/index.js:432-436"
+   ],
+   "identifier_output_fields": [
+    "entities[].name",
+    "entities[].observations",
+    "relations[].from",
+    "relations[].to",
+    "relations[].relationType"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`searchNodes` loads the local memory graph and returns matching entities and related relations from that file. The returned fields can include non-public local memory contents matching the agent-supplied `query`. The query only selects what to read and is not a network destination.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [],
+ "version": "2026.8.31"
+}

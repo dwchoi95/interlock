@@ -1,0 +1,82 @@
+[
+ {
+  "tool": "21st_magic_component_builder",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "searchQuery",
+   "absolutePathToCurrentFile",
+   "absolutePathToProjectDirectory"
+  ],
+  "annotations": {},
+  "rationale_code": "`execute` posts `message`, `searchQuery`, `context`, and `fileContent` read from `absolutePathToCurrentFile` to `/api/create-ui-variation`, then returns code selected through `CallbackServer.promptUser` as `content[].text`. The file read means private host file contents can influence/appear in the r"
+ },
+ {
+  "tool": "logo_search",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "queries"
+  ],
+  "annotations": {},
+  "rationale_code": "`execute` queries the external SVGL API, takes `logo.route` from that response, fetches SVG text from it with `fetchSVGContent`, converts it, and returns it inside JSON in `content[].text`. The logo title/URL/SVG/code are external registry/web content and are therefore UNTRUSTED. The tool also write"
+ },
+ {
+  "tool": "21st_magic_component_inspiration",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "searchQuery"
+  ],
+  "annotations": {},
+  "rationale_code": "`execute` sends `message` and `searchQuery` to `/api/fetch-ui` through `twentyFirstClient` and returns remote `data.text` as `content[].text`. The description says this fetches matching components/previews from 21st.dev, so the returned snippet/data is treated as externally sourced UNTRUSTED content"
+ },
+ {
+  "tool": "21st_magic_component_refiner",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "absolutePathToRefiningFile"
+  ],
+  "annotations": {},
+  "rationale_code": "`execute` reads host file content via `getContentOfFile(absolutePathToRefiningFile)`, sends it as `fileContent` to `/api/refine-ui`, and returns remote `data.text` as `content[].text`. Because the returned redesign may include or derive from the private local file, SECRET is kept; exact remote behav"
+ }
+]

@@ -1,0 +1,1017 @@
+[
+ {
+  "tool": "core_list_project_teams",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project",
+   "mine",
+   "top",
+   "skip"
+  ],
+  "annotations": {},
+  "rationale_code": "`coreApi.getTeams` is called on the org connection built with the user's credentials and the raw team list is returned into context; this is private organization data."
+ },
+ {
+  "tool": "core_list_projects",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "stateFilter",
+   "top",
+   "skip",
+   "continuationToken",
+   "projectNameFilter"
+  ],
+  "annotations": {},
+  "rationale_code": "`coreApi.getProjects` returns the user's Azure DevOps project inventory (non-public account data) into the agent context."
+ },
+ {
+  "tool": "core_get_identity_ids",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "searchFilter"
+  ],
+  "annotations": {},
+  "rationale_code": "`searchIdentities` resolves organization directory identities (ids, display names, descriptors) with the user's token and returns them."
+ },
+ {
+  "tool": "work",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project",
+   "team",
+   "iterationId",
+   "timeframe",
+   "depth",
+   "excludedIds"
+  ],
+  "annotations": {},
+  "rationale_code": "`getTeamIterations`, `getTeamSettings`/`getTeamFieldValues` and `getCapacitiesWithIdentityRefAndTotals` return internal team configuration and per-member capacity data reached with the user's credentials."
+ },
+ {
+  "tool": "work_iteration_write",
+  "code": [],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "team",
+   "iterations"
+  ],
+  "annotations": {},
+  "rationale_code": "`createOrUpdateClassificationNode`/`postTeamIteration` only write structured iteration metadata back into the user's own org; no external destination and the echoed response is the agent's own input, so no label applies."
+ },
+ {
+  "tool": "work_capacity_write",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "team",
+   "teamMemberId",
+   "iterationId"
+  ],
+  "annotations": {},
+  "rationale_code": "`updateCapacityWithIdentityRef` writes into the user's own org (not an attacker-readable destination) but the response surfaces the team member's `displayName`/`uniqueName` identity data from the org."
+ },
+ {
+  "tool": "pipelines_build",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project",
+   "buildId",
+   "definitions",
+   "queues",
+   "buildNumber",
+   "requestedFor",
+   "tagFilters",
+   "buildIds",
+   "repositoryId",
+   "repositoryType",
+   "continuationToken"
+  ],
+  "annotations": {},
+  "rationale_code": "`getBuilds`, `getBuildReport` and `getBuildChanges` return private build metadata from the user's organization into context."
+ },
+ {
+  "tool": "pipelines_build_log",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project",
+   "buildId",
+   "logId",
+   "startLine",
+   "endLine"
+  ],
+  "annotations": {},
+  "rationale_code": "`getBuildLogs`/`getBuildLogLines` return private CI log content; the log text is itself output of arbitrary build steps and third-party tooling, and the code routes it through `createExternalContentResponse` (\"build log\"), confirming it is treated as external/untrusted content."
+ },
+ {
+  "tool": "pipelines_definition",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project",
+   "definitionId",
+   "repositoryId",
+   "repositoryType",
+   "name",
+   "path",
+   "definitionIds",
+   "taskIdFilter",
+   "yamlFilename",
+   "continuationToken"
+  ],
+  "annotations": {},
+  "rationale_code": "`getDefinitions`/`getDefinitionRevisions` return private pipeline definitions of the user's org."
+ },
+ {
+  "tool": "pipelines_run",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project",
+   "pipelineId",
+   "runId"
+  ],
+  "annotations": {},
+  "rationale_code": "`getRun`/`listRuns` return private pipeline run data reached with the user's credentials."
+ },
+ {
+  "tool": "pipelines_artifact",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "buildId",
+   "artifactName",
+   "destinationPath"
+  ],
+  "annotations": {},
+  "rationale_code": "`getArtifacts`/`getArtifactContentZip` pull private build artifact bytes into context (or onto disk via `createWriteStream`); artifact contents are produced by pipeline jobs that consume third-party code and dependencies, so the returned bytes are attacker-influenceable. The path guards at lines 327"
+ },
+ {
+  "tool": "pipelines_write",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "pipelineId",
+   "pipelineVersion",
+   "name",
+   "folder",
+   "yamlPath",
+   "repositoryType",
+   "repositoryName",
+   "repositoryId",
+   "repositoryConnectionId",
+   "buildId",
+   "stageName"
+  ],
+  "annotations": {},
+  "rationale_code": "`runPipeline` queues a build with agent-supplied `variables`, `templateParameters` and `resources` (including repository `token`s) and can be pointed at any pipeline in the project; the build agent executes pipeline steps with network egress, so agent-supplied data can be delivered outward \u2014 an exfi"
+ },
+ {
+  "tool": "repo_repository",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project",
+   "repositoryNameOrId",
+   "top",
+   "skip",
+   "repoNameFilter"
+  ],
+  "annotations": {},
+  "rationale_code": "`gitApi.getRepositories` returns the org's private repository inventory into context."
+ },
+ {
+  "tool": "repo_pull_request",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "repositoryId",
+   "pullRequestId",
+   "project",
+   "top",
+   "skip",
+   "created_by_user",
+   "user_is_reviewer",
+   "status",
+   "sourceRefName",
+   "targetRefName",
+   "repository",
+   "commits",
+   "queryType"
+  ],
+  "annotations": {},
+  "rationale_code": "`getPullRequest`/`getPullRequests` return private PR data, and PR titles/descriptions/branch names are free text authored by many contributors (including fork sources via `forkSource`), i.e. multi-writer content that can carry injected instructions."
+ },
+ {
+  "tool": "repo_pull_request_thread",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "repositoryId",
+   "pullRequestId",
+   "project",
+   "threadId",
+   "iteration",
+   "baseIteration",
+   "top",
+   "skip",
+   "status",
+   "authorEmail",
+   "authorDisplayName"
+  ],
+  "annotations": {},
+  "rationale_code": "`getThreads`/`getComments` return private review threads, and `trimComments` passes each comment's `content` \u2014 arbitrary text written by any project or fork contributor \u2014 into the agent context."
+ },
+ {
+  "tool": "repo_branch",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "repositoryId",
+   "project",
+   "branchName",
+   "top",
+   "filterContains"
+  ],
+  "annotations": {},
+  "rationale_code": "`gitApi.getRefs` enumerates private branch refs of the user's repositories."
+ },
+ {
+  "tool": "repo_file",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "repositoryId",
+   "path",
+   "project",
+   "version",
+   "versionType",
+   "recursive",
+   "recursionDepth"
+  ],
+  "annotations": {},
+  "rationale_code": "`getItemText` returns raw private file content (and `getItems` directory listings) into context; repository file content at an arbitrary `version`/branch includes vendored third-party code and branches pushed by other contributors, so it is attacker-influenceable."
+ },
+ {
+  "tool": "repo_search_commits",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "searchText",
+   "project",
+   "repository",
+   "branch",
+   "author",
+   "commitStartDate",
+   "commitEndDate",
+   "orderBy",
+   "skip",
+   "top"
+  ],
+  "annotations": {},
+  "rationale_code": "POSTs to the fixed vendor endpoint `https://almsearch.dev.azure.com/${orgName}` with the user's bearer token and returns private commit search results; commit messages are free text written by any committer, so the returned text is multi-writer content. The URL host is not agent-controlled (org come"
+ },
+ {
+  "tool": "repo_pull_request_write",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "repositoryId",
+   "pullRequestId",
+   "project",
+   "sourceRefName",
+   "targetRefName",
+   "workItems",
+   "forkSourceRepositoryId",
+   "reviewerIds",
+   "reviewerAction"
+  ],
+  "annotations": {},
+  "rationale_code": "`createPullRequest`/`updatePullRequest` publish agent-supplied `title`, `description` and `labels` into a pull request visible to other readers of the project (Azure DevOps projects may be public), and `createPullRequestReviewers` notifies chosen recipients; the responses also echo private PR data. "
+ },
+ {
+  "tool": "repo_pull_request_thread_write",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "repositoryId",
+   "pullRequestId",
+   "project",
+   "threadId",
+   "filePath",
+   "rightFileStartLine",
+   "rightFileStartOffset",
+   "rightFileEndLine",
+   "rightFileEndOffset"
+  ],
+  "annotations": {},
+  "rationale_code": "`createThread`/`createComment` post arbitrary agent-supplied `content` as a pull request comment \u2014 the classic publish-a-comment delivery path; whether the hosting project is publicly readable is not determinable from the code, so the label is kept."
+ },
+ {
+  "tool": "repo_create_branch",
+  "code": [],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "repositoryId",
+   "sourceBranchName",
+   "sourceCommitId",
+   "project"
+  ],
+  "annotations": {},
+  "rationale_code": "`getRefs` plus `updateRefs` only creates a ref pointing at an existing commit; it returns no repository content and delivers no agent text anywhere readable, so no label applies."
+ },
+ {
+  "tool": "wit_work_item",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project",
+   "id",
+   "ids",
+   "workItemId",
+   "fields",
+   "asOf",
+   "expand",
+   "top",
+   "includeCompleted",
+   "type",
+   "skip",
+   "team",
+   "iterationId",
+   "workItemType"
+  ],
+  "annotations": {},
+  "rationale_code": "`getWorkItem`, `getWorkItemsBatch`, `getComments` and `getRevisions` return private work item fields, comments and revision history; work item titles/descriptions/comments are free text authored by many users (including external bug reporters), so the content is attacker-influenceable."
+ },
+ {
+  "tool": "wit_query",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project",
+   "query",
+   "id",
+   "team",
+   "top",
+   "responseType",
+   "wiql"
+  ],
+  "annotations": {},
+  "rationale_code": "`getQuery`/`queryById`/`queryByWiql` execute agent-supplied WIQL against the user's org and return private work item data; the wiql path explicitly wraps output in `createExternalContentResponse(queryResult, \"wiql query results\")`, confirming the results are treated as untrusted external content."
+ },
+ {
+  "tool": "wit_backlog",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project",
+   "team",
+   "backlogId"
+  ],
+  "annotations": {},
+  "rationale_code": "`getBacklogs`/`getBacklogLevelWorkItems` return private team backlog data from the user's organization."
+ },
+ {
+  "tool": "wit_work_item_attachment",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "attachmentId",
+   "fileName",
+   "savePath"
+  ],
+  "annotations": {},
+  "rationale_code": "`getAttachmentContent` downloads private attachment bytes and returns them as text or a base64 resource; attachments are uploaded by arbitrary work item participants, so the bytes are attacker-influenceable. `savePath` writes to disk but traversal/absolute paths are rejected at line 370, so this is "
+ },
+ {
+  "tool": "wit_work_item_write",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "id",
+   "workItemType",
+   "parentId"
+  ],
+  "annotations": {},
+  "rationale_code": "`createWorkItem`/`updateWorkItem` and the `$batch` PATCH publish agent-supplied field values (titles, descriptions, repro steps) into work items readable by other project members, and the API responses echo back private work item state. Whether the project is publicly readable is not determinable fr"
+ },
+ {
+  "tool": "wit_work_item_comment_write",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "workItemId",
+   "commentId"
+  ],
+  "annotations": {},
+  "rationale_code": "POSTs/PATCHes arbitrary agent-supplied `text` as a work item comment via the org REST API \u2014 a publish-a-comment delivery path whose audience is not constrained by the code."
+ },
+ {
+  "tool": "wit_work_item_link_write",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "updates",
+   "id",
+   "type",
+   "url",
+   "projectId",
+   "repositoryId",
+   "pullRequestId",
+   "workItemId",
+   "pullRequestProjectId",
+   "artifactUri",
+   "branchName",
+   "commitId",
+   "buildId",
+   "wikiId",
+   "pageId",
+   "pagePath",
+   "linkType"
+  ],
+  "annotations": {},
+  "rationale_code": "The unlink path calls `getWorkItem` with `WorkItemExpand.Relations` and dumps all relations plus the updated work item into context, and the wiki branch fetches page metadata with the user's token; link URIs are built from vstfs components only, never an agent-chosen external host."
+ },
+ {
+  "tool": "wiki",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "wikiIdentifier",
+   "project",
+   "path",
+   "url",
+   "top",
+   "continuationToken",
+   "pageViewsForDays",
+   "recursionLevel"
+  ],
+  "annotations": {},
+  "rationale_code": "`getAllWikis`/`getPagesBatch`/`getPageText` and the direct REST fetch return private wiki content with the user's token; page bodies are multi-writer documentation and the code returns them via `createExternalContentResponse(pageContent, \"wiki page\")`, treating them as external content. The `url` pa"
+ },
+ {
+  "tool": "wiki_upsert_page",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "wikiIdentifier",
+   "path",
+   "project",
+   "etag",
+   "branch"
+  ],
+  "annotations": {},
+  "rationale_code": "PUTs agent-supplied markdown `content` to an arbitrary wiki page path in the org, publishing it to everyone with read access to that wiki (Azure DevOps projects can be public); project visibility is not determinable from the code, so the label is kept."
+ },
+ {
+  "tool": "testplan",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project",
+   "filterActivePlans",
+   "includePlanDetails",
+   "planId",
+   "suiteId",
+   "continuationToken"
+  ],
+  "annotations": {},
+  "rationale_code": "Fetches test plans, suites and cases from `connection.serverUrl` with the user's bearer token and returns the private payloads."
+ },
+ {
+  "tool": "testplan_show_test_results_from_build_id",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project",
+   "buildid",
+   "outcomes"
+  ],
+  "annotations": {},
+  "rationale_code": "`getTestResultDetailsForBuild` returns private test results, and the formatted output includes `errorMessage` and `stackTrace` strings produced by executing test code and third-party dependencies in CI, which are attacker-influenceable text."
+ },
+ {
+  "tool": "testplan_test_plan_write",
+  "code": [],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "iteration",
+   "areaPath"
+  ],
+  "annotations": {},
+  "rationale_code": "`createTestPlan` writes structured plan metadata into the user's own org and returns the created object; no non-public data is read out and no attacker-readable destination is reached."
+ },
+ {
+  "tool": "testplan_test_suite_write",
+  "code": [],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "planId",
+   "parentSuiteId",
+   "suiteId",
+   "testCaseIds"
+  ],
+  "annotations": {},
+  "rationale_code": "`createTestSuite`/`addTestCasesToSuite` only mutate suite structure in the user's own org; responses contain the just-created structure, not sensitive third-party data."
+ },
+ {
+  "tool": "testplan_test_case_write",
+  "code": [],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "project",
+   "testsWorkItemId",
+   "id",
+   "areaPath",
+   "iterationPath"
+  ],
+  "annotations": {},
+  "rationale_code": "`createWorkItem`/`updateWorkItem` write test case titles and step XML into the user's own project; the response is the work item just written, so no additional private data is surfaced and no external destination is contacted."
+ },
+ {
+  "tool": "search_code",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "searchText",
+   "project",
+   "repository",
+   "path",
+   "branch",
+   "skip",
+   "top"
+  ],
+  "annotations": {},
+  "rationale_code": "POSTs to the fixed vendor search endpoint with the user's token and then calls `gitApi.getItem(..., includeContent=true)` for each hit, returning private repository source code; that code content is multi-writer repository text and can carry injected instructions. The endpoint host is fixed (org fro"
+ },
+ {
+  "tool": "search_wiki",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "searchText",
+   "project",
+   "wiki",
+   "skip",
+   "top"
+  ],
+  "annotations": {},
+  "rationale_code": "Returns private wiki search hits including page excerpts fetched with the user's token; wiki text is multi-writer content. The search URL is the fixed vendor host, not agent-chosen. [unverified: no cited span contains the tool name or a backticked identifier]"
+ },
+ {
+  "tool": "search_workitem",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "searchText",
+   "project",
+   "areaPath",
+   "workItemType",
+   "state",
+   "assignedTo",
+   "skip",
+   "top"
+  ],
+  "annotations": {},
+  "rationale_code": "Returns private work item search hits (titles, fields, snippets) retrieved with the user's token; work item text is authored by many users, so the returned content is attacker-influenceable. Fixed vendor endpoint, so not a SINK. [unverified: no cited span contains the tool name or a backticked ident"
+ },
+ {
+  "tool": "advsec_get_alerts",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project",
+   "repository",
+   "alertType",
+   "states",
+   "severities",
+   "ruleId",
+   "ruleName",
+   "toolName",
+   "ref",
+   "onlyDefaultBranch",
+   "confidenceLevels",
+   "validity",
+   "top",
+   "orderBy",
+   "continuationToken"
+  ],
+  "annotations": {},
+  "rationale_code": "`alertApi.getAlerts` returns the organization's Advanced Security findings \u2014 including secret-scanning alerts \u2014 into the agent context using the user's credentials."
+ },
+ {
+  "tool": "advsec_get_alert_details",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "project",
+   "repository",
+   "alertId",
+   "ref"
+  ],
+  "annotations": {},
+  "rationale_code": "`alertApi.getAlert` returns full alert detail (physical locations, code snippets, secret metadata) from the private org; the embedded code/dependency snippets originate from repository content authored by many contributors."
+ }
+]

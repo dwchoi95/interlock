@@ -1,0 +1,155 @@
+{
+ "tools": {
+  "tavily_search": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can return attacker-controllable public web material because it will `Search the web` and `Returns snippets and source URLs`; optional outputs include `cleaned and parsed HTML content`, `query-related images`, image `descriptions`, and `favicon URL`. The advertised inputs are search parameters and domain filters, not a direct agent-chosen URL fetch, so it is not treated as a SINK or SECRET source from the advertised text.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "snippets",
+    "source URLs",
+    "cleaned and parsed HTML content",
+    "query-related images",
+    "image descriptions",
+    "favicon URL"
+   ],
+   "identifier_output_fields": [
+    "source URLs",
+    "query-related images",
+    "favicon URL"
+   ],
+   "attacker_named_fields": [
+    "source URLs",
+    "query-related images",
+    "favicon URL"
+   ]
+  },
+  "tavily_extract": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool accepts a `List of URLs to extract content from` and will `Extract content from URLs`, so a call can make a request to an agent-chosen attacker-readable host, making it a SINK. It returns `raw page content in markdown or text format`, plus optional `images from pages` and `favicon URLs`, which can be attacker-authored for attacker-controlled URLs, making it UNTRUSTED. The description does not rule out `file://`, `localhost`, or intranet URLs; under the least-restrictive reading, content from such URLs could be returned, so SECRET is kept and marked undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "urls"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "images",
+    "favicon URLs"
+   ],
+   "identifier_output_fields": [
+    "images",
+    "favicon URLs"
+   ],
+   "attacker_named_fields": [
+    "images",
+    "favicon URLs"
+   ]
+  },
+  "tavily_crawl": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool will `Crawl a website starting from a URL` where `url` is `The root URL to begin the crawl`, so it can make requests to an agent-chosen attacker-readable host, making it a SINK. It `Extracts content from pages` and may `return external links` and `favicon URL`, all of which can be attacker-authored on attacker-controlled sites, making it UNTRUSTED. The description does not state that localhost, intranet, or other non-public URLs are blocked; under the least-restrictive reading, crawling such reachable URLs could return non-public content, so SECRET is kept and marked undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "content",
+    "external links",
+    "favicon URL"
+   ],
+   "identifier_output_fields": [
+    "external links",
+    "favicon URL"
+   ],
+   "attacker_named_fields": [
+    "external links",
+    "favicon URL"
+   ]
+  },
+  "tavily_map": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool will `Map a website's structure` from `The root URL to begin the mapping`, so it can request an agent-chosen attacker-readable host, making it a SINK. It `Returns a list of URLs found starting from the base URL`; those found URLs can be authored by an attacker controlling the mapped site, making the output UNTRUSTED. The description does not state that localhost or intranet URLs are blocked; under the least-restrictive reading, mapping such reachable sites could reveal non-public URLs, so SECRET is kept and marked undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "tavily_research": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool will `gather information from multiple sources` and returns `a detailed response based on the research findings`; third-party/public sources may be attacker-controlled, so the returned research text is UNTRUSTED. The advertised input is a research task description, not a direct agent-chosen destination URL or recipient, and the description does not indicate access to user-private accounts or local resources.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No output schemas were advertised; output field names are derived from the tool descriptions and input option descriptions. `return` is used where the description characterizes the whole returned value as attacker-authored text or identifiers.",
+  "Queries or task descriptions sent only to Tavily/fixed vendor endpoints are not treated as SINK destinations under the stated rules."
+ ],
+ "usage": {
+  "input_tokens": 2799,
+  "output_tokens": 5714,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

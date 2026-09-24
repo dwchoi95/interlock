@@ -1,0 +1,712 @@
+[
+ {
+  "tool": "click",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "uid"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`click` acts on a page element selected by `uid`; when `includeSnapshot` is true it calls `response.includeSnapshot()`, returning page content. Page content can include user/private browser data and attacker-authored web content."
+ },
+ {
+  "tool": "close_page",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId"
+  ],
+  "annotations": {
+   "category": "navigation",
+   "readOnlyHint": false
+  },
+  "rationale_code": "Closes the page selected by `pageId` and then includes the page list via `response.setIncludePages(true)`. Page lists may expose private URLs/titles and attacker-controlled page titles/URLs."
+ },
+ {
+  "tool": "drag",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "from_uid",
+   "to_uid"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`drag` changes page state using attacker/page-derived `from_uid` and `to_uid`; if `includeSnapshot` is set it returns a page snapshot, which may contain private page data and attacker-authored content."
+ },
+ {
+  "tool": "emulate",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId"
+  ],
+  "annotations": {
+   "category": "emulation",
+   "readOnlyHint": false
+  },
+  "rationale_code": "The advertised `extraHttpHeaders` argument is described as headers included in every HTTP request originating from the page; agent-supplied header values can therefore be sent to web hosts the page contacts. The implementation file was not included, so reach is judged from the tool schema/descriptio"
+ },
+ {
+  "tool": "evaluate_script",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "function",
+   "filePath"
+  ],
+  "annotations": {
+   "category": "debugging",
+   "readOnlyHint": false,
+   "conditions": [
+    "javascriptEvaluation"
+   ]
+  },
+  "rationale_code": "The tool evaluates caller-supplied JavaScript in the target page and returns the JSON-serializable result; that script can read page/browser-origin data and attacker-authored DOM data. The advertised example includes `fetch(\"example.com\")`, so agent-supplied code can send data to arbitrary web hosts"
+ },
+ {
+  "tool": "fill",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "uid"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`fill` sends the agent-supplied `value` into an element on the target page, which can be attacker-controlled/readable. If `includeSnapshot` is set, it returns page content that can include private and attacker-authored text."
+ },
+ {
+  "tool": "fill_form",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "elements"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`fill_form` sends each `elements[].value` into page elements, so agent-supplied values can be delivered to attacker-controlled pages. If `includeSnapshot` is set, it returns page content that can include secrets and attacker-authored text."
+ },
+ {
+  "tool": "get_console_message",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "pageId",
+   "msgid"
+  ],
+  "annotations": {
+   "category": "debugging",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Returns a console message by `msgid` via `response.attachConsoleMessage`; console text can contain private data logged by the user\u2019s pages and attacker-authored messages from web content."
+ },
+ {
+  "tool": "get_network_request",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "reqid",
+   "requestFilePath",
+   "responseFilePath"
+  ],
+  "annotations": {
+   "category": "network",
+   "readOnlyHint": false
+  },
+  "rationale_code": "Returns request/response details via `response.attachNetworkRequest`; the description explicitly includes request `Cookie` and response `Set-Cookie` headers. Network URLs/headers/bodies can also be attacker-controlled. Optional file path arguments cause local writes."
+ },
+ {
+  "tool": "handle_dialog",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "action"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "When accepting a prompt, `dialog.accept(request.params.promptText)` sends the agent-supplied `promptText` into a page-created browser dialog, which an attacker-controlled page can read."
+ },
+ {
+  "tool": "hover",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "uid"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "`hover` changes page interaction state; if `includeSnapshot` is true it returns a page snapshot, which may contain private page data and attacker-authored content."
+ },
+ {
+  "tool": "lighthouse_audit",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "outputDirPath"
+  ],
+  "annotations": {
+   "category": "debugging",
+   "readOnlyHint": false
+  },
+  "rationale_code": "Runs Lighthouse against the current page, saves reports, and returns a summary including `lhr.mainDocumentUrl` and report paths. Audited page URLs/content can be private or attacker-controlled; reports are written to temp or `outputDirPath`."
+ },
+ {
+  "tool": "list_console_messages",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "pageId",
+   "types",
+   "serviceWorkerId"
+  ],
+  "annotations": {
+   "category": "debugging",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Returns console data via `response.setIncludeConsoleData`. Console messages can include secrets logged by the user's pages and attacker-authored web content."
+ },
+ {
+  "tool": "list_network_requests",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "pageId",
+   "resourceTypes"
+  ],
+  "annotations": {
+   "category": "network",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Returns recent network requests with `response.setIncludeNetworkRequests` and DevTools data. Request URLs/metadata can reveal private browsing/session data and can be attacker-controlled."
+ },
+ {
+  "tool": "list_pages",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "category": "navigation",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Includes the list of browser pages via `response.setIncludePages(true)`. Open page URLs/titles can be private, and titles/URLs may be attacker-authored."
+ },
+ {
+  "tool": "navigate_page",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "type",
+   "url"
+  ],
+  "annotations": {
+   "category": "navigation",
+   "readOnlyHint": false
+  },
+  "rationale_code": "For `type: url`, the tool navigates to caller-supplied `url` using `page.pptrPage.goto`, sending a request to an agent-chosen host. `initScript` is executed on new documents. The response includes pages/tool lists, which may expose private and attacker-authored page metadata."
+ },
+ {
+  "tool": "new_page",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url",
+   "isolatedContext"
+  ],
+  "annotations": {
+   "category": "navigation",
+   "readOnlyHint": false
+  },
+  "rationale_code": "Creates a new page and calls `page.pptrPage.goto(request.params.url)`, sending a request to an agent-chosen URL/host. The response includes page metadata, which may contain private or attacker-controlled titles/URLs."
+ },
+ {
+  "tool": "performance_analyze_insight",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "pageId",
+   "insightSetId",
+   "insightName"
+  ],
+  "annotations": {
+   "category": "performance",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Returns details from the last recorded trace via `response.attachTraceInsight`; trace insights can include page URLs/resources and page-derived data, which may be private or attacker-controlled."
+ },
+ {
+  "tool": "performance_start_trace",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "filePath"
+  ],
+  "annotations": {
+   "category": "performance",
+   "readOnlyHint": false
+  },
+  "rationale_code": "Starts tracing and may reload the page; tracing categories include screenshots. When auto-stopped, it parses and returns a trace summary and can save raw trace data. Trace data can contain private page/resource information and attacker-controlled URLs/content."
+ },
+ {
+  "tool": "performance_stop_trace",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "filePath"
+  ],
+  "annotations": {
+   "category": "performance",
+   "readOnlyHint": false
+  },
+  "rationale_code": "Stops tracing, optionally writes raw trace data, parses it, stores it, and returns a summary. Trace data can contain private page/resource information and attacker-controlled URLs/content."
+ },
+ {
+  "tool": "press_key",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "Sends the agent-supplied `key` to the target page, which an attacker-controlled page can observe. If `includeSnapshot` is set, it returns page content that can include secrets and attacker-authored text."
+ },
+ {
+  "tool": "resize_page",
+  "code": [],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId"
+  ],
+  "annotations": {
+   "category": "emulation",
+   "readOnlyHint": false
+  },
+  "rationale_code": "Resizes the target page/window using the supplied dimensions and includes pages, but the cited code does not show page content being returned; it changes browser state only."
+ },
+ {
+  "tool": "select_page",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId"
+  ],
+  "annotations": {
+   "category": "navigation",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Selects the page by `pageId`, may bring it to front, and includes the page list via `response.setIncludePages(true)`. Page list data can expose private URLs/titles and attacker-authored page metadata."
+ },
+ {
+  "tool": "take_heapsnapshot",
+  "code": [],
+  "description": [],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "filePath"
+  ],
+  "annotations": {
+   "category": "memory",
+   "readOnlyHint": false
+  },
+  "rationale_code": "The advertised tool captures a heap snapshot to caller-supplied `filePath`. The provided source for this tool\u2019s handler was not included; the schema indicates a local file write, but not that heap contents are returned inline to the agent."
+ },
+ {
+  "tool": "take_screenshot",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "uid",
+   "filePath"
+  ],
+  "annotations": {
+   "category": "debugging",
+   "readOnlyHint": false
+  },
+  "rationale_code": "Captures a screenshot of the page or element and either saves it or attaches the image. Screenshots can contain private page/session data and attacker-controlled visual content."
+ },
+ {
+  "tool": "take_snapshot",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "filePath"
+  ],
+  "annotations": {
+   "category": "debugging",
+   "readOnlyHint": false
+  },
+  "rationale_code": "Returns or saves an accessibility-tree text snapshot of the page. The snapshot contains page text/identifiers that may be private and attacker-authored."
+ },
+ {
+  "tool": "type_text",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "submitKey"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "Types agent-supplied `text` and optional `submitKey` into the currently focused page element; an attacker-controlled page can read submitted/typed text."
+ },
+ {
+  "tool": "upload_file",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "pageId",
+   "uid",
+   "filePaths"
+  ],
+  "annotations": {
+   "category": "input",
+   "readOnlyHint": false
+  },
+  "rationale_code": "Uploads one or more local browser-instance file paths to a page element or file chooser, delivering local file contents to the page; an attacker-controlled page can receive them. If `includeSnapshot` is set, it also returns page content that can include private and attacker-authored text."
+ },
+ {
+  "tool": "wait_for",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "pageId"
+  ],
+  "annotations": {
+   "category": "navigation",
+   "readOnlyHint": true
+  },
+  "rationale_code": "Waits until page text appears, then calls `response.includeSnapshot()`. The returned snapshot can contain private page data and attacker-authored content."
+ }
+]

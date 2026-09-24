@@ -1,0 +1,308 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Only the seven advertised tools in the prompt were judged. n8n management tools present in the source were not included because they were not in the advertised tool list.",
+  "All advertised tools here are READ under the enforcement definition; none of them writes state, executes host code, or sends agent-supplied data to an attacker-chosen destination in the cited code paths."
+ ],
+ "package": "n8n-mcp",
+ "source": ".cache/sources/.views/npm_n8n-mcp_2.57.1_932d1ac80569",
+ "tools": {
+  "get_node": {
+   "attacker_named_fields": [
+    "nodeType",
+    "displayName",
+    "properties.name",
+    "requiredProperties.name",
+    "commonProperties.name",
+    "examples.template"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp/tools.js:75-132",
+    "dist/mcp/server.js:1031-1043",
+    "dist/mcp/server.js:2005-2017",
+    "dist/mcp/server.js:2052-2058",
+    "dist/mcp/server.js:2288-2304",
+    "dist/mcp/server.js:2262-2270",
+    "dist/mcp/tool-docs/configuration/get-node.js:35-50"
+   ],
+   "identifier_output_fields": [
+    "nodeType",
+    "workflowNodeType",
+    "displayName",
+    "properties.name",
+    "requiredProperties.name",
+    "commonProperties.name",
+    "versionInfo.currentVersion",
+    "examples.template"
+   ],
+   "injectable_output_fields": [
+    "documentation",
+    "description",
+    "displayName",
+    "properties",
+    "requiredProperties",
+    "commonProperties",
+    "examples",
+    "aiDocumentationSummary"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`get_node` reads node records by caller-supplied `nodeType` and returns stored documentation/schema fields such as `node.documentation`. The advertised modes can also include real-world template examples. Because the database includes community nodes/templates, node documentation, names, property descriptions, and examples may be authored by third parties; these returned fields are UNTRUSTED. There is no write or agent-chosen network destination in this code path.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_template": {
+   "attacker_named_fields": [
+    "template.name",
+    "template.author",
+    "workflow.nodes.id",
+    "workflow.nodes.name",
+    "workflow.nodes.type"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp/tools.js:218-242",
+    "dist/mcp/server.js:1091-1095",
+    "dist/mcp/server.js:3040-3048",
+    "dist/mcp/tool-docs/templates/get-template.js:19-48"
+   ],
+   "identifier_output_fields": [
+    "template.id",
+    "template.name",
+    "template.author",
+    "template.nodes",
+    "template.url",
+    "workflow.nodes.id",
+    "workflow.nodes.name",
+    "workflow.nodes.type",
+    "workflow.connections",
+    "url"
+   ],
+   "injectable_output_fields": [
+    "template.name",
+    "template.description",
+    "template.author",
+    "template.workflow",
+    "workflow",
+    "usage"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`get_template` retrieves public workflow templates by `templateId` from the template service and returns template information plus workflow JSON. Public/community templates contain author-controlled names, descriptions, workflow node names, parameters, notes, and other text, so the output is UNTRUSTED. It is a read-only local retrieval and has no agent-chosen network destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_nodes": {
+   "attacker_named_fields": [
+    "nodeType",
+    "displayName",
+    "authorName"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp/tools.js:29-74",
+    "dist/mcp/server.js:1022-1030",
+    "dist/mcp/tool-docs/discovery/search-nodes.js:23-32",
+    "README.md:18-25"
+   ],
+   "identifier_output_fields": [
+    "nodeType",
+    "displayName",
+    "category",
+    "authorName"
+   ],
+   "injectable_output_fields": [
+    "displayName",
+    "description",
+    "authorName",
+    "examples",
+    "useCases"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`search_nodes` searches the node database and can include community nodes and community/template examples. The docs state searches include community nodes and return community metadata such as `authorName`; README also describes community nodes. Community registry/package metadata and public template examples are third-party/public content, so returned node metadata/examples are attacker-controllable under the threat model. It does not contact an agent-chosen host or write state.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_templates": {
+   "attacker_named_fields": [
+    "templates.name",
+    "templates.author",
+    "templates.nodes",
+    "categories.topNodes",
+    "nodes.type",
+    "chains.path"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp/tools.js:243-337",
+    "dist/mcp/server.js:1096-1129",
+    "dist/mcp/server.js:3023-3038",
+    "dist/mcp/server.js:3126-3145",
+    "dist/mcp/tool-docs/templates/search-templates.js:98-113"
+   ],
+   "identifier_output_fields": [
+    "templates.id",
+    "templates.name",
+    "templates.author",
+    "templates.nodes",
+    "templates.url",
+    "categories.category",
+    "categories.topNodes",
+    "category",
+    "nodes.type",
+    "chains.path"
+   ],
+   "injectable_output_fields": [
+    "templates.name",
+    "templates.description",
+    "templates.author",
+    "templates.metadata",
+    "categories.pattern",
+    "categories.topNodes",
+    "pattern",
+    "nodes.role",
+    "chains.path",
+    "message",
+    "tip"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`search_templates` searches public/community workflow templates in several modes and returns template records or mined pattern summaries. The documented return fields include `name`, `description`, `author`, `url`, `metadata`, and pattern data derived from templates; these are public multi-writer/template-library content and can be attacker-authored. It does not write state or contact an agent-chosen host.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "tools_documentation": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp/tools.js:5-28",
+    "dist/mcp/server.js:1020-1021",
+    "dist/mcp/server.js:2998-3002",
+    "dist/mcp/tools-documentation.js:9-64"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "`tools_documentation` is a read-only static documentation lookup: `executeTool` dispatches to `getToolsDocumentation`, which returns either `getToolsOverview` or `getToolDocumentation`. The returned content is built from packaged documentation objects, not from user accounts, arbitrary URLs, or public multi-writer content.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "validate_node": {
+   "attacker_named_fields": [
+    "nodeType",
+    "displayName",
+    "errors.property",
+    "warnings.property",
+    "missingRequiredFields"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp/tools.js:133-217",
+    "dist/mcp/server.js:1044-1090",
+    "dist/mcp/server.js:2960-2996",
+    "dist/mcp/tool-docs/validation/validate-node.js:42-51"
+   ],
+   "identifier_output_fields": [
+    "nodeType",
+    "workflowNodeType",
+    "displayName",
+    "errors.property",
+    "warnings.property",
+    "missingRequiredFields"
+   ],
+   "injectable_output_fields": [
+    "displayName",
+    "errors.property",
+    "errors.message",
+    "errors.fix",
+    "warnings.property",
+    "warnings.message",
+    "warnings.suggestion",
+    "suggestions",
+    "missingRequiredFields"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`validate_node` is read-only validation, but it looks up node definitions and returns fields such as `displayName` and missing required property names from the node database. For community nodes those node/property names and related validation text can be third-party-authored. It does not write state or send data to an agent-chosen destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "validate_workflow": {
+   "attacker_named_fields": [
+    "errors.node",
+    "warnings.node"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/mcp/tools.js:338-428",
+    "dist/mcp/server.js:1131-1133",
+    "dist/mcp/tools.js:396-418",
+    "dist/mcp/tool-docs/validation/validate-workflow.js:20-53"
+   ],
+   "identifier_output_fields": [
+    "errors.node",
+    "warnings.node"
+   ],
+   "injectable_output_fields": [
+    "errors.node",
+    "errors.message",
+    "errors.details",
+    "warnings.node",
+    "warnings.message",
+    "warnings.details",
+    "suggestions"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`validate_workflow` is read-only validation, but its output includes validation `errors`, `warnings`, node names, details, and suggestions for the caller-supplied workflow. When the workflow comes from public templates or other third-party sources, those node names and text incorporated into diagnostics can be attacker-controlled. The tool does not write state or send data to an agent-chosen destination.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "unset/empty",
+   "effect": "If a requested tool name is present in `DISABLED_TOOLS`, `executeTool` rejects the call; by default no tools are disabled by this check.",
+   "evidence": "dist/mcp/server.js:1007-1010",
+   "kind": "environment variable",
+   "syntax": "DISABLED_TOOLS=<comma-separated tool names>"
+  },
+  {
+   "default": "source=\"all\", includeExamples=false",
+   "effect": "For `search_nodes`, restricting `source` to core nodes and not requesting template examples removes the community-node/template-example sources of the UNTRUSTED label for that call; default is `source: \"all\"` and `includeExamples: false`.",
+   "evidence": "dist/mcp/tools.js:50-65; dist/mcp/server.js:1025-1030",
+   "kind": "call argument condition",
+   "syntax": "search_nodes arguments: source=\"core\" with includeExamples=false"
+  },
+  {
+   "default": "includeExamples=false",
+   "effect": "For `get_node`, using only core node types and not requesting template examples avoids community/template-authored output for that call; default `includeExamples` is false, but `nodeType` is caller-selected and may name community nodes.",
+   "evidence": "dist/mcp/tools.js:81-124; dist/mcp/server.js:1031-1043",
+   "kind": "call argument condition",
+   "syntax": "get_node arguments selecting only trusted core node types and includeExamples=false"
+  }
+ ],
+ "version": "2.57.1"
+}

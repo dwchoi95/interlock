@@ -1,0 +1,865 @@
+{
+ "kind": "npm",
+ "notes": [
+  "For several tools, exact response field names are produced by response helper methods (`includeSnapshot`, `setIncludePages`, `attachNetworkRequest`, etc.) whose implementations were not included. Where the source shows that the whole returned content can contain page/web data or identifiers but not precise field names, `return` is used for enforcement fields.",
+  "`evaluate_script`, `emulate`, and `take_heapsnapshot` behavior is partly based on the advertised command/source option definitions because their handlers were not included in the supplied source; these entries are marked `undetermined` where appropriate."
+ ],
+ "package": "chrome-devtools-mcp",
+ "source": ".cache/sources/.views/npm_chrome-devtools-mcp_1.9.0_4ef2f10b6a6f",
+ "tools": {
+  "click": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId",
+    "uid"
+   ],
+   "evidence": [
+    "build/src/tools/input.js:119-132",
+    "build/src/tools/input.js:143-158",
+    "build/src/third_party/index.js:53444-53449"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`click` performs a browser mouse click on a page element via `handle.asLocator().click(...)`. On an attacker-controlled page this is an observable browser interaction, so it is a SINK. If `includeSnapshot` is true, the tool calls `response.includeSnapshot()`, returning page content that may be private and/or attacker-authored.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "close_page": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId"
+   ],
+   "evidence": [
+    "build/src/tools/pages.js:58-69",
+    "build/src/tools/pages.js:72-86"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`close_page` closes a browser page selected by `pageId`, then includes the page list in the response. Open page titles/URLs can disclose the user's private browsing state and can also be attacker-authored by web pages.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "drag": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId",
+    "from_uid",
+    "to_uid"
+   ],
+   "evidence": [
+    "build/src/tools/input.js:397-408",
+    "build/src/tools/input.js:414-424"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`drag` sends drag/drop input events to page elements (`fromHandle.drag`, `toHandle.drop`), which an attacker-controlled page can observe, so it is a SINK. If `includeSnapshot` is true it returns a page snapshot, which can contain private or attacker-authored page content.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "emulate": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId"
+   ],
+   "evidence": [
+    "build/src/config/cli-options.js:151-205"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The advertised `emulate` arguments include `geolocation`, `userAgent`, and especially `extraHttpHeaders`, whose description says headers are included into every HTTP request from the page and persist across navigations. Those agent-supplied values can be delivered to web origins the page contacts. The implementation was not included, so reach beyond the advertised behavior is undetermined.",
+   "undetermined": true,
+   "value_args": [
+    "geolocation",
+    "userAgent",
+    "extraHttpHeaders"
+   ]
+  },
+  "evaluate_script": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId",
+    "function",
+    "filePath"
+   ],
+   "evidence": [
+    "build/src/config/cli-options.js:207-253",
+    "build/src/config/cli-options.js:217-233"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The tool is advertised to execute an agent-supplied JavaScript function in the target page and may save output to `filePath`. The description example includes `fetch(\"example.com\")`, so the script can contact attacker-chosen hosts from the browser page (SINK). Executed page JavaScript can return private page/account data, and on attacker-controlled pages can return attacker-authored content. Code for the handler was not included, so details of output formatting and limits are undetermined.",
+   "undetermined": true,
+   "value_args": [
+    "function",
+    "args",
+    "dialogAction"
+   ]
+  },
+  "fill": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId",
+    "uid"
+   ],
+   "evidence": [
+    "build/src/tools/input.js:342-357",
+    "build/src/tools/input.js:362-369"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`fill` writes the supplied `value` into a page element selected by `uid`, which can deliver agent-supplied text to an attacker-controlled page. If `includeSnapshot` is true, it returns a page snapshot that can contain private or attacker-authored content.",
+   "undetermined": false,
+   "value_args": [
+    "value"
+   ]
+  },
+  "fill_form": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId",
+    "elements"
+   ],
+   "evidence": [
+    "build/src/tools/input.js:436-455",
+    "build/src/tools/input.js:461-469"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`fill_form` iterates over supplied form `elements` and writes each nested value into the corresponding page element, delivering agent-supplied form data to the page. If `includeSnapshot` is true, it returns a page snapshot containing private and/or attacker-authored content.",
+   "undetermined": false,
+   "value_args": [
+    "elements"
+   ]
+  },
+  "get_console_message": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "build/src/tools/console.js:86-97",
+    "build/src/tools/console.js:100-102"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`get_console_message` attaches a stored console message by `msgid`. Console messages come from the inspected page or extensions and can contain private page data or attacker-authored strings from attacker-controlled pages.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_network_request": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "reqid",
+    "requestFilePath",
+    "responseFilePath"
+   ],
+   "evidence": [
+    "build/src/tools/network.js:77-97",
+    "build/src/tools/network.js:103-125",
+    "build/src/config/cli-options.js:634-660"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`get_network_request` returns or saves details for a selected network request. Its description explicitly says it is useful for inspecting request headers including `Cookie` and response headers including `Set-Cookie`, which are private account/browser data. Response bodies and headers from attacker-controlled hosts are attacker-authored. Optional file path parameters write request/response bodies to local files, making the tool WRITE, but the code does not show an attacker-readable destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "handle_dialog": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId"
+   ],
+   "evidence": [
+    "build/src/tools/pages.js:293-308",
+    "build/src/tools/pages.js:317-341"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`handle_dialog` accepts or dismisses a browser dialog and may pass the agent-supplied `promptText` to `dialog.accept(...)`. A page that opened the prompt can read that text, so this is a SINK.",
+   "undetermined": false,
+   "value_args": [
+    "promptText"
+   ]
+  },
+  "hover": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId",
+    "uid"
+   ],
+   "evidence": [
+    "build/src/tools/input.js:205-217",
+    "build/src/tools/input.js:226-232",
+    "build/src/third_party/index.js:53339-53343"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`hover` sends mouse movement over a page element, which an attacker-controlled page can observe. If `includeSnapshot` is true, it returns page snapshot content that may be private or attacker-authored.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "lighthouse_audit": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId",
+    "outputDirPath"
+   ],
+   "evidence": [
+    "build/src/tools/lighthouse.js:11-31",
+    "build/src/tools/lighthouse.js:72-90",
+    "build/src/tools/lighthouse.js:94-135"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`lighthouse_audit` audits the current page using Lighthouse, may perform navigation-mode reload, writes JSON/HTML reports, and returns a summary including the audited URL and report paths. Audit results and reports may include private page information; audited page content and URLs can be attacker-controlled.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_console_messages": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "build/src/tools/console.js:32-71",
+    "build/src/tools/console.js:74-82"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`list_console_messages` returns console data for the page via `response.setIncludeConsoleData(...)`. Console messages can disclose private page/account state and can be authored by attacker-controlled pages.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_network_requests": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "build/src/tools/network.js:30-59",
+    "build/src/tools/network.js:62-74"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`list_network_requests` includes recent network requests for the page. Request URLs and metadata can disclose private user/account activity, and URLs/metadata for attacker-controlled pages are attacker-authored. It returns identifiers usable by `get_network_request` through the request listing.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_pages": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "build/src/tools/pages.js:11-27"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`list_pages` returns the list of open browser pages via `response.setIncludePages(true)`. Page URLs/titles can reveal private browsing/account state, and page titles/URLs may be controlled by attacker-hosted pages.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "navigate_page": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId",
+    "url"
+   ],
+   "evidence": [
+    "build/src/tools/pages.js:128-159",
+    "build/src/tools/pages.js:173-183",
+    "build/src/tools/pages.js:186-251"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`navigate_page` can navigate an existing page to an agent-supplied `url` using `page.pptrPage.goto(...)`, sending a browser request to that chosen destination. It can also install an agent-supplied `initScript` for the next navigation. The response includes page-list state, which can contain private or attacker-authored URLs/titles.",
+   "undetermined": false,
+   "value_args": [
+    "initScript"
+   ]
+  },
+  "new_page": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "build/src/tools/pages.js:88-109",
+    "build/src/tools/pages.js:112-125"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`new_page` creates a page and navigates it to the agent-supplied `url` with `page.pptrPage.goto(...)`, sending a browser request to an agent-chosen host. It then includes page-list state, whose titles/URLs can be private or attacker-authored.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "performance_analyze_insight": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "build/src/tools/performance.js:120-144"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`performance_analyze_insight` returns details from a previously recorded trace (`context.recordedTraces().at(-1)` and `response.attachTraceInsight(...)`). Trace insights can include private page URLs/timings and attacker-controlled page/resource URLs.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "performance_start_trace": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId",
+    "filePath"
+   ],
+   "evidence": [
+    "build/src/tools/performance.js:16-33",
+    "build/src/tools/performance.js:47-73",
+    "build/src/tools/performance.js:146-177"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`performance_start_trace` records a browser trace, optionally reloads the page, may save raw trace data to `filePath`, parses the trace, stores it, and attaches a trace summary. Trace data and summaries can contain private page URLs/content/timings and attacker-controlled resource URLs/content. CrUX lookup is to a fixed Google endpoint, so it is not classified as a SINK under the stated rules.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "performance_stop_trace": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId",
+    "filePath"
+   ],
+   "evidence": [
+    "build/src/tools/performance.js:98-118",
+    "build/src/tools/performance.js:146-177"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`performance_stop_trace` stops a running trace, may save raw trace data to `filePath`, parses the trace, stores it, and returns a summary. Trace data can include private page/account activity and attacker-controlled page/resource information.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "press_key": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId"
+   ],
+   "evidence": [
+    "build/src/tools/input.js:536-548",
+    "build/src/tools/input.js:551-577"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`press_key` sends keyboard events to the page using the supplied `key`, which an attacker-controlled page can observe. If `includeSnapshot` is true, it returns a page snapshot containing private and/or attacker-authored content.",
+   "undetermined": false,
+   "value_args": [
+    "key"
+   ]
+  },
+  "resize_page": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId"
+   ],
+   "evidence": [
+    "build/src/tools/pages.js:255-265",
+    "build/src/tools/pages.js:268-290"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`resize_page` changes the browser page/window size and then includes page-list state. Page-list URLs/titles can disclose private browsing state and can be attacker-authored by loaded pages.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "select_page": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId"
+   ],
+   "evidence": [
+    "build/src/tools/pages.js:29-44",
+    "build/src/tools/pages.js:47-55"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`select_page` changes the selected page and may bring it to front, then includes page-list state. Page URLs/titles can reveal private browsing/account state and can be attacker-authored.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "take_heapsnapshot": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId",
+    "filePath"
+   ],
+   "evidence": [
+    "build/src/config/cli-options.js:1264-1279"
+   ],
+   "identifier_output_fields": [
+    "filePath"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "The advertised tool captures a heap snapshot of the target page and saves it to the supplied `filePath`. That can write private page memory to a local file, but the provided source does not show the snapshot content being returned into the agent context or sent to an attacker-readable destination. The handler implementation was not included, so output details are undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "take_screenshot": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "filePath"
+   ],
+   "evidence": [
+    "build/src/tools/screenshot.js:142-180",
+    "build/src/tools/screenshot.js:217-264"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`take_screenshot` captures an image of the page or element and either writes it to `filePath`/temporary file or attaches it to the response. Screenshots can reveal private page/account data, and screenshots of attacker-controlled pages are attacker-controllable visual content.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "take_snapshot": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "filePath"
+   ],
+   "evidence": [
+    "build/src/tools/snapshot.js:9-28",
+    "build/src/tools/snapshot.js:33-37"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`take_snapshot` returns or saves an accessibility-tree text snapshot of the target page. The snapshot contains page text and element identifiers, which can include private user/account content and attacker-authored page content.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "type_text": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId"
+   ],
+   "evidence": [
+    "build/src/tools/input.js:372-382",
+    "build/src/tools/input.js:385-394"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`type_text` sends the agent-supplied `text` and optional `submitKey` into the currently focused page input via keyboard events. An attacker-controlled page can read the typed content, so this is a SINK.",
+   "undetermined": false,
+   "value_args": [
+    "text",
+    "submitKey"
+   ]
+  },
+  "upload_file": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "pageId",
+    "uid"
+   ],
+   "evidence": [
+    "build/src/tools/input.js:473-489",
+    "build/src/tools/input.js:491-497",
+    "build/src/tools/input.js:502-525"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`upload_file` supplies local browser file paths to a page file input or file chooser (`handle.uploadFile` / `fileChooser.accept`), sending file contents to the page; an attacker-controlled page can receive those uploads, so it is a SINK. If `includeSnapshot` is true it returns a page snapshot, which can include private or attacker-authored content.",
+   "undetermined": false,
+   "value_args": [
+    "filePaths"
+   ]
+  },
+  "wait_for": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "build/src/tools/snapshot.js:40-53",
+    "build/src/tools/snapshot.js:56-60"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`wait_for` waits until any supplied text appears, then always calls `response.includeSnapshot()`. The returned page snapshot can include private page/account content and attacker-authored page text.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "off by default is false; JavaScript evaluation is enabled by default",
+   "effect": "Disables JavaScript evaluation tools, removes `initScript` from `navigate_page`, and disallows `javascript:`, `data:`, and `vbscript:` navigations; this removes `evaluate_script` and part of the SINK surface of `navigate_page`.",
+   "evidence": "build/src/config/mcp-options.js:126-130; build/src/tools/pages.js:150-157; build/src/config/mcp-options.js:361-364",
+   "kind": "flag",
+   "syntax": "--no-javascript-evaluation / --javascriptEvaluation=false"
+  },
+  {
+   "default": "unset by default",
+   "effect": "Restricts browser network access by blocking URL patterns, reducing which hosts URL-navigation and page-initiated network SINKs can reach.",
+   "evidence": "build/src/config/mcp-options.js:106-110",
+   "kind": "flag",
+   "syntax": "--blockedUrlPattern=<pattern>"
+  },
+  {
+   "default": "unset by default",
+   "effect": "Restricts browser network access to allowed URL patterns only, reducing which hosts URL-navigation and page-initiated network SINKs can reach.",
+   "evidence": "build/src/config/mcp-options.js:111-115",
+   "kind": "flag",
+   "syntax": "--allowedUrlPattern=<pattern>"
+  },
+  {
+   "default": "true",
+   "effect": "Disables sending URLs from performance traces to the fixed CrUX API endpoint for field data enrichment.",
+   "evidence": "build/src/config/mcp-options.js:116-120; build/src/tools/performance.js:172-206",
+   "kind": "flag",
+   "syntax": "--performanceCrux=false / --no-performance-crux"
+  },
+  {
+   "default": "OS temp directory",
+   "effect": "Limits filesystem paths accessible to file-writing and upload-related tool parameters to configured roots; default is the OS temp directory.",
+   "evidence": "build/src/config/mcp-options.js:218-224",
+   "kind": "flag",
+   "syntax": "--filesystemRoot=<dir> / --workspace=<dir>"
+  },
+  {
+   "default": "false for MCP server",
+   "effect": "Disables the default path restriction when MCP roots are not negotiated, allowing file-writing tools and uploads to access paths outside the temp directory.",
+   "evidence": "build/src/config/mcp-options.js:209-217",
+   "kind": "flag",
+   "syntax": "--allowUnrestrictedPaths=true"
+  },
+  {
+   "default": "not set for normal MCP server",
+   "effect": "When started by the CLI and no filesystem root is supplied, sets `allowUnrestrictedPaths=true` and removes the default filesystem root, making CLI file access broader than the MCP server default.",
+   "evidence": "build/src/config/mcp-options.js:263-279",
+   "kind": "flag",
+   "syntax": "--viaCli"
+  },
+  {
+   "default": "false",
+   "effect": "Exposes only a slim set of navigation, JavaScript execution, and screenshot tools, removing many advertised tools from the normal tool surface.",
+   "evidence": "build/src/config/mcp-options.js:195-198; build/src/config/mcp-options.js:365-368",
+   "kind": "flag",
+   "syntax": "--slim"
+  }
+ ],
+ "version": "1.9.0"
+}

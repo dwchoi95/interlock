@@ -1,0 +1,1390 @@
+{
+ "kind": "npm",
+ "notes": [
+  "No tool provides arbitrary code execution on the local host in the provided source. Pipeline tools may trigger Azure DevOps pipeline execution remotely, but that is not local HOSTEXEC under the threat model.",
+  "All advertised tools are default-enabled in the normal local server configuration because `--domains` defaults to `all`, and `all` enables every listed domain except `mcp-apps`, which is not among the advertised tools judged here.",
+  "Several SINK determinations are marked `undetermined` because the code writes to Azure DevOps projects/repositories/work items/wikis/test plans but does not reveal whether those targets are public or attacker-readable."
+ ],
+ "package": "@azure-devops/mcp",
+ "source": ".cache/sources/.views/npm_azure-devops_mcp_2.9.0_123594ecc45f",
+ "tools": {
+  "advsec_get_alert_details": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/advanced-security.js:99-104",
+    "dist/tools/advanced-security.js:106-112"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "alertId",
+    "repository",
+    "project",
+    "ref",
+    "ruleId"
+   ],
+   "injectable_output_fields": [
+    "return",
+    "ref"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads detailed Advanced Security alert data for a repository using the user's credentials. Details may include repository-derived locations/messages/snippets and secret alert information. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "advsec_get_alerts": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/advanced-security.js:11-48",
+    "dist/tools/advanced-security.js:68-83"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "alertId",
+    "repository",
+    "project",
+    "ref",
+    "ruleId"
+   ],
+   "injectable_output_fields": [
+    "return",
+    "ruleName",
+    "toolName",
+    "ref"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads Advanced Security alerts from an authenticated Azure DevOps repository. Alerts can include secret/code/dependency findings and repository-derived paths/messages/snippets, which can be contributor-controlled and may expose non-public security data. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "core_get_identity_ids": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/core.js:75-80",
+    "dist/tools/core.js:83-91"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "displayName",
+    "descriptor"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Searches identities with the user's credentials using `searchIdentities` and returns identity IDs, display names, and descriptors from the user's Azure DevOps organization.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "core_list_project_teams": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/core.js:16-21",
+    "dist/tools/core.js:23-37"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Uses the authenticated Azure DevOps connection (`connectionProvider`, `getCoreApi`) to return project teams from the user's organization via `coreApi.getTeams`, which is SaaS data reached with the user's credentials.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "core_list_projects": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/core.js:48-54",
+    "dist/tools/core.js:56-64"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Uses the authenticated Azure DevOps connection to return projects in the user's organization via `coreApi.getProjects`.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "pipelines_artifact": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "destinationPath"
+   ],
+   "evidence": [
+    "dist/tools/pipelines.js:315-321",
+    "dist/tools/pipelines.js:341-342",
+    "dist/tools/pipelines.js:350-372"
+   ],
+   "identifier_output_fields": [
+    "name",
+    "id",
+    "url",
+    "artifactName"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Lists or downloads build artifacts using the user's Azure DevOps credentials. Artifact names and ZIP contents are produced by builds and can be controlled by repository/pipeline contributors. When `destinationPath` is supplied, it writes the artifact ZIP to the local filesystem.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "pipelines_build": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/pipelines.js:128-157",
+    "dist/tools/pipelines.js:162-175"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "buildId",
+    "definition",
+    "repository",
+    "sourceBranch",
+    "sourceVersion"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads build reports and changes from Azure DevOps with the user's credentials. Build changes can include commit/work-item data authored by repository contributors, so returned content can be attacker-controlled in a multi-writer project.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "pipelines_build_log": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/pipelines.js:190-197",
+    "dist/tools/pipelines.js:202-209"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "logId",
+    "url"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads build logs with `getBuildLogLines` and returns them as external content. Build logs are produced by repository/pipeline code and can contain attacker-authored text in a multi-writer repository.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "pipelines_definition": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/pipelines.js:223-246",
+    "dist/tools/pipelines.js:264-271"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "path",
+    "repositoryId",
+    "definitionId"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads build definitions and revisions from Azure DevOps. Pipeline names, paths, YAML filenames, and revisions can be authored by project contributors, so output can include untrusted content.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "pipelines_run": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/pipelines.js:285-290",
+    "dist/tools/pipelines.js:297-302"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "runId",
+    "pipelineId",
+    "name",
+    "url"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads pipeline run data using the authenticated Pipelines API. Run metadata may include contributor-supplied variables, branch names, commit messages, and other pipeline-provided text.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "pipelines_write": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "project",
+    "pipelineId",
+    "pipelineVersion",
+    "repositoryName",
+    "repositoryId",
+    "repositoryConnectionId",
+    "buildId",
+    "stageName"
+   ],
+   "evidence": [
+    "dist/tools/pipelines.js:18-37",
+    "dist/tools/pipelines.js:40-74",
+    "dist/tools/pipelines.js:77-100",
+    "dist/tools/pipelines.js:386-389",
+    "dist/tools/pipelines.dto.js:82-89"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "url",
+    "pipelineId",
+    "buildId",
+    "runId"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Queues pipeline runs, creates pipeline definitions, or updates build stages through authenticated Azure DevOps APIs. Agent-supplied variables, parameters, YAML overrides, names, repository settings, and stage updates are sent to Azure DevOps. Returned run/definition data may include repository/pipeline-authored text. Code does not determine whether the target project/pipeline is attacker-readable.",
+   "undetermined": true,
+   "value_args": [
+    "resources",
+    "stagesToSkip",
+    "templateParameters",
+    "variables",
+    "yamlOverride",
+    "name",
+    "folder",
+    "yamlPath",
+    "repositoryType",
+    "status",
+    "forceRetryAllJobs"
+   ]
+  },
+  "repo_branch": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/repositories.js:386-395",
+    "dist/tools/repositories.js:402-407",
+    "dist/tools/repositories.js:410-417",
+    "dist/tools/repositories.js:20-25"
+   ],
+   "identifier_output_fields": [
+    "return",
+    "name",
+    "objectId"
+   ],
+   "injectable_output_fields": [
+    "return",
+    "name"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads branch refs from Azure DevOps. Branch names are returned and can be created/named by repository contributors.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "repo_create_branch": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "repositoryId",
+    "branchName",
+    "sourceBranchName",
+    "sourceCommitId",
+    "project"
+   ],
+   "evidence": [
+    "dist/tools/repositories.js:856-864",
+    "dist/tools/repositories.js:872-877",
+    "dist/tools/repositories.js:883-891"
+   ],
+   "identifier_output_fields": [
+    "branchName",
+    "sourceBranchName",
+    "sourceCommitId"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Creates a Git ref in an Azure DevOps repository by calling `gitApi.updateRefs` with an agent-supplied branch name/source. This writes to a shared repository; code does not determine target visibility.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "repo_file": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/repositories.js:428-443",
+    "dist/tools/repositories.js:451-457",
+    "dist/tools/repositories.js:463-489"
+   ],
+   "identifier_output_fields": [
+    "path",
+    "commitId",
+    "contentMetadata.fileName"
+   ],
+   "injectable_output_fields": [
+    "return",
+    "path",
+    "contentMetadata.fileName"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads repository file contents and directory entries using the user's credentials. File contents, paths, filenames, and commit IDs are controlled by repository contributors.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "repo_pull_request": {
+   "attacker_named_fields": [
+    "createdBy.displayName",
+    "createdBy.uniqueName"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/repositories.js:160-189",
+    "dist/tools/repositories.js:198-243",
+    "dist/tools/repositories.js:290-291",
+    "dist/tools/repositories.js:308-309",
+    "dist/tools/repositories.js:77-95"
+   ],
+   "identifier_output_fields": [
+    "pullRequestId",
+    "codeReviewId",
+    "repository",
+    "project",
+    "sourceRefName",
+    "targetRefName",
+    "createdBy.displayName",
+    "createdBy.uniqueName"
+   ],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "sourceRefName",
+    "targetRefName",
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads pull requests and related data from Azure DevOps. PR titles/descriptions/source branches and creator identity can be authored by repository contributors; `trimPullRequest` returns `title`, optional `description`, `createdBy`, and refs.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "repo_pull_request_thread": {
+   "attacker_named_fields": [
+    "author.displayName",
+    "author.uniqueName"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/repositories.js:319-336",
+    "dist/tools/repositories.js:341-365",
+    "dist/tools/repositories.js:370-376",
+    "dist/tools/repositories.js:27-35",
+    "dist/tools/repositories.js:40-50"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "threadId",
+    "comments.id",
+    "author.displayName",
+    "author.uniqueName"
+   ],
+   "injectable_output_fields": [
+    "comments.content",
+    "content",
+    "author.displayName",
+    "author.uniqueName",
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads PR threads/comments. Comment `content` and `author` fields are authored by PR participants, so output is attacker-controllable in a multi-writer repository.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "repo_pull_request_thread_write": {
+   "attacker_named_fields": [
+    "author.displayName",
+    "author.uniqueName"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "repositoryId",
+    "pullRequestId",
+    "project",
+    "threadId",
+    "filePath"
+   ],
+   "evidence": [
+    "dist/tools/repositories.js:748-768",
+    "dist/tools/repositories.js:818-819",
+    "dist/tools/repositories.js:826-832",
+    "dist/tools/repositories.js:839-846"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "threadId",
+    "comments.id",
+    "author.displayName",
+    "author.uniqueName"
+   ],
+   "injectable_output_fields": [
+    "comments.content",
+    "content",
+    "author.displayName",
+    "author.uniqueName",
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Creates/replies to PR comment threads or updates thread status using `createThread`, `createComment`, and `updateThread`. Agent-supplied `content` is stored in PR comments; returned thread data can include contributor-authored comments. Target visibility is not determined by the code.",
+   "undetermined": true,
+   "value_args": [
+    "content",
+    "status",
+    "rightFileStartLine",
+    "rightFileStartOffset",
+    "rightFileEndLine",
+    "rightFileEndOffset"
+   ]
+  },
+  "repo_pull_request_write": {
+   "attacker_named_fields": [
+    "createdBy.displayName",
+    "createdBy.uniqueName"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "repositoryId",
+    "pullRequestId",
+    "project",
+    "sourceRefName",
+    "targetRefName",
+    "workItems",
+    "forkSourceRepositoryId",
+    "reviewerIds"
+   ],
+   "evidence": [
+    "dist/tools/repositories.js:554-582",
+    "dist/tools/repositories.js:600-611",
+    "dist/tools/repositories.js:618-679",
+    "dist/tools/repositories.js:690-706",
+    "dist/tools/repositories.js:727-738"
+   ],
+   "identifier_output_fields": [
+    "pullRequestId",
+    "codeReviewId",
+    "repository",
+    "project",
+    "sourceRefName",
+    "targetRefName",
+    "createdBy.displayName",
+    "createdBy.uniqueName",
+    "id",
+    "uniqueName"
+   ],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "sourceRefName",
+    "targetRefName"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Creates/updates PRs, reviewers, labels, autocomplete, status, and votes in Azure DevOps. Agent-supplied title/description/labels/messages/reviewer IDs are stored or used to modify shared PR records. Returned PR data may include existing contributor-authored title/description. Code does not determine public/attacker visibility of the target repo/PR.",
+   "undetermined": true,
+   "value_args": [
+    "title",
+    "description",
+    "labels",
+    "status",
+    "autoComplete",
+    "mergeStrategy",
+    "mergeCommitMessage",
+    "deleteSourceBranch",
+    "transitionWorkItems",
+    "bypassReason",
+    "reviewerAction",
+    "vote"
+   ]
+  },
+  "repo_repository": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/repositories.js:112-119",
+    "dist/tools/repositories.js:128-133",
+    "dist/tools/repositories.js:138-150"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "webUrl"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Reads repositories in an Azure DevOps project through `gitApi.getRepositories` using the user's credentials.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "repo_search_commits": {
+   "attacker_named_fields": [
+    "author"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/repositories.js:502-517",
+    "dist/tools/repositories.js:518-551"
+   ],
+   "identifier_output_fields": [
+    "commitId",
+    "repository",
+    "project",
+    "branch",
+    "author"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Posts a commit-search query to Azure DevOps Search using the user's token and returns the response. Commit messages/authors and refs in results are contributor-authored.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_code": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/search.js:13-25",
+    "dist/tools/search.js:47-64",
+    "dist/tools/search.js:161-183"
+   ],
+   "identifier_output_fields": [
+    "project.id",
+    "repository.id",
+    "path",
+    "versions.changeId",
+    "gitItem.path",
+    "gitItem.commitId"
+   ],
+   "injectable_output_fields": [
+    "return",
+    "path",
+    "gitItem"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Searches Azure DevOps code with the user's token and fetches matching Git items including content. Search results and file contents/paths are repository-contributor controlled.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_wiki": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/search.js:67-74",
+    "dist/tools/search.js:91-105"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "path",
+    "wiki",
+    "project"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Searches Azure DevOps wiki content using the user's token and returns raw search results. Wiki page titles/snippets/content are contributor-authored.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_workitem": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/search.js:108-118",
+    "dist/tools/search.js:141-155"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "workItemId",
+    "project"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Searches Azure DevOps work items with the user's token and returns raw search results. Work item titles/descriptions/fields are participant-authored.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "testplan": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/test-plans.js:14-24",
+    "dist/tools/test-plans.js:43-55",
+    "dist/tools/test-plans.js:63-101",
+    "dist/tools/test-plans.js:111-123"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "planId",
+    "suiteId",
+    "continuationToken"
+   ],
+   "injectable_output_fields": [
+    "return",
+    "name",
+    "testCases"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads test plans/suites/cases from Azure DevOps with the user's token. Test plan/suite/case names and case data are project-authored and can be attacker-controlled in a multi-writer project.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "testplan_show_test_results_from_build_id": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/test-plans.js:137-146",
+    "dist/tools/test-plans.js:157-169"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "runId",
+    "testCaseTitle"
+   ],
+   "injectable_output_fields": [
+    "testCaseTitle",
+    "errorMessage",
+    "stackTrace",
+    "automatedTestName",
+    "automatedTestStorage"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads test results for a build. Test titles, error messages, stack traces, automated test names/storage are produced by test code and can be contributor-controlled.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "testplan_test_case_write": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "project",
+    "testsWorkItemId",
+    "id",
+    "areaPath",
+    "iterationPath"
+   ],
+   "evidence": [
+    "dist/tools/test-plans.js:301-314",
+    "dist/tools/test-plans.js:327-353",
+    "dist/tools/test-plans.js:363-368"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "url",
+    "testsWorkItemId"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Creates test case work items or updates test steps by writing agent-supplied titles/steps/paths/priority to Azure DevOps work items. Target visibility is not determined by the code.",
+   "undetermined": true,
+   "value_args": [
+    "title",
+    "priority",
+    "steps"
+   ]
+  },
+  "testplan_test_plan_write": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "project",
+    "iteration",
+    "areaPath"
+   ],
+   "evidence": [
+    "dist/tools/test-plans.js:181-190",
+    "dist/tools/test-plans.js:198-208"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Creates a test plan in Azure DevOps using agent-supplied `name`, `iteration`, `description`, dates, and area path. Target project visibility is not determined by the code.",
+   "undetermined": true,
+   "value_args": [
+    "name",
+    "description",
+    "startDate",
+    "endDate"
+   ]
+  },
+  "testplan_test_suite_write": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "project",
+    "planId",
+    "parentSuiteId",
+    "suiteId",
+    "testCaseIds"
+   ],
+   "evidence": [
+    "dist/tools/test-plans.js:220-230",
+    "dist/tools/test-plans.js:245-252",
+    "dist/tools/test-plans.js:282-287"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "planId",
+    "suiteId",
+    "testCaseIds"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Creates suites or adds test cases to suites in Azure DevOps. Agent-supplied suite name and case IDs are stored/used to modify shared test plans; target visibility is not determined by the code.",
+   "undetermined": true,
+   "value_args": [
+    "name"
+   ]
+  },
+  "wiki": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/wiki.js:11-29",
+    "dist/tools/wiki.js:34-39",
+    "dist/tools/wiki.js:68-73",
+    "dist/tools/wiki.js:98-111",
+    "dist/tools/wiki.js:189-202"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "wikiIdentifier",
+    "path",
+    "url",
+    "continuationToken"
+   ],
+   "injectable_output_fields": [
+    "return",
+    "content",
+    "path",
+    "name"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads wiki lists, page metadata, and page content using the user's credentials. Wiki page paths, names, and content are authored by wiki contributors; `get_page_content` returns external wiki page content.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "wiki_upsert_page": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "wikiIdentifier",
+    "path",
+    "project",
+    "etag",
+    "branch"
+   ],
+   "evidence": [
+    "dist/tools/wiki.js:221-228",
+    "dist/tools/wiki.js:238-248",
+    "dist/tools/wiki.js:285-301"
+   ],
+   "identifier_output_fields": [
+    "path",
+    "wikiIdentifier",
+    "branch",
+    "url"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Creates or updates a wiki page by PUTing agent-supplied `content` to an Azure DevOps wiki page path. This stores data in a shared wiki; code does not determine whether the wiki is attacker-readable.",
+   "undetermined": true,
+   "value_args": [
+    "content"
+   ]
+  },
+  "wit_backlog": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/work-items.js:311-316",
+    "dist/tools/work-items.js:338-345"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "backlogId",
+    "workItemId"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads backlog levels and backlog work items from Azure DevOps. Backlog/work item names and references can include participant-authored content.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "wit_query": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/work-items.js:242-261",
+    "dist/tools/work-items.js:275-288",
+    "dist/tools/work-items.js:293-296"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "ids",
+    "workItems.id",
+    "query"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads saved queries or executes WIQL using the authenticated Work Item Tracking API. Query results can include work item titles/fields authored by project participants; WIQL results are returned as external content.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "wit_work_item": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/work-items.js:60-81",
+    "dist/tools/work-items.js:99-100",
+    "dist/tools/work-items.js:114-138",
+    "dist/tools/work-items.js:150-151",
+    "dist/tools/work-items.js:174-197",
+    "dist/tools/work-items.js:209-223"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "ids",
+    "workItemId",
+    "fields.System.Id",
+    "fields.System.Title",
+    "url"
+   ],
+   "injectable_output_fields": [
+    "return",
+    "fields",
+    "comments",
+    "text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads work items, comments, revisions, iteration work items, and type metadata with the user's credentials. Work item fields and comments are authored by project participants and may be attacker-controlled.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "wit_work_item_attachment": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "savePath",
+    "fileName"
+   ],
+   "evidence": [
+    "dist/tools/work-items.js:359-367",
+    "dist/tools/work-items.js:386-411",
+    "dist/tools/work-items.js:394-400",
+    "dist/tools/work-items.js:412-419"
+   ],
+   "identifier_output_fields": [
+    "attachmentId",
+    "fileName",
+    "uri"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Downloads attachment content from Azure DevOps with the user's credentials. Attachment filenames and content are supplied by work item participants. With `savePath`, the tool writes the attachment to a local relative path.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "wit_work_item_comment_write": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "project",
+    "workItemId",
+    "commentId"
+   ],
+   "evidence": [
+    "dist/tools/work-items.js:654-661",
+    "dist/tools/work-items.js:680-692",
+    "dist/tools/work-items.js:697-709"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "commentId",
+    "workItemId"
+   ],
+   "injectable_output_fields": [
+    "return",
+    "text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Adds or updates work item comments by sending agent-supplied `text` to Azure DevOps comment endpoints. The returned comment response can include participant-authored/comment text. Code does not determine whether the work item is attacker-readable.",
+   "undetermined": true,
+   "value_args": [
+    "text",
+    "format"
+   ]
+  },
+  "wit_work_item_link_write": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "project",
+    "updates",
+    "id",
+    "url",
+    "projectId",
+    "repositoryId",
+    "pullRequestId",
+    "workItemId",
+    "pullRequestProjectId",
+    "artifactUri",
+    "branchName",
+    "commitId",
+    "buildId",
+    "wikiId",
+    "pageId",
+    "pagePath",
+    "linkType"
+   ],
+   "evidence": [
+    "dist/tools/work-items.js:723-782",
+    "dist/tools/work-items.js:798-827",
+    "dist/tools/work-items.js:840-868",
+    "dist/tools/work-items.js:887-903",
+    "dist/tools/work-items.js:984-1006"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "linkToId",
+    "workItemId",
+    "pullRequestId",
+    "artifactUri",
+    "url",
+    "repositoryId",
+    "projectId",
+    "branchName",
+    "commitId",
+    "buildId",
+    "wikiId",
+    "pageId",
+    "pagePath"
+   ],
+   "injectable_output_fields": [
+    "return",
+    "attributes.comment"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Adds/removes links and artifact links on work items. Agent-supplied link targets, artifact URIs, and comments are stored on Azure DevOps work items. `unlink` returns existing relations/work item data that may include participant-authored link attributes. Target visibility is not determined by the code.",
+   "undetermined": true,
+   "value_args": [
+    "updates",
+    "comment"
+   ]
+  },
+  "wit_work_item_write": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "project",
+    "id",
+    "workItemType",
+    "updates",
+    "batchUpdates",
+    "parentId"
+   ],
+   "evidence": [
+    "dist/tools/work-items.js:434-483",
+    "dist/tools/work-items.js:499-517",
+    "dist/tools/work-items.js:525-527",
+    "dist/tools/work-items.js:532-571",
+    "dist/tools/work-items.js:591-638"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "url",
+    "fields.System.Id",
+    "fields.System.Title",
+    "parentId"
+   ],
+   "injectable_output_fields": [
+    "return",
+    "fields"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Creates or updates work items, batches updates, and creates children under a parent. Agent-supplied field values/titles/descriptions are stored in Azure DevOps. Returned work item objects may include existing participant-authored fields. Target visibility is not determined by the code.",
+   "undetermined": true,
+   "value_args": [
+    "fields",
+    "updates",
+    "batchUpdates",
+    "items"
+   ]
+  },
+  "work": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/work.js:12-25",
+    "dist/tools/work.js:43-51",
+    "dist/tools/work.js:62-64",
+    "dist/tools/work.js:106-123",
+    "dist/tools/work.js:144-168",
+    "dist/tools/work.js:181-187"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "path",
+    "identifier",
+    "iterationId",
+    "team",
+    "teamMember.id",
+    "teamMember.displayName",
+    "teamMember.uniqueName"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Reads work/iteration/team settings/capacity data from Azure DevOps APIs using the authenticated connection (`getWorkApi`, `getWorkItemTrackingApi`), returning non-public organization data.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "work_capacity_write": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "project",
+    "team",
+    "teamMemberId",
+    "iterationId"
+   ],
+   "evidence": [
+    "dist/tools/work.js:283-302",
+    "dist/tools/work.js:307-317",
+    "dist/tools/work.js:321-333"
+   ],
+   "identifier_output_fields": [
+    "teamMember.id",
+    "teamMember.displayName",
+    "teamMember.uniqueName"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Updates a team member's capacity in Azure DevOps using `workApi.updateCapacityWithIdentityRef` and returns the updated capacity. This writes agent-supplied capacity and days-off data to a shared project/team; code does not determine target visibility.",
+   "undetermined": true,
+   "value_args": [
+    "activities",
+    "daysOff"
+   ]
+  },
+  "work_iteration_write": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "project",
+    "team",
+    "iterations"
+   ],
+   "evidence": [
+    "dist/tools/work.js:207-220",
+    "dist/tools/work.js:229-235",
+    "dist/tools/work.js:257-257"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "path",
+    "identifier"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Creates project iterations or assigns iterations to a team via authenticated Azure DevOps APIs (`createOrUpdateClassificationNode`, `postTeamIteration`) and returns the created/assigned records. This stores agent-supplied iteration names/paths/dates in a shared Azure DevOps project; whether an attacker can read the target project is not determined by the code.",
+   "undetermined": true,
+   "value_args": [
+    "iterations"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "all",
+   "effect": "Only domains present in `enabledDomains` are configured. Omitting the option or using `all` enables all domains except `mcp-apps`; specifying a subset removes tools outside that subset. Invalid or empty domain input falls back to all domains.",
+   "evidence": "dist/index.js:33-39; dist/shared/domains.js:35-39; dist/shared/domains.js:78-85; dist/tools.js:15-29",
+   "kind": "tool_availability",
+   "syntax": "--domains <domains> or -d <domains>; default: \"all\""
+  },
+  {
+   "default": "enabled via all",
+   "effect": "Controls `core_list_project_teams`, `core_list_projects`, and `core_get_identity_ids`.",
+   "evidence": "dist/tools.js:20-20; dist/tools/core.js:6-10",
+   "kind": "tool_availability",
+   "syntax": "Domain `core`"
+  },
+  {
+   "default": "enabled via all",
+   "effect": "Controls `work`, `work_iteration_write`, and `work_capacity_write`.",
+   "evidence": "dist/tools.js:22-22; dist/tools/work.js:6-10",
+   "kind": "tool_availability",
+   "syntax": "Domain `work`"
+  },
+  {
+   "default": "enabled via all",
+   "effect": "Controls `pipelines_build`, `pipelines_build_log`, `pipelines_definition`, `pipelines_run`, `pipelines_artifact`, and `pipelines_write`.",
+   "evidence": "dist/tools.js:23-23; dist/tools/pipelines.js:118-125",
+   "kind": "tool_availability",
+   "syntax": "Domain `pipelines`"
+  },
+  {
+   "default": "enabled via all",
+   "effect": "Controls repository and pull request tools: `repo_repository`, `repo_pull_request`, `repo_pull_request_thread`, `repo_branch`, `repo_file`, `repo_search_commits`, `repo_pull_request_write`, `repo_pull_request_thread_write`, and `repo_create_branch`.",
+   "evidence": "dist/tools.js:24-24; dist/tools/repositories.js:8-18",
+   "kind": "tool_availability",
+   "syntax": "Domain `repositories`"
+  },
+  {
+   "default": "enabled via all",
+   "effect": "Controls `wit_work_item`, `wit_query`, `wit_backlog`, `wit_work_item_attachment`, `wit_work_item_write`, `wit_work_item_comment_write`, and `wit_work_item_link_write`.",
+   "evidence": "dist/tools.js:25-25; dist/tools/work-items.js:11-19",
+   "kind": "tool_availability",
+   "syntax": "Domain `work-items`"
+  },
+  {
+   "default": "enabled via all",
+   "effect": "Controls `wiki` and `wiki_upsert_page`.",
+   "evidence": "dist/tools.js:26-26; dist/tools/wiki.js:6-9",
+   "kind": "tool_availability",
+   "syntax": "Domain `wiki`"
+  },
+  {
+   "default": "enabled via all",
+   "effect": "Controls `testplan`, `testplan_show_test_results_from_build_id`, `testplan_test_plan_write`, `testplan_test_suite_write`, and `testplan_test_case_write`.",
+   "evidence": "dist/tools.js:27-27; dist/tools/test-plans.js:5-11",
+   "kind": "tool_availability",
+   "syntax": "Domain `test-plans`"
+  },
+  {
+   "default": "enabled via all",
+   "effect": "Controls `search_code`, `search_wiki`, and `search_workitem`.",
+   "evidence": "dist/tools.js:28-28; dist/tools/search.js:7-11",
+   "kind": "tool_availability",
+   "syntax": "Domain `search`"
+  },
+  {
+   "default": "enabled via all",
+   "effect": "Controls `advsec_get_alerts` and `advsec_get_alert_details`.",
+   "evidence": "dist/tools.js:29-29; dist/tools/advanced-security.js:6-9",
+   "kind": "tool_availability",
+   "syntax": "Domain `advanced-security`"
+  }
+ ],
+ "version": "2.9.0"
+}

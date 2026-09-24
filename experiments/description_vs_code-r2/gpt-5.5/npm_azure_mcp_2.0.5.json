@@ -1,0 +1,1432 @@
+{
+ "tools": {
+  "documentation": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Searches `official Microsoft/Azure documentation`, `Microsoft Learn and other official sources`; the advertised outputs are first-party `article title, URL, and ... content excerpt`, not attacker-controlled or private user data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "title",
+    "URL"
+   ],
+   "attacker_named_fields": []
+  },
+  "azd": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Advertises Azure Developer CLI operations for `resource provisioning, deployment, and monitoring`, which can reach non-public Azure resources under the user's credentials. Child commands and returned fields are not specified, so scope is partly undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "foundry": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `read, create, modify resources such as Models, Agents and Evaluation workflows in Microsoft Foundry platform`, so it can read non-public SaaS/resource data with the user's credentials and write/modify resources. Child command details are hidden.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "get_azure_bestpractices": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns `best practices for code generation, operations and deployment` and `AI application best practices`; this is guidance content, not private account data or attacker-controlled content.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "aks": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Requires `Azure subscription context` and provides subscription-scoped visibility into AKS `metadata\u2014including Azure resource IDs, networking endpoints, identity configuration, and provisioning state`, which is non-public Azure account data. It says `Not for kubectl execution` or lifecycle changes, so treated as read-only.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "Azure resource IDs",
+    "networking endpoints",
+    "identity configuration",
+    "provisioning state"
+   ],
+   "attacker_named_fields": []
+  },
+  "appconfig": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages Azure App Configuration stores and `key-value settings`, including `retrieving configuration data`; configuration data in the user's Azure account is non-public. It can also set labels and lock/unlock settings.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "configuration stores",
+    "key-value pairs",
+    "labels"
+   ],
+   "attacker_named_fields": []
+  },
+  "applens": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Diagnoses `Azure resource issues` and detects problems/root causes for resources, so it can return private diagnostic data. Diagnostics may include error or behavior data influenced by external requests; the description does not exclude attacker-authored diagnostic/log text, so UNTRUSTED is kept as undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "appservice": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can manage Azure App Service `web apps, databases, and configurations`, which are non-public account resources and can be changed. Subcommands and output fields are not specified.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "web apps",
+    "databases",
+    "configurations"
+   ],
+   "attacker_named_fields": []
+  },
+  "role": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages Azure RBAC resources, including `listing role assignments`, `managing permissions`, and access management `at various scopes`, exposing private authorization data and allowing writes.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "role assignments",
+    "permissions",
+    "scopes"
+   ],
+   "attacker_named_fields": []
+  },
+  "datadog": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves monitored Azure resource information and `health status` through a Datadog integration, which can reveal non-public monitoring/account data. Only listing/retrieval is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "Datadog monitors",
+    "monitored Azure resources"
+   ],
+   "attacker_named_fields": []
+  },
+  "managedlustre": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `create, update, list and inspect` Azure Managed Lustre file systems in the user's Azure account, exposing private resource data and enabling writes.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "file systems"
+   ],
+   "attacker_named_fields": []
+  },
+  "azuremigrate": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Supports `policy and governance changes`, identity/subscription design, and can `generate a complete platform landing zone`; this can change Azure governance resources and may read non-public subscription design. Details are not fully specified.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "subscriptions",
+    "regions"
+   ],
+   "attacker_named_fields": []
+  },
+  "azureterraformbestpractices": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns `Terraform best practices for Azure`; no private data, attacker-controlled source, or write is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "deploy": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Provides commands for `deploying applications to Azure` and can `fetch application logs`, so it can change Azure state and return private app data. Application logs may contain attacker-controlled request/content text; the description does not rule that out.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [
+    "application logs"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "deviceregistry": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `manage Azure Device Registry resources` and supports `listing namespaces` and managing resources in `your Azure subscription`, exposing private subscription data and enabling writes.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "namespaces",
+    "device registry resources"
+   ],
+   "attacker_named_fields": []
+  },
+  "eventgrid": {
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages and accesses Event Grid `topics, domains, and event subscriptions`, which are private Azure resources. Event subscriptions commonly designate delivery endpoints; because the child schema is hidden, the description does not exclude an agent-chosen endpoint, so SINK is kept as undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "topics",
+    "domains",
+    "event subscriptions"
+   ],
+   "attacker_named_fields": []
+  },
+  "acr": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages Azure Container Registry resources and `registry configurations`, exposing private registry metadata and enabling configuration changes.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "container registries"
+   ],
+   "attacker_named_fields": []
+  },
+  "advisor": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Requires `Azure subscription context` and provides subscription-scoped Advisor recommendations, which are non-public account data. Only manage/query recommendations are advertised; no external sink.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "Advisor recommendations"
+   ],
+   "attacker_named_fields": []
+  },
+  "bicepschema": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves Bicep `schemas, templates, and resource definitions` for IaC support; the advertised source is schema/template knowledge, not private user data or attacker-authored content.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "schemas",
+    "templates",
+    "resource definitions"
+   ],
+   "attacker_named_fields": []
+  },
+  "cosmos": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages and queries Azure Cosmos DB `accounts, databases, containers, and document queries`, which can expose private database data and change resources. Query results may include multi-writer/app data; the description does not exclude attacker-authored documents, so UNTRUSTED is undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "accounts",
+    "databases",
+    "containers"
+   ],
+   "attacker_named_fields": []
+  },
+  "cloudarchitect": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Generates Azure architecture `designs and recommendations based on requirements`; no account read, attacker-controlled output source, or state change is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "communication": {
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages Azure Communication Services and `supports sending SMS`; SMS sends agent-supplied content to agent-chosen recipients, a SINK, and resource management can expose private Azure account data.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "compute": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `list, query, create, or monitor VMs and VMSS instances` and access only resources available to the authenticated user, exposing private compute metadata and enabling VM creation/management.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "VMs",
+    "VMSS instances",
+    "Managed Disks"
+   ],
+   "attacker_named_fields": []
+  },
+  "confidentialledger": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can append and query `tamper-proof ledger entries`; ledger contents are non-public account data, and `write immutable audit records` changes state.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "ledger entries"
+   ],
+   "attacker_named_fields": []
+  },
+  "containerapps": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages Azure Container Apps resources and `container app configurations`, exposing private account resource metadata and allowing changes.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "container apps"
+   ],
+   "attacker_named_fields": []
+  },
+  "eventhubs": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages Event Hubs namespaces and event hubs and includes `CRUD operations`, so it can read and change private Azure messaging resources.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "namespaces",
+    "event hubs"
+   ],
+   "attacker_named_fields": []
+  },
+  "fileshares": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Commands for managing Azure File Shares` can expose and change non-public file share resources. Child commands and content access are unspecified.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "File Shares"
+   ],
+   "attacker_named_fields": []
+  },
+  "foundryextensions": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Interacts with Foundry OpenAI, `knowledge indexes, threads, agents, and resources`, exposing private SaaS/resource data and allowing interaction/management. Threads or knowledge indexes may contain third-party text; the description does not exclude attacker-authored content.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [
+    "threads",
+    "knowledge indexes"
+   ],
+   "identifier_output_fields": [
+    "knowledge indexes",
+    "threads",
+    "agents",
+    "resources"
+   ],
+   "attacker_named_fields": []
+  },
+  "functionapp": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages and accesses Azure Function App resources, which are non-public Azure account resources, and management implies state changes.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "Function App resources"
+   ],
+   "attacker_named_fields": []
+  },
+  "functions": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Provides Azure Functions `code generation commands`, language/runtime exploration, and templates; no private account data or attacker-controlled source is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "languages",
+    "runtime versions",
+    "function templates"
+   ],
+   "attacker_named_fields": []
+  },
+  "grafana": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages and accesses Azure Managed Grafana resources and `monitoring dashboards`, which can contain non-public monitoring data and can be changed.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "Grafana workspaces",
+    "dashboards"
+   ],
+   "attacker_named_fields": []
+  },
+  "keyvault": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`managing and accessing Azure Key Vault resources` can return non-public secrets/keys/certificates and modify vault resources.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "Key Vault resources"
+   ],
+   "attacker_named_fields": []
+  },
+  "kusto": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can execute `KQL queries` and manage Azure Data Explorer clusters/databases, exposing private analytics data and allowing management. Query results may include attacker-controlled telemetry or multi-writer data; not excluded by the description.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "clusters",
+    "databases",
+    "table schemas"
+   ],
+   "attacker_named_fields": []
+  },
+  "loadtesting": {
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages Azure Load Testing resources and can configure scripts and `executing performance tests`; tests send traffic to configured targets, so hidden parameters may choose attacker-readable URLs/hosts. Test resources/results are private account data.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "test configurations",
+    "test runs",
+    "test results"
+   ],
+   "attacker_named_fields": []
+  },
+  "marketplace": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages/accesses Azure Marketplace `products and offers`; Marketplace product/offer text can be authored by third-party publishers, so it is UNTRUSTED. `managing` Marketplace resources may expose account/private offer data or change state, but details are not specified.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [
+    "products",
+    "offers"
+   ],
+   "identifier_output_fields": [
+    "products",
+    "offers"
+   ],
+   "attacker_named_fields": [
+    "products",
+    "offers"
+   ]
+  },
+  "quota": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Checks Azure resource `quota and usage` for resource types/regions, exposing non-public subscription usage. No state change is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "regions",
+    "resource types"
+   ],
+   "attacker_named_fields": []
+  },
+  "monitor": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Queries and analyzes Azure Monitor `logs and metrics`, exposing private monitoring data. Logs may contain attacker-controlled request/message text; the description does not exclude that.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "logs"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "applicationinsights": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Lists and manages Application Insights components, private Azure resources. It explicitly says these commands `do not support querying metrics or logs`, so no log-content UNTRUSTED label is inferred.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "Application Insights components"
+   ],
+   "attacker_named_fields": []
+  },
+  "mysql": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages Azure Database for MySQL and executes `SQL queries`, exposing private database data and allowing configuration changes. Query rows may include app/multi-writer attacker-authored data; not excluded.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "servers",
+    "databases",
+    "table schemas"
+   ],
+   "attacker_named_fields": []
+  },
+  "policy": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `Manage Azure Policy assignments and definitions`, retrieve assignments, and analyze compliance, exposing private governance/compliance data and enabling writes.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "policy assignments",
+    "policy definitions"
+   ],
+   "attacker_named_fields": []
+  },
+  "postgres": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages PostgreSQL resources and executes `SQL queries`, exposing private database data and allowing configuration changes. Query results may contain attacker-authored app data; not excluded.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "servers",
+    "databases",
+    "table schemas"
+   ],
+   "attacker_named_fields": []
+  },
+  "pricing": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Gets `Azure retail pricing for SKUs, services, regions`; this is public vendor pricing data and no state change or attacker-authored source is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "SKUs",
+    "services",
+    "regions"
+   ],
+   "attacker_named_fields": []
+  },
+  "redis": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Lists Redis resources, databases, data access policies and can create Azure Managed Redis resources, exposing private account metadata and allowing writes.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "Redis resources",
+    "databases",
+    "data access policies"
+   ],
+   "attacker_named_fields": []
+  },
+  "resourcehealth": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Monitors and diagnoses Azure `resource health`, `availability status`, and service health events for the user's resources, exposing private operational data. No writes are advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "resource health",
+    "service health events"
+   ],
+   "attacker_named_fields": []
+  },
+  "search": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can manage and query Azure AI Search `services, indexes, and knowledge sources` and supports `document search`; search indexes/documents may contain private data and may include attacker-authored documents. Management implies writes.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [
+    "document search",
+    "knowledge sources"
+   ],
+   "identifier_output_fields": [
+    "services",
+    "indexes",
+    "knowledge sources"
+   ],
+   "attacker_named_fields": []
+  },
+  "speech": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Works with Speech STT/TTS, audio processing, and language detection. It sends supplied audio/text to a fixed Azure AI Services endpoint, but the text does not advertise reading private files/accounts or sending to attacker-chosen destinations.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "servicebus": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages Azure Service Bus `queues, topics, and subscriptions`, private Azure messaging resources, and management changes state. The description does not advertise receiving or sending message bodies to external recipients.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "queues",
+    "topics",
+    "subscriptions"
+   ],
+   "attacker_named_fields": []
+  },
+  "servicefabric": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Provides visibility into Service Fabric managed cluster nodes including `node status, node types, IP addresses, and fault/upgrade domains`, which is private subscription data. No state-changing operation is described.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "nodes",
+    "IP addresses",
+    "node types"
+   ],
+   "attacker_named_fields": []
+  },
+  "signalr": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages Azure SignalR Service resources and lists services, exposing private account resources and potentially changing them via management commands.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "SignalR services"
+   ],
+   "attacker_named_fields": []
+  },
+  "sql": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages Azure SQL `databases, servers, and elastic pools`, including firewall rules and Entra ID administrators, exposing private account configuration and allowing writes. It does not advertise querying table data.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "databases",
+    "servers",
+    "elastic pools",
+    "firewall rules",
+    "Entra ID administrators"
+   ],
+   "attacker_named_fields": []
+  },
+  "storage": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can create/list/get/manage Storage accounts, containers, blobs and tables and `upload files to blob storage`; this exposes private storage account/blob metadata and changes Azure Storage state. The description does not state blobs are public or attacker-readable.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "storage accounts",
+    "blob containers",
+    "blobs",
+    "tables"
+   ],
+   "attacker_named_fields": []
+  },
+  "storagesync": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages Azure File Sync resources, sync groups, endpoints, and registered servers, exposing private hybrid storage configuration and allowing deployment/maintenance writes.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "Storage Sync services",
+    "sync groups",
+    "cloud endpoints",
+    "server endpoints",
+    "registered servers"
+   ],
+   "attacker_named_fields": []
+  },
+  "virtualdesktop": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Manages and accesses Azure Virtual Desktop `hostpools, session hosts, and user sessions`, exposing private desktop/session information and allowing management writes.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "hostpools",
+    "session hosts",
+    "user sessions"
+   ],
+   "attacker_named_fields": []
+  },
+  "wellarchitectedframework": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Accesses Azure Well-Architected Framework `guidance, best practices, and recommendations`; no private account access, attacker-controlled source, or state change is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "workbooks": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can list, create, update, and delete Azure Workbooks and manage workbook `configurations and content`, exposing private dashboard resources and allowing writes.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "value_args": [
+    "parameters"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "workbooks"
+   ],
+   "attacker_named_fields": []
+  },
+  "group_list": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Lists all resource groups in a subscription and returns resource group `names and IDs`, which are non-public Azure account metadata. Annotation says read-only.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "names",
+    "IDs"
+   ],
+   "attacker_named_fields": []
+  },
+  "group_resource_list": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Lists all resources in a specified resource group and returns resource `names, IDs, types, and locations`, private subscription metadata. Annotation says read-only.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "names",
+    "IDs",
+    "types",
+    "locations"
+   ],
+   "attacker_named_fields": []
+  },
+  "subscription_list": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Lists all Azure subscriptions for the current account and returns `subscriptionId, displayName, state, tenantId, and isDefault`, which is non-public account/tenant data. Annotation says read-only.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "subscriptionId",
+    "displayName",
+    "tenantId"
+   ],
+   "attacker_named_fields": []
+  },
+  "extension_azqr": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Runs Azure Quick Review CLI to generate `compliance and security reports for Azure resources` and returns the generated `report file path`; this reaches private subscription/resource configuration. It writes a report file, but the advertised command is azqr-specific, not arbitrary host execution.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "subscription",
+    "resource-group"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "report file path"
+   ],
+   "attacker_named_fields": []
+  },
+  "extension_cli_generate": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Generates Azure CLI commands for a supplied `intent`; it returns generated instructions/commands and does not execute them, read private data, or contact an agent-chosen destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "extension_cli_install": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Provides installation instructions for CLI tools; no private data access, attacker-controlled source, write, or execution is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "All hierarchical router tools expose only generic `command` and `parameters` schemas; where the description advertises management/write capabilities but not child schemas, destination_args/value_args are limited to those declared generic arguments and undetermined is set when exact reach or output fields are not settled.",
+  "A query or operation against fixed Microsoft/Azure service endpoints is not treated as a SINK unless the advertised capability can deliver data to an agent-chosen recipient, URL, or host, such as SMS, Event Grid subscriptions, or load-test targets."
+ ],
+ "usage": {
+  "input_tokens": 15759,
+  "output_tokens": 11794,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

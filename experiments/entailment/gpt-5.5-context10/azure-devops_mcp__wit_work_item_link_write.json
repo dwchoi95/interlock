@@ -1,0 +1,16 @@
+{
+ "package": "@azure-devops/mcp",
+ "tool": "wit_work_item_link_write",
+ "claimed": [
+  "SECRET"
+ ],
+ "HOSTEXEC": "not_supported",
+ "SECRET": "supported",
+ "SINK": "not_supported",
+ "UNTRUSTED": "supported",
+ "reason": "The cited lines show authenticated Azure DevOps/API reads: getWorkItem(..., WorkItemExpand.Relations, ...) and a fetch with a Bearer access token followed by parsing pageResponse.json(), so SaaS data reached with the user's credentials enters the agent/tool context. Line 853 returns JSON.stringify(relations, null, 2) in tool output, so work item relation data is exposed; those relations and echoed type/url values are external/user-controlled content, supporting UNTRUSTED. The lines do not show arbitrary host code execution. They also do not establish a SINK: the shown fetch is a GET to the configured org URL, and the shown output is returned to the agent/user rather than sent to an attacker-chosen destination.",
+ "usage": {
+  "input_tokens": 1803,
+  "output_tokens": 1218
+ }
+}

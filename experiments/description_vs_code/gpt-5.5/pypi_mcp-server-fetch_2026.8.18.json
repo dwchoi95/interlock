@@ -1,0 +1,37 @@
+{
+ "tools": {
+  "fetch": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Fetches a URL from the internet` and the `url` argument is a `URL to fetch`. Because the agent chooses the URL, it can make requests to attacker-controlled hosts, so request metadata and any data embedded into the URL can be delivered to an attacker-readable destination, making it a SINK. It returns fetched page content and can `optionally extract its contents as markdown`; internet web content is attacker-controllable, so it is UNTRUSTED. The schema uses `format: uri` rather than limiting to public HTTP(S), and the description broadly says `URL` / `Fetches a URL from the internet`; whether localhost, intranet, file URLs, or credentialed/internal URLs are blocked is not settled by the advertised text. Under the required least-restrictive reading, keep SECRET because it may return non-public data from `file://`, `localhost`, intranet URLs, or otherwise reachable non-public URLs. It does not advertise arbitrary host code execution, so HOSTEXEC is not included.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [
+    "url"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [],
+ "usage": {
+  "input_tokens": 1252,
+  "output_tokens": 297,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

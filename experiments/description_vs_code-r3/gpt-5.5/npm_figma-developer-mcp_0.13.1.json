@@ -1,0 +1,55 @@
+{
+ "tools": {
+  "get_figma_data": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can fetch Figma file data by `fileKey` and returns `comprehensive Figma file data including layout, content, visuals, and component information`. If the file is private or otherwise accessible with the user's Figma credentials, that returned file data is non-public SaaS data, so SECRET. Figma file `content`, visuals, node names, and component data may also come from public, third-party, or multi-writer Figma files, so the returned data can be attacker-authored, making it UNTRUSTED. It does not advertise sending data to an agent-chosen host or public destination; the `fileKey` selects a Figma file at the fixed Figma service, so it is not a SINK. No arbitrary host code execution is advertised. Output schema is not provided, so exact output field names are partly undetermined; the listed output fields are inferred from the advertised Figma/node/image data descriptions.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "nodeId",
+    "imageRef",
+    "gifRef",
+    "filenameSuffix"
+   ],
+   "attacker_named_fields": []
+  },
+  "download_figma_images": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Download[s] SVG and PNG images used in a Figma file` and says images `will be saved relative to the server's image directory`, so it changes local server state and is WRITE. It does not advertise returning the downloaded image bytes into the agent context, only saving them locally, so SECRET is not assigned. The Figma/image content may be attacker-controlled in public or multi-writer files, but the advertised behavior is to save files rather than return their contents, so UNTRUSTED is not assigned to the tool output. It writes to `localPath` and per-node `fileName` under the server image directory, not to an attacker-readable network or public SaaS destination, and it contacts Figma by `fileKey` rather than an agent-chosen host, so it is not a SINK. No arbitrary code execution is advertised. Output schema is absent, so exact returned identifiers, if any, are undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "localPath",
+    "fileName"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [],
+ "usage": {
+  "input_tokens": 262,
+  "output_tokens": 3135,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 1792
+ }
+}

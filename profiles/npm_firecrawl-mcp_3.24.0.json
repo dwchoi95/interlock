@@ -1,0 +1,378 @@
+{
+ "kind": "npm",
+ "notes": [
+  "`firecrawl_scrape` is not labelled SECRET because, with the default cloud API base, the fetch of `file://`/localhost URLs happens on Firecrawl's infrastructure rather than the user's host; setting `FIRECRAWL_API_URL` to a self-hosted instance inside the user's network would change that (see value_conditions).",
+  "Code supplied to `firecrawl_interact` (`language: bash|python|node`) runs in Firecrawl's remote session sandbox reached through `client.interact`, so it is scored as remote-vendor execution (UNTRUSTED+SINK) rather than HOSTEXEC per the labelling rules (dist/index.js:2908-2913).",
+  "Several tool bodies (`firecrawl_search`, `firecrawl_monitor_update`, `firecrawl_research_read_paper`, `firecrawl_research_search_github`, the local branch of `firecrawl_parse`) are elided in the supplied bundle; labels for those were kept under the least-restrictive reading and marked undetermined where the code did not settle the question.",
+  "Monitor tools reach the user's Firecrawl account data through `monitorRequest(session, ...)`, which forwards the user's credential; that is why read-only monitor tools are marked SECRET."
+ ],
+ "package": "firecrawl-mcp",
+ "source": ".cache/sources/.views/npm_firecrawl-mcp_3.24.0_f5fb07dbf556",
+ "tools": {
+  "firecrawl_agent": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:2789-2809",
+    "dist/index.js:2801-2805"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`client.startAgent` is given an agent-authored `prompt` and arbitrary seed `urls`; the remote agent then browses those URLs, so agent-held data placed in a seed URL (or a prompt instructing a visit) is delivered to an attacker-controlled host (SINK). The call itself returns only a job id, so it does not bring back untrusted content.",
+   "undetermined": false
+  },
+  "firecrawl_agent_status": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:2830-2838"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`client.http.get('/v2/agent/{id}')` returns the agent's assembled research result, which is synthesized from arbitrary web pages the agent read (UNTRUSTED). Reads Firecrawl job state only, so no SINK. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "firecrawl_check_crawl_status": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:2733-2737"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`getCrawlStatusWithOrigin` returns the crawl job's collected page data for a given id, which is scraped third-party web content (UNTRUSTED). It only reads Firecrawl job state, so no agent-chosen outbound destination.",
+   "undetermined": false
+  },
+  "firecrawl_crawl": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:2700-2715",
+    "dist/index.js:2674-2676",
+    "dist/index.js:2661-2662"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The crawl starts on an arbitrary agent-supplied `url` and the polled result contains the collected page data, i.e. attacker-controlled site content (UNTRUSTED). Outside safe mode the schema accepts `webhook` and `webhookHeaders`, so crawl payloads and agent-chosen headers are delivered to an agent-chosen URL; the crawl requests themselves also hit an agent-chosen host (SINK).",
+   "undetermined": false
+  },
+  "firecrawl_developer_search": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:55-59",
+    "dist/index.js:18-29",
+    "dist/index.js:44"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`execute` queries the fixed `/v2/search/developer` index and `fmtDeveloper` renders result titles, URLs and matched `passages` into context; the index covers GitHub issues, PRs, READMEs and community docs, all attacker-publishable (UNTRUSTED). Query goes to a fixed vendor path, so not a SINK.",
+   "undetermined": false
+  },
+  "firecrawl_extract": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:2759-2771"
+   ],
+   "labels": [],
+   "rationale": "`beforeValidate` returns the deprecation payload and `execute` always throws `UserError`; the tool performs no network or file access, and `canList: () => false` hides it from listings.",
+   "undetermined": false
+  },
+  "firecrawl_feedback": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:2616-2620",
+    "dist/index.js:2600-2614",
+    "dist/index.js:2430-2433"
+   ],
+   "labels": [],
+   "rationale": "`fetch` posts the feedback body to the hard-coded `${apiBase}/v2/feedback` vendor endpoint and returns the parsed vendor response, so there is no agent-chosen destination and no untrusted or secret data returned.",
+   "undetermined": false
+  },
+  "firecrawl_interact": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:2886-2892",
+    "dist/index.js:2908-2913",
+    "dist/index.js:2852-2855"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "It scrapes an arbitrary agent-supplied `url` (returning live page content, UNTRUSTED) and then calls `client.interact` with agent-supplied `prompt` or `code` plus `language` (`bash`/`python`/`node`). That code executes in Firecrawl's remote browser/session sandbox, not on the user's host, so per the rules it is not HOSTEXEC; its actual reach is outbound network from that session plus form submission on the live site, i.e. delivery of agent data to an attacker-chosen destination (SINK).",
+   "undetermined": false
+  },
+  "firecrawl_interact_stop": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:2943-2951"
+   ],
+   "labels": [],
+   "rationale": "Issues a DELETE to the fixed Firecrawl path `/v2/scrape/{scrapeId}/interact` and returns a status object; no untrusted content, no secret data, no agent-chosen destination. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "firecrawl_map": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:2200-2204",
+    "dist/index.js:2187-2194"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`client.map` is called with an arbitrary agent-supplied `url` and optional `search` term; the returned URL inventory comes from the target site, so it is attacker-controllable text in context (UNTRUSTED). The outbound request targets an agent-chosen host, so agent data embedded in the URL/`search` reaches an attacker-readable destination (SINK).",
+   "undetermined": false
+  },
+  "firecrawl_monitor_check": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:467-483"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns one stored check with page-level `diff`, `snapshot` and judgment data from the user's account (SECRET) and those snapshots/diffs are the content of monitored third-party web pages, which an attacker can control (UNTRUSTED). The `execute` body is elided after the shown description lines.",
+   "undetermined": true
+  },
+  "firecrawl_monitor_checks": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:457-463"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Lists the account's historical check summaries for a monitor via `monitorRequest`, i.e. private account data retrieved with the user's credential (SECRET).",
+   "undetermined": false
+  },
+  "firecrawl_monitor_create": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:292-294",
+    "dist/index.js:296-303",
+    "dist/index.js:275-277"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Parameters include an agent-chosen `webhookUrl`, `email` recipient and `includeDiffs`, and `buildMonitorCreateBody` plus `monitorRequest` POST them to `/monitor`; the created monitor then delivers check diffs/notifications to that agent-chosen URL or address (SINK). The arbitrary `body` record allows the same via `webhook`/`notification` fields. The response is just the created monitor record.",
+   "undetermined": false
+  },
+  "firecrawl_monitor_delete": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:401-409"
+   ],
+   "labels": [],
+   "rationale": "Sends a DELETE to `/monitor/{id}` and returns deletion status; destructive for the user's account but returns no non-public content, no attacker content, and has no agent-chosen destination. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "firecrawl_monitor_get": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:347-352"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Fetches one monitor by id from the user's Firecrawl account via `monitorRequest`, returning its private configuration (including webhook URLs and notification addresses) into context (SECRET).",
+   "undetermined": false
+  },
+  "firecrawl_monitor_list": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:324-330"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`monitorRequest(session, '/monitor')` returns the authenticated account's monitor records \u2014 non-public SaaS data reached with the user's credential (SECRET). [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "firecrawl_monitor_run": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:427-434"
+   ],
+   "labels": [],
+   "rationale": "POSTs to `/monitor/{id}/run` and returns the queued check record. The network work uses the monitor's already-configured targets, and no agent-supplied data or page content is returned by this call. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "firecrawl_monitor_update": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:912",
+    "dist/index.js:280"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The tool takes an arbitrary `body` record and, per the documented contract, can change `webhook` and `notification` targets of an existing monitor, which causes monitored page diffs to be delivered to an agent-chosen URL or email recipient (SINK). The `execute` body for this tool is elided from the shown bundle, so the label is kept under the least-restrictive reading.",
+   "undetermined": true
+  },
+  "firecrawl_parse": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:7",
+    "dist/index.js:2036-2061",
+    "dist/index.js:2069-2073"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "The tool's documented and implemented local mode reads the supplied `filePath` from the server filesystem (`readFile` is imported and `path.basename(args2.filePath)` is used to mint an upload for the local file), and the parsed document content is returned into context, so host file contents reach the agent (SECRET). Uploads go to the fixed Firecrawl API, not an agent-chosen host, so no SINK. The local-read branch itself is elided in the bundle, so this is kept under the least-restrictive reading.",
+   "undetermined": true
+  },
+  "firecrawl_research_inspect_paper": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:683-690"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Fetches metadata for an agent-supplied `paperId` from `${BASE2}/papers/{id}` and returns title/abstract/author text from the public paper corpus (UNTRUSTED). Fixed vendor endpoint, so not a SINK.",
+   "undetermined": false
+  },
+  "firecrawl_research_read_paper": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:842",
+    "dist/index.js:1334"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns in-body full-text passages from an indexed public paper, i.e. third-party content rendered into the agent context (UNTRUSTED). Its `execute` body is elided from the shown bundle, so the label is kept; it is registered in the same research group served by the fixed Firecrawl research endpoints, so no SINK is evident.",
+   "undetermined": true
+  },
+  "firecrawl_research_related_papers": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:716-724",
+    "dist/index.js:709-715"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Queries the citation graph over the public paper corpus with agent-supplied seeds and returns ranked candidate records (titles/abstracts) into context (UNTRUSTED). Request goes to the fixed Firecrawl research base path. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "firecrawl_research_search_github": {
+   "default_enabled": true,
+   "evidence": [
+    "README.md:843",
+    "dist/index.js:1335"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns ranked matches with snippets and full matched markdown from indexed public GitHub issues, pull requests and READMEs \u2014 content any attacker can publish (UNTRUSTED). The `execute` body is elided from the shown bundle; the search is against Firecrawl's fixed research index, so no SINK is evident.",
+   "undetermined": true
+  },
+  "firecrawl_research_search_papers": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:653-661"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`client.http.get(`${BASE2}/papers`, ...)` returns indexed paper titles/abstracts from public preprint and literature corpora (arXiv, bioRxiv, medRxiv) formatted by `fmtHits` into context; that corpus is third-party publishable content (UNTRUSTED). The query goes to the fixed Firecrawl research endpoint, so no SINK.",
+   "undetermined": false
+  },
+  "firecrawl_scrape": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:2164",
+    "dist/index.js:2151-2161",
+    "dist/index.js:2139",
+    "dist/index.js:2130-2133"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`execute` passes any agent-supplied `url` to `client.scrape` (or `keylessPost` to `/v2/scrape`) and returns the page markdown/HTML/links into context, so the result is arbitrary attacker-controlled web content (UNTRUSTED). Because the fetched URL, its query string, browser `actions` (`write`, `click`, `executeJavascript`) and `profile` are fully agent-chosen, agent-held data can be delivered to an attacker-owned host and read there (SINK). The JS/actions run in Firecrawl's remote browser, not on the host, so no HOSTEXEC.",
+   "undetermined": false
+  },
+  "firecrawl_search": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:2207-2225",
+    "dist/index.js:1287"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Web/news/image search results plus optional `scrapeOptions` page content are returned into context; search results and the `developer` index (GitHub issues, PRs, docs) are attacker-publishable content (UNTRUSTED). The query itself goes to the fixed Firecrawl API endpoint, so it is not a SINK.",
+   "undetermined": false
+  },
+  "firecrawl_search_feedback": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:2440-2470",
+    "dist/index.js:2439"
+   ],
+   "labels": [],
+   "rationale": "Feedback is POSTed to the fixed Firecrawl `/v2/feedback`-style vendor endpoint with a UUID, rating and short notes; a fixed vendor endpoint is not an attacker-readable destination and no non-public or attacker content is returned. Registered by default unless the opt-out env vars are set.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "Falsy in the advertised schema shown (crawl exposes `webhook`/`webhookHeaders`), so the SINK path is present by default",
+   "effect": "When truthy, `webhook` and `webhookHeaders` are omitted from the `firecrawl_crawl` schema, removing the explicit webhook exfiltration path (the arbitrary crawl target URL remains); scrape is also advertised as read-only.",
+   "evidence": "dist/index.js:2674-2676",
+   "kind": "internal flag derived from environment",
+   "syntax": "SAFE_MODE (derived flag; gates `webhook`/`webhookHeaders` on crawl and interactive scrape actions)"
+  },
+  {
+   "default": "unset \u2192 tool registered",
+   "effect": "`firecrawl_search_feedback` is not registered at all.",
+   "evidence": "dist/index.js:2426-2439",
+   "kind": "environment variable",
+   "syntax": "FIRECRAWL_NO_SEARCH_FEEDBACK=1 | FIRECRAWL_DISABLE_SEARCH_FEEDBACK=1"
+  },
+  {
+   "default": "unset \u2192 tool registered",
+   "effect": "`firecrawl_feedback` is not registered.",
+   "evidence": "dist/index.js:2430-2433",
+   "kind": "environment variable",
+   "syntax": "FIRECRAWL_NO_ENDPOINT_FEEDBACK=1 | FIRECRAWL_DISABLE_ENDPOINT_FEEDBACK=1"
+  },
+  {
+   "default": "Not set \u2192 full profile with all tools registered",
+   "effect": "`primaryProfile.toolAllowlist = SEARCH_PROFILE_TOOLS` causes `server.addTool` to drop every tool except the five `firecrawl_research_*` tools (and `firecrawl_search`, which is additionally dropped when this profile is primary), removing scrape/crawl/interact/parse/monitor labels entirely.",
+   "evidence": "dist/index.js:1329-1336",
+   "kind": "environment variable / endpoint profile",
+   "syntax": "FASTMCP_ENDPOINT=/v2/mcp-search with FIRECRAWL_MCP_SEARCH_OAUTH_ONLY=true"
+  },
+  {
+   "default": "Local stdio/self-hosted runs with a credential are not keyless, so all tools are callable",
+   "effect": "`guardHostedTool` throws KEYLESS_TOOL_NOT_AVAILABLE for any tool not in `KEYLESS_TOOL_NAMES`, so only scrape/search/parse are callable; the other tools' labels are unreachable in that session.",
+   "evidence": "dist/index.js:1625-1630",
+   "kind": "runtime session state",
+   "syntax": "hosted keyless session (no Authorization bearer / API key, CLOUD_SERVICE deployment)"
+  },
+  {
+   "default": "unset \u2192 Firecrawl cloud API is used and fetches originate outside the user's network",
+   "effect": "Redirects all scrape/map/crawl/parse traffic to a self-hosted Firecrawl instance; if that instance sits on localhost or an intranet, scrape/crawl fetches can reach internal hosts, which would add SECRET reach to those tools.",
+   "evidence": "dist/index.js:1686-1690",
+   "kind": "environment variable",
+   "syntax": "FIRECRAWL_API_URL=https://firecrawl.your-domain.com (self-hosted API base)"
+  },
+  {
+   "default": "unset in local npx runs",
+   "effect": "Enables action logging to stderr and the `/ready` credential checks; also forces a credential for feedback calls. Does not remove any tool label.",
+   "evidence": "dist/index.js:1530-1531",
+   "kind": "environment variable",
+   "syntax": "CLOUD_SERVICE=true"
+  }
+ ],
+ "version": "3.24.0"
+}

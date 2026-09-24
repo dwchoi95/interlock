@@ -1,0 +1,647 @@
+{
+ "kind": "npm",
+ "notes": [
+  "No source code was provided, so file:line evidence required by the policy cannot be produced. Evidence entries cite the advertised tool descriptions/input schemas instead, and `undetermined` is set true for every tool.",
+  "All tools are treated as default-enabled because they were advertised and no source/config flag was provided showing that any tool is gated off by default.",
+  "No HOSTEXEC label was assigned: the advertised tools are Notion API operations and do not indicate host code execution."
+ ],
+ "package": "@notionhq/notion-mcp-server",
+ "source": ".cache/sources/.views/npm_notionhq_notion-mcp-server_2.5.1_dadffe599b8f",
+ "tools": {
+  "API-create-a-comment": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "parent"
+   ],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Create comment`; input schema has destination `parent` and content `rich_text`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Posts agent-supplied comment text to an agent-selected Notion page. If the page is shared/attacker-readable, this is a SINK. The returned comment/object may include Notion account/page metadata and collaborative fields; source is unavailable to determine exact output. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": [
+    "rich_text"
+   ]
+  },
+  "API-create-a-data-source": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "parent"
+   ],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Create a data source`; input schema has destination `parent` and value fields `properties`, `title`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Creates a Notion data source under an agent-selected parent with agent-supplied schema/title. If the parent is shared/attacker-readable, this is a SINK. Response may include Notion metadata and inherited/collaborative data; exact fields are undetermined. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": [
+    "properties",
+    "title"
+   ]
+  },
+  "API-delete-a-block": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "block_id"
+   ],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Delete a block`; input schema requires `block_id`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Deletes/archives an agent-selected Notion block, changing Notion state. If the block is shared with an attacker, the state change and any returned object can be attacker-visible; returned block metadata/content may be non-public or collaborative. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "API-get-block-children": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Retrieve block children`; input schema requires `block_id`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads child blocks from a Notion block/page reachable with the user's token, which can contain non-public workspace content. Block content in shared/multi-writer pages can be authored by others, so UNTRUSTED is retained. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "API-get-self": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Retrieve your token's bot user`; input schema has no arguments."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Returns information about the authenticated Notion bot/user for the token, which is non-public account/integration data. No attacker-controlled content is apparent from the advertised schema, but source is unavailable. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "API-get-user": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Retrieve a user`; input schema has `user_id`, indicating a Notion API read using the user's integration credentials."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Retrieves Notion user/account data accessible to the user's token, which may be non-public. In a multi-user workspace, returned user-controlled profile fields such as names/avatars may be authored by another user, so UNTRUSTED is retained. Classification is inferred from advertised schema/description because source code is unavailable. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "API-get-users": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | List all users`; input schema supports pagination via `start_cursor` and `page_size`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Lists Notion users visible to the integration, which can be non-public workspace/account data. User profile names/avatars can be outside-authored in a multi-user workspace, so UNTRUSTED is retained. Source code is unavailable, so exact returned fields are undetermined. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "API-list-data-source-templates": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | List templates in a data source`; input schema requires `data_source_id`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Lists templates in a Notion data source reachable by the integration. Template names/content/metadata can be private and may be authored by collaborators in shared workspaces. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "API-move-page": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "page_id",
+    "parent"
+   ],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Move a page`; input schema requires `page_id` and new `parent`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Moves an agent-selected Notion page to an agent-selected parent. Moving a page into a shared/attacker-readable parent may expose its contents/metadata, so SINK is retained. Returned page metadata may be private or collaborative. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "API-patch-block-children": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "block_id",
+    "after"
+   ],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Append block children`; input schema requires destination `block_id` and content `children`, with optional `after`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Appends agent-supplied blocks to an agent-selected Notion block/page. If that page/block is shared or otherwise attacker-readable, this can deliver data to an attacker-readable destination, so SINK is retained. The response may include Notion object/content data reachable with the user's token and potentially collaborative content; exact output is undetermined without source. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": [
+    "children"
+   ]
+  },
+  "API-patch-page": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "page_id"
+   ],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Update page properties`; input schema has destination `page_id` and value fields `properties`, `in_trash`, `archived`, `icon`, `cover`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Writes agent-supplied properties/icon/cover/archive state to an agent-selected Notion page. A shared/public page can be attacker-readable, so SINK is retained. The response may include non-public page data and collaborative fields. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": [
+    "properties",
+    "in_trash",
+    "archived",
+    "icon",
+    "cover"
+   ]
+  },
+  "API-post-page": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "parent"
+   ],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Create a page`; input schema has destination `parent` and content fields `properties`, `children`, `icon`, `cover`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Creates a Notion page under an agent-selected parent with agent-supplied content. If the parent is shared or attacker-readable, this can exfiltrate data into that destination. Returned page metadata/content is Notion data and may include collaborative/inherited fields; exact output is undetermined. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": [
+    "properties",
+    "children",
+    "icon",
+    "cover"
+   ]
+  },
+  "API-post-search": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Search by title`; input schema has `query`, `sort`, `filter`, pagination fields."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Searches pages/data sources visible to the user's Notion integration and returns titles/metadata, which may be non-public. Page/database titles in shared or multi-writer workspaces can be authored by other users, so output is UNTRUSTED. Despite POST/destructiveHint, the advertised operation is search/read. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "API-query-data-source": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Query a data source`; input schema requires `data_source_id` and supports filters/sorts/pagination."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Queries rows/pages from a Notion data source visible to the integration. Returned records/properties can be non-public and can be authored by collaborators in a multi-writer database. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "API-retrieve-a-block": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Retrieve a block`; input schema requires `block_id`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads a Notion block accessible to the user's integration. Such content may be non-public and, in shared/multi-writer pages, authored by other users. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "API-retrieve-a-comment": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Retrieve comments`; input schema requires `block_id`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Retrieves comments from a Notion block/page. Comments are often authored by collaborators and may contain attacker-controlled text, and comments on private pages are non-public data. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "API-retrieve-a-data-source": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Retrieve a data source`; input schema requires `data_source_id`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads a Notion data source/database schema/metadata accessible with the user's token. Titles, descriptions, and property names in collaborative workspaces may be outside-authored, and the data is non-public unless shared. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "API-retrieve-a-database": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Retrieve a database`; input schema requires `database_id`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads a Notion database accessible to the user's token. Database titles/descriptions/schema in collaborative workspaces can be outside-authored and the data is typically non-public. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "API-retrieve-a-page": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Retrieve a page`; input schema requires `page_id` and optional `filter_properties`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads Notion page metadata/properties accessible to the user's token. Page titles/properties in shared or multi-writer pages can be outside-authored, so UNTRUSTED is retained. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "API-retrieve-a-page-property": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Retrieve a page property item`; input schema requires `page_id` and `property_id`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads a Notion page property accessible to the integration. Property values can be private and, in collaborative pages/databases, outside-authored. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "API-retrieve-page-markdown": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Retrieve a page as Markdown`; input schema requires `page_id` and optional `include_transcript`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Reads full Notion page/block content as Markdown, possibly including meeting transcripts when `include_transcript` is true. Page content/transcripts can be non-public and can contain collaborator-authored or third-party content. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "API-update-a-block": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "block_id"
+   ],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Update a block`; input schema has destination `block_id` and mutable fields `type`, `archived`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Updates or archives an agent-selected Notion block. If the selected block is in a shared/attacker-readable workspace/page, agent-supplied data or state changes can be exposed, so SINK is retained. The returned block may contain non-public and collaborative content. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": [
+    "type",
+    "archived"
+   ]
+  },
+  "API-update-a-data-source": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "data_source_id"
+   ],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Update a data source`; input schema has destination `data_source_id` and value fields `title`, `description`, `properties`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Writes title/description/property schema changes to an agent-selected Notion data source. If the data source is shared or attacker-readable, this can disclose agent-supplied data. Returned metadata may include private or collaborative content. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": [
+    "title",
+    "description",
+    "properties"
+   ]
+  },
+  "API-update-page-markdown": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "page_id"
+   ],
+   "evidence": [
+    "No source file/line was provided. Advertised description: `Notion | Update a page's content as Markdown`; input schema has destination `page_id`, operation `type`, and content-bearing fields `replace_content`, `update_content`, `insert_content`, `replace_content_range`."
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Writes agent-supplied Markdown edits to an agent-selected Notion page/block. If that page is shared or attacker-readable, this can deliver data to an attacker. The response may include Notion page/content data; exact returned fields are undetermined without source. [unverified: no citation with a file:line reference]",
+   "undetermined": true,
+   "value_args": [
+    "replace_content",
+    "update_content",
+    "insert_content",
+    "replace_content_range"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "2.5.1"
+}

@@ -1,0 +1,135 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Only the advertised tools `execute_sql` and `search_objects` were judged. `explain_sql`, `health_check`, and custom tools are present in the code but not in the advertised tool list.",
+  "`max_rows` can cap returned rows for `execute_sql`, but it does not remove SECRET/UNTRUSTED because capped results may still contain sensitive or attacker-authored data."
+ ],
+ "package": "@bytebase/dbhub",
+ "source": ".cache/sources/.views/npm_bytebase_dbhub_1.2.5_2e58a38413c9",
+ "tools": {
+  "execute_sql": {
+   "attacker_named_fields": [
+    "statements[].rows"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "sql"
+   ],
+   "evidence": [
+    "dist/index.js:273-275",
+    "dist/index.js:279-307",
+    "dist/index.js:291-301",
+    "dist/chunk-VDA5BVNE.js:2482-2492"
+   ],
+   "identifier_output_fields": [
+    "source_id",
+    "statements[].sql",
+    "statements[].rows"
+   ],
+   "injectable_output_fields": [
+    "statements[].rows"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`execute_sql` accepts an arbitrary `sql` string and passes it to the configured connector via `connector.executeSQL(sql, executeOptions)`, then returns `result.resultSets` as `statements` including database `rows`. This can expose non-public data from the configured database, so SECRET applies. It is not advertised as read-only here, and absent a `readonly` tool setting the policy permits DML/DDL/admin/unknown SQL, so it can change database state. UNTRUSTED is kept because arbitrary returned database rows may contain attacker-authored content in multi-writer/user-content databases; the code does not establish whether this sqlite source is single-writer trusted, so this is undetermined. No SINK label: the code sends SQL only to the configured database connector, not to an agent-chosen attacker-readable host or public destination. No HOSTEXEC evidence in the provided code.",
+   "undetermined": true,
+   "value_args": [
+    "sql"
+   ]
+  },
+  "search_objects": {
+   "attacker_named_fields": [
+    "results[].name",
+    "results[].schema",
+    "results[].table",
+    "results[].columns[].name",
+    "results[].indexes[].name",
+    "results[].indexes[].columns"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:332-339",
+    "dist/index.js:731-790",
+    "dist/index.js:381-405",
+    "dist/index.js:406-487",
+    "dist/index.js:559-615",
+    "dist/index.js:616-663",
+    "dist/chunk-VDA5BVNE.js:2482-2492"
+   ],
+   "identifier_output_fields": [
+    "object_type",
+    "pattern",
+    "schema",
+    "table",
+    "detail_level",
+    "results[].name",
+    "results[].schema",
+    "results[].table",
+    "results[].columns[].name",
+    "results[].columns[].type",
+    "results[].indexes[].name",
+    "results[].indexes[].columns",
+    "results[].type",
+    "results[].language",
+    "results[].parameters",
+    "results[].return_type"
+   ],
+   "injectable_output_fields": [
+    "results[].name",
+    "results[].schema",
+    "results[].table",
+    "results[].comment",
+    "results[].columns[].name",
+    "results[].columns[].description",
+    "results[].indexes[].name",
+    "results[].indexes[].columns",
+    "results[].parameters",
+    "results[].return_type",
+    "results[].definition"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`search_objects` connects to the configured database and returns schema/object metadata such as schemas, tables, columns, indexes, comments, stored procedure details, and definitions. Database metadata can be non-public, so SECRET applies. UNTRUSTED is kept because names/comments/descriptions/definitions can be authored by other database users in a multi-writer database; the code does not settle whether this source is trusted-only, so this is undetermined. The tool is read-only in code: it searches metadata and its row-count fallback executes a `SELECT COUNT(*)` with `{ readonly: true }`. No SINK: it does not contact an agent-chosen host or write to an attacker-readable destination.",
+   "undetermined": true,
+   "value_args": []
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "enabled",
+   "effect": "The built-in tools `execute_sql` and `search_objects` are enabled by default for a source when that source has no configured tools.",
+   "evidence": "dist/chunk-VDA5BVNE.js:2482-2492",
+   "kind": "default_enabled",
+   "syntax": "default with no TOML [[tools]] entry for a source"
+  },
+  {
+   "default": "not configured",
+   "effect": "When any tools are configured for a source, only those listed are registered for that source; omitting a built-in removes it from the advertised tools for that source.",
+   "evidence": "dist/chunk-VDA5BVNE.js:2468-2480",
+   "kind": "tool_removal",
+   "syntax": "TOML [[tools]] entries for a source omitting `name = \"execute_sql\"` or `name = \"search_objects\"`"
+  },
+  {
+   "default": "readonly not set, writes allowed",
+   "effect": "Denies non-read SQL classes for `execute_sql`, removing its ability to change database state, but it can still return database data so SECRET/UNTRUSTED remain.",
+   "evidence": "dist/index.js:289-299",
+   "kind": "label_reduction",
+   "syntax": "[[tools]] name = \"execute_sql\" readonly = true"
+  },
+  {
+   "default": "off",
+   "effect": "Uses an in-memory sample SQLite database rather than the user's configured private database, so SECRET does not apply to demo sample data.",
+   "evidence": "dist/chunk-VDA5BVNE.js:643-646; dist/chunk-VDA5BVNE.js:705-710; dist/chunk-VDA5BVNE.js:1030-1032",
+   "kind": "label_removal",
+   "syntax": "--demo"
+  }
+ ],
+ "version": "1.2.5"
+}

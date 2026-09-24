@@ -1,0 +1,73 @@
+[
+ {
+  "tool": "browser_eval",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`detectAgentBrowser` runs only two hard-coded probes (`command -v agent-browser` / `where agent-browser` and `agent-browser --version`) via `execSync`; the agent-supplied `task` string is never passed to a shell, only interpolated into the returned JSON guidance text (dist/tools/browser-eval.js:59-6"
+ },
+ {
+  "tool": "nextjs_docs",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "topic",
+   "project_path"
+  ],
+  "annotations": {},
+  "rationale_code": "`resolveNextVersion` reads host files at an agent-chosen `project_path` (`node_modules/next/package.json` and `package.json`) with the user's filesystem privileges and returns the parsed `version` / declared dependency string plus directory-existence facts (`docsAvailable`) into the agent context. T"
+ },
+ {
+  "tool": "nextjs_index",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "port"
+  ],
+  "annotations": {},
+  "rationale_code": "`probeAndListTools` / `getAllAvailableServers` scan local ports and speak MCP to `http(s)://localhost:<port>/_next/mcp` via `detectProtocol` and `listNextJsTools`, returning discovered server ports, PIDs, launch `command` strings and the dev server's tool metadata \u2014 localhost service content plus lo"
+ },
+ {
+  "tool": "nextjs_call",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "port",
+   "toolName",
+   "args"
+  ],
+  "annotations": {},
+  "rationale_code": "`callNextJsTool(portNumber, args.toolName, args.args)` proxies an arbitrary tool name and arbitrary argument object to the Next.js dev server's localhost MCP endpoint and returns the raw `result`, which per the documented runtime tools includes build/runtime errors, the dev log file (browser console"
+ }
+]

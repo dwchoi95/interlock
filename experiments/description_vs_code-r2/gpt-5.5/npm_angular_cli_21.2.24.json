@@ -1,0 +1,144 @@
+{
+ "tools": {
+  "ai_tutor": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns bundled tutor instructions/curriculum/persona: `Loads the core instructions, curriculum, and persona for the Angular AI Tutor`. The advertised text does not say it reads user files, accounts, attacker-controlled web content, sends data externally, or executes code. Although the returned text is intended to affect the model (`reprogramming the assistant` and `MUST adopt the persona`), it is not described as attacker-authored under the threat model.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "get_best_practices": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "With `workspacePath`, the tool uses a local project path to return a guide matching the user's installed Angular version: `provide the workspacePath argument to get the guide that matches the project's Angular version` and `absolute path to the angular.json file ... used to find the version-specific best practices guide that corresponds to the installed version`. That can reveal non-public local project metadata, so it has SECRET reach. The returned guide itself is described as official/bundled, not attacker-controlled, and the tool is read-only and does not send data to an attacker-chosen destination or execute code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "search_documentation": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches a fixed official vendor site: `Searches the official Angular documentation at https://angular.dev`. A query to a fixed vendor endpoint is not a SINK, and the schema provides no agent-chosen URL/host argument. The returned content is official Angular documentation (`official documentation`, `source of truth`), not described as attacker-controlled. It does not read local private data or execute host code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "searchedVersion",
+    "url",
+    "title",
+    "breadcrumbs"
+   ],
+   "attacker_named_fields": []
+  },
+  "find_examples": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "With `workspacePath`, the tool uses a local `angular.json` path to select examples for the installed Angular version: `provide the workspacePath argument to get examples that match the project's Angular version` and `absolute path to the angular.json file ... used to find the version-specific code examples that correspond to the installed version`. That can reveal non-public local project metadata, so it has SECRET reach. The examples are described as a `curated database of official, best-practice code examples` and `generic code examples bundled with the CLI`, so they are not attacker-controlled; the tool does not advertise external delivery or host execution.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "list_projects": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns an overview of the user's local repository/workspaces: `Provides a comprehensive overview of all Angular workspaces and projects within the repository`, including `their types, and their locations`, `root`, `sourceRoot`, `unitTestFramework`, `styleLanguage`, `selectorPrefix`, `frameworkVersion`, `builder`, and `path`. This is non-public local project data, so it is SECRET. It is read-only and does not advertise attacker-controlled input, external delivery, or code execution.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name",
+    "root",
+    "sourceRoot",
+    "unitTestFramework",
+    "styleLanguage",
+    "selectorPrefix",
+    "frameworkVersion",
+    "builder",
+    "path",
+    "type"
+   ],
+   "attacker_named_fields": []
+  },
+  "onpush_zoneless_migration": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads local source files from an absolute path: `The tool can operate on either a single file or an entire directory. Provide the absolute path` and `The contents are read with fs.readFileSync`. It then analyzes that Angular code and returns migration instructions, so it can expose non-public local file contents or derived facts to the agent context. It explicitly `DOES NOT modify code` and only `PROVIDES INSTRUCTIONS`, so it is not a write tool. No arbitrary host execution is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [
+  {
+   "syntax": "get_best_practices.workspacePath omitted",
+   "kind": "argument",
+   "effect": "Returns the generic bundled best-practices guide instead of using local project version information, so the SECRET reach from local workspace-version selection is absent for that call.",
+   "default": "description",
+   "evidence": "`If omitted, the tool will return the generic best practices guide bundled with the CLI.`"
+  },
+  {
+   "syntax": "find_examples.workspacePath omitted",
+   "kind": "argument",
+   "effect": "Searches generic bundled examples instead of using local project version information, so the SECRET reach from local workspace-version selection is absent for that call.",
+   "default": "description",
+   "evidence": "`If omitted, the tool will search the generic code examples bundled with the CLI.`"
+  }
+ ],
+ "notes": [
+  "Judged only from the advertised tool names, descriptions, schemas, and annotations; no source code was available.",
+  "Fixed official Angular documentation search at `https://angular.dev` is not treated as a SINK because there is no agent-chosen destination host."
+ ],
+ "usage": {
+  "input_tokens": 4711,
+  "output_tokens": 5572,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

@@ -1,0 +1,268 @@
+{
+ "tools": {
+  "git_status": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Shows the working tree status` for a caller-supplied `repo_path`, so it can return non-public local repository metadata such as changed paths/status. The repository/worktree may also contain attacker-authored names or metadata in a cloned or multi-writer project; the description does not constrain repository provenance, so the UNTRUSTED part is undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "repo_path"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "git_diff_unstaged": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Shows changes in the working directory that are not yet staged`, which can expose non-public local file contents from the repository. Diff text can also include attacker-authored file content if the working tree contains third-party or multi-writer content; the description does not constrain repository provenance, so UNTRUSTED is undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "repo_path"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "git_diff_staged": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Shows changes that are staged for commit`, so it can return non-public local staged file contents. The staged diff may include attacker-authored repository content in a cloned or multi-writer project; the description does not constrain repository provenance, so UNTRUSTED is undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "repo_path"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "git_diff": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Shows differences between branches or commits` in `repo_path` for a selected `target`, which can expose non-public file contents from a private/local repository. Differences between branches or commits may also contain attacker-authored content from public or multi-writer repositories; the description does not constrain repository provenance, so UNTRUSTED is undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "repo_path",
+    "target"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "git_commit": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Records changes to the repository`, which changes local repository state but is not advertised as sending data to any remote or attacker-readable destination. It is not advertised as returning repository contents or executing arbitrary code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "repo_path"
+   ],
+   "value_args": [
+    "message"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "git_add": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Adds file contents to the staging area`, which changes local repository state for selected `files` but is not advertised as sending data to a remote or attacker-readable destination. It is not advertised as returning repository contents or executing arbitrary code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "repo_path",
+    "files"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "git_reset": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Unstages all staged changes`, which changes local repository state but is not advertised as returning secrets, sending data out, or executing arbitrary code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "repo_path"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "git_log": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Shows the commit logs`, which can reveal non-public history, commit messages, authors, and identifiers in a private/local repository. Commit logs can also include attacker-authored messages or names in public or multi-writer repositories; the description does not constrain repository provenance, so UNTRUSTED is undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "repo_path"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "git_create_branch": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Creates a new branch from an optional base branch`, which changes local repository state. It is not advertised as sending data to a remote or attacker-readable destination, returning repository contents, or executing arbitrary code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "repo_path",
+    "branch_name",
+    "base_branch"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "git_checkout": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Switches branches`, which changes local working tree/repository state. It is not advertised as sending data to a remote or attacker-readable destination, returning repository contents, or executing arbitrary code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "repo_path",
+    "branch_name"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "git_show": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Shows the contents of a commit`, which can expose non-public file contents from a private/local repository. Commit contents may also be attacker-authored in public or multi-writer repositories; the description does not constrain repository provenance, so UNTRUSTED is undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "repo_path",
+    "revision"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "git_branch": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`List Git branches` can reveal non-public branch names in a private/local repository. Branch names, especially when `branch_type` includes `remote` or `all`, may be chosen by outside contributors; the description does not constrain repository provenance, so UNTRUSTED and attacker-named identifiers are undetermined.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "repo_path",
+    "branch_type",
+    "contains",
+    "not_contains"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No source code or output schemas were provided; judgments are based only on the advertised tool names, descriptions, input schemas, and annotations."
+ ],
+ "usage": {
+  "input_tokens": 2466,
+  "output_tokens": 5116,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

@@ -1,0 +1,16 @@
+{
+ "package": "@modelcontextprotocol/server-filesystem",
+ "tool": "get_file_info",
+ "claimed": [
+  "SECRET"
+ ],
+ "HOSTEXEC": "not_supported",
+ "SECRET": "supported",
+ "SINK": "not_supported",
+ "UNTRUSTED": "insufficient",
+ "reason": "The cited handler validates a user-supplied path, calls getFileStats, which uses fs.stat on the host filesystem, and returns file/directory metadata such as size, timestamps, type, and permissions. That establishes returning host filesystem metadata into the agent context, so SECRET is supported. The lines show no arbitrary code execution and no write/network/message to an attacker-readable destination, so HOSTEXEC and SINK are not supported. Although the path argument selects what is statted, the lines do not by themselves establish that the returned metadata is attacker-controllable, so UNTRUSTED is insufficient.",
+ "usage": {
+  "input_tokens": 1310,
+  "output_tokens": 596
+ }
+}

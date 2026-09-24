@@ -1,0 +1,48 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Both tools are listed unconditionally by the ListTools handler with no toolset/flag gating (dist/index.js:215-217).",
+  "Rate limiting (dist/index.js:82-94) can cause errors but does not change reachability or labels.",
+  "Error paths echo the Brave API response body back to the agent (dist/index.js:121, 148, 174, 191), another vendor-controlled text channel but still not attacker-chosen destinations."
+ ],
+ "package": "@modelcontextprotocol/server-brave-search",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-brave-search_0.6.2_59d26596a22e",
+ "tools": {
+  "brave_local_search": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:140-151",
+    "dist/index.js:196-212",
+    "dist/index.js:153"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`performLocalSearch` returns Brave POI names, addresses and `descData.descriptions` text (third-party/community-sourced business listing content) to the agent, and falls back to `performWebSearch` which returns arbitrary web content, so UNTRUSTED. All fetches target the fixed Brave endpoints (`/res/v1/web/search`, `/res/v1/local/pois`, `/res/v1/local/descriptions`) with only the query/ids parameters, so no agent-chosen destination and hence no SINK. Nothing non-public from the host or the user's accounts is returned, so no SECRET.",
+   "undetermined": false
+  },
+  "brave_web_search": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:113-119",
+    "dist/index.js:125-130",
+    "dist/index.js:232"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`performWebSearch` fetches Brave web search results and returns attacker-influenceable `title`, `description` and `url` fields from arbitrary web pages straight into the agent context, so results are UNTRUSTED. The request goes only to the fixed vendor endpoint `https://api.search.brave.com/res/v1/web/search` with agent-supplied text limited to the `q` query parameter, which is a fixed-vendor query rather than an attacker-readable destination, so it is not a SINK. No local files, credentials or intranet data are read back (the `BRAVE_API_KEY` is only sent as a header, never returned), so no SECRET, and there is no code execution.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "unset - server exits immediately",
+   "effect": "If unset, the server prints an error and exits before serving any tools, so both tools become unavailable; when set, both tools are advertised unconditionally.",
+   "evidence": "dist/index.js:68-72",
+   "kind": "env",
+   "syntax": "BRAVE_API_KEY=<key> (environment variable)"
+  }
+ ],
+ "version": "0.6.2"
+}

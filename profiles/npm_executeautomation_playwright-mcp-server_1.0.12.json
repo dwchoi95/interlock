@@ -1,0 +1,435 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All 33 tools are returned unconditionally by `createToolDefinitions()` (dist/tools.js:1-494); there is no toolset/capability flag gating any of them, so every tool is default-enabled.",
+  "The concrete tool implementations under dist/tools/browser/*.js and dist/tools/api/requests.js are not part of the supplied source; labels for page-interaction tools therefore retain the least restrictive (label-keeping) reading and are marked undetermined.",
+  "No tool shells out with agent-controlled input: the only `spawn` is the fixed `npx playwright install <browserType>` in `installBrowsers` (dist/toolHandler.js:112), with browserType constrained to the chromium/firefox/webkit enum (dist/tools.js:82) - hence no HOSTEXEC label anywhere.",
+  "`playwright_evaluate` is arbitrary JS but confined to the browser page, so per the rules it is labelled SECRET/UNTRUSTED/SINK rather than HOSTEXEC; note the browser is launched headed by default (`headless = false`, dist/toolHandler.js:174).",
+  "`playwright_navigate` accepts any scheme, so `file://`/`http://localhost` pages can be loaded and then exfiltrated with `playwright_evaluate` or read with `playwright_get_visible_text`/`_html`.",
+  "`start_codegen_session` and `end_codegen_session` give arbitrary-path local directory creation and a `*.spec.ts` file write (dist/tools/codegen/index.js:43, :96; dist/tools/codegen/generator.js:150) - a host-integrity concern but not one of the four labels, since the file is never executed by this server."
+ ],
+ "package": "@executeautomation/playwright-mcp-server",
+ "source": ".cache/sources/.views/npm_executeautomation_playwright-mcp-server_1.0.12_a40617f5e11c",
+ "tools": {
+  "clear_codegen_session": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/codegen/index.js:174-179"
+   ],
+   "labels": [],
+   "rationale": "`clearCodegenSession.handler` only deletes an in-memory session record. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "end_codegen_session": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/codegen/index.js:89-96",
+    "dist/tools/codegen/generator.js:145-151"
+   ],
+   "labels": [],
+   "rationale": "Writes a generated `*.spec.ts` file to the session's `outputPath` via `fs.writeFile` and returns the generated code (derived from the agent's own recorded tool args). Local write only - no execution of the written file, no network egress, no reading of pre-existing user data.",
+   "undetermined": false
+  },
+  "get_codegen_session": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/codegen/index.js:153-158"
+   ],
+   "labels": [],
+   "rationale": "`getCodegenSession.handler` returns the in-memory session object (actions the agent itself recorded). No host files, credentials or network access. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "playwright_assert_response": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:529-530",
+    "dist/tools.js:373-374"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SECRET"
+   ],
+   "rationale": "`assertResponseTool.execute` resolves the awaited HTTP response and validates/reports its body, so response content from the (attacker-controlled) site reaches the agent; if the page was navigated to a localhost/intranet/file origin the awaited response is non-public. Implementation file dist/tools/browser/index.js is not provided, so both labels are kept.",
+   "undetermined": true
+  },
+  "playwright_click": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:511-512",
+    "dist/tools.js:116"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`clickTool.execute` acts on the attacker-controlled page; its result/diagnostics can reflect page state and clicking can trigger navigation to attacker content. The implementation (dist/tools/browser/interaction.js) is not included, so the UNTRUSTED reading of its return value is kept.",
+   "undetermined": true
+  },
+  "playwright_click_and_switch_tab": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:559-560",
+    "dist/toolHandler.js:31-33"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`clickAndSwitchTabTool.execute` follows a link in the current page and promotes the new tab via `setGlobalPage`, reporting the new tab's URL/title - i.e. content of a page the attacker's link chose. Implementation file not included, so UNTRUSTED is kept.",
+   "undetermined": true
+  },
+  "playwright_close": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:415-443"
+   ],
+   "labels": [],
+   "rationale": "Closes the browser and resets global state; returns a fixed status string.",
+   "undetermined": false
+  },
+  "playwright_console_logs": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:509-510",
+    "dist/toolHandler.js:66-92"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`registerConsoleMessage` captures every `console` message and `pageerror` from the loaded page into `consoleLogsTool`, and this tool returns them, so attacker-controlled page text enters the agent context.",
+   "undetermined": false
+  },
+  "playwright_custom_user_agent": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:531-532",
+    "dist/toolHandler.js:465"
+   ],
+   "labels": [],
+   "rationale": "Only re-creates the browser context with the supplied `userAgent` (`browserSettings.userAgent`); returns no page data and contacts no agent-chosen host.",
+   "undetermined": false
+  },
+  "playwright_delete": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:546-547",
+    "dist/toolHandler.js:319-322",
+    "dist/tools.js:344-350"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK",
+    "SECRET"
+   ],
+   "rationale": "`deleteRequestTool.execute` issues a request to an arbitrary agent-chosen URL with arbitrary headers (SINK - path/headers can carry data), returns the response body (UNTRUSTED) and can address internal hosts (SECRET).",
+   "undetermined": false
+  },
+  "playwright_drag": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:553-554",
+    "dist/tools.js:441-442"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`dragTool.execute` manipulates elements of the attacker-controlled page and its result is page-derived; implementation (dist/tools/browser/interaction.js) is not in the provided source.",
+   "undetermined": true
+  },
+  "playwright_evaluate": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:525-526",
+    "dist/tools.js:199"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK",
+    "SECRET"
+   ],
+   "rationale": "`evaluateTool.execute` runs arbitrary agent-supplied `script` in the page context and returns its result: the script can `fetch()` any URL (including localhost/intranet, and file content when the page origin is `file://`) making it SECRET, can POST collected data to an attacker host (SINK), and returns attacker-page-derived values (UNTRUSTED). Execution is confined to the browser page, so no HOSTEXEC.",
+   "undetermined": false
+  },
+  "playwright_expect_response": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:527-528",
+    "dist/tools.js:361-362"
+   ],
+   "labels": [],
+   "rationale": "`expectResponseTool.execute` only registers a `waitForResponse` promise keyed by `id`; the matched response content is surfaced later by `playwright_assert_response`.",
+   "undetermined": false
+  },
+  "playwright_fill": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:517-518",
+    "dist/tools.js:152-153"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`fillTool.execute` writes agent-supplied `value` into a form field of whatever page is loaded; on an attacker-controlled page the value is directly observable by page JavaScript, making it an exfiltration sink. Page-derived results make it UNTRUSTED; the interaction implementation is not in the provided source.",
+   "undetermined": true
+  },
+  "playwright_get": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:484-486",
+    "dist/toolHandler.js:319-322",
+    "dist/toolHandler.js:538-539"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK",
+    "SECRET"
+   ],
+   "rationale": "`ensureApiContext(args.url)` builds a Playwright request context with the agent-chosen `baseURL` and `getRequestTool.execute` performs the GET, returning the response body (UNTRUSTED). The URL is unrestricted, so localhost/intranet endpoints can be read (SECRET), and the agent-chosen URL plus arbitrary `headers`/`token` make it an outbound channel to an attacker host (SINK).",
+   "undetermined": false
+  },
+  "playwright_get_visible_html": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:535-536",
+    "dist/tools.js:400-415"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SECRET"
+   ],
+   "rationale": "`visibleHtmlTool.execute` returns raw page HTML (optionally including scripts when `removeScripts:false`), so attacker-authored markup enters the agent context and local/intranet page content can be read after navigation to such a URL.",
+   "undetermined": false
+  },
+  "playwright_get_visible_text": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:533-534",
+    "dist/tools.js:391-397",
+    "dist/tools.js:81"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SECRET"
+   ],
+   "rationale": "`visibleTextTool.execute` returns the text of the current page: attacker-controlled when the browser was pointed at a hostile site (UNTRUSTED), and non-public when `playwright_navigate` loaded a `file://`, localhost or intranet URL (SECRET).",
+   "undetermined": false
+  },
+  "playwright_go_back": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:549-550",
+    "dist/tools/browser/navigation.js"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`goBackTool.execute` re-loads a previous (possibly attacker-controlled) page and reports the resulting navigation state; the implementation file is not included in the provided source, so the UNTRUSTED reading of its output is kept.",
+   "undetermined": true
+  },
+  "playwright_go_forward": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:551-552",
+    "dist/tools/browser/navigation.js"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`goForwardTool.execute` navigates forward into a possibly attacker-controlled page and returns navigation state; implementation not provided, so UNTRUSTED is kept.",
+   "undetermined": true
+  },
+  "playwright_hover": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:521-522",
+    "dist/tools.js:176"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`hoverTool.execute` interacts with the attacker-controlled page; its return value is page-derived and the implementation is not in the provided source.",
+   "undetermined": true
+  },
+  "playwright_iframe_click": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:513-514",
+    "dist/tools.js:127-128"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`iframeClickTool.execute` clicks inside a (typically third-party) iframe of the loaded page; return payload comes from the attacker-controlled document and its implementation is not in the provided source, so UNTRUSTED is kept.",
+   "undetermined": true
+  },
+  "playwright_iframe_fill": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:515-516",
+    "dist/tools.js:139-143"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`iframeFillTool.execute` types agent-supplied `value` into an input of an attacker-controlled iframe document, where page scripts observe it immediately - agent data reaches an attacker-readable destination (SINK). Results come from that untrusted document (UNTRUSTED); implementation file not provided.",
+   "undetermined": true
+  },
+  "playwright_navigate": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools.js:81",
+    "dist/toolHandler.js:501-502",
+    "dist/toolHandler.js:159-243"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK",
+    "SECRET"
+   ],
+   "rationale": "`navigationTool.execute` drives a real browser (`ensureBrowser` launches chromium/firefox/webkit) to an agent-supplied `url`, so the tool loads attacker-controlled pages (UNTRUSTED) and the URL itself is an agent-chosen outbound request that can carry data in its path/query to an attacker host (SINK). The scheme is unrestricted in the visible code, so `file://`, `localhost` and intranet URLs can be loaded and their content becomes readable through the other page-reading tools; the concrete return payload lives in `dist/tools/browser/navigation.js`, which is not in the provided source, so SECRET is kept.",
+   "undetermined": true
+  },
+  "playwright_patch": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:544-545",
+    "dist/toolHandler.js:319-322",
+    "dist/tools.js:326-333"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK",
+    "SECRET"
+   ],
+   "rationale": "`patchRequestTool.execute` sends agent-supplied body/headers to an arbitrary URL (SINK), returns the response (UNTRUSTED) and can reach localhost/intranet endpoints (SECRET).",
+   "undetermined": false
+  },
+  "playwright_post": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:484-486",
+    "dist/toolHandler.js:540-541",
+    "dist/tools.js:290-297"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK",
+    "SECRET"
+   ],
+   "rationale": "`postRequestTool.execute` sends agent-supplied `value` and `headers` to an arbitrary agent-chosen `url` (clear SINK) and returns the response (UNTRUSTED); the URL may be localhost/intranet, exposing non-public responses (SECRET).",
+   "undetermined": false
+  },
+  "playwright_press_key": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:555-556",
+    "dist/tools.js:453-454"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`pressKeyTool.execute` sends keystrokes to the loaded page (which can submit forms on an attacker site) and returns page-derived status; implementation not provided, so UNTRUSTED kept.",
+   "undetermined": true
+  },
+  "playwright_put": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:542-543",
+    "dist/toolHandler.js:319-322",
+    "dist/tools.js:308-315"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SINK",
+    "SECRET"
+   ],
+   "rationale": "`putRequestTool.execute` writes agent-supplied body to an arbitrary URL (SINK), returns the response (UNTRUSTED) and can target internal hosts (SECRET).",
+   "undetermined": false
+  },
+  "playwright_resize": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:505-506",
+    "dist/tools.js:237-253"
+   ],
+   "labels": [],
+   "rationale": "`resizeTool.execute` only changes viewport/device emulation settings; no data is returned from the page, no network destination chosen, no host execution.",
+   "undetermined": false
+  },
+  "playwright_save_as_pdf": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:557-558",
+    "dist/tools.js:465-466"
+   ],
+   "labels": [],
+   "rationale": "`saveAsPdfTool.execute` writes the rendered page to a local file at an agent-chosen `outputPath`; the content is not returned to the agent and the destination is the user's own disk, not attacker-readable.",
+   "undetermined": false
+  },
+  "playwright_screenshot": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:503-504",
+    "dist/tools.js:98-105",
+    "dist/toolHandler.js:634"
+   ],
+   "labels": [
+    "UNTRUSTED",
+    "SECRET"
+   ],
+   "rationale": "`screenshotTool.execute` returns the rendered current page (base64 by default per schema `storeBase64`), so attacker-controlled page content re-enters the agent context (UNTRUSTED); if the page was pointed at `file://`/localhost by `playwright_navigate` the image contains non-public data (SECRET). `savePng`/`downloadsDir` only write locally, which is not attacker-readable. Implementation file dist/tools/browser/index.js is not provided.",
+   "undetermined": true
+  },
+  "playwright_select": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:519-520",
+    "dist/tools.js:164-165"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`selectTool.execute` operates on the loaded (possibly attacker-controlled) page and returns page-derived status; implementation not included, so UNTRUSTED kept.",
+   "undetermined": true
+  },
+  "playwright_upload_file": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/toolHandler.js:523-524",
+    "dist/tools.js:187-190"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`uploadFileTool.execute` attaches a local file at an absolute `filePath` to a `input[type=file]` on the currently loaded page; if that page is attacker-controlled the host file's bytes are delivered to the attacker (sink for non-public host data). Content is not returned into the agent context, so no SECRET label.",
+   "undetermined": false
+  },
+  "start_codegen_session": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/codegen/index.js:31-48",
+    "dist/tools/codegen/index.js:43"
+   ],
+   "labels": [],
+   "rationale": "`startCodegenSession.handler` only creates a directory (`fs.mkdir`) at an agent-chosen path and stores options in memory; it returns no host data, makes no network call and executes nothing.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "unset - Playwright's bundled browser is used, auto-installed via `npx playwright install` if missing",
+   "effect": "Selects the browser binary used by `browserInstance.launch({ executablePath })`; does not add or remove any tool or label.",
+   "evidence": "dist/toolHandler.js:199-204",
+   "kind": "env var",
+   "syntax": "CHROME_EXECUTABLE_PATH=<path>"
+  },
+  {
+   "default": "stdio transport",
+   "effect": "Changes transport only (stdio vs HTTP endpoints /sse, /messages, /mcp); the same full tool list from `createToolDefinitions()` is advertised either way.",
+   "evidence": "README.md:179-201",
+   "kind": "cli flag",
+   "syntax": "--port 8931 (HTTP/SSE mode)"
+  }
+ ],
+ "version": "1.0.12"
+}

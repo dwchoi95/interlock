@@ -1,0 +1,795 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All listed tools are advertised unconditionally in `ListToolsRequestSchema`; no feature flags or disabled-by-default toolsets are shown.",
+  "The operation module source files are not provided. Classifications therefore rely on the advertised schemas/descriptions, the dispatcher calls, and README evidence that the server uses a GitHub personal access token with possible private-repository access. Exact GitHub response fields are undetermined; the only result field shown by code is MCP `content[].text` containing `JSON.stringify(...)`."
+ ],
+ "package": "@modelcontextprotocol/server-github",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-github_2025.4.8_5edf77157f2c",
+ "tools": {
+  "add_issue_comment": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "owner",
+    "repo",
+    "issue_number"
+   ],
+   "evidence": [
+    "dist/index.js:117-121",
+    "dist/index.js:315-320",
+    "README.md:138-145",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Dispatched to `issues.addIssueComment(owner, repo, issue_number, body)`. It posts agent-supplied `body` to the selected issue; public repository issues are attacker-readable, so it is a SINK. Returned comment/repository details for private repositories may reveal non-public GitHub data, so it is SECRET. Exact output fields are not shown.",
+   "undetermined": true,
+   "value_args": [
+    "body"
+   ]
+  },
+  "create_branch": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "owner",
+    "repo",
+    "branch",
+    "from_branch"
+   ],
+   "evidence": [
+    "dist/index.js:97-101",
+    "dist/index.js:203-207",
+    "README.md:101-108",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Dispatched to `branches.createBranchFromRef(args.owner, args.repo, args.branch, args.from_branch)`. It creates a branch in the selected repository, so public repositories make it a SINK. Returned ref/SHA data can reflect attacker-controlled public repository refs, so output is UNTRUSTED; for private repositories it may reveal non-public data, so it is SECRET. Exact output fields are not shown.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "create_issue": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "owner",
+    "repo",
+    "assignees",
+    "milestone"
+   ],
+   "evidence": [
+    "dist/index.js:82-86",
+    "dist/index.js:245-255",
+    "README.md:68-78",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Dispatched to `issues.createIssue(owner, repo, options)` after separating `owner`/`repo`. It writes issue `title`, `body`, labels, assignees, and milestone to the selected repository; on a public repository this is attacker-readable, so it is a SINK. Returned issue details in a private repository may be non-public GitHub data, so it is SECRET. Exact output fields are not shown.",
+   "undetermined": true,
+   "value_args": [
+    "title",
+    "body",
+    "labels"
+   ]
+  },
+  "create_or_update_file": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "owner",
+    "repo",
+    "path",
+    "branch",
+    "sha"
+   ],
+   "evidence": [
+    "dist/index.js:57-61",
+    "dist/index.js:231-235",
+    "README.md:20-30",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Advertised unconditionally and dispatched to `files.createOrUpdateFile(args.owner, args.repo, args.path, args.content, args.message, args.branch, args.sha)`. It writes agent-supplied `content` and `message` to a GitHub repository path/branch, which can be a public attacker-readable repository, so it is a SINK. The README configures a GitHub personal access token with repo/private-repo scope, so returned file/commit details may be non-public SaaS data, making it SECRET. Operation implementation is not included, so exact returned fields are undetermined.",
+   "undetermined": true,
+   "value_args": [
+    "content",
+    "message"
+   ]
+  },
+  "create_pull_request": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "owner",
+    "repo",
+    "head",
+    "base"
+   ],
+   "evidence": [
+    "dist/index.js:87-91",
+    "dist/index.js:271-275",
+    "README.md:80-91",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Dispatched to `pulls.createPullRequest(args)`. It creates a pull request with supplied `title`/`body` between selected `head` and `base` branches in the selected repository; for a public repository this publishes agent-supplied data, so it is a SINK. Returned PR details may be private repository data under the user's token, so it is SECRET. Exact output fields are not shown.",
+   "undetermined": true,
+   "value_args": [
+    "title",
+    "body"
+   ]
+  },
+  "create_pull_request_review": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "owner",
+    "repo",
+    "pull_number",
+    "commit_id",
+    "comments"
+   ],
+   "evidence": [
+    "dist/index.js:152-156",
+    "dist/index.js:352-357",
+    "README.md:217-230",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Dispatched to `pulls.createPullRequestReview(owner, repo, pull_number, options)`. It posts a review body and optional line comments to a selected PR; on a public repository this is attacker-readable, so it is a SINK. Returned review/PR details in private repositories may be non-public data, so it is SECRET. Exact output fields are not shown.",
+   "undetermined": true,
+   "value_args": [
+    "body",
+    "event",
+    "comments"
+   ]
+  },
+  "create_repository": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "name"
+   ],
+   "evidence": [
+    "dist/index.js:67-71",
+    "dist/index.js:217-221",
+    "README.md:50-57",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Dispatched to `repository.createRepository(args)`. It creates a repository in the user's GitHub account and can store agent-supplied `name`/`description`; if not private, this is attacker-readable public GitHub state, so it is a SINK. The returned created-repository details may include non-public account/repository data under the user's token, so it is SECRET. Exact defaults and output fields are not shown.",
+   "undetermined": true,
+   "value_args": [
+    "description"
+   ]
+  },
+  "fork_repository": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "owner",
+    "repo",
+    "organization"
+   ],
+   "evidence": [
+    "dist/index.js:92-96",
+    "dist/index.js:196-200",
+    "README.md:93-99",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Dispatched to `repository.forkRepository(args.owner, args.repo, args.organization)`. It creates a fork in the user's account or selected organization, changing GitHub state, so it is a SINK. Forking/returning details for public repositories may include attacker-controlled repository metadata, so output is UNTRUSTED. Forking private repositories or returning fork details under the user's token may reveal non-public data, so it is SECRET. Exact output fields are not shown.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_file_contents": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:72-76",
+    "dist/index.js:224-228",
+    "README.md:59-66",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Dispatched to `files.getFileContents(args.owner, args.repo, args.path, args.branch)` and returns JSON text. It can read files/directories from public repositories controlled by attackers, so output is UNTRUSTED. With the configured token and private-repo scope it can also read private repository contents, so it is SECRET. Exact result fields are not shown.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_issue": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:137-141",
+    "dist/index.js:330-334",
+    "README.md:187-193",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Dispatched to `issues.getIssue(args.owner, args.repo, args.issue_number)`. Public issue contents and authors can be attacker-controlled, so output is UNTRUSTED. Private repository issues can be read with the user's token, so it is SECRET. Exact result fields are not shown.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_pull_request": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:142-146",
+    "dist/index.js:337-341",
+    "README.md:195-201",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Dispatched to `pulls.getPullRequest(args.owner, args.repo, args.pull_number)`. Public pull request titles/bodies/branches/authors can be attacker-controlled, so output is UNTRUSTED. Private PR details may be returned under the user's token, so it is SECRET. Exact result fields are not shown.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_pull_request_comments": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:177-181",
+    "dist/index.js:390-394",
+    "README.md:268-274",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Dispatched to `pulls.getPullRequestComments(args.owner, args.repo, args.pull_number)`. PR review comments in public/multi-writer repositories can be attacker-authored, so output is UNTRUSTED. Private review comments may be returned under the user's token, so it is SECRET. Exact result fields are not shown.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_pull_request_files": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:162-166",
+    "dist/index.js:368-372",
+    "README.md:243-249",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Dispatched to `pulls.getPullRequestFiles(args.owner, args.repo, args.pull_number)`. File names, patches, and changed content in public PRs can be attacker-controlled, so output is UNTRUSTED. Private PR file/patch data may be returned under the user's token, so it is SECRET. Exact result fields are not shown.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_pull_request_reviews": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:182-186",
+    "dist/index.js:397-401",
+    "README.md:276-282",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Dispatched to `pulls.getPullRequestReviews(args.owner, args.repo, args.pull_number)`. PR review bodies, reviewer names, and states in public/multi-writer repositories can be attacker-authored, so output is UNTRUSTED. Private PR reviews may be returned under the user's token, so it is SECRET. Exact result fields are not shown.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_pull_request_status": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:167-171",
+    "dist/index.js:375-379",
+    "README.md:251-257",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Dispatched to `pulls.getPullRequestStatus(args.owner, args.repo, args.pull_number)`. Public PR status/check names, descriptions, URLs, and contexts can be controlled by repository integrations or contributors, so output is UNTRUSTED. Private PR status data may be returned under the user's token, so it is SECRET. Exact result fields are not shown.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_commits": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:102-106",
+    "dist/index.js:323-327",
+    "README.md:177-185",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Dispatched to `commits.listCommits(args.owner, args.repo, args.page, args.perPage, args.sha)`. Commit messages, author names, branch names, and repository metadata in public repositories can be attacker-controlled, so output is UNTRUSTED. In private repositories it may return non-public commit history under the user's token, so it is SECRET. Exact result fields are not shown.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_issues": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:107-111",
+    "dist/index.js:299-304",
+    "README.md:110-122",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Dispatched to `issues.listIssues(owner, repo, options)`. Issue titles/bodies/authors in public or multi-writer repositories can be attacker-authored, so output is UNTRUSTED. In private repositories it may return non-public issue data, so it is SECRET. Exact result fields are not shown.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_pull_requests": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:147-151",
+    "dist/index.js:344-349",
+    "README.md:203-215",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Dispatched to `pulls.listPullRequests(owner, repo, options)`. Public PR titles/bodies/authors/branches can be attacker-controlled, so output is UNTRUSTED. Private repository PR data can be returned under the user's token, so it is SECRET. Exact result fields are not shown.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "merge_pull_request": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "owner",
+    "repo",
+    "pull_number"
+   ],
+   "evidence": [
+    "dist/index.js:157-161",
+    "dist/index.js:360-365",
+    "README.md:232-241",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Dispatched to `pulls.mergePullRequest(owner, repo, pull_number, options)`. It merges the selected PR and may store supplied commit title/message, changing public repository state when applicable, so it is a SINK. The selected PR may be attacker-authored and returned merge details may incorporate PR-derived metadata, so output is UNTRUSTED. Private repository merge details may be non-public, so it is SECRET. Exact output fields are not shown.",
+   "undetermined": true,
+   "value_args": [
+    "commit_title",
+    "commit_message",
+    "merge_method"
+   ]
+  },
+  "push_files": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "owner",
+    "repo",
+    "branch",
+    "files"
+   ],
+   "evidence": [
+    "dist/index.js:77-81",
+    "dist/index.js:238-242",
+    "README.md:32-40",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Dispatched to `files.pushFiles(args.owner, args.repo, args.branch, args.files, args.message)`. It writes the supplied `files` and commit `message` to an agent-selected repository/branch, which may be public and attacker-readable, so it is a SINK. Returned branch/commit details from a private repository may be non-public SaaS data, so it is SECRET. Exact returned fields are not shown.",
+   "undetermined": true,
+   "value_args": [
+    "files",
+    "message"
+   ]
+  },
+  "search_code": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:122-126",
+    "dist/index.js:278-282",
+    "README.md:147-155",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Dispatched to `search.searchCode(args)`. Code search can return public code controlled by attackers, so output is UNTRUSTED. With the user's GitHub token and private-repo scope, it may also return private code, so it is SECRET. Exact result fields are not shown.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "search_issues": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:127-131",
+    "dist/index.js:285-289",
+    "README.md:157-165",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Dispatched to `search.searchIssues(args)`. Public issue and pull-request search results include attacker-authored titles/bodies/authors, so output is UNTRUSTED. Searches may include private issues/PRs visible to the user's token, so it is SECRET. Exact result fields are not shown.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "search_repositories": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:62-66",
+    "dist/index.js:210-214",
+    "README.md:42-48",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Dispatched to `repository.searchRepositories(args.query, args.page, args.perPage)` and returns JSON text. GitHub repository search results can include public attacker-controlled repository metadata, so output is UNTRUSTED. With the configured GitHub token and repo/private-repo permissions, searches may also return repositories visible only to the user, so it is SECRET. Exact result fields are not shown.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "search_users": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:132-136",
+    "dist/index.js:292-296",
+    "README.md:167-175"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Dispatched to `search.searchUsers(args)`. GitHub user search returns public user/profile data, which attackers can control for their own accounts, so output is UNTRUSTED. The provided code does not show this tool returning non-public account data.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "update_issue": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "owner",
+    "repo",
+    "issue_number",
+    "assignees",
+    "milestone"
+   ],
+   "evidence": [
+    "dist/index.js:112-116",
+    "dist/index.js:307-312",
+    "README.md:124-136",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Dispatched to `issues.updateIssue(owner, repo, issue_number, options)`. It changes an issue record selected by `owner`, `repo`, and `issue_number`, storing supplied fields, so a public repository issue is a SINK. If the issue is attacker-authored or in a public multi-writer repository, returned updated issue details can include attacker-authored fields that were not overwritten, so output is UNTRUSTED. Private issue details may be returned under the user's token, so it is SECRET. Exact output fields are not shown.",
+   "undetermined": true,
+   "value_args": [
+    "title",
+    "body",
+    "labels",
+    "state"
+   ]
+  },
+  "update_pull_request_branch": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "owner",
+    "repo",
+    "pull_number",
+    "expected_head_sha"
+   ],
+   "evidence": [
+    "dist/index.js:172-176",
+    "dist/index.js:382-387",
+    "README.md:259-266",
+    "README.md:310-315",
+    "README.md:354-356"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Dispatched to `pulls.updatePullRequestBranch(owner, repo, pull_number, expected_head_sha)` and returns a success object. It updates the selected pull request branch, changing repository state; for public repositories this is a SINK. The success/error of updating a private PR can reveal non-public repository/PR state under the user's token, so it is SECRET. The success response itself is fixed, and exact operation internals are not shown.",
+   "undetermined": true,
+   "value_args": []
+  }
+ },
+ "value_conditions": [],
+ "version": "2025.4.8"
+}

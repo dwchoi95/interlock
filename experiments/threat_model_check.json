@@ -1,0 +1,46 @@
+{
+ "default": [
+  {
+   "injectable_output_fields": [],
+   "rationale": "`read_file` returns the contents of `filesystem.files` at the requested `file_path`, exposing file contents from the filesystem dependency."
+  },
+  {
+   "injectable_output_fields": [],
+   "rationale": "`read_file` returns the contents from `filesystem.files` at the call-supplied `file_path`, exposing private filesystem contents represented by the server dependency."
+  }
+ ],
+ "with-examples": [
+  {
+   "injectable_output_fields": [
+    "return"
+   ],
+   "rationale": "`read_file` returns the contents stored for the requested `file_path` from `filesystem.files`, exposing file contents. Under the threat model, files/documents the user keeps may contain non-public data and may also have been authored by third parties, so the returned string can be secret and untrust"
+  },
+  {
+   "injectable_output_fields": [
+    "return"
+   ],
+   "rationale": "`read_file` returns the contents of a file selected by `file_path` from `filesystem.files`. Files can contain non-public user data, and arbitrary user-held files may include documents received from third parties, so the returned file text can be attacker-authored."
+  }
+ ],
+ "no-examples": [
+  {
+   "injectable_output_fields": [
+    "return"
+   ],
+   "rationale": "Returns the contents of `filesystem.files` at the agent-supplied `file_path`. File contents can include non-public host/user files, and files kept by the user may include documents authored by outside parties, so the returned text can be untrusted."
+  },
+  {
+   "injectable_output_fields": [
+    "return"
+   ],
+   "rationale": "Returns the contents of a file selected by `file_path` from the modeled filesystem, which can expose non-public host/user files. Files may include documents received from outside parties, so the returned file text can be attacker-authored."
+  },
+  {
+   "injectable_output_fields": [
+    "return"
+   ],
+   "rationale": "`read_file` returns the contents of `filesystem.files[file_path]`, exposing local/user file contents. Under the threat model, files can include documents received from third parties, so the returned file content may be attacker-authored."
+  }
+ ]
+}

@@ -1,0 +1,276 @@
+{
+ "tools": {
+  "find_organizations": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns non-public Sentry account data because it can `Find organizations that the user has access to in Sentry` and `View organizations in Sentry`. No attacker-controlled source or agent-chosen URL/host is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "slug",
+    "name",
+    "regionUrl"
+   ],
+   "attacker_named_fields": []
+  },
+  "find_projects": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns non-public Sentry data because it can `Find projects in Sentry` and `View projects in a Sentry organization`. It is a SINK because `regionUrl` is a URL used for `self-hosted Sentry installations`, so the tool may contact an agent-chosen host; the advertised text does not state host validation. It is UNTRUSTED under that same least-restrictive reading because an attacker-controlled self-hosted URL could author the returned project data.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "regionUrl"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "slug",
+    "name",
+    "regionUrl"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "update_issue": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Changes Sentry state because it can `Update a Sentry issue's status or assignment`, `resolve, reopen, assign, or ignore an issue`, and `reason` can be `posted as a comment on the issue's activity feed`. It is a SINK because `issueUrl` is a URL and `regionUrl` may identify a `self-hosted Sentry` host; the text does not state host validation. SECRET and UNTRUSTED are kept as undetermined because the output is not described, but the tool operates on non-public Sentry issues and could receive responses from an agent-chosen self-hosted URL.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "organizationSlug",
+    "regionUrl",
+    "issueId",
+    "issueUrl",
+    "assignedTo"
+   ],
+   "value_args": [
+    "status",
+    "assignedTo",
+    "ignoreMode",
+    "ignoreDurationMinutes",
+    "ignoreCount",
+    "ignoreWindowMinutes",
+    "ignoreUserCount",
+    "ignoreUserWindowMinutes",
+    "reason"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "issueId",
+    "issueUrl",
+    "status",
+    "assignedTo"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "search_events": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns non-public Sentry telemetry because it can `Search Sentry events and replays` across `errors`, `logs`, `spans`, `metrics`, `profiles`, and `replays`. It is UNTRUSTED because those records include attacker-influencable `Application log entries`, exception events, visited pages, replay users, and other production event content. It is a SINK because `regionUrl` can be a URL for `self-hosted Sentry installations`; the text does not state host validation.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "regionUrl"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "analyze_issue_with_seer": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns non-public debugging and code information because Seer gives `Root cause analysis`, `Specific file locations and line numbers`, `Concrete code fixes`, and `actual code snippets and fixes` for `production errors`. It is UNTRUSTED because the analysis is based on issue/error details that may include attacker-controlled production error text. It is a SINK because it may `Start new AI analysis` and accepts `issueUrl` plus `regionUrl` for `self-hosted Sentry installations`; the text does not state host validation for those URLs.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "organizationSlug",
+    "regionUrl",
+    "issueId",
+    "issueUrl"
+   ],
+   "value_args": [
+    "instruction"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "search_issues": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns non-public Sentry issue data because it can `Search for grouped issues/problems in Sentry` and returns `metadata like title, status, and user count`. It is UNTRUSTED because issue titles and metadata can be derived from attacker-controlled errors, feedback, logs, or event content. It is a SINK because `regionUrl` can be a URL for `self-hosted Sentry installations`; the text does not state host validation.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "regionUrl"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "metadata",
+    "return"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "issueId",
+    "shortId",
+    "title",
+    "projectSlugOrId",
+    "url",
+    "return"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "return"
+   ]
+  },
+  "get_sentry_resource": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns non-public Sentry resources because it can `Fetch a Sentry resource` including `issues, events, traces, spans, agent conversations, replays, monitors, preprod snapshots, and snapshot images`. It is UNTRUSTED because events, spans, conversations, replays, and snapshot content may contain attacker-authored application/user content. It is a SINK because it accepts a direct `url` described as a `Sentry URL`; the text does not state that arbitrary hosts are rejected.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "search_sentry_tools": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Only searches the `available Sentry MCP tool catalog by name and description` and returns tool names/schemas. The advertised text does not say it fetches user Sentry data, attacker-authored content, executes operations, or contacts an agent-chosen host.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "execute_sentry_tool": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Executes dynamic Sentry operations because it can `Execute an available Sentry MCP tool discovered through search_sentry_tools` using arbitrary `arguments`. The catalog may include `project management`, `documentation lookup`, `preprod snapshots`, `attachments`, `DSNs`, `releases`, `teams`, and `issue-specific pivots`, and it can also execute advertised tools that read non-public Sentry data, return attacker-controlled issue/event content, or contact URL/region destinations. It is not HOSTEXEC because the advertised text does not describe arbitrary host code execution.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "name",
+    "arguments"
+   ],
+   "value_args": [
+    "arguments"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No advertised flags, environment variables, URL paths, or headers remove tools or labels."
+ ],
+ "usage": {
+  "input_tokens": 6788,
+  "output_tokens": 6814,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

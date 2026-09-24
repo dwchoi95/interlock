@@ -1,0 +1,214 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All advertised tools are registered unconditionally in the module and the server starts them from `main`; no code-level feature flag disables individual tools.",
+  "The code also registers a `memory://knowledge-graph` MCP resource, but the requested advertised tool list contains only tools."
+ ],
+ "package": "@modelcontextprotocol/server-memory",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-memory_2026.8.31_59ad4662270d",
+ "tools": {
+  "add_observations": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:54",
+    "dist/index.js:133-145",
+    "dist/index.js:307-312",
+    "dist/index.js:108-109"
+   ],
+   "identifier_output_fields": [
+    "results.entityName"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`addObservations` reads the local graph, checks whether `entityName` exists, filters out observation strings already present, writes the graph back, and returns the added observations. The success/error and omitted duplicate observations can reveal non-public facts about the local memory graph. It writes only to local memory, not an attacker-readable destination. [dropped destination_args not in the input schema: observations.entityName] [dropped value_args not in the input schema: observations.contents]",
+   "undetermined": false,
+   "value_args": []
+  },
+  "create_entities": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:54",
+    "dist/index.js:117-122",
+    "dist/index.js:253-258",
+    "dist/index.js:108-109"
+   ],
+   "identifier_output_fields": [
+    "entities.name"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`createEntities` reads the local memory file via `loadGraph`, filters out entities whose `name` already exists, writes the graph back, and returns only `newEntities`. That output can reveal non-public local-memory membership for supplied entity names. It writes only to the configured local memory file, not to an attacker-chosen or attacker-readable destination, so it is not a SINK. [dropped destination_args not in the input schema: entities.name] [dropped value_args not in the input schema: entities.name, entities.entityType, entities.observations]",
+   "undetermined": false,
+   "value_args": []
+  },
+  "create_relations": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:54",
+    "dist/index.js:124-131",
+    "dist/index.js:277-282",
+    "dist/index.js:108-109"
+   ],
+   "identifier_output_fields": [
+    "relations.from",
+    "relations.to",
+    "relations.relationType"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`createRelations` reads the local graph, filters out relations already present, writes the graph back, and returns only newly added relations. The returned subset can reveal whether a supplied relation already existed in non-public local memory. It writes only to the configured local memory file, not an attacker-readable destination. [dropped destination_args not in the input schema: relations.from, relations.to, relations.relationType] [dropped value_args not in the input schema: relations.from, relations.to, relations.relationType]",
+   "undetermined": false,
+   "value_args": []
+  },
+  "delete_entities": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "entityNames"
+   ],
+   "evidence": [
+    "dist/index.js:147-152",
+    "dist/index.js:332-337",
+    "dist/index.js:108-109"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Deletes matching entities and associated relations from the configured local graph file, then returns a constant success message. The destination is a local memory file, not attacker-readable or agent-chosen by the call, and the output does not contain graph contents. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "delete_observations": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:153-162",
+    "dist/index.js:360-365",
+    "dist/index.js:108-109"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Deletes specified observations from entities in the configured local graph file, then returns a constant success message. The call writes only local state and does not return graph contents or send data to an attacker-readable destination. [dropped destination_args not in the input schema: deletions.entityName, deletions.observations] [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "delete_relations": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:163-169",
+    "dist/index.js:385-390",
+    "dist/index.js:108-109"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Deletes matching relations from the configured local graph file and returns a constant success message. It changes only local state and does not return graph contents or send data to an attacker-readable destination. [dropped destination_args not in the input schema: relations.from, relations.to, relations.relationType] [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "open_nodes": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:52-73",
+    "dist/index.js:191-206",
+    "dist/index.js:456-460"
+   ],
+   "identifier_output_fields": [
+    "entities.name",
+    "relations.from",
+    "relations.to",
+    "relations.relationType"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`open_nodes` loads the configured local graph and returns requested entities plus related relations. This can expose non-public user memory for the requested node names. The `names` argument only selects local records and does not contact an agent-chosen host.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_graph": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:52-73",
+    "dist/index.js:170-172",
+    "dist/index.js:408-412"
+   ],
+   "identifier_output_fields": [
+    "entities.name",
+    "relations.from",
+    "relations.to",
+    "relations.relationType"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`read_graph` loads and returns the entire configured local knowledge graph. This can expose non-public user memory stored in the local JSONL file. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "search_nodes": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:52-73",
+    "dist/index.js:174-189",
+    "dist/index.js:432-436"
+   ],
+   "identifier_output_fields": [
+    "entities.name",
+    "relations.from",
+    "relations.to",
+    "relations.relationType"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`search_nodes` loads the configured local graph and returns matching entities and related relations. Returned entity observations and relation data can expose non-public user memory. The `query` only selects local records and does not contact an agent-chosen host.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "unset; uses default memory path",
+   "effect": "Selects the local JSONL memory file path; if unset, the server uses `memory.jsonl` in the server directory. This changes which local file the tools read and write, but does not add or remove tools or labels.",
+   "evidence": "dist/index.js:11; dist/index.js:14-18; README.md:232",
+   "kind": "environment variable",
+   "syntax": "MEMORY_FILE_PATH"
+  }
+ ],
+ "version": "2026.8.31"
+}

@@ -1,0 +1,58 @@
+{
+ "kind": "pypi",
+ "notes": [
+  "`fetch` is always advertised by `list_tools`; no flag or capability gates tool registration (`server.py:197-207`).",
+  "The server also defines a `fetch` prompt, but it is not in the advertised tools list and was not judged as a tool."
+ ],
+ "package": "mcp-server-fetch",
+ "source": ".cache/sources/.views/pypi_mcp-server-fetch_2026.8.18_99ea4bc4141f",
+ "tools": {
+  "fetch": {
+   "attacker_named_fields": [
+    "text",
+    "message"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "server.py:154",
+    "server.py:121-126",
+    "server.py:135",
+    "server.py:142-147",
+    "server.py:230-239",
+    "server.py:255",
+    "server.py:73-81",
+    "server.py:94-105"
+   ],
+   "identifier_output_fields": [
+    "text",
+    "message"
+   ],
+   "injectable_output_fields": [
+    "text",
+    "message"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`fetch` accepts an arbitrary `url` (`AnyUrl`) and passes it to `fetch_url`, which performs `client.get(url, follow_redirects=True, ...)`; this is a SINK because agent-supplied data can be encoded in an attacker-chosen URL/host, and a READ destination because the URL decides the contacted host. The fetched `response.text` is returned to the agent in `TextContent.text`, so attacker-controlled web content is UNTRUSTED. There is no localhost/intranet filtering, so HTTP URLs reachable from the host, including localhost or intranet services, can be fetched and returned, making it SECRET. The robots.txt precheck also contacts the same agent-chosen host and can include attacker-authored `robots.txt` text in an error message.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "absent / false",
+   "effect": "Sets `ignore_robots_txt=True`; then `call_tool` skips `check_may_autonomously_fetch_url` and does not enforce robots.txt before fetching. Labels remain the same.",
+   "evidence": "__init__.py:13-21; server.py:234-235",
+   "kind": "CLI flag",
+   "syntax": "--ignore-robots-txt"
+  }
+ ],
+ "version": "2026.8.18"
+}

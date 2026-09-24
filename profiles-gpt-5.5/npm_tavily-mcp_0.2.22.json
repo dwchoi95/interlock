@@ -1,0 +1,202 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All network calls made directly by this MCP server go to fixed Tavily API endpoints (`baseURLs`), not to arbitrary hosts; SINK labels on extract/crawl/map are based on the advertised URL-fetching/crawling behavior of those Tavily endpoints with caller-supplied URL arguments."
+ ],
+ "package": "tavily-mcp",
+ "source": ".cache/sources/.views/npm_tavily-mcp_0.2.22_01f43efe7174",
+ "tools": {
+  "tavily_crawl": {
+   "attacker_named_fields": [
+    "results.url",
+    "results.favicon"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "build/index.js:235-242",
+    "build/index.js:418-438",
+    "build/index.js:566-572",
+    "build/index.js:870-888"
+   ],
+   "identifier_output_fields": [
+    "base_url",
+    "results.url",
+    "results.favicon"
+   ],
+   "injectable_output_fields": [
+    "results.url",
+    "results.raw_content",
+    "results.favicon"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`tavily_crawl` accepts a caller-supplied root `url` and is described as crawling a website starting from that URL, so it can cause requests to an agent-chosen host; an attacker-controlled site can observe those requests, making `url` the destination. It returns crawled page URLs, raw content previews, and favicons from the target site, which are attacker-controllable when the crawled site is attacker-controlled.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "tavily_extract": {
+   "attacker_named_fields": [
+    "results.title",
+    "results.url",
+    "results.favicon",
+    "images",
+    "images.url"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "urls"
+   ],
+   "evidence": [
+    "build/index.js:194-202",
+    "build/index.js:408-416",
+    "build/index.js:559-565",
+    "build/index.js:830-868"
+   ],
+   "identifier_output_fields": [
+    "results.id",
+    "results.title",
+    "results.url",
+    "results.favicon",
+    "images",
+    "images.url"
+   ],
+   "injectable_output_fields": [
+    "answer",
+    "results.title",
+    "results.url",
+    "results.content",
+    "results.raw_content",
+    "results.favicon",
+    "images",
+    "images.url",
+    "images.description"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`tavily_extract` accepts caller-supplied `urls` and is described as extracting content from those URLs, so it can cause requests to agent-chosen web hosts; an attacker-controlled host can observe such requests, making `urls` the destination. It returns extracted page content through `response.data`, formatted into text fields such as result `title`, `url`, `content`, `raw_content`, and optional image/favicon fields, which can be authored by the web page owner.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "tavily_map": {
+   "attacker_named_fields": [
+    "results"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "build/index.js:305-312",
+    "build/index.js:439-455",
+    "build/index.js:573-579",
+    "build/index.js:890-898"
+   ],
+   "identifier_output_fields": [
+    "base_url",
+    "results"
+   ],
+   "injectable_output_fields": [
+    "results"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`tavily_map` accepts a caller-supplied root `url` and is described as mapping a website starting from that URL, so it can cause requests to an agent-chosen host; an attacker-controlled site can observe those requests, making `url` the destination. It returns the mapped URLs found on that site, which a site owner can author.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "tavily_research": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "build/index.js:358-365",
+    "build/index.js:456-465",
+    "build/index.js:580-612",
+    "build/index.js:900-904"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "content"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`tavily_research` is described as gathering information from multiple sources and returns a detailed research response. The code posts the research `input` to Tavily's fixed research endpoint, polls that fixed endpoint, and returns `pollResponse.data.content` (or streamed accumulated content) as agent-visible text. Because the research result is based on external sources, it can contain attacker-controlled public content. The request destination is the fixed Tavily API, so the research prompt itself is not a SINK under the rules.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "tavily_search": {
+   "attacker_named_fields": [
+    "results.title",
+    "results.url",
+    "results.favicon",
+    "images",
+    "images.url"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "build/index.js:105-106",
+    "build/index.js:390-406",
+    "build/index.js:512-557",
+    "build/index.js:830-868"
+   ],
+   "identifier_output_fields": [
+    "results.id",
+    "results.title",
+    "results.url",
+    "results.favicon",
+    "images",
+    "images.url"
+   ],
+   "injectable_output_fields": [
+    "answer",
+    "results.title",
+    "results.url",
+    "results.content",
+    "results.raw_content",
+    "results.favicon",
+    "images",
+    "images.url",
+    "images.description"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`tavily_search` is a web search tool (`description` says it searches the web and returns snippets/source URLs) and posts the supplied search parameters to Tavily's fixed search endpoint. The returned `response.data` is formatted into agent-visible text including `answer`, result `title`, `url`, `content`, optional `raw_content`/`favicon`, and image URLs/descriptions, all of which may reflect attacker-controlled public web content. The request goes only to the fixed Tavily API endpoint, so the search query is not a SINK under the rules.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "If `TAVILY_API_KEY` is set, authenticated mode is used; if absent, keyless mode is used.",
+   "effect": "Sets `IS_KEYLESS`; the server still advertises all tools, but the code logs that only search and extract are available and other tools will return an API-key-required message, which removes the practical UNTRUSTED/SINK behavior for tavily_crawl, tavily_map, and tavily_research in keyless mode.",
+   "evidence": "build/index.js:12-13, build/index.js:47-56, build/index.js:532, build/index.js:562, build/index.js:569, build/index.js:576, build/index.js:590",
+   "kind": "environment variable",
+   "syntax": "TAVILY_API_KEY unset or empty"
+  },
+  {
+   "default": "false",
+   "effect": "When true, the process prints a static tool list and exits instead of starting the MCP server, so no MCP tools are available.",
+   "evidence": "build/index.js:937-948",
+   "kind": "command-line flag",
+   "syntax": "--list-tools"
+  }
+ ],
+ "version": "0.2.22"
+}

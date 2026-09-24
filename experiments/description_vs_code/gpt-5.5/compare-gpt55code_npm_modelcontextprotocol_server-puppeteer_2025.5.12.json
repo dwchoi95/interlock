@@ -1,0 +1,179 @@
+[
+ {
+  "tool": "puppeteer_navigate",
+  "code": [
+   "HOSTEXEC",
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "HOSTEXEC",
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url",
+   "launchOptions"
+  ],
+  "annotations": {},
+  "rationale_code": "`puppeteer_navigate` sends the browser to the agent-supplied `url` with `page.goto(args.url)`, so it can make requests to attacker-chosen hosts and is a SINK. Before dispatch, every call invokes `ensureBrowser(args)`. For this tool, `launchOptions` is advertised and merged into the options passed di"
+ },
+ {
+  "tool": "puppeteer_screenshot",
+  "code": [
+   "HOSTEXEC",
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "HOSTEXEC",
+   "SINK"
+  ],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "name",
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "The tool captures the current browser page or selected element and returns the screenshot as image data or a base64 data URI. If the current page is an attacker-controlled web page, the returned screenshot is UNTRUSTED; if the current page is a `file://`, localhost, intranet, or authenticated page r"
+ },
+ {
+  "tool": "puppeteer_click",
+  "code": [
+   "HOSTEXEC",
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "HOSTEXEC",
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`page.click(args.selector)` performs a browser action on the current page; on an attacker-controlled page or a page selected by prior navigation, that action can trigger requests, form submissions, or page-controlled JavaScript, so it is a SINK. The handler also calls `ensureBrowser(args)` before di"
+ },
+ {
+  "tool": "puppeteer_fill",
+  "code": [
+   "HOSTEXEC",
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "HOSTEXEC",
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`page.type(args.selector, args.value)` sends the agent-supplied `value` into the current web page. An attacker-controlled page can observe the typed data or transmit it, so this is a SINK. As with all tools, raw arguments are passed to `ensureBrowser(args)` before dispatch, and no schema validation "
+ },
+ {
+  "tool": "puppeteer_select",
+  "code": [
+   "HOSTEXEC",
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "HOSTEXEC",
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`page.select(args.selector, args.value)` sends an agent-supplied selection value into the current page; page scripts or form submission can disclose that to the page's origin or other endpoints, making it a SINK. Raw arguments also reach `ensureBrowser(args)` before dispatch, with no schema validati"
+ },
+ {
+  "tool": "puppeteer_hover",
+  "code": [
+   "HOSTEXEC",
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "HOSTEXEC",
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`page.hover(args.selector)` performs an observable browser interaction on the current page; attacker-controlled page code can react to the hover and send requests, making it a SINK. Separately, raw arguments are passed to `ensureBrowser(args)` before dispatch and no schema validation is shown; under"
+ },
+ {
+  "tool": "puppeteer_evaluate",
+  "code": [
+   "HOSTEXEC",
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "HOSTEXEC"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "script"
+  ],
+  "annotations": {},
+  "rationale_code": "The tool executes agent-supplied JavaScript in the browser page with `page.evaluate(args.script)` and returns the result and collected console output. The browser-page script can read attacker-authored DOM/content, so outputs are UNTRUSTED, and can read non-public current-page data such as authentic"
+ }
+]

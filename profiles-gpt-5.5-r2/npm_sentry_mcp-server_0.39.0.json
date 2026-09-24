@@ -1,0 +1,311 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Only the ESM line numbers from `dist/index.js` / `dist/config-BqCCImAX-C9xxoOuk.js` are cited; the CJS file duplicates the same behavior with shifted line numbers.",
+  "Several handler bodies, including `find_organizations`, `find_projects`, and parts of `update_issue`, are not present in the supplied excerpt. Those tools are marked `undetermined` where classification relies on advertised behavior plus catalog/top-level exposure rather than visible handler code.",
+  "`execute_sentry_tool` is judged by the union of reachable catalog tools because the code dispatches by `name` into the available catalog handler."
+ ],
+ "package": "@sentry/mcp-server",
+ "source": ".cache/sources/.views/npm_sentry_mcp-server_0.39.0_8a168fd234fe",
+ "tools": {
+  "analyze_issue_with_seer": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "organizationSlug",
+    "regionUrl",
+    "issueId",
+    "issueUrl"
+   ],
+   "evidence": [
+    "dist/index.js:38321-38341",
+    "dist/index.js:38365-38377",
+    "dist/index.js:38378-38388",
+    "dist/index.js:38393-38396"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The handler reads an authenticated Sentry issue with `apiService.getIssue` and obtains/starts Seer autofix state. The result is described and implemented as root-cause/fix analysis based on private issue data, including code-level explanations. Issue/error content can include attacker-influenced messages, stack data, or other event content, so analysis derived from it is UNTRUSTED. The tool may start analysis, so it is WRITE even though it is not destructive.",
+   "undetermined": false,
+   "value_args": [
+    "instruction"
+   ]
+  },
+  "execute_sentry_tool": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "name",
+    "arguments"
+   ],
+   "evidence": [
+    "dist/index.js:42272-42326",
+    "dist/index.js:42509-42515",
+    "dist/index.js:42531-42540",
+    "dist/index.js:42541-42550",
+    "dist/index.js:42483-42500"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`execute_sentry_tool` is a wrapper that looks up any available catalog tool by `name` and executes its handler with supplied `arguments`. The catalog includes read tools that return private Sentry data and attacker-influenced event/issue/replay content, so the wrapper inherits SECRET and UNTRUSTED reach. It also can execute catalog tools such as `get_sentry_resource`; because that tool's `url` handling is not fully shown and is conservatively labeled SINK, the wrapper inherits SINK. The wrapper is WRITE because it can dispatch write tools such as `update_issue`, project/team/DSN mutations, and onboarding updates listed in the catalog.",
+   "undetermined": true,
+   "value_args": [
+    "arguments"
+   ]
+  },
+  "find_organizations": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:13437-13445",
+    "dist/index.js:42272-42276"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`find_organizations` is advertised as a top-level/catalog Sentry tool. Its handler body is not present in the supplied excerpt, but the advertised operation is to list organizations available to the authenticated user, which is non-public SaaS account data. Because the behavior is not otherwise shown in the excerpt, this is marked undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "find_projects": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:13437-13445",
+    "dist/index.js:42272-42276"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`find_projects` is advertised as a top-level/catalog Sentry tool. Its handler body is not present in the supplied excerpt, but the advertised operation is to list projects in an authenticated Sentry organization, which is non-public SaaS account data. Because the behavior is not otherwise shown in the excerpt, this is marked undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_sentry_resource": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "dist/index.js:41677-41699",
+    "dist/index.js:41702-41715",
+    "dist/index.js:41721-41726"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`get_sentry_resource` fetches authenticated Sentry resources including issues, events, traces, spans, conversations, replays, monitors, and snapshots, so it can return non-public SaaS data. Many of those resources can contain attacker-influenced event, replay, feedback, log, or conversation text. The input schema accepts a generic `url` and the handler passes it into `resolveResourceParams`; the supplied excerpt does not show URL host validation or prove that no network request is made to an agent-chosen host, so the conservative reading keeps SINK for `url` and marks this undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "search_events": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:37131-37132",
+    "dist/index.js:37285-37296",
+    "dist/index.js:37313-37321",
+    "dist/index.js:37070-37079",
+    "dist/config-BqCCImAX-C9xxoOuk.js:806-819"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`search_events` searches authenticated Sentry telemetry datasets (`errors`, `logs`, `spans`, `metrics`, `profiles`, `replays`), so it returns non-public SaaS event/replay data. Returned event/log/replay fields include messages, users, pages/URLs, issue IDs, trace IDs, and replay IDs; such telemetry/log/message fields can be influenced by outside users or attacker-controlled web content, so outputs are UNTRUSTED.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_issues": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:38924-38931",
+    "dist/index.js:38966-38979",
+    "dist/index.js:38850-38856",
+    "dist/index.js:38861-38868"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`search_issues` searches authenticated Sentry grouped issues (`requiredScopes: [\"event:read\"]`) and formats issue short IDs, URLs, titles, assignees, timestamps, and culprits. Issue titles/culprits can be derived from errors, messages, URLs, and other event data influenced by outside users, so returned text is UNTRUSTED as well as SECRET.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_sentry_tools": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:13435-13445",
+    "dist/index.js:42343-42355",
+    "dist/index.js:42467-42470"
+   ],
+   "identifier_output_fields": [
+    "results",
+    "name"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "`search_sentry_tools` searches local tool names/descriptions/schemas and returns catalog metadata for available tools. The shown code scores tool metadata and returns search results; it does not fetch user SaaS data, attacker-authored content, execute code, or write/send agent content to attacker-readable destinations.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "update_issue": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "organizationSlug",
+    "regionUrl",
+    "issueId",
+    "issueUrl",
+    "assignedTo"
+   ],
+   "evidence": [
+    "dist/index.js:29618-29623",
+    "dist/index.js:29592-29602"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "`update_issue` is a state-changing Sentry issue tool (`readOnlyHint: false` in the advertised schema; the source defines the update tool and helper `tryPostReasonComment`). The shown helper posts agent-supplied `reason` text to a Sentry issue comment via `apiService.createIssueComment({ organizationSlug, issueId, text: reason })`. This is a WRITE to the user's Sentry account, but the destination is not shown to be attacker-readable and the shown code does not return non-public issue content.",
+   "undetermined": true,
+   "value_args": [
+    "status",
+    "assignedTo",
+    "ignoreMode",
+    "ignoreDurationMinutes",
+    "ignoreCount",
+    "ignoreWindowMinutes",
+    "ignoreUserCount",
+    "ignoreUserWindowMinutes",
+    "reason"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "If `grantedSkills` is absent, no skills-based tools are available.",
+   "effect": "All tools are filtered out unless `isAllowedBySkills` sees granted skills and the tool has at least one enabled skill.",
+   "evidence": "dist/index.js:13495-13499",
+   "kind": "availability",
+   "syntax": "context.grantedSkills absent or not matching tool.skills"
+  },
+  {
+   "default": "Without an organization constraint, `find_organizations` remains eligible.",
+   "effect": "Hides `find_organizations`.",
+   "evidence": "dist/index.js:13500-13501",
+   "kind": "availability",
+   "syntax": "context.constraints.organizationSlug truthy"
+  },
+  {
+   "default": "Without a project constraint, `find_projects` remains eligible.",
+   "effect": "Hides `find_projects` and `create_project`.",
+   "evidence": "dist/index.js:13500-13501",
+   "kind": "availability",
+   "syntax": "context.constraints.projectSlug truthy"
+  },
+  {
+   "default": "Experimental mode defaults false where callers use `context.experimentalMode ?? false`.",
+   "effect": "Experimental tools are hidden when experimental mode is off.",
+   "evidence": "dist/index.js:13472-13475",
+   "kind": "availability",
+   "syntax": "tool.experimental === true && experimentalMode !== true"
+  },
+  {
+   "default": "If there is no project constraint or no project capability map, required capabilities do not filter the tool.",
+   "effect": "Tools with required capabilities are hidden unless every required capability is true for the constrained project.",
+   "evidence": "dist/index.js:13490-13494",
+   "kind": "availability",
+   "syntax": "context.constraints.projectSlug && context.constraints.projectCapabilities && tool.requiredCapabilities"
+  },
+  {
+   "default": "The server uses the default surface policy for available/searchable tools in the shown wrapper path.",
+   "effect": "Only top-level tools plus catalog-eligible tools are surfaced directly/searchably; top-level advertised direct tools are listed in `TOP_LEVEL_TOOL_NAMES`, and catalog infrastructure tools are `search_sentry_tools` and `execute_sentry_tool`.",
+   "evidence": "dist/index.js:13435-13445",
+   "kind": "availability",
+   "syntax": "useDefaultSurfacePolicy === true"
+  },
+  {
+   "default": "No injection occurs when a constraint value is absent or not a string.",
+   "effect": "Active organization/project/region constraints are injected into tool arguments and filtered from exposed schemas where applicable.",
+   "evidence": "dist/index.js:13415-13422",
+   "kind": "argument injection",
+   "syntax": "context.constraints.* matching a tool input schema"
+  },
+  {
+   "default": "Allowed cloud region domains are `sentry.io`, `us.sentry.io`, and `de.sentry.io`; enforcement is not shown in the supplied excerpt.",
+   "effect": "If the omitted `ParamRegionUrl` validation enforces the allowed Sentry region domains, SINK from region URL selection would be removed. The supplied excerpt only shows the allowed-domain constant and comment, not the validation call, so SINK is not removed where URL handling is otherwise unsettled.",
+   "evidence": "dist/index.js:55-63",
+   "kind": "label condition",
+   "syntax": "ParamRegionUrl / SENTRY_ALLOWED_REGION_DOMAINS"
+  }
+ ],
+ "version": "0.39.0"
+}

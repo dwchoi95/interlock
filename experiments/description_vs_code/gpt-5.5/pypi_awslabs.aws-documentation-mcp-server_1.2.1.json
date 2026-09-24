@@ -1,0 +1,151 @@
+{
+ "tools": {
+  "read_documentation": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Fetch[es] and convert[s] an AWS documentation page` and its URL requirements say it `Must be from the docs.aws.amazon.com domain` and `Must end with .html`, so the advertised reach is limited to public AWS documentation rather than local, intranet, user-account, or attacker-controlled hosts. It sends an agent-supplied `url` in an outbound fetch to the AWS documentation host, but that fixed vendor destination is not attacker-readable under the SINK definition.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [
+    "url"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "read_sections": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Retrieves a page, converts to markdown` and returns `Filtered markdown content`. Its stated URL requirements only say `Must end with .html`; unlike other tools, the description does not say the URL must be on `docs.aws.amazon.com`. On the least restrictive reading, an agent-chosen `.html` URL could be an attacker-controlled web page, making returned content UNTRUSTED; could be `file://`, `localhost`, or intranet content ending in `.html`, making returned content SECRET; and could be an attacker-readable URL/host with exfiltrated data embedded in the `url`, making it a SINK. This is undetermined because the prose also refers to `AWS documentation pages`, but the advertised requirements do not settle a domain or scheme restriction.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "url",
+    "section_titles"
+   ],
+   "value_args": [
+    "url"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "search_table": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches rows in tables from a documentation page, and its URL requirements say `Must be from the docs.aws.amazon.com domain` and `Must end with .html`. The returned table headings, columns, and rows are from public AWS documentation, not advertised as user-private or attacker-controlled. The agent-supplied `url` is fetched from the fixed AWS documentation domain, so it is not an attacker-readable SINK.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "url",
+    "section_title",
+    "query"
+   ],
+   "value_args": [
+    "url"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "search_documentation": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool uses the `official AWS Documentation Search API` to search `across all AWS documentation` and returns documentation search results. The query goes to a fixed vendor endpoint, and the rules say `A query sent to a fixed vendor endpoint is not a SINK`. The advertised corpus is AWS documentation, not local/private data or attacker-controlled content.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "product_types",
+    "guide_types"
+   ],
+   "value_args": [
+    "search_phrase",
+    "search_intent",
+    "product_types",
+    "guide_types"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "search_results.url",
+    "search_results.metadata.additional_urls.url",
+    "search_results.metadata.additional_urls.section_anchor",
+    "query_id"
+   ],
+   "attacker_named_fields": []
+  },
+  "recommend": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool gets `content recommendations for an AWS documentation page` and returns `recommended pages with URLs, titles, and context`. It is advertised as discovering related AWS documentation rather than fetching arbitrary page contents, local/private data, or posting to attacker-readable destinations. The agent-supplied `url` is sent to the recommendation service, but no attacker-readable destination is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [
+    "url"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "url"
+   ],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [
+  {
+   "syntax": "read_documentation.url must be from docs.aws.amazon.com and end with .html",
+   "kind": "URL requirement",
+   "effect": "Removes arbitrary-host, localhost/intranet/file, and attacker-controlled web reach for read_documentation.",
+   "default": "",
+   "evidence": "description"
+  },
+  {
+   "syntax": "search_table.url must be from docs.aws.amazon.com and end with .html",
+   "kind": "URL requirement",
+   "effect": "Removes arbitrary-host, localhost/intranet/file, and attacker-controlled web reach for search_table.",
+   "default": "",
+   "evidence": "description"
+  },
+  {
+   "syntax": "read_sections.url must end with .html",
+   "kind": "URL requirement",
+   "effect": "Only constrains the suffix; it does not remove arbitrary-host, localhost/intranet/file, or attacker-controlled web reach because no domain or scheme restriction is advertised.",
+   "default": "",
+   "evidence": "description"
+  }
+ ],
+ "notes": [
+  "No advertised flags, environment variables, headers, or default-off settings remove any tools or labels."
+ ],
+ "usage": {
+  "input_tokens": 4429,
+  "output_tokens": 5195,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "package": "@azure-devops/mcp",
+ "tool": "pipelines_build_log",
+ "claimed": [
+  "SECRET",
+  "UNTRUSTED"
+ ],
+ "HOSTEXEC": "not_supported",
+ "SECRET": "supported",
+ "SINK": "not_supported",
+ "UNTRUSTED": "supported",
+ "reason": "The cited code reads build log metadata/content via a connection-backed Build API and returns it to the agent, so it supports SECRET because build logs are SaaS/project data accessed through the configured connection. The get_content path returns build log lines, which are external pipeline output and can contain attacker-controlled text, supporting UNTRUSTED. There is no arbitrary host code execution, and the code only reads from the API and returns to the caller; it does not send agent-supplied data to an attacker-readable destination, so HOSTEXEC and SINK are not supported.",
+ "usage": {
+  "input_tokens": 1287,
+  "output_tokens": 665
+ }
+}

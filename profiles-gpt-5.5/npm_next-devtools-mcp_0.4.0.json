@@ -1,0 +1,125 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All four tools are included unconditionally in the `tools` array and advertised by mapping that array in `ListToolsRequestSchema` (`dist/index.js:17`, `dist/index.js:34-47`).",
+  "The server queues telemetry containing the MCP tool name on every tool call (`dist/index.js:55-65`) and may spawn a telemetry flusher on shutdown (`dist/index.js:142-151`); the provided code does not show tool arguments being included, and a fixed vendor telemetry endpoint would not be a SINK under the stated rules."
+ ],
+ "package": "next-devtools-mcp",
+ "source": ".cache/sources/.views/npm_next-devtools-mcp_0.4.0_91c49454f95a",
+ "tools": {
+  "browser_eval": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/browser-eval.js:25-30",
+    "dist/tools/browser-eval.js:38-46",
+    "dist/tools/browser-eval.js:48-63",
+    "dist/tools/browser-eval.js:65-74"
+   ],
+   "identifier_output_fields": [
+    "status",
+    "tool",
+    "version"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "`browser_eval` probes the host with fixed commands (`command -v agent-browser`/`where agent-browser` and `agent-browser --version`) and returns installation/version guidance. The command is not chosen from tool input, so this is not arbitrary host code execution under the HOSTEXEC definition. It does not fetch attacker-controlled content, return host file contents, or send agent-supplied data to an attacker-readable destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "nextjs_call": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "port",
+    "toolName",
+    "args"
+   ],
+   "evidence": [
+    "dist/tools/nextjs_call.js:3-14",
+    "dist/tools/nextjs_call.js:33-42",
+    "dist/tools/nextjs_call.js:60-68",
+    "README.md:183-188"
+   ],
+   "identifier_output_fields": [
+    "port",
+    "toolName",
+    "result"
+   ],
+   "injectable_output_fields": [
+    "result"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`nextjs_call` forwards the chosen `port`, `toolName`, and `args` to a running Next.js runtime MCP tool and returns its raw `result`. The advertised/runtime tools include local application diagnostics such as errors, logs, routes, project metadata, and Server Action source mapping, which are non-public localhost/application data, so it is SECRET. The exact runtime tool outputs vary by Next.js version and are not defined in the provided internal manager code; because returned logs/errors/runtime data can include application/browser/server text whose origin may include third-party or attacker-controllable content, `result` is treated as UNTRUSTED. The tool can also invoke mutating runtime tools such as cache management/clear-cache, so it is classified as WRITE, though the shown code does not establish an attacker-readable SINK or arbitrary HOSTEXEC.",
+   "undetermined": true,
+   "value_args": [
+    "args"
+   ]
+  },
+  "nextjs_docs": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/nextjs-docs.js:14-17",
+    "dist/tools/nextjs-docs.js:43-48",
+    "dist/tools/nextjs-docs.js:55-61",
+    "dist/tools/nextjs-docs.js:69-85",
+    "dist/tools/nextjs-docs.js:102-108"
+   ],
+   "identifier_output_fields": [
+    "status",
+    "nextVersion",
+    "versionSource",
+    "docsPath",
+    "docsAvailable",
+    "message",
+    "instructions"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`nextjs_docs` reads local project files under `project_path`/cwd, including `node_modules/next/package.json` and `package.json`, and returns the detected Next.js version/source, local docs path, and docs availability. Those are non-public host/project details, so the tool returns SECRET data. It does not fetch remote documentation or write/send data out.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "nextjs_index": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/nextjs_index.js:59-79",
+    "dist/tools/nextjs_index.js:91-103",
+    "dist/tools/nextjs_index.js:115-140",
+    "dist/tools/nextjs_index.js:142-147"
+   ],
+   "identifier_output_fields": [
+    "servers.port",
+    "servers.pid",
+    "servers.command",
+    "servers.url",
+    "servers.tools.name",
+    "servers.tools.inputSchema",
+    "port"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`nextjs_index` discovers/probes local Next.js dev servers and returns local runtime/server information, including port, PID, command, URL, and the MCP tools/input schemas exposed by the dev server. Local process/runtime details and localhost MCP endpoint data are non-public host/application data, so this is SECRET. The shown code does not expose an agent-chosen remote host URL and does not write state. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  }
+ },
+ "value_conditions": [],
+ "version": "0.4.0"
+}

@@ -1,0 +1,180 @@
+{
+ "tools": {
+  "tools_documentation": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool only says it will `Get documentation for n8n MCP tools` and does not advertise access to user-private data, attacker-controlled public content, outbound delivery to agent-chosen destinations, or host code execution.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "search_nodes": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches n8n nodes and can include third-party/public material: `Include top 2 real-world configuration examples from popular templates` and has a `community=community nodes` source. Public templates and community node registries are attacker-controllable under the threat model. It is not a SINK because it only searches a fixed node/template corpus; `query` is a search term, not an agent-chosen host.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "get_node": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns node information, `docs`, schemas, versions, properties, and can `Include real-world configuration examples from templates`. Because node information may include community node material and template examples, the returned text can be attacker-authored. The advertised text does not indicate access to secrets, writes, arbitrary hosts, or host execution.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "validate_node": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool only `Validate[s] n8n node configuration` supplied in `config` and returns `errors/warnings/suggestions`. It does not advertise fetching external/public content, reading private user data, sending data to attacker-chosen destinations, changing state, or executing host code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "get_template": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Get[s] template by ID` and can return `nodes+connections` or `complete workflow JSON`. Public workflow templates are multi-writer/third-party content under the threat model, so their node names, connections, and workflow JSON can be attacker-authored. It reads from a fixed template service by `templateId`, not an agent-chosen destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "nodes",
+    "connections"
+   ],
+   "attacker_named_fields": [
+    "nodes",
+    "connections"
+   ]
+  },
+  "search_templates": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches `2700+ templates` and returns template fields such as `name`, `description`, `author`, `nodes`, `url`, and `metadata`. Template names, descriptions, authors, node selections, and metadata are public third-party content and may be attacker-authored. It is not a SINK because `query`, filters, and pagination only select records from the fixed template corpus.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "name",
+    "description",
+    "author",
+    "nodes",
+    "metadata"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "author",
+    "nodes",
+    "url",
+    "metadata"
+   ],
+   "attacker_named_fields": [
+    "name",
+    "author",
+    "nodes"
+   ]
+  },
+  "validate_workflow": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool performs `Full workflow validation` of the supplied `workflow` and returns `errors/warnings/fixes`. It does not advertise reading outside data, writing anywhere, contacting agent-chosen hosts, or executing arbitrary host code; validation of `expressions` is described as syntax/reference validation only.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [
+  {
+   "syntax": "search_nodes.source='core' and includeExamples=false",
+   "kind": "input flag",
+   "effect": "For that call, the described community-node and template-example sources of UNTRUSTED content are excluded because `core=n8n base nodes` and examples are not included.",
+   "default": "source defaults to 'all'; includeExamples defaults to false",
+   "evidence": "description"
+  },
+  {
+   "syntax": "get_node.includeExamples=false",
+   "kind": "input flag",
+   "effect": "For that call, the described `real-world configuration examples from templates` source is omitted, though UNTRUSTED can still remain if the requested nodeType is a community/third-party node.",
+   "default": "includeExamples defaults to false",
+   "evidence": "description"
+  }
+ ],
+ "notes": [
+  "All tools are advertised with read-only annotations and none says it is disabled by default, so default_enabled is true for every tool.",
+  "Search and retrieval tools that query n8n node/template corpora are treated as fixed-service reads, not SINKs, because the advertised schemas do not let the agent choose an arbitrary URL or host."
+ ],
+ "usage": {
+  "input_tokens": 480,
+  "output_tokens": 6120,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 2816
+ }
+}

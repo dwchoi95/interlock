@@ -1,0 +1,74 @@
+{
+  "package": "@modelcontextprotocol/server-puppeteer",
+  "version": "2025.5.12",
+  "source": "npm pack @modelcontextprotocol/server-puppeteer@2025.5.12, extracted with tar in scratchpad adj-browser/ (not installed or run). The whole server is dist/index.js (429 lines). Its dependency puppeteer '^23.4.0' resolves today to puppeteer@23.11.1 -> puppeteer-core@23.11.1 and @puppeteer/browsers@2.6.1; those were also packed and read to confirm how launchOptions reach child_process.spawn. Evidence paths are relative to adj-browser/, PP = modelcontextprotocol-server-puppeteer-2025.5.12/package/dist/index.js, PC = puppeteer-core-23.11.1/package/lib/cjs/puppeteer/node, PB = browsers-2.6.1/package/lib/cjs/launch.js.",
+  "tools": {
+    "puppeteer_navigate": {
+      "labels": ["HOSTEXEC", "SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Its advertised launchOptions object goes straight into puppeteer.launch. Only 8 Chrome args are denylisted; executablePath, ignoreDefaultArgs, env and every other arg are not checked. An agent can therefore spawn any host binary with chosen arguments (e.g. executablePath:'/bin/sh', ignoreDefaultArgs:true, args:['-c','<cmd>']). Separately, page.goto takes any URL (file://, localhost, intranet, attacker) with no validation.",
+      "evidence": "PP:15-16 (launchOptions/allowDangerous in schema); PP:100-143 (DANGEROUS_ARGS denylist only checks args; deepMerge(env PUPPETEER_LAUNCH_OPTIONS, launchOptions) -> puppeteer.launch); PP:186-188 (page.goto(args.url)); PC/ChromeLauncher.js:50-100 (ignoreDefaultArgs:true => chromeArguments = args; executablePath used as given); PC/BrowserLauncher.js:81-110 (launch with launchArgs.executablePath/args); PB:150 (child_process.spawn(executablePath, args))"
+    },
+    "puppeteer_screenshot": {
+      "labels": ["HOSTEXEC", "SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Returns a base64 PNG of the current page, which can be a file://, localhost or attacker page. It also inherits HOSTEXEC because handleToolCall passes every tool's raw arguments, launchOptions included (not in this tool's schema), to ensureBrowser/puppeteer.launch.",
+      "evidence": "PP:195-232 (page.screenshot base64 returned as image or data URI); PP:183-184 (ensureBrowser(args) for every tool); PP:100-143; PP:420 (arguments passed unvalidated)"
+    },
+    "puppeteer_click": {
+      "labels": ["HOSTEXEC", "SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "The click itself only echoes the selector. The tool is HOSTEXEC because its arguments, including an unadvertised launchOptions, go to puppeteer.launch through ensureBrowser(args).",
+      "evidence": "PP:234-253 (page.click); PP:183-184; PP:100-143; PP:420"
+    },
+    "puppeteer_fill": {
+      "labels": ["HOSTEXEC", "SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Types an agent-supplied value into a page field, where page script can read and send it (SINK on its own). It is also HOSTEXEC through the unvalidated launchOptions passed to ensureBrowser(args).",
+      "evidence": "PP:254-274 (page.type(selector, value)); PP:183-184; PP:100-143"
+    },
+    "puppeteer_select": {
+      "labels": ["HOSTEXEC", "SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "Selects an agent-supplied value in a page <select>, which page script can read (SINK on its own). It is also HOSTEXEC through the unvalidated launchOptions passed to ensureBrowser(args).",
+      "evidence": "PP:275-295 (page.select); PP:183-184; PP:100-143"
+    },
+    "puppeteer_hover": {
+      "labels": ["HOSTEXEC", "SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "The hover itself only echoes the selector. The tool is HOSTEXEC through the unvalidated launchOptions passed to ensureBrowser(args).",
+      "evidence": "PP:296-316 (page.hover); PP:183-184; PP:100-143"
+    },
+    "puppeteer_evaluate": {
+      "labels": ["HOSTEXEC", "SECRET", "UNTRUSTED", "SINK"],
+      "secondary_extra": [],
+      "default_enabled": true,
+      "undetermined": false,
+      "rationale": "The script runs through page.evaluate (browser-page confined) and returns its result plus captured console output, which already gives SECRET, UNTRUSTED and SINK from page JavaScript on file://, localhost or attacker pages. HOSTEXEC comes from the unvalidated launchOptions passed to ensureBrowser(args), not from the script.",
+      "evidence": "PP:317-356 (page.evaluate(args.script); result + logs returned); PP:183-184; PP:100-143"
+    }
+  },
+  "value_conditions": [],
+  "notes": [
+    "The server reads no CLI flags. It always advertises the same 7 tools (PP:7-93, PP:417-419), so no tool can be removed.",
+    "Env vars: PUPPETEER_LAUNCH_OPTIONS (JSON) is deep-merged UNDER the agent's launchOptions, so the agent overrides it (PP:112-120). ALLOW_DANGEROUS=true only widens, by skipping the arg denylist (PP:124). DOCKER_CONTAINER (any value) switches defaults to headless + --no-sandbox --single-process --no-zygote (PP:141-143). None removes a label.",
+    "HOSTEXEC mechanism: the args denylist (--no-sandbox, --disable-web-security, ...) is the only launch-option check, and it does not look at executablePath, ignoreDefaultArgs, env, userDataDir, or Chrome command-prefix flags such as --renderer-cmd-prefix / --gpu-launcher. puppeteer-core passes executablePath and args to child_process.spawn (PC/ChromeLauncher.js:50-100, PB:150). Code runs in the MCP server's environment; if the server runs in the mcp/puppeteer Docker image (DOCKER_CONTAINER set), that environment is the container, but configs cannot express this as a label-removing value.",
+    "The per-tool HOSTEXEC on click/hover/fill/select/screenshot/evaluate relies on the SDK 1.0.1 server not validating arguments against each tool's inputSchema (PP:420 passes request.params.arguments straight to handleToolCall). It does not matter for the package verdict, because puppeteer_navigate advertises launchOptions explicitly.",
+    "Default browser: puppeteer launches its own downloaded Chrome for Testing, headed (headless:false) outside Docker, with a fresh temporary --user-data-dir (PC/ChromeLauncher.js:78-85). It does not use the user's real profile by default, but launchOptions.userDataDir (agent- or env-supplied) can point at a real, logged-in Chrome profile.",
+    "No URL filtering of any kind: puppeteer_navigate does page.goto(args.url) directly (PP:187), so file:// host files, localhost and intranet hosts are reachable, and screenshot/evaluate return their content.",
+    "Also exposes MCP resources console://logs (page console output) and screenshot://<name> (PP:377-416). These are resources, not tools; noted only for completeness.",
+    "Package-level union at default: {HOSTEXEC, SECRET, UNTRUSTED, SINK}, with no value condition able to reduce it."
+  ]
+}

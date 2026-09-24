@@ -1,0 +1,646 @@
+[
+ {
+  "tool": "start_codegen_session",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "options",
+   "outputPath"
+  ],
+  "annotations": {},
+  "rationale_code": "`startCodegenSession.handler` only creates a directory (`fs.mkdir`) at an agent-chosen path and stores options in memory; it returns no host data, makes no network call and executes nothing."
+ },
+ {
+  "tool": "end_codegen_session",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "sessionId"
+  ],
+  "annotations": {},
+  "rationale_code": "Writes a generated `*.spec.ts` file to the session's `outputPath` via `fs.writeFile` and returns the generated code (derived from the agent's own recorded tool args). Local write only - no execution of the written file, no network egress, no reading of pre-existing user data."
+ },
+ {
+  "tool": "get_codegen_session",
+  "code": [],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "sessionId"
+  ],
+  "annotations": {},
+  "rationale_code": "`getCodegenSession.handler` returns the in-memory session object (actions the agent itself recorded). No host files, credentials or network access. [unverified: no cited span contains the tool name or a backticked identifier]"
+ },
+ {
+  "tool": "clear_codegen_session",
+  "code": [],
+  "description": [],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "sessionId"
+  ],
+  "annotations": {},
+  "rationale_code": "`clearCodegenSession.handler` only deletes an in-memory session record. [unverified: no cited span contains the tool name or a backticked identifier]"
+ },
+ {
+  "tool": "playwright_navigate",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "`navigationTool.execute` drives a real browser (`ensureBrowser` launches chromium/firefox/webkit) to an agent-supplied `url`, so the tool loads attacker-controlled pages (UNTRUSTED) and the URL itself is an agent-chosen outbound request that can carry data in its path/query to an attacker host (SINK"
+ },
+ {
+  "tool": "playwright_screenshot",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "name",
+   "selector",
+   "downloadsDir"
+  ],
+  "annotations": {},
+  "rationale_code": "`screenshotTool.execute` returns the rendered current page (base64 by default per schema `storeBase64`), so attacker-controlled page content re-enters the agent context (UNTRUSTED); if the page was pointed at `file://`/localhost by `playwright_navigate` the image contains non-public data (SECRET). `"
+ },
+ {
+  "tool": "playwright_click",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`clickTool.execute` acts on the attacker-controlled page; its result/diagnostics can reflect page state and clicking can trigger navigation to attacker content. The implementation (dist/tools/browser/interaction.js) is not included, so the UNTRUSTED reading of its return value is kept."
+ },
+ {
+  "tool": "playwright_iframe_click",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "iframeSelector",
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`iframeClickTool.execute` clicks inside a (typically third-party) iframe of the loaded page; return payload comes from the attacker-controlled document and its implementation is not in the provided source, so UNTRUSTED is kept."
+ },
+ {
+  "tool": "playwright_iframe_fill",
+  "code": [
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "iframeSelector",
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`iframeFillTool.execute` types agent-supplied `value` into an input of an attacker-controlled iframe document, where page scripts observe it immediately - agent data reaches an attacker-readable destination (SINK). Results come from that untrusted document (UNTRUSTED); implementation file not provid"
+ },
+ {
+  "tool": "playwright_fill",
+  "code": [
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`fillTool.execute` writes agent-supplied `value` into a form field of whatever page is loaded; on an attacker-controlled page the value is directly observable by page JavaScript, making it an exfiltration sink. Page-derived results make it UNTRUSTED; the interaction implementation is not in the prov"
+ },
+ {
+  "tool": "playwright_select",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`selectTool.execute` operates on the loaded (possibly attacker-controlled) page and returns page-derived status; implementation not included, so UNTRUSTED kept."
+ },
+ {
+  "tool": "playwright_hover",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`hoverTool.execute` interacts with the attacker-controlled page; its return value is page-derived and the implementation is not in the provided source."
+ },
+ {
+  "tool": "playwright_upload_file",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SECRET",
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector",
+   "filePath"
+  ],
+  "annotations": {},
+  "rationale_code": "`uploadFileTool.execute` attaches a local file at an absolute `filePath` to a `input[type=file]` on the currently loaded page; if that page is attacker-controlled the host file's bytes are delivered to the attacker (sink for non-public host data). Content is not returned into the agent context, so n"
+ },
+ {
+  "tool": "playwright_evaluate",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "script"
+  ],
+  "annotations": {},
+  "rationale_code": "`evaluateTool.execute` runs arbitrary agent-supplied `script` in the page context and returns its result: the script can `fetch()` any URL (including localhost/intranet, and file content when the page origin is `file://`) making it SECRET, can POST collected data to an attacker host (SINK), and retu"
+ },
+ {
+  "tool": "playwright_console_logs",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`registerConsoleMessage` captures every `console` message and `pageerror` from the loaded page into `consoleLogsTool`, and this tool returns them, so attacker-controlled page text enters the agent context."
+ },
+ {
+  "tool": "playwright_resize",
+  "code": [],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`resizeTool.execute` only changes viewport/device emulation settings; no data is returned from the page, no network destination chosen, no host execution."
+ },
+ {
+  "tool": "playwright_close",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Closes the browser and resets global state; returns a fixed status string."
+ },
+ {
+  "tool": "playwright_get",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "`ensureApiContext(args.url)` builds a Playwright request context with the agent-chosen `baseURL` and `getRequestTool.execute` performs the GET, returning the response body (UNTRUSTED). The URL is unrestricted, so localhost/intranet endpoints can be read (SECRET), and the agent-chosen URL plus arbitr"
+ },
+ {
+  "tool": "playwright_post",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "`postRequestTool.execute` sends agent-supplied `value` and `headers` to an arbitrary agent-chosen `url` (clear SINK) and returns the response (UNTRUSTED); the URL may be localhost/intranet, exposing non-public responses (SECRET)."
+ },
+ {
+  "tool": "playwright_put",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "`putRequestTool.execute` writes agent-supplied body to an arbitrary URL (SINK), returns the response (UNTRUSTED) and can target internal hosts (SECRET)."
+ },
+ {
+  "tool": "playwright_patch",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "`patchRequestTool.execute` sends agent-supplied body/headers to an arbitrary URL (SINK), returns the response (UNTRUSTED) and can reach localhost/intranet endpoints (SECRET)."
+ },
+ {
+  "tool": "playwright_delete",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "`deleteRequestTool.execute` issues a request to an arbitrary agent-chosen URL with arbitrary headers (SINK - path/headers can carry data), returns the response body (UNTRUSTED) and can address internal hosts (SECRET)."
+ },
+ {
+  "tool": "playwright_expect_response",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "id",
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "`expectResponseTool.execute` only registers a `waitForResponse` promise keyed by `id`; the matched response content is surfaced later by `playwright_assert_response`."
+ },
+ {
+  "tool": "playwright_assert_response",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "id"
+  ],
+  "annotations": {},
+  "rationale_code": "`assertResponseTool.execute` resolves the awaited HTTP response and validates/reports its body, so response content from the (attacker-controlled) site reaches the agent; if the page was navigated to a localhost/intranet/file origin the awaited response is non-public. Implementation file dist/tools/"
+ },
+ {
+  "tool": "playwright_custom_user_agent",
+  "code": [],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "Only re-creates the browser context with the supplied `userAgent` (`browserSettings.userAgent`); returns no page data and contacts no agent-chosen host."
+ },
+ {
+  "tool": "playwright_get_visible_text",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`visibleTextTool.execute` returns the text of the current page: attacker-controlled when the browser was pointed at a hostile site (UNTRUSTED), and non-public when `playwright_navigate` loaded a `file://`, localhost or intranet URL (SECRET)."
+ },
+ {
+  "tool": "playwright_get_visible_html",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`visibleHtmlTool.execute` returns raw page HTML (optionally including scripts when `removeScripts:false`), so attacker-authored markup enters the agent context and local/intranet page content can be read after navigation to such a URL."
+ },
+ {
+  "tool": "playwright_go_back",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [],
+  "code_verified": false,
+  "hidden": [
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`goBackTool.execute` re-loads a previous (possibly attacker-controlled) page and reports the resulting navigation state; the implementation file is not included in the provided source, so the UNTRUSTED reading of its output is kept."
+ },
+ {
+  "tool": "playwright_go_forward",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [],
+  "code_verified": false,
+  "hidden": [
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`goForwardTool.execute` navigates forward into a possibly attacker-controlled page and returns navigation state; implementation not provided, so UNTRUSTED is kept."
+ },
+ {
+  "tool": "playwright_drag",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "sourceSelector",
+   "targetSelector"
+  ],
+  "annotations": {},
+  "rationale_code": "`dragTool.execute` manipulates elements of the attacker-controlled page and its result is page-derived; implementation (dist/tools/browser/interaction.js) is not in the provided source."
+ },
+ {
+  "tool": "playwright_press_key",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`pressKeyTool.execute` sends keystrokes to the loaded page (which can submit forms on an attacker site) and returns page-derived status; implementation not provided, so UNTRUSTED kept."
+ },
+ {
+  "tool": "playwright_save_as_pdf",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "outputPath",
+   "filename"
+  ],
+  "annotations": {},
+  "rationale_code": "`saveAsPdfTool.execute` writes the rendered page to a local file at an agent-chosen `outputPath`; the content is not returned to the agent and the destination is the user's own disk, not attacker-readable."
+ },
+ {
+  "tool": "playwright_click_and_switch_tab",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "selector"
+  ],
+  "annotations": {},
+  "rationale_code": "`clickAndSwitchTabTool.execute` follows a link in the current page and promotes the new tab via `setGlobalPage`, reporting the new tab's URL/title - i.e. content of a page the attacker's link chose. Implementation file not included, so UNTRUSTED is kept."
+ }
+]

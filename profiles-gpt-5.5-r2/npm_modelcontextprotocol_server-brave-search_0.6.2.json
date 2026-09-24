@@ -1,0 +1,78 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Both tools are always listed by `ListToolsRequestSchema` when the server is running: dist/index.js:215-217.",
+  "`brave_web_search` declares an `offset` input in the schema, but the call handler only passes `query` and `count` to `performWebSearch`, so `offset` is not used at call time: dist/index.js:229-230."
+ ],
+ "package": "@modelcontextprotocol/server-brave-search",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-brave-search_0.6.2_59d26596a22e",
+ "tools": {
+  "brave_local_search": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:135-145 constructs a fixed Brave Search API request with the supplied `query` and requests location results.",
+    "dist/index.js:151-160 uses Brave-provided location IDs to fetch POI and description data.",
+    "dist/index.js:164-171 and dist/index.js:181-188 fetch POI and description data from fixed Brave local API endpoints.",
+    "dist/index.js:204-210 formats local result fields including `Name`, `Address`, `Phone`, `Hours`, and `Description` into returned text.",
+    "dist/index.js:152-153 falls back to web search when no local results are found.",
+    "dist/index.js:242-244 returns those results in MCP `content` text."
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns local business/place information and descriptions from Brave, and may fall back to web search. Business listing names, descriptions, addresses, and related public data can be attacker-controllable through public/third-party sources, so the output is UNTRUSTED. It contacts only fixed Brave API endpoints and does not let the agent choose a host, so it is not a SINK. It does not return non-public user data and does not execute host code. The supplied `query` is sent to Brave, so the call is treated as WRITE for enforcement even though the endpoint is fixed.",
+   "undetermined": false,
+   "value_args": [
+    "query"
+   ]
+  },
+  "brave_web_search": {
+   "attacker_named_fields": [
+    "content.text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:109-118 constructs a fixed Brave Search API request with the supplied `query` and API token.",
+    "dist/index.js:123-130 parses Brave results and formats `title`, `description`, and `url` into returned text.",
+    "dist/index.js:231-233 returns those results in MCP `content` text."
+   ],
+   "identifier_output_fields": [
+    "content.text"
+   ],
+   "injectable_output_fields": [
+    "content.text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns public web search results from Brave. Public web result titles, descriptions, and URLs can be authored or influenced by arbitrary website operators, so the output is UNTRUSTED. It does not fetch agent-chosen URLs or hosts; it only contacts the fixed Brave endpoint, and a query sent to a fixed vendor endpoint is not a SINK. It does not return non-public user data and does not execute host code. The supplied `query` is sent to Brave as `q`, so the call is treated as WRITE for enforcement even though the endpoint is fixed.",
+   "undetermined": false,
+   "value_args": [
+    "query"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "unset",
+   "effect": "Required for the server to start; if absent, the process exits before advertising or serving tools.",
+   "evidence": "dist/index.js:68-72 reads `process.env.BRAVE_API_KEY` and calls `process.exit(1)` when it is missing.",
+   "kind": "environment variable",
+   "syntax": "BRAVE_API_KEY"
+  }
+ ],
+ "version": "0.6.2"
+}

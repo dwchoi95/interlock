@@ -1,0 +1,119 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All four tools are included unconditionally in the server's `tools` array (`dist/index.js:13-17`) and advertised by iterating that array (`dist/index.js:34-46`), so they are default-enabled.",
+  "Every tool invocation queues anonymous telemetry for the tool name (`dist/index.js:55-65`), and README documents opt-out with `NEXT_TELEMETRY_DISABLED=1` (`README.md:244-260`); no advertised tool is removed by that setting."
+ ],
+ "package": "next-devtools-mcp",
+ "source": ".cache/sources/.views/npm_next-devtools-mcp_0.4.0_91c49454f95a",
+ "tools": {
+  "browser_eval": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/browser-eval.js:25-46",
+    "dist/tools/browser-eval.js:48-63"
+   ],
+   "identifier_output_fields": [
+    "tool",
+    "version",
+    "instructions"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`browser_eval` executes fixed local probe commands with `execSync` to determine whether `agent-browser` is installed and to read `agent-browser --version`, then returns the local installation status and version. This is host-local, non-public environment information, so it is SECRET. The command strings are fixed and do not include agent-supplied input, so this is not arbitrary HOSTEXEC.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "nextjs_call": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "port",
+    "toolName",
+    "args"
+   ],
+   "evidence": [
+    "dist/tools/nextjs_call.js:3-14",
+    "dist/tools/nextjs_call.js:60-68",
+    "dist/tools/nextjs_call.js:70-77",
+    "README.md:183-188"
+   ],
+   "identifier_output_fields": [
+    "port",
+    "toolName",
+    "result"
+   ],
+   "injectable_output_fields": [
+    "result",
+    "error"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`nextjs_call` forwards the selected `toolName` and `args` to a local Next.js runtime MCP endpoint via `callNextJsTool` and returns the runtime `result`. The documented runtime tools can expose errors, logs, route/project metadata, and server-action source-file resolution, which are non-public local application/runtime data, so it is SECRET. Because the returned `result` is opaque output from runtime tools such as browser/server logs and errors, it may include text originating outside the MCP server; the internal runtime manager and exact Next.js tool behavior are not included, so UNTRUSTED is kept with `undetermined` true. The tool can also invoke runtime tools that change application state, e.g. the description lists cache management, so its kind is WRITE.",
+   "undetermined": true,
+   "value_args": [
+    "args"
+   ]
+  },
+  "nextjs_docs": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/nextjs-docs.js:43-67",
+    "dist/tools/nextjs-docs.js:69-85",
+    "dist/tools/nextjs-docs.js:101-113"
+   ],
+   "identifier_output_fields": [
+    "nextVersion",
+    "docsPath",
+    "message",
+    "instructions"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`nextjs_docs` reads local project files under `project_path`, including `node_modules/next/package.json` and `package.json`, and returns local Next.js version/source information, docs availability, paths, and instructions containing local paths. This exposes non-public host filesystem/project metadata, so it is SECRET.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "nextjs_index": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/nextjs_index.js:59-79",
+    "dist/tools/nextjs_index.js:91-115",
+    "dist/tools/nextjs_index.js:126-140"
+   ],
+   "identifier_output_fields": [
+    "servers[].port",
+    "servers[].pid",
+    "servers[].command",
+    "servers[].url",
+    "servers[].tools[].name",
+    "servers[].tools[].inputSchema"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`nextjs_index` discovers/probes local Next.js dev servers and returns local server metadata such as `port`, `pid`, `command`, `url`, and available runtime MCP tool names/schemas. That is non-public local host/application state, so it is SECRET. The exact discovery/probing implementation is imported from `../_internal/nextjs-runtime-manager.js`, which was not provided, so the precise reach is undetermined.",
+   "undetermined": true,
+   "value_args": []
+  }
+ },
+ "value_conditions": [],
+ "version": "0.4.0"
+}

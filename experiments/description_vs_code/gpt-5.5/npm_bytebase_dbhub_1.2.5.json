@@ -1,0 +1,67 @@
+{
+ "tools": {
+  "execute_sql": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Execute SQL queries on the sqlite database` with `SQL to execute` can run SELECT-style queries against a database and return database contents, so it can expose non-public database data. The description does not say who can write the database contents; conservatively, returned rows may include attacker-authored data, so UNTRUSTED is kept and this is marked undetermined. It is not labeled SINK because writing to a sqlite database is not advertised as sending data to an attacker-readable destination, and it is not labeled HOSTEXEC because only SQL execution, not arbitrary host code execution, is advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "sql"
+   ],
+   "value_args": [
+    "sql"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "search_objects": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Search and list database objects on the sqlite database` can return database schema/object information, which may be non-public database metadata, so SECRET applies. The description includes `Detail: names (minimal), summary (metadata), full (all)` and does not say whether object names or metadata can be authored by outside parties; conservatively, returned names/metadata may be attacker-authored, so UNTRUSTED is kept and this is marked undetermined. It is a read-only listing/search tool and is not advertised as sending data to an attacker-readable destination or executing host code.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "object_type",
+    "pattern",
+    "schema",
+    "table"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No source code was provided; judgments are based only on the advertised tool descriptions, schemas, and annotations."
+ ],
+ "usage": {
+  "input_tokens": 1353,
+  "output_tokens": 2428,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

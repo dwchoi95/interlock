@@ -1,0 +1,881 @@
+{
+ "tools": {
+  "API-get-user": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns Notion workspace user data via the user's Notion credentials: `Notion | Retrieve a user`. This is non-public SaaS/account data. No attacker-controlled text is evident from the advertised text.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "user_id",
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "API-get-users": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Lists Notion users available to the integration: `Notion | List all users`, which is non-public SaaS/account data reached with the user's credentials.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "user_id",
+    "name",
+    "start_cursor"
+   ],
+   "attacker_named_fields": []
+  },
+  "API-get-self": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns credential-associated bot/user information: `Notion | Retrieve your token's bot user`; this is non-public account/integration data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "user_id",
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "API-post-search": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Searches Notion content by title: `Notion | Search by title` and compares against `page and database titles`. Results can expose non-public pages/data sources reachable with the user's credentials. Titles in shared or multi-writer Notion content may be authored by other parties; the advertisement does not rule that out, so UNTRUSTED is kept under the least-restrictive reading.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title"
+   ],
+   "identifier_output_fields": [
+    "page_id",
+    "data_source_id",
+    "database_id",
+    "block_id",
+    "title",
+    "url",
+    "start_cursor"
+   ],
+   "attacker_named_fields": [
+    "title"
+   ]
+  },
+  "API-get-block-children": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves Notion block children: `Notion | Retrieve block children`, exposing page/block content available to the user's integration. Block text in collaborative Notion pages may be authored by outside parties; the advertised text does not exclude that, so UNTRUSTED is retained.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "rich_text",
+    "text",
+    "content",
+    "title"
+   ],
+   "identifier_output_fields": [
+    "block_id",
+    "page_id",
+    "data_source_id",
+    "database_id",
+    "user_id",
+    "title",
+    "name",
+    "url",
+    "start_cursor"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "name",
+    "url"
+   ]
+  },
+  "API-patch-block-children": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Appends supplied content to a Notion block/page: `Notion | Append block children` and `Child content to append`. This is a write to an agent-selected `block_id`/position. If the chosen Notion page/block is shared, public, or multi-writer, stored content is attacker-readable; the description does not settle visibility, so SINK is kept. The API may return the updated/created block objects containing non-public or collaborative content, but the advertised result schema is not provided, so SECRET/UNTRUSTED are also undetermined but retained.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "block_id",
+    "after"
+   ],
+   "value_args": [
+    "children"
+   ],
+   "injectable_output_fields": [
+    "rich_text",
+    "text",
+    "content",
+    "title"
+   ],
+   "identifier_output_fields": [
+    "block_id",
+    "page_id",
+    "data_source_id",
+    "database_id",
+    "user_id",
+    "title",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "name",
+    "url"
+   ]
+  },
+  "API-retrieve-a-block": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves a Notion block by ID: `Notion | Retrieve a block`, exposing non-public Notion content reachable with the user's credentials. Block content may be authored by collaborators or other writers; the description does not rule that out.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "rich_text",
+    "text",
+    "content",
+    "title"
+   ],
+   "identifier_output_fields": [
+    "block_id",
+    "page_id",
+    "data_source_id",
+    "database_id",
+    "user_id",
+    "title",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "name",
+    "url"
+   ]
+  },
+  "API-update-a-block": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Updates or archives a Notion block: `Notion | Update a block` and `properties to be updated`. This writes agent-supplied update data to the agent-selected `block_id`. If that block is shared/public/multi-writer, written content can be attacker-readable; visibility is not settled by the description. The returned updated block may also include non-public or collaborative content, but no output schema is advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "block_id"
+   ],
+   "value_args": [
+    "type",
+    "archived"
+   ],
+   "injectable_output_fields": [
+    "rich_text",
+    "text",
+    "content",
+    "title"
+   ],
+   "identifier_output_fields": [
+    "block_id",
+    "page_id",
+    "data_source_id",
+    "database_id",
+    "user_id",
+    "title",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "name",
+    "url"
+   ]
+  },
+  "API-delete-a-block": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Deletes/archives a Notion block: `Notion | Delete a block`, changing state of the agent-selected `block_id`. This is a write to Notion; if the block is shared/public/multi-writer the effect is observable by an attacker, but visibility is not specified. The API may return the deleted block object containing non-public or collaborative text, but the output schema is not advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "block_id"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "rich_text",
+    "text",
+    "content",
+    "title"
+   ],
+   "identifier_output_fields": [
+    "block_id",
+    "page_id",
+    "data_source_id",
+    "database_id",
+    "user_id",
+    "title",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "name",
+    "url"
+   ]
+  },
+  "API-retrieve-a-page": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves a Notion page: `Notion | Retrieve a page`, exposing non-public page properties/content metadata reachable with the user's credentials. Page titles/properties in shared or multi-writer Notion pages may be outside-authored; the description does not exclude that.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "properties",
+    "title",
+    "rich_text",
+    "text",
+    "content"
+   ],
+   "identifier_output_fields": [
+    "page_id",
+    "block_id",
+    "data_source_id",
+    "database_id",
+    "property_id",
+    "user_id",
+    "title",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "name",
+    "url"
+   ]
+  },
+  "API-patch-page": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Updates page properties: `Notion | Update page properties`, including `property values to update`, trash/archive state, icon, and cover for the agent-selected `page_id`. This can store agent-supplied content in a Notion page. If the page is shared/public/multi-writer, the stored data is attacker-readable; the description does not settle visibility. The updated page response may include non-public or collaborative properties, but no output schema is advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "page_id"
+   ],
+   "value_args": [
+    "properties",
+    "in_trash",
+    "archived",
+    "icon",
+    "cover"
+   ],
+   "injectable_output_fields": [
+    "properties",
+    "title",
+    "rich_text",
+    "text",
+    "content"
+   ],
+   "identifier_output_fields": [
+    "page_id",
+    "block_id",
+    "data_source_id",
+    "database_id",
+    "property_id",
+    "user_id",
+    "title",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "name",
+    "url"
+   ]
+  },
+  "API-post-page": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Creates a Notion page: `Notion | Create a page`, with `property values for the new page` and `content to be rendered on the new page`. This writes supplied data under the agent-selected `parent`. If that parent/workspace is shared/public/multi-writer, the created content may be attacker-readable; the description does not specify visibility. The created page response may include non-public or collaborative data, but no output schema is advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "parent"
+   ],
+   "value_args": [
+    "properties",
+    "children",
+    "icon",
+    "cover"
+   ],
+   "injectable_output_fields": [
+    "properties",
+    "title",
+    "rich_text",
+    "text",
+    "content"
+   ],
+   "identifier_output_fields": [
+    "page_id",
+    "block_id",
+    "data_source_id",
+    "database_id",
+    "property_id",
+    "user_id",
+    "title",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "name",
+    "url"
+   ]
+  },
+  "API-retrieve-a-page-property": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves a page property item: `Notion | Retrieve a page property item`, exposing non-public Notion page property values. Page property values may contain collaborator-authored text in shared or multi-writer pages; the advertised text does not rule that out.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "property",
+    "properties",
+    "title",
+    "rich_text",
+    "text",
+    "content"
+   ],
+   "identifier_output_fields": [
+    "page_id",
+    "property_id",
+    "user_id",
+    "title",
+    "name",
+    "url",
+    "start_cursor"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "name",
+    "url"
+   ]
+  },
+  "API-retrieve-a-comment": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves comments: `Notion | Retrieve comments` for a block or page. Comments are user-authored collaborative text and may be written by outside parties on shared content; they are also non-public SaaS data reachable with the user's credentials.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "rich_text",
+    "text",
+    "content"
+   ],
+   "identifier_output_fields": [
+    "comment_id",
+    "block_id",
+    "page_id",
+    "user_id",
+    "name",
+    "start_cursor"
+   ],
+   "attacker_named_fields": [
+    "user_id",
+    "name"
+   ]
+  },
+  "API-create-a-comment": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Creates a Notion comment: `Notion | Create comment` with `The content of the comment` on the selected `parent`. This sends/stores agent-supplied text into a Notion page. If the page is shared/public/multi-writer, readers including an attacker can see it; visibility is not specified. The created comment response may include non-public or collaborative comment data, but no output schema is advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "parent"
+   ],
+   "value_args": [
+    "rich_text"
+   ],
+   "injectable_output_fields": [
+    "rich_text",
+    "text",
+    "content"
+   ],
+   "identifier_output_fields": [
+    "comment_id",
+    "block_id",
+    "page_id",
+    "user_id",
+    "name"
+   ],
+   "attacker_named_fields": [
+    "user_id",
+    "name"
+   ]
+  },
+  "API-query-data-source": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Queries a Notion data source/database: `Notion | Query a data source`, returning non-public records reachable with the user's credentials. Returned page titles/properties from a shared or multi-writer data source may be authored by other parties; the description does not exclude that. Although annotated destructive, the advertised operation is a query/read.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "properties",
+    "title",
+    "rich_text",
+    "text",
+    "content"
+   ],
+   "identifier_output_fields": [
+    "page_id",
+    "data_source_id",
+    "database_id",
+    "property_id",
+    "user_id",
+    "title",
+    "name",
+    "url",
+    "start_cursor"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "name",
+    "url"
+   ]
+  },
+  "API-retrieve-a-data-source": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves a Notion data source: `Notion | Retrieve a data source`, exposing non-public database/data-source schema and metadata. Titles/descriptions/property names in collaborative data sources may be outside-authored; the advertised text does not rule that out.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "properties",
+    "name"
+   ],
+   "identifier_output_fields": [
+    "data_source_id",
+    "database_id",
+    "page_id",
+    "property_id",
+    "title",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "description",
+    "name",
+    "url"
+   ]
+  },
+  "API-update-a-data-source": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Updates a data source: `Notion | Update a data source`, including `title`, `description`, and `Property schema updates` for the agent-selected `data_source_id`. This stores supplied data in Notion. If the data source is shared/public/multi-writer, an attacker may read the stored data; visibility is not specified. The updated data-source response may include non-public or collaborative metadata, but no output schema is advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "data_source_id"
+   ],
+   "value_args": [
+    "title",
+    "description",
+    "properties"
+   ],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "properties",
+    "name"
+   ],
+   "identifier_output_fields": [
+    "data_source_id",
+    "database_id",
+    "page_id",
+    "property_id",
+    "title",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "description",
+    "name",
+    "url"
+   ]
+  },
+  "API-create-a-data-source": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Creates a data source: `Notion | Create a data source`, with supplied `Property schema of data source` and `title` under an agent-selected `parent`. If that parent is shared/public/multi-writer, the created schema/title is attacker-readable; the advertised text does not settle visibility. The created data-source response may include non-public or collaborative metadata, but no output schema is advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "parent"
+   ],
+   "value_args": [
+    "properties",
+    "title"
+   ],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "properties",
+    "name"
+   ],
+   "identifier_output_fields": [
+    "data_source_id",
+    "database_id",
+    "page_id",
+    "property_id",
+    "title",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "description",
+    "name",
+    "url"
+   ]
+  },
+  "API-list-data-source-templates": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Lists templates in a Notion data source: `Notion | List templates in a data source`, exposing non-public template metadata reachable with the user's credentials. Template names/titles/content in shared or multi-writer data sources may be authored by collaborators; the description does not rule that out.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "name",
+    "description",
+    "content"
+   ],
+   "identifier_output_fields": [
+    "template_id",
+    "data_source_id",
+    "page_id",
+    "title",
+    "name",
+    "url",
+    "start_cursor"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "name",
+    "url"
+   ]
+  },
+  "API-retrieve-a-database": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves a Notion database: `Notion | Retrieve a database`, exposing non-public database metadata/schema. Database titles, descriptions, and property names in collaborative workspaces may be authored by other writers; the advertised text does not exclude that.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "properties",
+    "name"
+   ],
+   "identifier_output_fields": [
+    "database_id",
+    "data_source_id",
+    "page_id",
+    "property_id",
+    "title",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "description",
+    "name",
+    "url"
+   ]
+  },
+  "API-move-page": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Moves a Notion page: `Notion | Move a page`, changing the agent-selected `page_id` to the selected `parent`. This state change is observable to anyone with access to the page/parent; if shared/public/multi-writer, that can be attacker-readable, and visibility is not specified. The moved page response may include non-public or collaborative metadata, but no output schema is advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "page_id",
+    "parent"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "properties",
+    "title",
+    "rich_text",
+    "text",
+    "content"
+   ],
+   "identifier_output_fields": [
+    "page_id",
+    "parent",
+    "block_id",
+    "data_source_id",
+    "database_id",
+    "title",
+    "name",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "name",
+    "url"
+   ]
+  },
+  "API-retrieve-page-markdown": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves a page/block as Markdown: `Notion | Retrieve a page as Markdown` for an identifier `to read or update as markdown`, exposing non-public page content. Markdown page content and optional `meeting note transcripts` may include text authored by collaborators or other writers; the description does not rule that out.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "page_id",
+    "block_id",
+    "url",
+    "title"
+   ],
+   "attacker_named_fields": [
+    "url",
+    "title"
+   ]
+  },
+  "API-update-page-markdown": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Updates a page's content as Markdown: `Notion | Update a page's content as Markdown`, including `replace_content`, `update_content`, `insert_content`, and `replace_content_range` that store supplied Markdown in the selected `page_id`. If that page is shared/public/multi-writer, the written content is attacker-readable; the advertised text does not specify visibility. The update response may include non-public or collaborative content, but no output schema is advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "page_id"
+   ],
+   "value_args": [
+    "replace_content",
+    "update_content",
+    "insert_content",
+    "replace_content_range"
+   ],
+   "injectable_output_fields": [
+    "return",
+    "properties",
+    "title",
+    "rich_text",
+    "text",
+    "content"
+   ],
+   "identifier_output_fields": [
+    "page_id",
+    "block_id",
+    "data_source_id",
+    "database_id",
+    "title",
+    "url"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "url"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No tool advertises arbitrary host code execution, so HOSTEXEC is not assigned.",
+  "All network access appears to be to fixed Notion API endpoints; no READ tool has an agent-chosen URL/host destination argument.",
+  "Several SINK and UNTRUSTED judgments are marked undetermined because the advertised text does not state whether the selected Notion pages, blocks, comments, or data sources are private, shared, public, or multi-writer. Under the requested least-restrictive reading, the labels are retained."
+ ],
+ "usage": {
+  "input_tokens": 460,
+  "output_tokens": 7906,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 18176
+ }
+}

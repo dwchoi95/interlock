@@ -1,0 +1,1361 @@
+{
+ "tools": {
+  "core_list_project_teams": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves organization/project team data using the authenticated Azure DevOps context: `Retrieve a list of teams for an Azure DevOps project`; exact result schema is not advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "project",
+    "team",
+    "id",
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "core_list_projects": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns project data in the user's Azure DevOps organization: `Retrieve a list of projects in your Azure DevOps organization`; exact result schema is not advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "project",
+    "id",
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "core_get_identity_ids": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns Azure DevOps identity data found by `unique name, display name, email`, which is account/organization data available through the user's credentials.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "identityId",
+    "uniqueName",
+    "displayName",
+    "email"
+   ],
+   "attacker_named_fields": []
+  },
+  "work": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves project/team work data such as `iterations`, `team settings`, and `capacity`; this is non-public Azure DevOps data. Iteration/team names and related project planning fields can be authored in a multi-writer project, so output is treated as untrusted; exact result fields are not advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "name",
+    "path",
+    "settings"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "team",
+    "iterationId",
+    "id",
+    "name",
+    "path"
+   ],
+   "attacker_named_fields": [
+    "name",
+    "path"
+   ]
+  },
+  "work_iteration_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can change Azure DevOps iteration state: `Create or assign iterations in an Azure DevOps project`; agent-supplied iteration names, dates, identifiers, and paths are stored/assigned in the selected project/team.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "team",
+    "iterations"
+   ],
+   "value_args": [
+    "iterations"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "iterationId",
+    "id",
+    "name",
+    "path",
+    "identifier"
+   ],
+   "attacker_named_fields": []
+  },
+  "work_capacity_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can update team capacity records: `Update the team capacity of a team member for a specific iteration`; supplied activities and days off are written to Azure DevOps.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "team",
+    "teamMemberId",
+    "iterationId"
+   ],
+   "value_args": [
+    "activities",
+    "daysOff"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "project",
+    "team",
+    "teamMemberId",
+    "iterationId"
+   ],
+   "attacker_named_fields": []
+  },
+  "pipelines_build": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves private build data for a project: `list builds`, `get status, issues, and report metadata`, and `get commits and work items associated with a build`. Commits, work items, build numbers/tags, issues, and source changes may be authored by repository/project contributors.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "buildNumber",
+    "issues",
+    "commits",
+    "workItems",
+    "sourceChange",
+    "tags"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "buildId",
+    "buildIds",
+    "definitionId",
+    "repositoryId",
+    "branchName",
+    "commitId",
+    "workItemId",
+    "tag"
+   ],
+   "attacker_named_fields": [
+    "commitId",
+    "branchName",
+    "tag"
+   ]
+  },
+  "pipelines_build_log": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves build logs: `get the text content of a specific log`; build logs are non-public project data and may contain text produced by build scripts, commits, tests, or other contributor-controlled inputs.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "content",
+    "log"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "buildId",
+    "logId"
+   ],
+   "attacker_named_fields": []
+  },
+  "pipelines_definition": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves pipeline definition data and revisions in a project. Definitions, names, paths, YAML filenames, repository links, and revision metadata may reflect contributor-authored repository/pipeline configuration; exact output fields are not advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "name",
+    "path",
+    "yamlFilename",
+    "revisions"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "definitionId",
+    "definitionIds",
+    "repositoryId",
+    "name",
+    "path",
+    "yamlFilename"
+   ],
+   "attacker_named_fields": [
+    "name",
+    "path",
+    "yamlFilename"
+   ]
+  },
+  "pipelines_run": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves pipeline run data: `get a single pipeline run` and `list runs for a pipeline`; run metadata can include contributor-controlled branch, commit, parameters, names, or outputs, but exact result fields are not advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "name",
+    "variables",
+    "templateParameters",
+    "resources"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "pipelineId",
+    "runId",
+    "buildId",
+    "repositoryId",
+    "branchName"
+   ],
+   "attacker_named_fields": [
+    "branchName"
+   ]
+  },
+  "pipelines_artifact": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `Retrieve and download build artifacts`; artifacts are non-public project/build data and their contents/names may be generated from contributor-controlled builds. If `destinationPath` is provided it also writes a local file.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "destinationPath"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "artifactName",
+    "content"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "buildId",
+    "artifactName",
+    "destinationPath",
+    "path"
+   ],
+   "attacker_named_fields": [
+    "artifactName"
+   ]
+  },
+  "pipelines_write": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `queue a new pipeline run`, `create a new YAML pipeline definition`, or `cancel, retry, or run a stage`; supplied variables, resources, YAML override, names, and stage status are sent to Azure DevOps. `previewRun` can return final YAML, which may include private and contributor-authored pipeline/repository content. It queues remote pipeline work but the description does not establish arbitrary code execution on the MCP host.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "pipelineId",
+    "name",
+    "folder",
+    "yamlPath",
+    "repositoryType",
+    "repositoryName",
+    "repositoryId",
+    "repositoryConnectionId",
+    "buildId",
+    "stageName"
+   ],
+   "value_args": [
+    "resources",
+    "stagesToSkip",
+    "templateParameters",
+    "variables",
+    "yamlOverride",
+    "status",
+    "forceRetryAllJobs"
+   ],
+   "injectable_output_fields": [
+    "return",
+    "yaml",
+    "name"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "pipelineId",
+    "runId",
+    "buildId",
+    "name",
+    "repositoryName",
+    "repositoryId",
+    "stageName"
+   ],
+   "attacker_named_fields": [
+    "name",
+    "repositoryName",
+    "stageName"
+   ]
+  },
+  "repo_repository": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves repository data in an organization/project: `get a repository by name or ID` and `list repositories in a project`; this is data reached with the user's Azure DevOps credentials.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "project",
+    "repositoryNameOrId",
+    "repositoryId",
+    "name",
+    "id"
+   ],
+   "attacker_named_fields": []
+  },
+  "repo_pull_request": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves pull request data. PR titles, descriptions, labels, source/target branch names, changed files, work item refs, and creator/reviewer metadata can be authored or selected by repository contributors.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "labels",
+    "sourceRefName",
+    "targetRefName",
+    "changedFiles"
+   ],
+   "identifier_output_fields": [
+    "repositoryId",
+    "repository",
+    "pullRequestId",
+    "project",
+    "title",
+    "sourceRefName",
+    "targetRefName",
+    "commits",
+    "createdBy",
+    "reviewer"
+   ],
+   "attacker_named_fields": [
+    "createdBy",
+    "title",
+    "sourceRefName"
+   ]
+  },
+  "repo_pull_request_thread": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves PR `comment threads` and `comments`; comment content and thread author fields are attacker-controllable in a multi-writer repository.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "content",
+    "comments",
+    "authorEmail",
+    "authorDisplayName"
+   ],
+   "identifier_output_fields": [
+    "repositoryId",
+    "pullRequestId",
+    "project",
+    "threadId",
+    "authorEmail",
+    "authorDisplayName",
+    "filePath"
+   ],
+   "attacker_named_fields": [
+    "authorEmail",
+    "authorDisplayName"
+   ]
+  },
+  "repo_branch": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves branch data; branch names can be created by repository contributors and are later usable as identifiers.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "branchName",
+    "name"
+   ],
+   "identifier_output_fields": [
+    "repositoryId",
+    "project",
+    "branchName",
+    "name",
+    "commitId"
+   ],
+   "attacker_named_fields": [
+    "branchName",
+    "name"
+   ]
+  },
+  "repo_file": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves repository file content and directory listings: `get the text content of a file` and `list files and folders`; repository content and paths are contributor-controlled and may be private.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "content",
+    "path",
+    "name"
+   ],
+   "identifier_output_fields": [
+    "repositoryId",
+    "path",
+    "project",
+    "version",
+    "versionType",
+    "name"
+   ],
+   "attacker_named_fields": [
+    "path",
+    "name"
+   ]
+  },
+  "repo_search_commits": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Searches private commits across projects/repositories; commit messages and author names are contributor-supplied: `Keywords to search for in commit messages` and `names of the commit authors`.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "commitMessage",
+    "message",
+    "author",
+    "repository",
+    "branch"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "repository",
+    "branch",
+    "author",
+    "commitId"
+   ],
+   "attacker_named_fields": [
+    "author",
+    "branch"
+   ]
+  },
+  "repo_pull_request_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can create/update PRs, reviewers, and votes: `create a pull request`, `update a pull request`, `add or remove pull request reviewers`, `cast a vote`; supplied title, description, labels, reviewers, merge message, and vote are stored in Azure DevOps.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "repositoryId",
+    "pullRequestId",
+    "project",
+    "sourceRefName",
+    "targetRefName",
+    "reviewerIds"
+   ],
+   "value_args": [
+    "title",
+    "description",
+    "isDraft",
+    "workItems",
+    "forkSourceRepositoryId",
+    "labels",
+    "status",
+    "autoComplete",
+    "mergeStrategy",
+    "mergeCommitMessage",
+    "deleteSourceBranch",
+    "transitionWorkItems",
+    "bypassReason",
+    "reviewerAction",
+    "vote"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "repositoryId",
+    "pullRequestId",
+    "project",
+    "title",
+    "sourceRefName",
+    "targetRefName",
+    "reviewerIds"
+   ],
+   "attacker_named_fields": []
+  },
+  "repo_pull_request_thread_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `create a new comment thread`, `reply to a comment`, or `update the status`; supplied comment content/status is written to a PR thread readable by repository participants.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "repositoryId",
+    "pullRequestId",
+    "project",
+    "threadId",
+    "filePath",
+    "rightFileStartLine",
+    "rightFileEndLine"
+   ],
+   "value_args": [
+    "content",
+    "status",
+    "rightFileStartOffset",
+    "rightFileEndOffset"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "repositoryId",
+    "pullRequestId",
+    "project",
+    "threadId",
+    "filePath"
+   ],
+   "attacker_named_fields": []
+  },
+  "repo_create_branch": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Creates a branch in a repository: `Create a new branch in the repository`; the branch name/source are agent-supplied and stored in Azure DevOps.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "repositoryId",
+    "branchName",
+    "sourceBranchName",
+    "sourceCommitId",
+    "project"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "repositoryId",
+    "branchName",
+    "sourceBranchName",
+    "sourceCommitId",
+    "project"
+   ],
+   "attacker_named_fields": []
+  },
+  "wit_work_item": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves work items, comments, revisions, and iteration work item data. Work item titles/descriptions/fields/comments are multi-writer project content and can contain attacker-authored text.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "fields",
+    "comments",
+    "revisions"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "id",
+    "ids",
+    "workItemId",
+    "team",
+    "iterationId",
+    "workItemType",
+    "commentId"
+   ],
+   "attacker_named_fields": [
+    "title"
+   ]
+  },
+  "wit_query": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves saved query data and executes WIQL returning work item results; saved query names/paths/WIQL and returned work item fields may be authored in a multi-writer project.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "query",
+    "wiql",
+    "fields",
+    "title",
+    "description"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "query",
+    "id",
+    "team",
+    "workItemId",
+    "title"
+   ],
+   "attacker_named_fields": [
+    "query",
+    "title"
+   ]
+  },
+  "wit_backlog": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves backlog levels and work items for a project/team. Backlog names and work item titles/fields are project content and may be contributor-authored.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "name",
+    "title",
+    "fields"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "team",
+    "backlogId",
+    "workItemId",
+    "name"
+   ],
+   "attacker_named_fields": [
+    "name",
+    "title"
+   ]
+  },
+  "wit_work_item_attachment": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Downloads a work item attachment and returns base64 content or saves it locally. Attachments are non-public work item data and their filenames/content may be uploaded by other project users.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "savePath"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "content",
+    "fileName"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "attachmentId",
+    "fileName",
+    "savePath",
+    "path"
+   ],
+   "attacker_named_fields": [
+    "fileName"
+   ]
+  },
+  "wit_work_item_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can create/update work items and child work items: supplied fields, updates, titles, and descriptions are stored in Azure DevOps work items.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "id",
+    "parentId",
+    "batchUpdates"
+   ],
+   "value_args": [
+    "workItemType",
+    "fields",
+    "updates",
+    "batchUpdates",
+    "items"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "project",
+    "id",
+    "parentId",
+    "workItemType",
+    "title"
+   ],
+   "attacker_named_fields": []
+  },
+  "wit_work_item_comment_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `add a comment to a work item` or `update an existing comment`; supplied `text` is stored on the selected work item/comment.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "workItemId",
+    "commentId"
+   ],
+   "value_args": [
+    "text",
+    "format"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "project",
+    "workItemId",
+    "commentId"
+   ],
+   "attacker_named_fields": []
+  },
+  "wit_work_item_link_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can link/unlink work items and add artifact links; supplied link comments, URLs/URIs, branch/commit/build/wiki identifiers, and relation choices are written to work item links.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "updates",
+    "id",
+    "url",
+    "projectId",
+    "repositoryId",
+    "pullRequestId",
+    "workItemId",
+    "pullRequestProjectId",
+    "artifactUri",
+    "branchName",
+    "commitId",
+    "buildId",
+    "wikiId",
+    "pageId",
+    "pagePath"
+   ],
+   "value_args": [
+    "type",
+    "linkType",
+    "comment"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "project",
+    "id",
+    "linkToId",
+    "url",
+    "projectId",
+    "repositoryId",
+    "pullRequestId",
+    "workItemId",
+    "artifactUri",
+    "branchName",
+    "commitId",
+    "buildId",
+    "wikiId",
+    "pageId",
+    "pagePath"
+   ],
+   "attacker_named_fields": []
+  },
+  "wiki": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves wiki metadata, pages, and page content. Wiki page content, paths, and titles are multi-writer documentation content and can be attacker-authored.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "content",
+    "path",
+    "title"
+   ],
+   "identifier_output_fields": [
+    "wikiIdentifier",
+    "project",
+    "path",
+    "url",
+    "pageId",
+    "title"
+   ],
+   "attacker_named_fields": [
+    "path",
+    "title"
+   ]
+  },
+  "wiki_upsert_page": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Creates or updates a wiki page: `Create or update a wiki page with content`; supplied markdown content is stored at the selected wiki/path/branch.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "wikiIdentifier",
+    "path",
+    "project",
+    "etag",
+    "branch"
+   ],
+   "value_args": [
+    "content"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "wikiIdentifier",
+    "path",
+    "project",
+    "branch",
+    "etag"
+   ],
+   "attacker_named_fields": []
+  },
+  "testplan": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves test plans, suites, and cases. Plan/suite/case names and details are project-authored content and may be controlled by project contributors.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "name",
+    "title",
+    "description"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "planId",
+    "suiteId",
+    "testCaseId",
+    "continuationToken",
+    "name"
+   ],
+   "attacker_named_fields": [
+    "name",
+    "title"
+   ]
+  },
+  "testplan_show_test_results_from_build_id": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns test results including `test case titles, error messages, stack traces, and outcomes`; titles/errors/stack traces can be produced by tests or code and are private build data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "test case titles",
+    "error messages",
+    "stack traces",
+    "outcomes"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "buildid",
+    "testCaseId",
+    "testRunId",
+    "title"
+   ],
+   "attacker_named_fields": [
+    "title"
+   ]
+  },
+  "testplan_test_plan_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can `create a new test plan`; supplied name, iteration, description, dates, and area path are stored in the project.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "project"
+   ],
+   "value_args": [
+    "name",
+    "iteration",
+    "description",
+    "startDate",
+    "endDate",
+    "areaPath"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "project",
+    "planId",
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "testplan_test_suite_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can create suites or add test cases: `create a new test suite in a test plan` and `add existing test cases to a test suite`; supplied name and test case IDs modify Azure DevOps test plan state.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "planId",
+    "parentSuiteId",
+    "suiteId",
+    "testCaseIds"
+   ],
+   "value_args": [
+    "name"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "project",
+    "planId",
+    "parentSuiteId",
+    "suiteId",
+    "testCaseIds",
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "testplan_test_case_write": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can create or update test cases: supplied title, priority, paths, tested-by link, and steps are stored in Azure DevOps work items/test cases.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "project",
+    "id",
+    "testsWorkItemId"
+   ],
+   "value_args": [
+    "title",
+    "priority",
+    "areaPath",
+    "iterationPath",
+    "steps"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "project",
+    "id",
+    "testsWorkItemId",
+    "title"
+   ],
+   "attacker_named_fields": []
+  },
+  "search_code": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Searches Azure DevOps repositories; code snippets, file paths, repository branches, and matching content are private repository data and contributor-authored.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "content",
+    "path",
+    "fileName",
+    "branch"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "repository",
+    "path",
+    "branch",
+    "fileName"
+   ],
+   "attacker_named_fields": [
+    "path",
+    "fileName",
+    "branch"
+   ]
+  },
+  "search_wiki": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Searches Azure DevOps Wiki; wiki page titles, paths, snippets, and content are private multi-writer documentation and can be attacker-authored.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "content",
+    "title",
+    "path",
+    "wiki"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "wiki",
+    "path",
+    "title",
+    "wikiIdentifier"
+   ],
+   "attacker_named_fields": [
+    "title",
+    "path"
+   ]
+  },
+  "search_workitem": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Searches work items; returned titles/descriptions/fields and area/state metadata are private project data and may be authored by project contributors.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "title",
+    "description",
+    "fields",
+    "areaPath"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "areaPath",
+    "workItemType",
+    "state",
+    "assignedTo",
+    "workItemId",
+    "title"
+   ],
+   "attacker_named_fields": [
+    "title"
+   ]
+  },
+  "advsec_get_alerts": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Retrieves Advanced Security alerts for a repository, including `secret alerts`; alerts are private security data and may be derived from contributor-controlled code, refs, paths, dependencies, or secret material. Exact alert fields are not advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "ruleName",
+    "ref",
+    "path",
+    "message"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "repository",
+    "alertId",
+    "ruleId",
+    "ruleName",
+    "toolName",
+    "ref",
+    "continuationToken"
+   ],
+   "attacker_named_fields": [
+    "ref",
+    "path"
+   ]
+  },
+  "advsec_get_alert_details": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Gets detailed information about a specific Advanced Security alert; details for code/dependency/license/secret alerts are private security data and may include contributor-controlled code locations/refs or secret-related content. Exact fields are not advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "ruleName",
+    "ref",
+    "path",
+    "message",
+    "details"
+   ],
+   "identifier_output_fields": [
+    "project",
+    "repository",
+    "alertId",
+    "ref",
+    "ruleId",
+    "path"
+   ],
+   "attacker_named_fields": [
+    "ref",
+    "path"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "syntax": "pipelines_write.action == \"run_pipeline\" && previewRun == true",
+   "kind": "flag",
+   "effect": "For that run_pipeline mode, the description says it `returns the final YAML without creating a run`; this removes the queue-run state change for that call, though the tool still has other write/SINK modes.",
+   "default": "",
+   "evidence": "description"
+  },
+  {
+   "syntax": "pipelines_artifact.destinationPath omitted",
+   "kind": "flag",
+   "effect": "For artifact download, the description says if `destinationPath` is not provided it `returns base64 content`, so the local file write is absent for that call.",
+   "default": "",
+   "evidence": "description"
+  },
+  {
+   "syntax": "wit_work_item_attachment.savePath omitted",
+   "kind": "flag",
+   "effect": "For attachment download, the description says if `savePath` is omitted it `returns the content as a base64-encoded resource`, so the local file write is absent for that call.",
+   "default": "",
+   "evidence": "description"
+  }
+ ],
+ "notes": [
+  "All evidence entries are `description` because no source code or implementation behavior is available.",
+  "Result schemas are not advertised; output field names are inferred from tool names, descriptions, and input identifiers. Where that affects labels or fields, `undetermined` is set true and the least restrictive applicable label is kept.",
+  "Queries to Azure DevOps are treated as fixed-vendor endpoint access, not arbitrary-host SINKs."
+ ],
+ "usage": {
+  "input_tokens": 592,
+  "output_tokens": 9004,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 16128
+ }
+}

@@ -1,0 +1,35 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Only one tool is advertised (dist/index.js:69-84); there is no flag or toolset gating, so it is enabled whenever the server starts with a URL.",
+  "The server also exposes resources (ListResources/ReadResource, dist/index.js:28-68) that return table and column metadata from the connected database; these are not tools but carry the same SECRET character.",
+  "Residual risk not visible as a label from the code alone: because `sql` is arbitrary, a sufficiently privileged database role could reach outside the SQL sandbox (e.g. `COPY (SELECT ...) TO PROGRAM`, `dblink`/`postgres_fdw` to an attacker host), which would amount to exfiltration or execution on the database server. Nothing in this file enables or blocks those; the code only enforces a READ ONLY transaction (dist/index.js:90)."
+ ],
+ "package": "@modelcontextprotocol/server-postgres",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-postgres_0.6.2_8e160ec0e0e2",
+ "tools": {
+  "query": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:91",
+    "dist/index.js:93",
+    "dist/index.js:24-26"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "The `query` tool runs caller-supplied `sql` against the connection pool built from the command-line `databaseUrl` (`pool` at dist/index.js:24-26) and returns `result.rows` as text into the agent context (dist/index.js:91-93). That is arbitrary read access to the user's own database with the user's credentials, so SECRET. The statement is wrapped in `BEGIN TRANSACTION READ ONLY` (dist/index.js:90) with a `ROLLBACK` in `finally` (dist/index.js:102), and there is no outbound HTTP, file write, or shell invocation in the handler, so no SINK or HOSTEXEC is shown by the code. Database rows are the user's own account data, not attacker-controlled multi-writer content, so UNTRUSTED is not raised.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "none - process.exit(1) when absent",
+   "effect": "Required; the server exits before registering any handlers if no database URL is given, so the `query` tool is unavailable. The URL also determines which database (and therefore which secret data) `query` can read.",
+   "evidence": "dist/index.js:15-20",
+   "kind": "cli-argument",
+   "syntax": "argv[1] = <postgres connection URL>, e.g. npx -y @modelcontextprotocol/server-postgres postgresql://localhost/mydb"
+  }
+ ],
+ "version": "0.6.2"
+}

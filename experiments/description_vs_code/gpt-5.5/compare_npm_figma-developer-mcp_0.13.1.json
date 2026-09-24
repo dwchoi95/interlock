@@ -1,0 +1,53 @@
+[
+ {
+  "tool": "get_figma_data",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "fileKey",
+   "nodeId"
+  ],
+  "annotations": {
+   "readOnlyHint": true
+  },
+  "rationale_code": "`get_figma_data` calls `X.getRawFile`/`getRawNode` -> `requestWithSize` -> `Ke` (fetch) against `https://api.figma.com/v1` with the user's credentials injected by `getAuthHeaders()` (`X-Figma-Token: this.apiKey` or `Authorization: Bearer ${this.oauthToken}`), and returns the simplified/serialized fi"
+ },
+ {
+  "tool": "download_figma_images",
+  "code": [],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "fileKey",
+   "nodes",
+   "nodeId",
+   "imageRef",
+   "gifRef",
+   "fileName",
+   "localPath"
+  ],
+  "annotations": {
+   "openWorldHint": true
+  },
+  "rationale_code": "`Bt` validates `localPath` with `he(u,d)` against the configured `imageDir` (rejecting `outside_image_dir`/`drive_letter_on_posix`), then `Ze` -> `X.downloadImages` -> `W` -> `downloadFigmaImage` fetches only URLs returned by the Figma API (`getImageFillUrls`/`getNodeRenderUrls`), never an agent-sup"
+ }
+]

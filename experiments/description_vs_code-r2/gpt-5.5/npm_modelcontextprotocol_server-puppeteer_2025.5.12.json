@@ -1,0 +1,174 @@
+{
+ "tools": {
+  "puppeteer_navigate": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Navigate to a URL` with `URL to navigate to` lets the agent cause a browser request to an agent-chosen URL/host. That request is an attacker-readable destination when the URL is attacker-controlled, so it is a SINK. It also changes browser state, so kind is WRITE. `launchOptions` can restart the browser but the advertised text does not say this returns page content or executes arbitrary host code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [
+    "url"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "puppeteer_screenshot": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Take a screenshot of the current page or a specific element` and `capture the screenshot as a base64-encoded data URI (as text) instead of binary image content` indicate the tool returns captured page content. If the current page is an attacker-controlled web page, that returned content is UNTRUSTED. If the browser can view `file://`, localhost, intranet, or authenticated pages, the screenshot can return non-public content, so SECRET is kept; the advertised text does not state URL-scheme, network, or credential isolation limits, so this is undetermined. `Name for the screenshot` indicates creation of a named screenshot artifact, so kind is WRITE.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "name"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "puppeteer_click": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Click an element on the page` sends a browser UI action to the current page. Because the current page may be an attacker-controlled page reached by URL navigation, the click can trigger form submission, navigation, or script-controlled requests to an attacker-readable destination. The `selector` decides which page element/action is invoked. No advertised result content is described.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "selector"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "puppeteer_fill": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Fill out an input field` with `Value to fill` sends agent-supplied text into the current page. If that page is attacker-controlled, page JavaScript or later form submission can read the value, making it a SINK. The `selector` chooses the destination field and `value` is the content sent.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "selector"
+   ],
+   "value_args": [
+    "value"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "puppeteer_select": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Select an element on the page with Select tag` with `Value to select` sends an agent-supplied selection value into the current page. If that page is attacker-controlled, page JavaScript or later submission can read it, so this is a SINK. The `selector` chooses the destination element and `value` is the content sent.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "selector"
+   ],
+   "value_args": [
+    "value"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "puppeteer_hover": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Hover an element on the page` sends a browser UI event to the current page. On an attacker-controlled page, hover handlers can observe the action and trigger requests or other writes to attacker-readable destinations, potentially using data already placed in the page. The `selector` chooses the element/action invoked. No advertised result content is described.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "selector"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "puppeteer_evaluate": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Execute JavaScript in the browser console` with `JavaScript code to execute` can run agent-supplied browser-page code. Such code can read and return page-controlled DOM/text, making outputs UNTRUSTED on attacker-controlled pages. If the current page is `file://`, localhost, intranet, or authenticated content, the same browser-console code can return non-public data, so SECRET is kept; the advertised text does not state page/network/credential isolation or exact return semantics, so this is undetermined. The script can also initiate browser requests or modify pages, and the `script` itself can contain both destination and content, so it is a SINK. This is not HOSTEXEC because the advertised execution is in the `browser console`, not arbitrary host execution.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "script"
+   ],
+   "value_args": [
+    "script"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "syntax": "allowDangerous=false",
+   "kind": "input flag",
+   "effect": "Dangerous Puppeteer launch options such as `--no-sandbox` are rejected; this limits reduced browser sandboxing but does not remove the SINK label for navigation.",
+   "default": "false",
+   "evidence": "description"
+  }
+ ],
+ "notes": [],
+ "usage": {
+  "input_tokens": 1697,
+  "output_tokens": 6903,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

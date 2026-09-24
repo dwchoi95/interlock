@@ -1,0 +1,250 @@
+{
+ "tools": {
+  "browser_navigate": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Navigate to a URL` and the `url` argument (`The URL to navigate to`) allow the agent to choose an arbitrary destination. A URL request to an attacker-controlled host can carry agent-supplied data in the URL itself. The advertised text does not state restrictions on schemes, hosts, or URL contents, so the least restrictive reading keeps SINK.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [
+    "url"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_go_back": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Go back to the previous page` changes browser state and may issue a request to a previously visited page, including an attacker-readable page selected earlier by the agent. The text does not settle whether the page is served from cache or re-requested, so the least restrictive reading keeps SINK.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_go_forward": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Go forward to the next page` changes browser state and may issue a request to a history entry, including an attacker-readable page selected earlier by the agent. The text does not settle whether the page is served from cache or re-requested, so the least restrictive reading keeps SINK.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_snapshot": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Capture accessibility snapshot of the current page` returns page contents. Because other advertised tools can navigate to a `URL`, the `current page` can be an attacker-controlled web page, so returned page text is UNTRUSTED. The current page can also be an authenticated SaaS page, intranet, localhost, or file URL if reachable by the browser, so the snapshot can return non-public data and is SECRET. The text does not state host, scheme, or credential restrictions, so the least restrictive reading keeps both labels. The snapshot also contains `references to elements to interact with`, but the exact result field names are not advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "browser_click": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Perform click on a web page` sends a browser interaction to the current page. If the current page is attacker-controlled, it can observe the click and the chosen target; clicking can also submit forms or trigger requests. The target is determined by `element` and `ref` (`Exact target element reference from the page snapshot`).",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "element",
+    "ref"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_hover": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Hover over element on page` sends a browser event to the current page. If the current page is attacker-controlled, it can observe the hover and chosen target. The target is determined by `element` and `ref` (`Exact target element reference from the page snapshot`).",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "element",
+    "ref"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_type": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Type text into editable element` sends the agent-supplied `text` to the current web page. If the page is attacker-controlled, the text is attacker-readable; `submit` can also `press Enter after`, causing submission. The target is determined by `element` and `ref`.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "element",
+    "ref"
+   ],
+   "value_args": [
+    "text"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_select_option": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Select an option in a dropdown` sends the selected `values` to the current page. If the page is attacker-controlled, it can observe those values. The target is determined by `element` and `ref`.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "element",
+    "ref"
+   ],
+   "value_args": [
+    "values"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_press_key": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Press a key on the keyboard` sends the agent-supplied `key` to the currently focused page or element. The schema allows `a character to generate`, so this can deliver agent-supplied data to an attacker-controlled current page.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "key"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_wait": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Wait for a specified time in seconds` does not advertise returning page content or sending agent-supplied data to any destination. It only takes `time`.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_get_console_logs": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Get the console logs from the browser` returns text produced by the current page. An attacker-controlled page can author console logs, making the result UNTRUSTED. Console logs from authenticated, localhost, intranet, or file pages may contain non-public data, making the result SECRET. The text does not state host, scheme, credential, or log-source restrictions, so the least restrictive reading keeps both labels.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_screenshot": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Take a screenshot of the current page` returns the visible page image. An attacker-controlled current page can author the displayed content, making the result UNTRUSTED. A private authenticated page, intranet, localhost, or file page can display non-public data, making the result SECRET. The text does not state host, scheme, or credential restrictions, so the least restrictive reading keeps both labels.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No source code or output schemas were provided; judgments use only the advertised names, descriptions, input schemas, and annotations.",
+  "No advertised tool provides host arbitrary code execution. JavaScript running inside a browsed page is treated as page/browser behavior, not HOSTEXEC."
+ ],
+ "usage": {
+  "input_tokens": 1964,
+  "output_tokens": 5250,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

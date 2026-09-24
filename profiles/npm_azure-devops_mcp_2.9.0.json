@@ -1,0 +1,558 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Every tool reaches a single fixed organization endpoint `https://dev.azure.com/<org>` derived from the CLI positional argument (dist/index.js:54-55), or the fixed vendor search host `almsearch.dev.azure.com/<org>` (dist/tools/search.js:28, dist/tools/repositories.js:519); no tool takes an agent-chosen host, so there is no HTTP-fetch SSRF sink.",
+  "SINK labels on the ADO write tools (repo_pull_request_write, repo_pull_request_thread_write, wit_work_item_write, wit_work_item_comment_write, wiki_upsert_page) are marked undetermined: the code never checks project visibility, and Azure DevOps supports public projects/wikis whose comments and pages are world-readable, so agent-supplied text posted there may be attacker-readable. Writes that only manipulate structured metadata (work_iteration_write, work_capacity_write, repo_create_branch, wit_work_item_link_write, testplan_* writes) were not labelled SINK because they do not publish free-form agent text.",
+  "pipelines_write run_pipeline can queue builds that may run on self-hosted agents inside the user's network; the code cannot tell whether agents are Microsoft-hosted or self-hosted. It is labelled SINK (egress from the build) rather than HOSTEXEC because the execution is not on the MCP host process.",
+  "The server's own content-safety helper `createExternalContentResponse` is applied to wiql results, build logs and wiki page content (dist/tools/work-items.js:296, dist/tools/pipelines.js:209, dist/tools/wiki.js:202), corroborating the UNTRUSTED labels on those tools; the wrapper is only a framing hint and does not remove the label."
+ ],
+ "package": "@azure-devops/mcp",
+ "source": ".cache/sources/.views/npm_azure-devops_mcp_2.9.0_123594ecc45f",
+ "tools": {
+  "advsec_get_alert_details": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/advanced-security.js:108-111"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`alertApi.getAlert` returns full alert detail (physical locations, code snippets, secret metadata) from the private org; the embedded code/dependency snippets originate from repository content authored by many contributors.",
+   "undetermined": false
+  },
+  "advsec_get_alerts": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/advanced-security.js:80-83"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`alertApi.getAlerts` returns the organization's Advanced Security findings \u2014 including secret-scanning alerts \u2014 into the agent context using the user's credentials.",
+   "undetermined": false
+  },
+  "core_get_identity_ids": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/core.js:79",
+    "dist/tools/core.js:83-89"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`searchIdentities` resolves organization directory identities (ids, display names, descriptors) with the user's token and returns them.",
+   "undetermined": false
+  },
+  "core_list_project_teams": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/core.js:32",
+    "dist/tools/core.js:37"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`coreApi.getTeams` is called on the org connection built with the user's credentials and the raw team list is returned into context; this is private organization data.",
+   "undetermined": false
+  },
+  "core_list_projects": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/core.js:58",
+    "dist/tools/core.js:64"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`coreApi.getProjects` returns the user's Azure DevOps project inventory (non-public account data) into the agent context.",
+   "undetermined": false
+  },
+  "pipelines_artifact": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/pipelines.js:341",
+    "dist/tools/pipelines.js:350",
+    "dist/tools/pipelines.js:370-372"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`getArtifacts`/`getArtifactContentZip` pull private build artifact bytes into context (or onto disk via `createWriteStream`); artifact contents are produced by pipeline jobs that consume third-party code and dependencies, so the returned bytes are attacker-influenceable. The path guards at lines 327-336 prevent traversal, so the local write is not host code execution.",
+   "undetermined": false
+  },
+  "pipelines_build": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/pipelines.js:162",
+    "dist/tools/pipelines.js:168",
+    "dist/tools/pipelines.js:174"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`getBuilds`, `getBuildReport` and `getBuildChanges` return private build metadata from the user's organization into context.",
+   "undetermined": false
+  },
+  "pipelines_build_log": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/pipelines.js:202",
+    "dist/tools/pipelines.js:208-209"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`getBuildLogs`/`getBuildLogLines` return private CI log content; the log text is itself output of arbitrary build steps and third-party tooling, and the code routes it through `createExternalContentResponse` (\"build log\"), confirming it is treated as external/untrusted content.",
+   "undetermined": false
+  },
+  "pipelines_definition": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/pipelines.js:264",
+    "dist/tools/pipelines.js:270"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`getDefinitions`/`getDefinitionRevisions` return private pipeline definitions of the user's org.",
+   "undetermined": false
+  },
+  "pipelines_run": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/pipelines.js:297",
+    "dist/tools/pipelines.js:301"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`getRun`/`listRuns` return private pipeline run data reached with the user's credentials.",
+   "undetermined": false
+  },
+  "pipelines_write": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/pipelines.js:34",
+    "dist/tools/pipelines.js:26-33",
+    "dist/tools/pipelines.js:73",
+    "dist/tools/pipelines.js:90-94"
+   ],
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "`runPipeline` queues a build with agent-supplied `variables`, `templateParameters` and `resources` (including repository `token`s) and can be pointed at any pipeline in the project; the build agent executes pipeline steps with network egress, so agent-supplied data can be delivered outward \u2014 an exfiltration channel that the code does not constrain. `previewRun` also returns the expanded pipeline YAML from the repository (private content). Execution happens on ADO build agents rather than the MCP host, so HOSTEXEC is not claimed, but the egress reach is undetermined from this code alone.",
+   "undetermined": true
+  },
+  "repo_branch": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/repositories.js:402",
+    "dist/tools/repositories.js:410",
+    "dist/tools/repositories.js:415"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`gitApi.getRefs` enumerates private branch refs of the user's repositories.",
+   "undetermined": false
+  },
+  "repo_create_branch": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/repositories.js:872",
+    "dist/tools/repositories.js:889"
+   ],
+   "labels": [],
+   "rationale": "`getRefs` plus `updateRefs` only creates a ref pointing at an existing commit; it returns no repository content and delivers no agent text anywhere readable, so no label applies.",
+   "undetermined": false
+  },
+  "repo_file": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/repositories.js:451-457",
+    "dist/tools/repositories.js:463"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`getItemText` returns raw private file content (and `getItems` directory listings) into context; repository file content at an arbitrary `version`/branch includes vendored third-party code and branches pushed by other contributors, so it is attacker-influenceable.",
+   "undetermined": false
+  },
+  "repo_pull_request": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/repositories.js:198",
+    "dist/tools/repositories.js:285",
+    "dist/tools/repositories.js:308"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`getPullRequest`/`getPullRequests` return private PR data, and PR titles/descriptions/branch names are free text authored by many contributors (including fork sources via `forkSource`), i.e. multi-writer content that can carry injected instructions.",
+   "undetermined": false
+  },
+  "repo_pull_request_thread": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/repositories.js:341",
+    "dist/tools/repositories.js:370",
+    "dist/tools/repositories.js:46"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`getThreads`/`getComments` return private review threads, and `trimComments` passes each comment's `content` \u2014 arbitrary text written by any project or fork contributor \u2014 into the agent context.",
+   "undetermined": false
+  },
+  "repo_pull_request_thread_write": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/repositories.js:818",
+    "dist/tools/repositories.js:826"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`createThread`/`createComment` post arbitrary agent-supplied `content` as a pull request comment \u2014 the classic publish-a-comment delivery path; whether the hosting project is publicly readable is not determinable from the code, so the label is kept.",
+   "undetermined": true
+  },
+  "repo_pull_request_write": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/repositories.js:600",
+    "dist/tools/repositories.js:670",
+    "dist/tools/repositories.js:691"
+   ],
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "`createPullRequest`/`updatePullRequest` publish agent-supplied `title`, `description` and `labels` into a pull request visible to other readers of the project (Azure DevOps projects may be public), and `createPullRequestReviewers` notifies chosen recipients; the responses also echo private PR data. Visibility of the target project cannot be determined from the code, so the SINK label is kept.",
+   "undetermined": true
+  },
+  "repo_repository": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/repositories.js:128",
+    "dist/tools/repositories.js:138"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`gitApi.getRepositories` returns the org's private repository inventory into context.",
+   "undetermined": false
+  },
+  "repo_search_commits": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/repositories.js:519",
+    "dist/tools/repositories.js:538-551"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "POSTs to the fixed vendor endpoint `https://almsearch.dev.azure.com/${orgName}` with the user's bearer token and returns private commit search results; commit messages are free text written by any committer, so the returned text is multi-writer content. The URL host is not agent-controlled (org comes from argv), so this is not a SINK.",
+   "undetermined": false
+  },
+  "search_code": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/search.js:28",
+    "dist/tools/search.js:47-64",
+    "dist/tools/search.js:174-180"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "POSTs to the fixed vendor search endpoint with the user's token and then calls `gitApi.getItem(..., includeContent=true)` for each hit, returning private repository source code; that code content is multi-writer repository text and can carry injected instructions. The endpoint host is fixed (org from argv), so it is not a SINK. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "search_wiki": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/search.js:76",
+    "dist/tools/search.js:91-105"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns private wiki search hits including page excerpts fetched with the user's token; wiki text is multi-writer content. The search URL is the fixed vendor host, not agent-chosen. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "search_workitem": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/search.js:120",
+    "dist/tools/search.js:141-155"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns private work item search hits (titles, fields, snippets) retrieved with the user's token; work item text is authored by many users, so the returned content is attacker-influenceable. Fixed vendor endpoint, so not a SINK. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "testplan": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/test-plans.js:43-44",
+    "dist/tools/test-plans.js:63-64",
+    "dist/tools/test-plans.js:111-112"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Fetches test plans, suites and cases from `connection.serverUrl` with the user's bearer token and returns the private payloads.",
+   "undetermined": false
+  },
+  "testplan_show_test_results_from_build_id": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/test-plans.js:146",
+    "dist/tools/test-plans.js:157-167"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`getTestResultDetailsForBuild` returns private test results, and the formatted output includes `errorMessage` and `stackTrace` strings produced by executing test code and third-party dependencies in CI, which are attacker-influenceable text.",
+   "undetermined": false
+  },
+  "testplan_test_case_write": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/test-plans.js:351",
+    "dist/tools/test-plans.js:366"
+   ],
+   "labels": [],
+   "rationale": "`createWorkItem`/`updateWorkItem` write test case titles and step XML into the user's own project; the response is the work item just written, so no additional private data is surfaced and no external destination is contacted.",
+   "undetermined": false
+  },
+  "testplan_test_plan_write": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/test-plans.js:206"
+   ],
+   "labels": [],
+   "rationale": "`createTestPlan` writes structured plan metadata into the user's own org and returns the created object; no non-public data is read out and no attacker-readable destination is reached.",
+   "undetermined": false
+  },
+  "testplan_test_suite_write": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/test-plans.js:250",
+    "dist/tools/test-plans.js:285"
+   ],
+   "labels": [],
+   "rationale": "`createTestSuite`/`addTestCasesToSuite` only mutate suite structure in the user's own org; responses contain the just-created structure, not sensitive third-party data.",
+   "undetermined": false
+  },
+  "wiki": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/wiki.js:34",
+    "dist/tools/wiki.js:99-109",
+    "dist/tools/wiki.js:189-193",
+    "dist/tools/wiki.js:202"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`getAllWikis`/`getPagesBatch`/`getPageText` and the direct REST fetch return private wiki content with the user's token; page bodies are multi-writer documentation and the code returns them via `createExternalContentResponse(pageContent, \"wiki page\")`, treating them as external content. The `url` parameter is not an SSRF sink because the org is validated against `connection.serverUrl` (lines 136-148) and only parsed project/wiki/pageId are used.",
+   "undetermined": false
+  },
+  "wiki_upsert_page": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/wiki.js:238",
+    "dist/tools/wiki.js:240-247",
+    "dist/tools/wiki.js:285-294"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "PUTs agent-supplied markdown `content` to an arbitrary wiki page path in the org, publishing it to everyone with read access to that wiki (Azure DevOps projects can be public); project visibility is not determinable from the code, so the label is kept.",
+   "undetermined": true
+  },
+  "wit_backlog": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/work-items.js:338",
+    "dist/tools/work-items.js:344"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`getBacklogs`/`getBacklogLevelWorkItems` return private team backlog data from the user's organization.",
+   "undetermined": false
+  },
+  "wit_query": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/work-items.js:275",
+    "dist/tools/work-items.js:283",
+    "dist/tools/work-items.js:295-296"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`getQuery`/`queryById`/`queryByWiql` execute agent-supplied WIQL against the user's org and return private work item data; the wiql path explicitly wraps output in `createExternalContentResponse(queryResult, \"wiql query results\")`, confirming the results are treated as untrusted external content.",
+   "undetermined": false
+  },
+  "wit_work_item": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/work-items.js:99",
+    "dist/tools/work-items.js:114",
+    "dist/tools/work-items.js:150",
+    "dist/tools/work-items.js:197"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`getWorkItem`, `getWorkItemsBatch`, `getComments` and `getRevisions` return private work item fields, comments and revision history; work item titles/descriptions/comments are free text authored by many users (including external bug reporters), so the content is attacker-influenceable.",
+   "undetermined": false
+  },
+  "wit_work_item_attachment": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/work-items.js:386",
+    "dist/tools/work-items.js:400",
+    "dist/tools/work-items.js:408",
+    "dist/tools/work-items.js:417"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`getAttachmentContent` downloads private attachment bytes and returns them as text or a base64 resource; attachments are uploaded by arbitrary work item participants, so the bytes are attacker-influenceable. `savePath` writes to disk but traversal/absolute paths are rejected at line 370, so this is a confined file write, not host execution.",
+   "undetermined": false
+  },
+  "wit_work_item_comment_write": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/work-items.js:680-688",
+    "dist/tools/work-items.js:697-705"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "POSTs/PATCHes arbitrary agent-supplied `text` as a work item comment via the org REST API \u2014 a publish-a-comment delivery path whose audience is not constrained by the code.",
+   "undetermined": true
+  },
+  "wit_work_item_link_write": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/work-items.js:841",
+    "dist/tools/work-items.js:853",
+    "dist/tools/work-items.js:957-967"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "The unlink path calls `getWorkItem` with `WorkItemExpand.Relations` and dumps all relations plus the updated work item into context, and the wiki branch fetches page metadata with the user's token; link URIs are built from vstfs components only, never an agent-chosen external host.",
+   "undetermined": false
+  },
+  "wit_work_item_write": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/work-items.js:513",
+    "dist/tools/work-items.js:526",
+    "dist/tools/work-items.js:558-566",
+    "dist/tools/work-items.js:625"
+   ],
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "`createWorkItem`/`updateWorkItem` and the `$batch` PATCH publish agent-supplied field values (titles, descriptions, repro steps) into work items readable by other project members, and the API responses echo back private work item state. Whether the project is publicly readable is not determinable from the code, so the SINK label is kept.",
+   "undetermined": true
+  },
+  "work": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/work.js:44",
+    "dist/tools/work.js:108",
+    "dist/tools/work.js:146"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`getTeamIterations`, `getTeamSettings`/`getTeamFieldValues` and `getCapacitiesWithIdentityRefAndTotals` return internal team configuration and per-member capacity data reached with the user's credentials.",
+   "undetermined": false
+  },
+  "work_capacity_write": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/work.js:317",
+    "dist/tools/work.js:322-327"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`updateCapacityWithIdentityRef` writes into the user's own org (not an attacker-readable destination) but the response surfaces the team member's `displayName`/`uniqueName` identity data from the org.",
+   "undetermined": false
+  },
+  "work_iteration_write": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/work.js:229",
+    "dist/tools/work.js:257"
+   ],
+   "labels": [],
+   "rationale": "`createOrUpdateClassificationNode`/`postTeamIteration` only write structured iteration metadata back into the user's own org; no external destination and the echoed response is the agent's own input, so no label applies.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "\"all\" \u2014 every domain except mcp-apps is enabled, so all judged tools are advertised by default",
+   "effect": "Only tools of the listed domains are registered; omitted domains' tools (and all their labels) disappear. e.g. omitting `repositories` removes repo_* tools, omitting `pipelines` removes pipelines_* including the run_pipeline SINK.",
+   "evidence": "dist/index.js:33-39; dist/shared/domains.js:82-86; dist/tools.js:15-29",
+   "kind": "CLI flag",
+   "syntax": "npx -y @azure-devops/mcp <org> -d core work work-items   (alias --domains; values: advanced-security, pipelines, core, repositories, search, test-plans, wiki, work, work-items)"
+  },
+  {
+   "default": "always enforced when `url` is supplied and the configured server URL is a recognized ADO host",
+   "effect": "Cross-organization URLs are rejected, so the agent-supplied `url` cannot be used to fetch arbitrary hosts/orgs; the wiki tool is therefore not an SSRF sink.",
+   "evidence": "dist/tools/wiki.js:136-148",
+   "kind": "input validation",
+   "syntax": "wiki action=get_page_content url=https://dev.azure.com/{otherOrg}/..."
+  },
+  {
+   "default": "always enforced",
+   "effect": "Absolute paths, drive letters and `..` traversal are rejected, confining local file writes to relative subdirectories of the server's working directory (no arbitrary host file overwrite / no HOSTEXEC).",
+   "evidence": "dist/tools/work-items.js:368-375; dist/tools/pipelines.js:327-336",
+   "kind": "input validation",
+   "syntax": "wit_work_item_attachment savePath=\"../x\" | pipelines_artifact destinationPath=\"/abs\""
+  },
+  {
+   "default": "always enforced",
+   "effect": "`yamlOverride` is rejected unless `previewRun` is true, so agent-supplied YAML is only expanded, never executed; running still executes the existing stored pipeline definition on build agents.",
+   "evidence": "dist/tools/pipelines.js:22-23",
+   "kind": "input validation",
+   "syntax": "pipelines_write action=run_pipeline yamlOverride=... (without previewRun)"
+  },
+  {
+   "default": "interactive (azcli inside GitHub Codespaces)",
+   "effect": "Selects the credential used for all API calls; with `pat` a global fetch interceptor rewrites Bearer to Basic. Does not add or remove any tool or label \u2014 all tools still act with the user's credentials.",
+   "evidence": "dist/index.js:40-46; dist/index.js:98-113",
+   "kind": "CLI flag",
+   "syntax": "--authentication pat|azcli|interactive|env|envvar"
+  }
+ ],
+ "version": "2.9.0"
+}

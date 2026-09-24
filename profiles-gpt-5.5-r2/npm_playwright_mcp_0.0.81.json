@@ -1,0 +1,714 @@
+{
+ "kind": "npm",
+ "notes": [
+  "`browser_evaluate` executes JavaScript in the browser page context shown by `tab.page.evaluate`/`locator.evaluate`, so it is not classified as HOSTEXEC; `browser_run_code_unsafe` is classified HOSTEXEC because the advertised source says it runs in the Playwright server process and is RCE-equivalent.",
+  "Several advertised tools have only README/tool-schema excerpts in the provided source, not handler bodies. For those, `undetermined` is true and labels follow the least-restrictive reading required by the instructions.",
+  "For tools with optional `filename`, `kind` is marked WRITE because the advertised behavior says results can be saved to a file; where the underlying write mechanism is not shown, `undetermined` is set true.",
+  "dependency sources included: playwright-core@1.64.0-alpha-2026-09-14"
+ ],
+ "package": "@playwright/mcp",
+ "source": ".cache/sources/.views/npm_playwright_mcp_0.0.81_307d4f86916b",
+ "tools": {
+  "browser_click": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "target"
+   ],
+   "evidence": [
+    ".deps/playwright-core/lib/coreBundle.js:64611-64619",
+    ".deps/playwright-core/lib/coreBundle.js:64620-64640"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Clicks a target element and calls `response2.setIncludeSnapshot()`, so the result includes current page content. That content can be attacker-controlled (UNTRUSTED) or private/authenticated/local content (SECRET). The click itself changes page/browser state, but the shown code does not send a free-text value to an attacker-readable destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "browser_close": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:894-898"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Advertised as closing the page/browser; this changes local browser state but the provided source does not show it returning page data or sending agent-supplied data to a web destination. [unverified: documentation cannot verify a clearance]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "browser_console_messages": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "filename"
+   ],
+   "evidence": [
+    "README.md:902-909"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns console messages from the current browsing session. Console text can be authored by attacker-controlled pages, so output is UNTRUSTED; console output from authenticated/private pages may contain non-public data, so output is SECRET. `filename` may save the returned messages to a workspace-relative file, but the actual implementation is not included in the provided excerpt. [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "browser_drag": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "startTarget",
+    "endTarget"
+   ],
+   "evidence": [
+    ".deps/playwright-core/lib/coreBundle.js:64643-64652",
+    "README.md:913-921"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Performs drag-and-drop between page elements. The full handler is omitted, so whether/when it includes a snapshot is undetermined; under the least-restrictive reading for browser page actions, returned page state may include attacker-authored content (UNTRUSTED) or private/authenticated content (SECRET). No free-text payload argument is shown besides element targets.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "browser_drop": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "target"
+   ],
+   "evidence": [
+    ".deps/playwright-core/lib/coreBundle.js:64798-64805",
+    "README.md:925-933"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The advertised behavior drops local file `paths` or supplied MIME `data` onto a page element. Dropped files can expose host file contents to the page (SECRET and SINK), and dropped `data` is agent-supplied content delivered to the current page, which may be attacker-controlled (SINK). The handler body is not included in the excerpt, so labels are kept under the least-restrictive reading.",
+   "undetermined": true,
+   "value_args": [
+    "paths",
+    "data"
+   ]
+  },
+  "browser_evaluate": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "target"
+   ],
+   "evidence": [
+    ".deps/playwright-core/lib/coreBundle.js:66781-66792",
+    ".deps/playwright-core/lib/coreBundle.js:66794-66815"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`browser_evaluate` executes the supplied `function` in the browser page using page/element `evaluate` and `eval`, not in the host process. Page JavaScript can read non-public page DOM/storage available to the browser context and return it, so output can be SECRET; if the page is attacker-controlled, returned data is UNTRUSTED. The supplied JavaScript can also make page-context network requests or otherwise deliver data to attacker-readable page/web destinations, so it is a SINK. It is not HOSTEXEC because the code shown executes in the browser page context (`tab.page.evaluate` / `locator.evaluate`), not the server process.",
+   "undetermined": false,
+   "value_args": [
+    "function"
+   ]
+  },
+  "browser_file_upload": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    ".deps/playwright-core/lib/coreBundle.js:64775-64781",
+    ".deps/playwright-core/lib/coreBundle.js:64783-64794"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The tool resolves user-supplied local `paths` and calls `fileChooser.setFiles(paths)`, making selected host files available to the current page/file input; an attacker-controlled page can read or receive those files, so it is both SECRET and SINK. It also calls `response2.setIncludeSnapshot()`, returning current page content, which can be attacker-authored (UNTRUSTED) or private/authenticated page data (SECRET).",
+   "undetermined": false,
+   "value_args": [
+    "paths"
+   ]
+  },
+  "browser_fill_form": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "fields"
+   ],
+   "evidence": [
+    "README.md:958-963"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Fills multiple form fields with agent-supplied `fields[].value` on the current page. If the current page is attacker-controlled, those values are delivered to an attacker-readable destination. The handler body is not included, so whether it also returns a snapshot is undetermined. [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": [
+    "fields"
+   ]
+  },
+  "browser_find": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:967-973"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Searches and returns snippets from the current accessibility snapshot. Page snapshot text can be controlled by an attacker page (UNTRUSTED) or come from private/authenticated/local pages visible in the browser (SECRET). Implementation lines are not present, so exact returned fields are undetermined. [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "browser_handle_dialog": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:977-983"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Handles a page dialog and may provide `promptText` to that dialog. Since dialogs can be created by an attacker-controlled page, `promptText` is agent-supplied content delivered to attacker-readable page script/state. Handler code is not included, so reach is partly inferred from the advertised tool behavior. [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": [
+    "promptText"
+   ]
+  },
+  "browser_hover": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "target"
+   ],
+   "evidence": [
+    "README.md:987-993"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Hovers over an element on the current page. The implementation is not included; browser page actions commonly return updated page state/snapshot, which may be attacker-authored (UNTRUSTED) or private/authenticated (SECRET). No content payload argument is shown. [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "browser_navigate": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    ".deps/playwright-core/lib/coreBundle.js:67307-67316",
+    ".deps/playwright-core/lib/coreBundle.js:67318-67323"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Navigates to the agent-supplied `url`, causing a request to an agent-chosen host/URL, so it is a SINK. It then includes a page snapshot; content at the navigated page may be attacker-controlled (UNTRUSTED), or may be non-public content reachable with the browser/profile credentials, localhost, intranet, or allowed file access (SECRET).",
+   "undetermined": false,
+   "value_args": []
+  },
+  "browser_navigate_back": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    ".deps/playwright-core/lib/coreBundle.js:67325-67338"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Calls `page.goBack()` and includes a snapshot of the resulting page. The page reached via history may be attacker-controlled (UNTRUSTED) or authenticated/private/local content (SECRET). No call-time URL argument chooses the destination for this call.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "browser_network_request": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "index",
+    "filename"
+   ],
+   "evidence": [
+    ".deps/playwright-core/lib/coreBundle.js:67557-67569",
+    ".deps/playwright-core/lib/coreBundle.js:67571-67583",
+    ".deps/playwright-core/lib/coreBundle.js:67491-67506"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns request/response headers and bodies for a captured request. These can include cookies, authorization headers, request bodies, and private response bodies (SECRET), and response bodies/headers from attacker-controlled hosts are UNTRUSTED. Binary/text response bodies may be saved to a file via `writeFile(resolved.fileName, body)` when rendering response body details.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "browser_network_requests": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "filename"
+   ],
+   "evidence": [
+    ".deps/playwright-core/lib/coreBundle.js:67518-67529",
+    ".deps/playwright-core/lib/coreBundle.js:67531-67555"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns a list of captured network requests (`tab2.requests()` and `renderRequestLine(request2)`). URLs and request metadata can reveal private/authenticated browsing activity (SECRET), while attacker-controlled pages can create attacker-authored request URLs/metadata (UNTRUSTED). `filename` may cause the result to be saved, as shown by `response2.addResult(... suggestedFilename: params2.filename)`.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "browser_press_key": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:1036-1041"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Sends an agent-supplied `key` event to the current page; an attacker-controlled page can observe keyboard events, so this can deliver agent-supplied data to an attacker-readable page. Handler code is not included in the excerpt. [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": [
+    "key"
+   ]
+  },
+  "browser_resize": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:1045-1051"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Resizes the browser window, changing local browser state. The provided source/README does not show data returned from a page or agent-supplied content sent to a remote recipient. [unverified: documentation cannot verify a clearance]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "browser_run_code_unsafe": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "filename"
+   ],
+   "evidence": [
+    "README.md:1055-1061",
+    ".deps/playwright-core/lib/coreBundle.js:69335-69347"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK",
+    "HOSTEXEC"
+   ],
+   "rationale": "The advertised description states this tool executes arbitrary JavaScript in the Playwright server process and is RCE-equivalent. HOSTEXEC implies SECRET, UNTRUSTED, and SINK. The CLI mapping passes `code` or `filename` to `browser_run_code_unsafe`. The implementation body is not included, but the description raises the label and the tool name/description explicitly mark it unsafe.",
+   "undetermined": true,
+   "value_args": [
+    "code"
+   ]
+  },
+  "browser_select_option": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "target"
+   ],
+   "evidence": [
+    "README.md:1065-1072"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Selects agent-supplied `values` in a page dropdown. Those values are delivered to the current page, which may be attacker-controlled (SINK). The implementation is not included; any returned page state may contain attacker-authored content (UNTRUSTED) or private/authenticated page content (SECRET). [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": [
+    "values"
+   ]
+  },
+  "browser_snapshot": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "filename"
+   ],
+   "evidence": [
+    ".deps/playwright-core/lib/coreBundle.js:64590-64598",
+    ".deps/playwright-core/lib/coreBundle.js:64599-64604"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Captures and returns or saves an accessibility snapshot of the current page. Page text can be attacker-authored (UNTRUSTED) and can also expose non-public authenticated/local/intranet page content (SECRET). `setIncludeFullSnapshot` takes `filename`, target locator, depth, and boxes, so the returned snapshot also contains element references usable by later calls.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "browser_tabs": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "index",
+    "url"
+   ],
+   "evidence": [
+    ".deps/playwright-core/lib/coreBundle.js:68036-68047",
+    ".deps/playwright-core/lib/coreBundle.js:68049-68076"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Can create, close, select, or list tabs. For `action: \"new\"` with `url`, it navigates to an agent-supplied URL, causing a request to an agent-chosen host (SINK), and includes a snapshot. Listing returns tab header snapshots, which include page-derived titles/URLs that can be attacker-authored (UNTRUSTED) or private browsing information (SECRET).",
+   "undetermined": false,
+   "value_args": []
+  },
+  "browser_take_screenshot": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "filename"
+   ],
+   "evidence": [
+    "README.md:1088-1098"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Takes a screenshot of the current page. Screenshots can contain attacker-authored web content (UNTRUSTED) or non-public/authenticated/local/intranet content visible in the browser (SECRET). Source excerpt does not include the handler, so exact result structure is undetermined. [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "browser_type": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "target"
+   ],
+   "evidence": [
+    ".deps/playwright-core/lib/coreBundle.js:67065-67077",
+    ".deps/playwright-core/lib/coreBundle.js:67079-67100"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Types/fills `text` into a target element (`locator2.fill`, `pressSequentially`, and optional Enter), so agent-supplied text is delivered to the current page; if that page is attacker-controlled, it is a SINK. The handler may include a page snapshot when `slowly` or `submit` is set, returning page content that can be attacker-authored (UNTRUSTED) or private/authenticated data (SECRET).",
+   "undetermined": false,
+   "value_args": [
+    "text"
+   ]
+  },
+  "browser_wait_for": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:1115-1122"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Waits for text/time on the current page and, by advertised browser workflow, returns page state when the wait completes. The page content being waited on can be attacker-authored (UNTRUSTED) or private/authenticated/local page content (SECRET). Handler code is not present, so exact output fields are undetermined. [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "browser_webmcp_call": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "name",
+    "frame"
+   ],
+   "evidence": [
+    ".deps/playwright-core/lib/coreBundle.js:64971-64983",
+    ".deps/playwright-core/lib/coreBundle.js:64984-65000"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "Calls a WebMCP tool registered by the page. It serializes supplied `params` and passes them to `frame.evaluate(callToolInPage, ...)`, so parameters are delivered to the page/tool and are attacker-readable if the page is attacker-controlled (SINK). The source explicitly says the output is page-provided and untrusted, and private pages may return non-public data (SECRET).",
+   "undetermined": false,
+   "value_args": [
+    "params"
+   ]
+  },
+  "browser_webmcp_list": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    ".deps/playwright-core/lib/coreBundle.js:64952-64960",
+    ".deps/playwright-core/lib/coreBundle.js:64961-64969"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Lists WebMCP tools registered by the current page via `tab2.webmcpTools()` and `renderListing(listing)`. Tool names, descriptions, schemas, and frame labels/URLs are page-provided, so attacker pages can author them (UNTRUSTED); private/authenticated pages may expose non-public tool metadata (SECRET).",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "absent / restricted",
+   "effect": "When absent, file-system access is described as restricted to workspace roots and navigation to file:// URLs is blocked; when present, tools that navigate, evaluate page code against file://, or upload/drop files may reach arbitrary local files and unrestricted file:// URLs, expanding SECRET reach.",
+   "evidence": "README.md:411-412",
+   "kind": "flag/env",
+   "syntax": "--allow-unrestricted-file-access / PLAYWRIGHT_MCP_ALLOW_UNRESTRICTED_FILE_ACCESS"
+  },
+  {
+   "default": "allow all",
+   "effect": "Restricts browser requests to configured trusted origins, which can reduce SINK/UNTRUSTED web reach for navigation/page network effects, but the README states it is not a security boundary and does not affect redirects, so labels are not removed globally.",
+   "evidence": "README.md:409-410",
+   "kind": "flag/env",
+   "syntax": "--allowed-origins <origins> / PLAYWRIGHT_MCP_ALLOWED_ORIGINS"
+  },
+  {
+   "default": "no blocklist",
+   "effect": "Blocks configured origins before allowlist evaluation, reducing reachable web destinations for browser requests, but requests not matching the blocklist remain allowed and redirects are not affected, so labels are not removed globally.",
+   "evidence": "README.md:412-412",
+   "kind": "flag/env",
+   "syntax": "--blocked-origins <origins> / PLAYWRIGHT_MCP_BLOCKED_ORIGINS"
+  },
+  {
+   "default": "full",
+   "effect": "Can suppress snapshots included in tool responses, reducing SECRET/UNTRUSTED output from automatic page snapshots, though tools that explicitly return page data or perform sinks remain labeled.",
+   "evidence": "README.md:448-448",
+   "kind": "flag/env",
+   "syntax": "--snapshot-mode <mode> / PLAYWRIGHT_MCP_SNAPSHOT_MODE, with mode \"none\""
+  },
+  {
+   "default": "core advertised tools only",
+   "effect": "Additional non-core capabilities such as vision, pdf, devtools, network, storage, config, and testing are opt-in; the tools judged here are in the advertised set and treated as enabled, while README marks several other sections as opt-in.",
+   "evidence": "README.md:415-415",
+   "kind": "flag/env",
+   "syntax": "--caps <caps> / PLAYWRIGHT_MCP_CAPS"
+  }
+ ],
+ "version": "0.0.81"
+}

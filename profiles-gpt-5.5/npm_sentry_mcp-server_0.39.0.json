@@ -1,0 +1,302 @@
+{
+ "kind": "npm",
+ "notes": [
+  "The source excerpt is bundled/minified and omits several individual handlers and formatters. Where handler code or URL validation is omitted, `undetermined` is set and the least-restrictive label is kept.",
+  "Writes to fixed Sentry/Sentry-Seer vendor APIs are treated as WRITE but not, by themselves, SINKs; SINK labels above are due to URL/region parameters whose complete validation is not visible in the provided source."
+ ],
+ "package": "@sentry/mcp-server",
+ "source": ".cache/sources/.views/npm_sentry_mcp-server_0.39.0_8a168fd234fe",
+ "tools": {
+  "analyze_issue_with_seer": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "organizationSlug",
+    "regionUrl",
+    "issueId",
+    "issueUrl"
+   ],
+   "evidence": [
+    "dist/index.js:38337-38341",
+    "dist/index.js:38365-38396",
+    "dist/index.js:16392-16395"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The handler constructs an API service, parses the issue parameters, fetches the issue with `apiService.getIssue`, checks Seer support, and retrieves/starts Autofix analysis. This exposes issue data and Seer analysis/code-fix output from the user's Sentry account. Issue details and derived analysis can include attacker-influenced error messages, stack/context, or other event content. The `instruction` argument is sent to the remote Sentry/Seer service, but that fixed vendor endpoint alone is not a SINK; SINK is kept because `regionUrl` handling is not fully shown and may select a host.",
+   "undetermined": true,
+   "value_args": [
+    "instruction"
+   ]
+  },
+  "execute_sentry_tool": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "name",
+    "arguments"
+   ],
+   "evidence": [
+    "dist/index.js:42272-42327",
+    "dist/index.js:42483-42500",
+    "dist/index.js:42509-42535",
+    "dist/index.js:42541-42550"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`execute_sentry_tool` looks up an available catalog tool by `name`, validates/prepares `arguments`, and calls the target tool's handler. The catalog includes read tools over Sentry account data, tools returning attacker-influenced telemetry, and write tools such as `update_issue`, project/team/DSN operations, and `add_issue_note`. Therefore its reach is the union of executable catalog tools. SINK is kept because it can pass URL-like arguments such as `regionUrl`/resource URLs to target tools, and complete host validation is not shown.",
+   "undetermined": true,
+   "value_args": [
+    "arguments"
+   ]
+  },
+  "find_organizations": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:13437-13445",
+    "dist/index.js:42272-42276"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "The tool is exposed as a top-level tool and catalog entry (`find_organizations`). The provided source excerpt does not include its handler; based on the advertised behavior it reads organizations accessible with the user's Sentry credentials, which is non-public account data. Because handler/output formatting is omitted, result fields are treated coarsely.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "find_projects": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "regionUrl"
+   ],
+   "evidence": [
+    "dist/index.js:13437-13445",
+    "dist/index.js:42272-42277",
+    "dist/index.js:13415-13422"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "The tool is exposed as a top-level tool and catalog entry (`find_projects`). It reads Sentry projects accessible in a user's organization, which is non-public account data. Its schema includes `regionUrl`; the excerpt shows constraints can inject matching tool parameters, but does not show complete `regionUrl` validation or the handler, so under the least-restrictive reading a call may cause a request to an agent-supplied host.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_sentry_resource": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "dist/index.js:41677-41715",
+    "dist/index.js:41721-41726"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`get_sentry_resource` fetches Sentry resources by URL or by resource type and ID, including issues, events, traces, spans, agent conversations, replays, monitors, snapshots, and images. Those resources are non-public Sentry account data and many resource bodies can contain attacker-controlled telemetry or user-generated text. The `url` parameter is a call-time URL used for resource resolution; validation/contact behavior is not fully shown, so it is treated as an agent-chosen request destination.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "search_events": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "regionUrl"
+   ],
+   "evidence": [
+    "dist/index.js:37070-37079",
+    "dist/index.js:37097-37103",
+    "dist/index.js:37285-37321",
+    "dist/config-BqCCImAX-C9xxoOuk.js:806-819"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The tool searches Sentry errors/logs/spans/metrics/profiles/replays. Results can include non-public telemetry such as users, pages, releases, traces, log/error messages, and user IDs/emails from the user's Sentry account. Telemetry fields like log messages, error messages, replay visited pages, user identifiers, URLs, and event fields can be attacker-controlled through captured application activity. `regionUrl` may direct API access; complete validation is not shown, so SINK is kept for possible agent-chosen host requests.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "search_issues": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "regionUrl"
+   ],
+   "evidence": [
+    "dist/index.js:38850-38885",
+    "dist/index.js:38924-38979"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`search_issues` returns grouped Sentry issues and formats Sentry URLs, issue short IDs, titles, status, assignee, dates, culprit, counts, and categories. These are non-public Sentry account data. Issue titles/culprits and feedback-related issue content can be attacker-influenced through captured errors or user feedback. `regionUrl` may select where requests are sent; complete validation is not present, so SINK is kept as undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "search_sentry_tools": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:42343-42355",
+    "dist/index.js:42467-42470",
+    "dist/index.js:42515-42535"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "This tool searches the local/session Sentry tool catalog by static tool name/description and returns executable schemas. It does not itself read Sentry account data, fetch attacker-controlled content, or send agent data to an attacker-readable destination in the shown code.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "update_issue": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "organizationSlug",
+    "regionUrl",
+    "issueId",
+    "issueUrl",
+    "assignedTo"
+   ],
+   "evidence": [
+    "dist/index.js:29592-29602",
+    "dist/index.js:29618-29647",
+    "dist/index.js:42299-42300"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`update_issue` is a write tool for issue status/assignment. When `reason` is supplied, `tryPostReasonComment` calls `apiService.createIssueComment({ organizationSlug, issueId, text: reason })`, storing agent-supplied text on a Sentry issue. It may also read/return issue state from the user's Sentry account, and issue data/reason echo can include attacker-influenced issue content. `regionUrl` is an input and the excerpt does not settle whether arbitrary/self-hosted hosts are rejected, so SINK is kept as undetermined for possible agent-chosen host delivery.",
+   "undetermined": true,
+   "value_args": [
+    "status",
+    "assignedTo",
+    "ignoreMode",
+    "ignoreDurationMinutes",
+    "ignoreCount",
+    "ignoreWindowMinutes",
+    "ignoreUserCount",
+    "ignoreUserWindowMinutes",
+    "reason"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "absent => hidden",
+   "effect": "Tools are only listed/executable when `isAllowedBySkills` returns true: if `context.grantedSkills` is absent the tool is hidden; otherwise the tool must have at least one enabled skill. Direct tools use skills shown in their definitions, e.g. `update_issue` has `['triage']`, `search_issues` has `['inspect','triage','seer']`, and `execute_sentry_tool` has `ALL_SKILLS`. Default from the excerpt is hidden when no skills are granted.",
+   "evidence": "dist/index.js:13495-13499",
+   "kind": "capability",
+   "syntax": "context.grantedSkills"
+  },
+  {
+   "default": "absent => visible if skills allow",
+   "effect": "When an organization constraint is set, `find_organizations` is hidden.",
+   "evidence": "dist/index.js:13500-13501",
+   "kind": "constraint",
+   "syntax": "context.constraints.organizationSlug"
+  },
+  {
+   "default": "absent => visible if skills allow",
+   "effect": "When a project constraint is set, `find_projects` is hidden; project constraints can also be injected into matching input parameters.",
+   "evidence": "dist/index.js:13500-13510",
+   "kind": "constraint",
+   "syntax": "context.constraints.projectSlug"
+  },
+  {
+   "default": "experimentalMode false unless context overrides",
+   "effect": "Experimental visibility flags can hide tools when `tool.experimental && !experimentalMode` or `tool.hideInExperimentalMode && experimentalMode`. None of the advertised tool snippets shown set these flags, so they are enabled with respect to this condition.",
+   "evidence": "dist/index.js:13472-13475",
+   "kind": "flag",
+   "syntax": "tool.experimental / tool.hideInExperimentalMode with context.experimentalMode"
+  },
+  {
+   "default": "default surface policy includes the advertised direct tools and the catalog gateway",
+   "effect": "Only `TOP_LEVEL_TOOL_NAMES` are exposed directly; catalog tools not in that set are reachable through `search_sentry_tools` and `execute_sentry_tool` if otherwise available.",
+   "evidence": "dist/index.js:13435-13445",
+   "kind": "toolset",
+   "syntax": "useDefaultSurfacePolicy=true; TOP_LEVEL_TOOL_NAMES"
+  }
+ ],
+ "version": "0.39.0"
+}

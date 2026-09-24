@@ -1,0 +1,1305 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Only README.md was supplied, not the implementation source for the advertised tool routers or subcommands. Therefore most tools are marked undetermined, and labels/kind are based on README capabilities plus advertised schemas/descriptions where the README does not settle exact behavior.",
+  "For hierarchical router tools, the only declared call-time arguments that can carry destinations or values are the generic top-level `command` and `parameters`, so those are used for WRITE tools when applicable.",
+  "Fixed Azure/Microsoft service endpoints are not treated as SINKs under the threat model; SINK is assigned only where the supplied descriptions indicate agent-chosen recipients, event delivery, public/blob publication, deployment publication, or load-test targets may receive agent-supplied data."
+ ],
+ "package": "@azure/mcp",
+ "source": ".cache/sources/.views/npm_azure_mcp_2.0.5_674321754801",
+ "tools": {
+  "acr": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:241-246",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Container Registry resource and repository listing under Azure credentials/RBAC. Advertised registry configuration management can mutate Azure state. Returned registry/repository metadata may be non-public. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "advisor": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:137-139",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Advisor recommendation retrieval under user Azure credentials/RBAC. Recommendations for the user's resources are non-public account data; no write is shown. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "aks": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:299-304",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists AKS cluster and node-pool listing/detail operations under user Azure credentials/RBAC, returning non-public subscription resource metadata. Listed operations are read-oriented in the supplied source. [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "appconfig": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:156-159",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists App Configuration store and key-value retrieval, and advertised tool includes managing key-values/labels/locks. Azure credentials/RBAC imply non-public configuration may be returned; management operations mutate Azure state. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "applens": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:161-164",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README describes diagnosing Azure app issues with App Lens under Azure credentials/RBAC. Diagnostic data can include non-public resource/app information. No write or attacker-readable sink is shown in source. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "applicationinsights": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:401",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Monitor/Application Insights-style monitoring under Azure credentials/RBAC. Component metadata is non-public account data; advertised component management may mutate Azure resources. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "appservice": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:165-176",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists App Service reads of web apps, application settings and deployments plus add/set/delete settings and database connections. These return non-public Azure data and mutate Azure resources. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "azd": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:186-188",
+    "README.md:449-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "The advertised tool is for Azure Developer CLI project provisioning/deployment; README identifies Azure Developer CLI tooling, and states MCP operations can run with the user's Azure RBAC permissions. Deployment may read local project/Azure account data (`SECRET`) and publish application content to Azure endpoints that may be attacker-readable (`SINK`). Exact behavior is not settled by the supplied README-only source. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "azuremigrate": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:356-360",
+    "README.md:400"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "README describes Platform Landing Zone generation/modification guidance. Supplied source does not show private data access, attacker-controlled output, external writes, or host execution; generation appears to return guidance/templates to the agent. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "azureterraformbestpractices": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:418"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "README lists Azure Terraform Best Practices guidance. No supplied code shows private data access, attacker-controlled output, writes, or host execution. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "bicepschema": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:422"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "README lists Bicep template/schema support. No supplied source shows access to private data, attacker-authored content, writes, or host execution. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "cloudarchitect": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:423"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "README lists Cloud Architect guided architecture design. No supplied implementation shows private account reads, attacker-controlled public content, writes, or host execution. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "communication": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:190-200",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "README lists Azure Communication Services SMS/email sending to specified recipients. Account/service metadata may be private (`SECRET`), and sending agent-supplied messages to chosen phone numbers/email addresses is a `SINK`. [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "compute": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:202-229",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists VM/VMSS/disk listing, detail, create, update and delete operations. These expose non-public Azure resource data and can mutate Azure resources under the user's credentials. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "confidentialledger": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:236-239",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists appending and getting Confidential Ledger entries. Ledger contents/resource access under user credentials may be non-public; appending mutates Azure ledger state. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "containerapps": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:231-234",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Container Apps listing and advertised tool includes managing configurations. This can return non-public resource metadata and mutate Azure resources. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "cosmos": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:247-250",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Cosmos DB database/container operations and the advertised tool includes document queries. Using the user's Azure credentials can return non-public database/resource data; management/query operations may mutate or read Azure state. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "datadog": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:403",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Native ISV Services/third-party integrations and Azure credential use. The advertised Datadog integration retrieves monitors/resource health for the user's Azure-linked account, which may be non-public. Source does not show writes. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "deploy": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:321-323",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Advertised deployment operations include fetching application logs and deployment planning; README\u2019s Monitor instrumentation orchestration references local workspace analysis. Azure credentials/RBAC may expose non-public logs/workspace/resource data. The tool can perform deployment-related state changes per advertisement, but no attacker-readable sink is established by source. [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "deviceregistry": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:390",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Device Registry namespace management under Azure credentials/RBAC. This can return non-public device registry resource data and mutate Azure resources. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "documentation": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:427-430"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "README points to official Microsoft documentation sources. No implementation code is present showing access to private data, attacker-authored sources, arbitrary hosts, or writes. [unverified: documentation cannot verify a clearance]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "eventgrid": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:257-267",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "README lists Event Grid topic/subscription listing plus publishing event data to topics. Azure topic/subscription metadata is non-public (`SECRET`). Publishing agent-supplied event data can deliver it to subscribers/endpoints of the selected topic, potentially attacker-readable (`SINK`). [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "eventhubs": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:409",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Service Bus/message-queue service area near Event Hubs-style messaging, and advertised Event Hubs CRUD operations manage user Azure resources. These can return non-public namespace/hub metadata and mutate Azure resources. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "extension_azqr": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "subscription",
+    "resource-group"
+   ],
+   "evidence": [
+    "README.md:404",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Quick Review CLI compliance scanning. Scanning Azure resources can collect non-public configuration/compliance data and writes a generated report file path per advertisement; no arbitrary code execution is shown because only a fixed CLI is described. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "extension_cli_generate": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:178-184"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "README describes generating Azure CLI commands from user intent. No supplied source shows private reads, attacker-controlled content, writes outside the agent context, or host execution of generated commands. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "extension_cli_install": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:186-188"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "README describes returning installation instructions for Azure CLI/azd/Functions Core Tools. No supplied source shows private reads, attacker-controlled content, external writes, or host execution. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "fileshares": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:269-287",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists File Share get/create/update/delete/snapshot/metrics operations under Azure credentials/RBAC. These expose non-public storage metadata/usage and mutate Azure resources. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "foundry": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:125-135",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Foundry operations to deploy models, create/list agents, query agents, and evaluate agents using Azure credentials/RBAC. These can return non-public Foundry resources and mutate Azure resources; no evidence of attacker-readable destination or attacker-authored output in the supplied source. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "foundryextensions": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:125-135",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Foundry agents, knowledge indexes, querying and evaluation. Advertised extensions interact with OpenAI, knowledge indexes, threads and agents; these may return non-public account/project data and create/update remote Foundry state. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "functionapp": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:393",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Functions management/access. Function App resource data is private to the user's Azure account, and management operations may mutate Azure state. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "functions": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:393"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "README describes Azure Functions project files/language/templates/source-code generation. The advertised tool is code generation/template exploration; supplied source does not show private reads, attacker-controlled public content, writes outside context, or host execution. [unverified: documentation cannot verify a clearance]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_azure_bestpractices": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:379-380"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "README describes Azure Best Practices as secure guidance/code-generation guidance. No supplied code shows private data access, attacker-controlled content, writes, or host execution. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "grafana": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:397",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Managed Grafana monitoring dashboards under Azure credentials/RBAC. Dashboard/workspace metadata and content may be non-public; advertised management/access operations can mutate resources. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "group_list": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:325-327",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [
+    "name",
+    "id"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists resource-group listing under Azure credentials/RBAC. Resource group names/IDs in the user's subscription are non-public account data. The advertised annotations mark the command read-only. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "group_resource_list": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:325-327",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [
+    "resources",
+    "name",
+    "id",
+    "type",
+    "location"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Resource listing within a resource group uses the user's Azure credentials/RBAC and returns non-public resource names/IDs/types/locations. The advertised annotations mark it read-only. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "keyvault": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:289-297",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Key Vault secret/key/certificate listing and creation/import. This directly returns or stores sensitive non-public vault data and mutates Azure Key Vault state. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "kusto": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:252-255",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Data Explorer database/table sampling and advertised KQL query execution. Query results and resource metadata are non-public Azure account data. Supplied source does not establish writes. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "loadtesting": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:396",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "README lists Azure Load Testing and advertised tool can configure scripts and execute performance tests. Test resources/results may be non-public (`SECRET`). Executing load tests can send agent-supplied requests/scripts to selected targets, potentially attacker-controlled hosts (`SINK`). [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "managedlustre": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:306-311",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Managed Lustre listing, validation and creation operations under Azure credentials/RBAC. These can return non-public resource data and create resources. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "marketplace": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:399"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "README lists Azure Marketplace product discovery. Marketplace offers/products can be authored by third parties, so returned product text may be attacker-controllable. No private account access or writes are established by the source. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "monitor": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:313-315",
+    "README.md:401",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists querying Log Analytics/Azure Monitor logs and metrics. Logs/metrics in the user's Azure account are non-public data. Supplied source does not establish writes or attacker-authored output. [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "mysql": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:388",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Database for MySQL management, and the advertised tool includes executing SQL queries, schema management and server parameter configuration. Query results/resource data may be non-public and management/query operations can mutate database state. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "policy": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:402",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Policy and advertised tool retrieves assignments/enforcement/compliance. These are non-public subscription governance data. Supplied source describes reads only. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "postgres": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:389",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Database for PostgreSQL management, and advertised tool includes SQL query execution, schema management and server parameters. It can return non-public database/resource data and mutate database/server state. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "pricing": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:429-430"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "Advertised Azure Retail Pricing retrieves public Azure retail pricing. Supplied source does not show private account data, attacker-controlled content, writes, or host execution. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "quota": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:405",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Quota resource quota/usage management under Azure credentials/RBAC. Quota and usage for the user's subscriptions are non-public account data. No write is shown in supplied source. [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "redis": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:407",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Redis resources and advertised tool lists databases/data-access policies and can create Azure Managed Redis resources. This returns non-public Azure resource/access data and can mutate Azure state. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "resourcehealth": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:411",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Resource Health status/availability under Azure credentials/RBAC. Health events/status for the user's resources are non-public account data. Source shows monitoring/diagnostic reads. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "role": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:406",
+    "README.md:449-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure RBAC/access-control management and warns MCP operations use the user's RBAC permissions. RBAC listings/management return non-public access-control data and may mutate permissions. [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "search": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:141-144",
+    "README.md:375",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure AI Search service/index listing and searching an index. Search indexes and query results in the user's Azure service may be non-public; advertised management operations can mutate indexes/services. [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "servicebus": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:409",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Service Bus message queuing and advertised queue/topic/subscription management. Namespace/entity data may be non-public and management operations mutate Azure state. Supplied source does not establish message send to attacker-chosen recipients. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "servicefabric": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:410",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Service Fabric managed cluster node operations. Cluster/node metadata under user Azure credentials is non-public. Advertised operations are read/query oriented. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "signalr": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Advertised SignalR tool lists Azure SignalR services using the user's Azure credentials/RBAC; service metadata is non-public account data. No README implementation details settle more than read access. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "speech": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:146-154",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists speech-to-text from audio files and text-to-speech output. Audio file contents/text may be non-public and are sent to Azure Speech; TTS may create output files. Fixed Azure endpoints are not a `SINK` under the given rules. [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "sql": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:331-346",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure SQL server/database/firewall/admin listing plus create/update/rename/delete operations. These expose non-public Azure SQL metadata and mutate Azure resources. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "storage": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:348-354",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "README lists Storage account/container details and uploading a file to blob storage. Azure storage metadata/files may be non-public (`SECRET`), while uploading agent-supplied/local file content to a selected blob/container can place it where others, including attackers if public/shared, can read it (`SINK`). [evidence: documentation only]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "storagesync": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:416",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Storage Sync management operations. Sync service/group/endpoint/server metadata is non-public Azure account data and management operations mutate Azure state. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "subscription_list": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:417",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [
+    "subscriptionId",
+    "displayName",
+    "tenantId"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists subscription management, and the tool returns the current account's subscription IDs, display names and tenant IDs. These are non-public account data; the advertised annotations mark it read-only. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "virtualdesktop": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:419",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Virtual Desktop infrastructure. Host pool/session-host/user-session information is non-public account data and advertised management/access operations can mutate Azure resources/sessions. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  },
+  "wellarchitectedframework": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "README.md:362-367",
+    "README.md:420"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "README lists Well-Architected Framework guidance and best practices. No supplied source shows private data access, attacker-controlled content, writes, or host execution. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": []
+  },
+  "workbooks": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "command",
+    "parameters"
+   ],
+   "evidence": [
+    "README.md:421",
+    "README.md:443-451"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "README lists Azure Workbooks custom visualizations, and advertised tool can list/create/update/delete workbooks. Workbook content/configuration may be non-public and operations can mutate Azure resources. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "parameters"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "Azure Public Cloud",
+   "effect": "Changes the Azure cloud endpoints used by tools; does not remove advertised tools or the labels above.",
+   "evidence": "README.md:85-119",
+   "kind": "configuration",
+   "syntax": "--cloud <AzureCloud|AzureChinaCloud|AzureUSGovernment> or AZURE_CLOUD=<alias>; default Azure Public Cloud"
+  },
+  {
+   "default": "telemetry collection is on by default",
+   "effect": "Disables all telemetry collection; does not remove advertised tools or the labels above.",
+   "evidence": "README.md:457-471",
+   "kind": "environment",
+   "syntax": "AZURE_MCP_COLLECT_TELEMETRY=false"
+  },
+  {
+   "default": "Microsoft telemetry is sent by default",
+   "effect": "Disables Microsoft telemetry only while keeping user-provided Application Insights telemetry active; does not remove advertised tools or the labels above.",
+   "evidence": "README.md:473-479",
+   "kind": "environment",
+   "syntax": "AZURE_MCP_COLLECT_TELEMETRY_MICROSOFT=false"
+  },
+  {
+   "default": "not configured unless environment variable is set",
+   "effect": "Adds user-provided Application Insights telemetry destination; does not remove advertised tools or the labels above.",
+   "evidence": "README.md:459-463",
+   "kind": "environment",
+   "syntax": "APPLICATIONINSIGHTS_CONNECTION_STRING=<connection string>"
+  }
+ ],
+ "version": "2.0.5"
+}

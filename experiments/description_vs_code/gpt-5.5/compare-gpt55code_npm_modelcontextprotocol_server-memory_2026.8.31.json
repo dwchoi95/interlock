@@ -1,0 +1,208 @@
+[
+ {
+  "tool": "create_entities",
+  "code": [
+   "SECRET"
+  ],
+  "description": [],
+  "code_verified": true,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "name"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`createEntities` loads the local memory graph, filters out entities whose `name` already exists, saves the graph, and returns only `newEntities`. Thus the output can reveal non-public membership information from the local memory file for agent-supplied candidate names, while also writing to that loc"
+ },
+ {
+  "tool": "create_relations",
+  "code": [
+   "SECRET"
+  ],
+  "description": [],
+  "code_verified": true,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "from",
+   "to"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`createRelations` loads the local memory graph, filters out relations already present by `from`, `to`, and `relationType`, saves the graph, and returns only `newRelations`. This can reveal non-public relation membership in the local memory file for guessed relations. It writes only to the configured"
+ },
+ {
+  "tool": "add_observations",
+  "code": [
+   "SECRET"
+  ],
+  "description": [],
+  "code_verified": true,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "entityName"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`addObservations` loads the local graph, looks up `entityName`, throws if missing, filters out already-present observation contents, saves, and returns `addedObservations`. The success/error and filtered output can reveal non-public local memory state for guessed entity names or observations. It wri"
+ },
+ {
+  "tool": "delete_entities",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "entityNames"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`deleteEntities` changes the local memory graph by removing matching entity names and associated relations, then returns a fixed success message. The code does not return graph contents or send data to an attacker-readable destination."
+ },
+ {
+  "tool": "delete_observations",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "entityName",
+   "observations"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`deleteObservations` changes the local memory graph by removing matching observation strings from selected entities, then returns a fixed success message. It does not return local graph contents or deliver data to an attacker-readable destination."
+ },
+ {
+  "tool": "delete_relations",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "from",
+   "to",
+   "relationType"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`deleteRelations` changes the local memory graph by removing matching relations, then returns a fixed success message. It does not return local graph contents or write to an attacker-readable location."
+ },
+ {
+  "tool": "read_graph",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`readGraph` returns `loadGraph()`, and `loadGraph` reads and parses the configured local memory file with `fs.readFile(this.memoryFilePath, \"utf-8\")`. The tool returns the entire non-public local knowledge graph."
+ },
+ {
+  "tool": "search_nodes",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "query"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`searchNodes` loads the local memory graph and returns matching entities and related relations from that file. The returned fields can include non-public local memory contents matching the agent-supplied `query`. The query only selects what to read and is not a network destination."
+ },
+ {
+  "tool": "open_nodes",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "names"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`openNodes` loads the local memory graph and returns selected entities plus relations touching them. The returned graph data comes from the non-public local memory file. The `names` argument only selects records to read and is not a network destination."
+ }
+]

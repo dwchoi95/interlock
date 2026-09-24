@@ -1,0 +1,127 @@
+{
+ "tools": {
+  "read_documentation": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "No label: the tool is described as fetching AWS documentation, and its URL requirements say the URL `Must be from the docs.aws.amazon.com domain` and `Must end with .html`, so it does not advertise access to arbitrary attacker hosts, local files, localhost, intranet, or user-private data. The returned `Markdown content of the AWS documentation` is public AWS-authored documentation, not attacker-controllable under the threat model.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "read_sections": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Retrieves a page, converts to markdown, and returns only matching sections`, but its stated URL requirements only say `Must end with .html` and do not state that the URL must be on `docs.aws.amazon.com`. Because the advertised text does not settle whether arbitrary hosts such as attacker-controlled sites, `localhost`, intranet hosts, or `file://` URLs ending in `.html` are rejected, least-restrictive reading keeps the labels. It can return attacker-authored page text, so UNTRUSTED; it can return content from localhost/intranet/file URLs if reachable, so SECRET; and a request to an agent-chosen URL/host can deliver agent-supplied data in the URL to an attacker-readable destination, so SINK.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "search_table": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "No label: the tool searches tables on an AWS documentation page, with URL requirements saying `Must be from the docs.aws.amazon.com domain` and `Must end with .html`. It returns table data from AWS documentation, such as `matching rows as JSON`, not user-private data or attacker-controlled hosts/content under the threat model. The query is used to filter rows, not to choose an attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "results.table_heading",
+    "results.columns",
+    "results.parent_columns",
+    "results.child_columns",
+    "results.rows",
+    "hint"
+   ],
+   "attacker_named_fields": []
+  },
+  "search_documentation": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "No label: the tool uses the `official AWS Documentation Search API`, a fixed vendor endpoint, to search public AWS documentation. A query sent to a fixed vendor endpoint is not a SINK. The advertised result fields are AWS documentation search results, not non-public user data or attacker-controlled content under the threat model.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "search_results.url",
+    "search_results.title",
+    "search_results.recommended_sections",
+    "search_results.sections",
+    "search_results.metadata.additional_urls.url",
+    "search_results.metadata.additional_urls.section_title",
+    "search_results.metadata.additional_urls.section_anchor",
+    "facets.product_types",
+    "facets.guide_types",
+    "query_id",
+    "metadata.discovered_services",
+    "metadata.related_tasks.doc_urls",
+    "metadata.relationships"
+   ],
+   "attacker_named_fields": []
+  },
+  "recommend": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "No label: the tool provides `recommendations for related AWS documentation pages based on a given URL` and returns `recommended pages with URLs, titles, and context`. It does not advertise fetching arbitrary agent-chosen hosts, accessing private data, or writing/sending to attacker-readable destinations; the recommendations are for AWS documentation pages.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "url",
+    "title"
+   ],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "Judgments are based only on the advertised tool descriptions, schemas, and annotations; no source code was available."
+ ],
+ "usage": {
+  "input_tokens": 4553,
+  "output_tokens": 4334,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

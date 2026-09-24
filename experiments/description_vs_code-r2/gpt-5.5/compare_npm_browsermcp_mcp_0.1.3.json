@@ -1,0 +1,247 @@
+[
+ {
+  "tool": "browser_navigate",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {},
+  "rationale_code": "`browser_navigate` parses an agent-supplied `url` and sends it to the connected browser; with the advertised snapshot configuration it then returns `captureAriaSnapshot`, including page URL, title, and accessibility snapshot. Navigating to an arbitrary URL is a request to an agent-chosen host (SINK)"
+ },
+ {
+  "tool": "browser_go_back",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`browser_go_back` changes browser history state and, in the advertised configuration, returns `captureAriaSnapshot` for the resulting page. That snapshot can contain non-public browser-accessible page data or attacker-controlled page content."
+ },
+ {
+  "tool": "browser_go_forward",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`browser_go_forward` changes browser history state and, in the advertised configuration, returns `captureAriaSnapshot` for the resulting page. That snapshot can contain non-public browser-accessible page data or attacker-controlled page content."
+ },
+ {
+  "tool": "browser_snapshot",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`browser_snapshot` returns `captureAriaSnapshot`, which fetches the browser URL, title, and accessibility snapshot via `getUrl`, `getTitle`, and `browser_snapshot`. Current page content may be private account/local/intranet content or attacker-controlled web content, and the snapshot contains later-"
+ },
+ {
+  "tool": "browser_click",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "element",
+   "ref"
+  ],
+  "annotations": {},
+  "rationale_code": "`browser_click` sends the selected `element`/`ref` to the browser to perform a click. A click can deliver an agent-chosen interaction to the current web page and may trigger page/network actions readable by that site, so it is a SINK. It then returns a page snapshot, which can contain private or att"
+ },
+ {
+  "tool": "browser_hover",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "element",
+   "ref"
+  ],
+  "annotations": {},
+  "rationale_code": "`browser_hover` sends the selected `element`/`ref` to the browser to perform a hover. That delivers an agent-chosen interaction event to the current page, which an attacker-controlled page can observe, so it is a SINK. It then returns a page snapshot, which can contain private or attacker-controlled"
+ },
+ {
+  "tool": "browser_type",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "element",
+   "ref"
+  ],
+  "annotations": {},
+  "rationale_code": "`browser_type` sends `text` plus the target `element`/`ref` to the browser, typing agent-supplied content into a web page; the current site can read typed data, so it is a SINK. It then returns a page snapshot, which can contain private or attacker-controlled content."
+ },
+ {
+  "tool": "browser_select_option",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "element",
+   "ref"
+  ],
+  "annotations": {},
+  "rationale_code": "`browser_select_option` sends selected `values` and target `element`/`ref` to the browser, changing page form state that the current site can observe, so it is a SINK. It then returns a page snapshot, which can contain private or attacker-controlled content."
+ },
+ {
+  "tool": "browser_press_key",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`browser_press_key` sends the agent-supplied `key` to the browser. If focus is in a web page, that key event or generated character is observable by the current site, including an attacker-controlled site, so it is a SINK. The returned text is only an echo/status string from the tool."
+ },
+ {
+  "tool": "browser_wait",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`browser_wait` sends only a wait duration to the connected browser and returns a fixed status string. The code does not return page content or send data to an agent-chosen external destination."
+ },
+ {
+  "tool": "browser_get_console_logs",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`browser_get_console_logs` requests browser console logs and returns them as JSON-stringified text. Console logs may contain non-public page/account data, and scripts on attacker-controlled pages can author console log content."
+ },
+ {
+  "tool": "browser_screenshot",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {},
+  "rationale_code": "`browser_screenshot` requests a screenshot from the browser and returns it as PNG image data. The screenshot may reveal non-public browser-accessible page content, and its pixels may be controlled by an attacker-controlled web page."
+ }
+]

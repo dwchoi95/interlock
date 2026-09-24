@@ -1,0 +1,158 @@
+{
+ "tools": {
+  "tavily_search": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The description says it will `Search the web for current information` and `Returns snippets and source URLs`; public web pages, snippets, image descriptions, and URLs can be attacker-controlled, so the output is UNTRUSTED. It is a READ tool because it retrieves search results. The advertised inputs send a search `query` to a fixed search/vendor service rather than making a request to an agent-chosen URL or host, so it is not treated as a SINK. No advertised access to local files, intranet, localhost, user credentials, or private SaaS data, so no SECRET label.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "snippets",
+    "source URLs",
+    "raw content",
+    "images",
+    "image descriptions",
+    "favicon URL"
+   ],
+   "identifier_output_fields": [
+    "source URLs",
+    "images",
+    "favicon URL"
+   ],
+   "attacker_named_fields": [
+    "source URLs",
+    "images",
+    "favicon URL"
+   ]
+  },
+  "tavily_extract": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The description says `Extract content from URLs` and `Returns raw page content`; content at arbitrary web URLs can be attacker-authored, so the output is UNTRUSTED. The `urls` argument makes the tool contact agent-supplied URLs, so a request to an attacker-controlled URL can deliver agent-supplied data to an attacker-readable host, making it a SINK. The text does not advertise any scheme, localhost, intranet, or private-network restriction, and also mentions `protected sites`; under the least-restrictive reading, supplied URLs could reach non-public `file://`, `localhost`, intranet, or protected content, so SECRET is retained and the point is undetermined. It is otherwise a READ tool because it extracts and returns content.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "urls"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return",
+    "images",
+    "favicon URLs"
+   ],
+   "identifier_output_fields": [
+    "images",
+    "favicon URLs"
+   ],
+   "attacker_named_fields": [
+    "images",
+    "favicon URLs"
+   ]
+  },
+  "tavily_crawl": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The description says `Crawl a website starting from a URL` and `Extracts content from pages`; pages and links on an arbitrary website can be attacker-authored, so the output is UNTRUSTED. The `url` argument makes the tool contact an agent-supplied URL, so a request to an attacker-controlled host can deliver agent-supplied data to an attacker-readable destination, making it a SINK. The advertised text does not restrict URL schemes or exclude `localhost`, intranet, or other non-public reachable sites; under the least-restrictive reading the crawl could return non-public content or internal URLs, so SECRET is retained and undetermined. It is a READ tool because it crawls and returns extracted content rather than modifying state.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "content",
+    "URLs",
+    "external links",
+    "favicon URL"
+   ],
+   "identifier_output_fields": [
+    "URLs",
+    "external links",
+    "favicon URL"
+   ],
+   "attacker_named_fields": [
+    "URLs",
+    "external links",
+    "favicon URL"
+   ]
+  },
+  "tavily_map": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The description says `Map a website's structure` and `Returns a list of URLs found starting from the base URL`; URLs found on an arbitrary website can be attacker-authored, so the output is UNTRUSTED. The `url` argument makes the tool contact an agent-supplied URL, so a request to an attacker-controlled host can deliver agent-supplied data to an attacker-readable destination, making it a SINK. The advertised text does not restrict URL schemes or exclude `localhost`, intranet, or non-public reachable websites; under the least-restrictive reading the returned URL list could disclose internal/private site structure, so SECRET is retained and undetermined. It is a READ tool because it maps and returns URLs rather than changing state.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "tavily_research": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The description says it will `gather information from multiple sources` and `Returns a detailed response based on the research findings`; public or third-party sources can contain attacker-controlled content that influences the returned response, so the output is UNTRUSTED. It is a READ tool because it gathers and returns research. The advertised schema has a research-task `input` but no URL, host, recipient, or publication destination argument, and no advertised access to local files, intranet, user credentials, or private SaaS data, so it is not labeled SINK or SECRET.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No source code was provided; judgments rely only on the advertised tool descriptions and input schemas.",
+  "All tools are treated as default-enabled because the advertised text does not say any tool is off by default."
+ ],
+ "usage": {
+  "input_tokens": 2799,
+  "output_tokens": 6637,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

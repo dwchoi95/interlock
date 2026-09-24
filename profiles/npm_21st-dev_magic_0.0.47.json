@@ -1,0 +1,66 @@
+{
+ "kind": "npm",
+ "notes": [
+  "`dist/utils/http-client.js`, `dist/utils/get-content-of-file.js`, `dist/utils/callback-server.js` and the server entrypoint were not included in the provided source, so the exact `twentyFirstClient` base URL/auth (likely an API key env var) and any path restrictions in `getContentOfFile` could not be verified; I read the endpoint as a single fixed vendor host (hence no SINK) and `getContentOfFile` as an unrestricted read of the supplied absolute path (hence SECRET).",
+  "No tool spawns processes or evaluates code, so no HOSTEXEC anywhere; `create-ui.js` only launches a hard-coded billing URL and a local callback server."
+ ],
+ "package": "@21st-dev/magic",
+ "source": ".cache/sources/.views/npm_21st-dev_magic_0.0.47_f93e342c7230",
+ "tools": {
+  "21st_magic_component_builder": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/create-ui.js:36",
+    "dist/tools/create-ui.js:33",
+    "dist/tools/create-ui.js:52-58",
+    "dist/tools/create-ui.js:64"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`execute` reads any local path the agent supplies via `getContentOfFile(absolutePathToCurrentFile)` (create-ui.js:36) and posts it to the 21st.dev endpoint `/api/create-ui-variation`; the returned/selected component code (`componentData.code`, create-ui.js:64) comes from 21st.dev's community component registry driven by `searchQuery`, i.e. third-party multi-writer content that is rendered straight into the agent's context with integration instructions, so UNTRUSTED. SECRET because arbitrary host file contents (e.g. `.env`, keys) are pulled in as `fileContent` and the vendor's variation output is derived from and typically echoes that file back into context. Not a SINK: the destination is the fixed `twentyFirstClient` vendor endpoint and `open(\"https://21st.dev/settings/billing\")` (create-ui.js:40) is a hard-coded URL; the agent cannot choose a host. `CallbackServer.promptUser` only runs a local browser handoff, no host code execution.",
+   "undetermined": true
+  },
+  "21st_magic_component_inspiration": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/fetch-ui.js:20-28"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`execute` posts `searchQuery`/`message` to the fixed vendor route `/api/fetch-ui` and returns `data.text` verbatim (fetch-ui.js:28). That text is component data/previews from the publicly writable 21st.dev component registry, i.e. third-party content an attacker can publish and steer via search terms, so it is UNTRUSTED. No local files or credentials are read, and the request target is a fixed vendor endpoint with no agent-chosen host, so no SECRET or SINK.",
+   "undetermined": false
+  },
+  "21st_magic_component_refiner": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/refine-ui.js:27",
+    "dist/tools/refine-ui.js:25",
+    "dist/tools/refine-ui.js:34"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`execute` reads any absolute host path given as `absolutePathToRefiningFile` through `getContentOfFile` (refine-ui.js:27) and sends it as `fileContent` to `/api/refine-ui`; the response `data.text` is a redesigned version of that file returned into the agent's context (refine-ui.js:34), so private host file content re-enters context -> SECRET. UNTRUSTED is kept because the vendor's refinement output is remote content the code does not validate and may incorporate 21st.dev community registry material; the code does not settle its provenance. Destination is the fixed `twentyFirstClient` vendor host with no agent-chosen URL or recipient, so not a SINK.",
+   "undetermined": true
+  },
+  "logo_search": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/tools/logo-search.js:42-52",
+    "dist/tools/logo-search.js:59-65",
+    "dist/tools/logo-search.js:169-176"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`fetchLogos` queries the third-party `https://api.svgl.app` registry with the agent-supplied `queries` (logo-search.js:42) and then `fetchSVGContent` fetches whatever URL the registry response names in `logo.route` (logo-search.js:167-169); that community-published SVG/JSX markup and `logo.url` are returned in the tool result (logo-search.js:176, 253), so the content is attacker-influenceable. The only outbound requests are to the fixed svgl host or URLs chosen by the registry, not by the agent, so no SINK; `fs.writeFile` (logo-search.js:142) writes a local `test-results/` file, which is neither exfiltration nor host execution, and no user credentials or private data are read.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [],
+ "version": "0.0.47"
+}

@@ -1,0 +1,224 @@
+{
+ "tools": {
+  "get_tasks": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns task data from a local project: `Get all tasks from Task Master` with `projectRoot` as `The directory of the project. Must be an absolute path.` This can return non-public project/task-file data from the host. No attacker-controlled source or agent-chosen network destination is advertised. Output field names are not specified, so identifier fields are inferred from `tasks`, `status`, and `subtasks`.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "status",
+    "subtasks.id",
+    "tag"
+   ],
+   "attacker_named_fields": []
+  },
+  "next_task": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Finds a task using local project/task files: `Find the next task to work on based on dependencies and status`, with `file` as `Absolute path to the tasks file`, `complexityReport` as a file path, and `projectRoot` as an absolute directory. This can return non-public local task/project data. No attacker-controlled source or agent-chosen network destination is advertised. Output field names are not specified, so identifier fields are inferred from task/dependency/status data.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "status",
+    "dependencies",
+    "subtasks.id"
+   ],
+   "attacker_named_fields": []
+  },
+  "get_task": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns detailed local task data: `Get detailed information about a specific task`, selected by `Task ID(s) to get`, under `Absolute path to the project root directory`. This can return non-public project/task-file contents. No attacker-controlled source or agent-chosen network destination is advertised. Output field names are not specified, so identifier fields are inferred from task/subtask/status data.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "status",
+    "subtasks.id",
+    "tag"
+   ],
+   "attacker_named_fields": []
+  },
+  "set_task_status": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Changes local task state: `Set the status of one or more tasks or subtasks`, selected by task/subtask `id`, `status`, and absolute `projectRoot`. It is a WRITE because it updates task records. The advertised text does not specify the returned data; under the least-restrictive reading for an uncertain local-task operation, it may return non-public task/project information, so SECRET is kept and undetermined is true. No attacker-controlled source, public write destination, or code execution is advertised.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "id",
+    "projectRoot",
+    "tag"
+   ],
+   "value_args": [
+    "status"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "status",
+    "tag"
+   ],
+   "attacker_named_fields": []
+  },
+  "update_subtask": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Updates local task data: `Appends timestamped information to a specific subtask`, selected by subtask `id`, optional `file`, and absolute `projectRoot`, so it is a WRITE and can expose local task/project data if it returns updated data. It can also use a third-party/web research source: `Use Perplexity AI for research-backed updates`; attacker-controlled public web content can influence research results, so UNTRUSTED is kept. A query to a fixed vendor endpoint is not treated as SINK, and no agent-chosen URL/host or public posting destination is advertised. Output fields are not specified, so `return` is used for potentially research-authored text.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "id",
+    "file",
+    "projectRoot",
+    "tag"
+   ],
+   "value_args": [
+    "prompt"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "tag"
+   ],
+   "attacker_named_fields": []
+  },
+  "parse_prd": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Reads a local PRD file and generates task data: `Parse a Product Requirements Document (PRD) text file to automatically generate initial tasks`, with `input` as an `Absolute path to the PRD document file` and `output` as an `Output path for tasks.json file`. The PRD may contain non-public local project information, so returned generated tasks can reveal SECRET data. It is a WRITE because it generates/appends/overwrites a tasks file. With `research`, it can `use the research role for potentially more informed task generation`, which may incorporate attacker-controlled public web/research content, so UNTRUSTED is kept. The research endpoint is not an agent-chosen destination, and no public posting destination or code execution is advertised. Output fields are not specified, so identifiers are inferred from generated tasks.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "output",
+    "projectRoot",
+    "tag"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "title",
+    "status",
+    "tag"
+   ],
+   "attacker_named_fields": []
+  },
+  "expand_task": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Writes local task data by expanding an existing task: `Expand a task into subtasks for detailed implementation`, selected by task `id`, optional `file`, and absolute `projectRoot`, so it is a WRITE and may return non-public task/project details. With `research`, it can `Use research role for generation`; attacker-controlled public research/web content can influence generated subtasks, so UNTRUSTED is kept. No agent-chosen URL/host, public write destination, or host code execution is advertised. Output fields are not specified, so identifiers are inferred from generated subtasks.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "id",
+    "file",
+    "projectRoot",
+    "tag"
+   ],
+   "value_args": [
+    "prompt"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "subtasks.id",
+    "title",
+    "status",
+    "tag"
+   ],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [
+  {
+   "syntax": "research=false",
+   "kind": "argument",
+   "effect": "For update_subtask, removes the advertised Perplexity/research-backed source of UNTRUSTED content; SECRET/local write behavior remains.",
+   "default": "",
+   "evidence": "`research`: `Use Perplexity AI for research-backed updates`"
+  },
+  {
+   "syntax": "research=false",
+   "kind": "argument",
+   "effect": "For parse_prd, removes the advertised research-role source of UNTRUSTED content; SECRET/local PRD parsing and local write behavior remain.",
+   "default": "",
+   "evidence": "`research`: `Enable Taskmaster to use the research role for potentially more informed task generation. Requires appropriate API key.`"
+  },
+  {
+   "syntax": "research=false",
+   "kind": "argument",
+   "effect": "For expand_task, removes the advertised research-role source of UNTRUSTED content; SECRET/local task expansion and local write behavior remain.",
+   "default": "false",
+   "evidence": "`research`: `Use research role for generation` with `default`: `false`"
+  }
+ ],
+ "notes": [
+  "All tools are treated as default-enabled because the advertised text does not say any tool is disabled by default.",
+  "Local absolute paths such as `projectRoot`, `file`, `input`, and `output` are not treated as SINK destinations because the SINK definition requires delivery to an attacker-readable destination such as an agent-chosen URL/host or public posting location; that is not advertised here.",
+  "For READ tools, local paths are not listed in destination_args because the enforcement rule asks READ destination_args only for arguments that make the tool contact an agent-chosen host, such as a URL.",
+  "Several tools have undetermined output fields because no output schema is advertised; identifier and injectable fields are inferred from the tool descriptions."
+ ],
+ "usage": {
+  "input_tokens": 2657,
+  "output_tokens": 4786,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

@@ -1,0 +1,168 @@
+{
+ "kind": "npm",
+ "notes": [
+  "No tools are gated by flags or capabilities in the provided code; they are all returned unconditionally from the `ListToolsRequestSchema` handler at dist/chunk-TWAHNSYO.js:28.",
+  "No HOSTEXEC behavior is shown: the code constructs shadcn CLI command strings but does not execute them."
+ ],
+ "package": "shadcn",
+ "source": ".cache/sources/.views/npm_shadcn_4.21.0_addf9cf0084b",
+ "tools": {
+  "get_add_command_for_items": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-TWAHNSYO.js:1",
+    "dist/chunk-TWAHNSYO.js:58"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "The tool returns `await u(...)`; `u` builds a command using `await ia(process.cwd())`, so the output may reveal local project/package-manager information derived from the current working directory. The implementation of imported `ia` is not shown, so the exact local data read is undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_audit_checklist": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-TWAHNSYO.js:58-68"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "The tool returns a fixed checklist string and does not read external data, write state, contact an agent-chosen destination, or execute host code.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_item_examples_from_registries": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-TWAHNSYO.js:17-20",
+    "dist/chunk-TWAHNSYO.js:49-58"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool searches configured registries using `_a(a,{query:r.query,config:i,...})`, fetches matching items with `ma(p,{config:i,...})`, and returns examples via `R(c,r.query)`. `R` includes registry-authored fields such as example `name`, `description`, file `path`, and complete file `content`, so the output is UNTRUSTED. If examples are fetched from private/user-configured registries, the complete code and metadata may be non-public, so the output is SECRET. Imported registry access functions are not shown, making exact reach undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_project_registries": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-TWAHNSYO.js:1",
+    "dist/chunk-TWAHNSYO.js:28-37"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "The tool reads project registry configuration via `l(process.cwd())`, where `l` returns `(await oa(n,{useCache:false})).registries`, and returns `Object.keys(t.registries)` to the agent. The advertised description in code says this comes from `components.json`, a local project file. The exact implementation of imported `oa` is not shown, so the local-file read details are not fully determined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_items_in_registries": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-TWAHNSYO.js:1-2",
+    "dist/chunk-TWAHNSYO.js:28",
+    "dist/chunk-TWAHNSYO.js:10-16"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool loads configured registries with `l(process.cwd())`, resolves requested registries with `Za`, fetches registry items using `_a(...)`, and formats returned item fields such as `c.name`, `c.description`, `c.registry`, and `c.addCommandArgument`. Registry content can be third-party/attacker-authored, so the returned text is UNTRUSTED. It can also return content/metadata from registries configured in the user's local project, potentially including private registry data, so it is SECRET. The implementations of imported `oa`, `Za`, and `_a` are not shown, so the exact backing stores and authentication behavior are undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "search_items_in_registries": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-TWAHNSYO.js:1-2",
+    "dist/chunk-TWAHNSYO.js:28",
+    "dist/chunk-TWAHNSYO.js:10-16"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool loads project registry configuration with `l(process.cwd())`, resolves registries with `Za`, searches them through `_a(s,{query:r.query,...})`, and formats returned item fields including names, descriptions, registries, and add command arguments. Those registry item fields may be authored by third-party registry operators, making the output UNTRUSTED. If configured registries are private or credentialed, the searched registry metadata is non-public user-accessible data, so the tool can return SECRET data. Imported registry-resolution/fetch functions are not shown, so details are undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "view_items_in_registries": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/chunk-TWAHNSYO.js:14-16",
+    "dist/chunk-TWAHNSYO.js:41-49"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool parses `items`, fetches matching registry items with `ma(r.items,{config:await l(process.cwd()),useCache:false})`, and returns formatted item details through `E(i)`, including item `name`, `description`, `type`, file counts, and dependencies. Registry item metadata may be third-party authored, so returned text is UNTRUSTED. Because resolution uses the user's project registry configuration, it may also return non-public/private registry data, so it is SECRET. The imported `ma` and `oa`/`l` behavior is not fully shown.",
+   "undetermined": true,
+   "value_args": []
+  }
+ },
+ "value_conditions": [],
+ "version": "4.21.0"
+}

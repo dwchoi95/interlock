@@ -1,0 +1,157 @@
+{
+ "tools": {
+  "tavily_search": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Search[es] the web` and `Returns snippets and source URLs`; public web snippets and URLs can be authored or influenced by outside parties, so the output is UNTRUSTED. It is not marked SINK because the advertised destination is a fixed search service/API, and a query to a fixed vendor endpoint is not a SINK. It is WRITE because the `Search query` is sent out of the agent context to perform the search.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "include_domains",
+    "exclude_domains"
+   ],
+   "value_args": [
+    "query"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "tavily_extract": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Extract content from URLs` supplied in `urls`, so it can make a request to an agent-chosen URL/host; that is a SINK, and URL paths/query strings can also carry agent-supplied data. It returns `raw page content`, which can be attacker-controlled for attacker-owned web hosts, so it is UNTRUSTED. SECRET is included because arbitrary `URLs` are not advertised as limited to the public Internet, and the text also mentions `protected sites`; if it can reach localhost, intranet, file-like, or protected resources, it can return non-public content. This reach is not fully settled by the advertisement, so undetermined is true.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "urls"
+   ],
+   "value_args": [
+    "urls",
+    "query"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "tavily_crawl": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Crawl a website starting from a URL` using the supplied `url`, so it can make requests to an agent-chosen URL/host; that is a SINK, and the URL itself can carry agent-supplied data. It `Extracts content from pages`, and website content can be authored by outside parties, so the output is UNTRUSTED. SECRET is included because the advertised `URL` is not limited to public sites; if it can reach localhost or intranet websites, the extracted pages or link structure may be non-public. This local/intranet reach is not settled by the advertisement, so undetermined is true.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "url",
+    "select_paths",
+    "select_domains"
+   ],
+   "value_args": [
+    "url",
+    "instructions"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "tavily_map": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Map a website's structure` from the supplied `url`, so it can make requests to an agent-chosen URL/host; that is a SINK, and the URL can carry agent-supplied data. It `Returns a list of URLs found`, and URLs/links on attacker-controlled sites can be authored by the attacker, so the output is UNTRUSTED. SECRET is included because the root URL is not advertised as limited to public websites; if it can reach localhost or intranet websites, the returned URL structure may be non-public. This reach is not settled by the advertisement, so undetermined is true.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "url",
+    "select_paths",
+    "select_domains"
+   ],
+   "value_args": [
+    "url",
+    "instructions"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "tavily_research": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool performs research by `gather[ing] information from multiple sources` and returns a `detailed response based on the research findings`; those sources may include public or third-party material that outside parties can author, so the output is UNTRUSTED. It is not marked SINK because the advertised input is a research `topic or question`, not an agent-chosen URL/host or recipient; sending the task to a fixed vendor endpoint is not a SINK. It is WRITE because the research `input` is sent out of the agent context to perform the research.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "input"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No advertised flags, environment variables, URL paths, or headers remove tools or labels."
+ ],
+ "usage": {
+  "input_tokens": 2675,
+  "output_tokens": 5710,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

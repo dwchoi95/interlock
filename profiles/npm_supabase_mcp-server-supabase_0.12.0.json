@@ -1,0 +1,368 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All SQL/log tool outputs are wrapped by `Q()` in `<untrusted-data-UUID>` delimiters with an instruction not to follow embedded commands (dist/chunk-UXVELPWK.js:2-9). This is a prompt-level mitigation only and does not remove the UNTRUSTED label.",
+  "No tool in this bundle spawns processes or touches the local filesystem; `deploy_edge_function` executes code only in Supabase's remote edge runtime, so no HOSTEXEC label applies anywhere.",
+  "`get_logs`, `list_storage_buckets`, `get_storage_config` and `update_storage_config` exist in the code but are not in the advertised tool list for this deployment (get_logs is hidden because `queryLogs` is available; the storage group is outside the default feature list), so they were not judged.",
+  "The SINK reading for `execute_sql`/`apply_migration` rests on arbitrary SQL being able to use outbound Postgres extensions (`pg_net`, `http`) on Supabase; the bundle does not constrain the SQL text, so the label is kept and marked undetermined."
+ ],
+ "package": "@supabase/mcp-server-supabase",
+ "source": ".cache/sources/.views/npm_supabase_mcp-server-supabase_0.12.0_091d49272ccf",
+ "tools": {
+  "apply_migration": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`apply_migration` passes an arbitrary agent-supplied `query` to `e.applyMigration(r,{name:l,query:c})`, i.e. unconstrained SQL (DDL and DML) on the user's Postgres. Arbitrary SQL can read any table (SECRET) and, on Supabase Postgres where outbound extensions such as `pg_net`/`http` can be enabled, can send chosen data to an attacker host (SINK); the migration result/echo can also carry row data written by third parties (UNTRUSTED). The code does not constrain the SQL, so these readings are kept; whether outbound extensions are installed is not decidable from this source. Disabled when `readOnly` is set.",
+   "undetermined": true
+  },
+  "confirm_cost": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [],
+   "rationale": "`confirm_cost` only hashes its own arguments via `M(t)` (SHA-256 of the JSON) and returns a confirmation id; no I/O at all.",
+   "undetermined": false
+  },
+  "create_branch": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [],
+   "rationale": "`create_branch` calls `e.createBranch(r,{name:l})` after cost confirmation; it only returns the new branch record for the user's own project and reads no external content. Disabled in read-only mode.",
+   "undetermined": false
+  },
+  "create_project": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [],
+   "rationale": "`create_project` calls `e.createProject({name,region,organization_id})` against the Supabase management API. It writes to the user's own account (not an attacker-readable destination), returns only the newly created project record, and ingests no external content. Blocked entirely when `readOnly` is set.",
+   "undetermined": false
+  },
+  "delete_branch": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [],
+   "rationale": "`delete_branch` calls `e.deleteBranch(r)` and returns `{success:true}`; destructive to the user's resources but no data flows in or out. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "deploy_edge_function": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1",
+    "dist/chunk-UXVELPWK.js:258-260"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`deploy_edge_function` uploads agent-supplied `files` content via `e.deployEdgeFunction(i,{...,verify_jwt:d,files:b})`. The deployed function is served at a project URL that the agent can make publicly reachable (`verify_jwt` is agent-settable to false), so arbitrary agent-supplied data is delivered to an attacker-readable destination; the deployed Deno code also runs in Supabase's remote runtime where it can fetch arbitrary hosts. Execution is in a remote vendor sandbox, not on the user's host, so not HOSTEXEC. Blocked when `readOnly` is set.",
+   "undetermined": false
+  },
+  "execute_sql": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1",
+    "dist/chunk-UXVELPWK.js:2-9"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`execute_sql` forwards the agent's raw `query` to `e.executeSql(l,{query:r,read_only:n})` and returns the rows wrapped by `Q()`. Arbitrary SELECTs over the user's database are returned into context (SECRET); the server itself wraps the output in `<untrusted-data-...>` boundaries because rows contain data written by the application's end users (UNTRUSTED). Arbitrary SQL on Supabase Postgres can also reach outbound networking extensions (`pg_net`/`http`), which would make it an exfiltration channel - not settled by this code, so SINK is kept. Remains exposed in read-only mode via `readOnlyBehavior:\"adapt\"`.",
+   "undetermined": true
+  },
+  "generate_typescript_types": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`generate_typescript_types` returns `e.generateTypescriptTypes(t)`, a full type definition of the user's private database schema. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "get_advisors": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`get_advisors` calls `e.getSecurityAdvisors(r)` / `e.getPerformanceAdvisors(r)` with the user's credentials and returns lint findings referencing the project's private schema objects. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "get_cost": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [],
+   "rationale": "`ee(e,i)` reads the org plan and project list only to compute a numeric price; the tool output schema `Qt` exposes only `type`, `amount`, `recurrence`, so no private data, attacker content, or outbound destination is reachable.",
+   "undetermined": false
+  },
+  "get_edge_function": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`get_edge_function` returns `await e.getEdgeFunction(i,r)`, described as retrieving file contents - the user's private function source code enters the context. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "get_organization": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`get_organization` calls `e.getOrganization(t)` with the user's credentials and returns organization details including subscription plan - non-public account data.",
+   "undetermined": false
+  },
+  "get_project": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`get_project` returns `await e.getProject(t)` - the user's project metadata reached with their account credentials.",
+   "undetermined": false
+  },
+  "get_project_url": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`get_project_url` returns `await e.getProjectUrl(t)`, the project's API endpoint retrieved from the user's authenticated account; it identifies a private project resource even though the URL is later embedded in clients. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "get_publishable_keys": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`get_publishable_keys` returns `await e.getPublishableKeys(t)` - API key material (`api_key` strings, legacy anon JWTs) fetched with the user's management credentials and pulled into the agent context. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "list_branches": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`list_branches` returns `await e.listBranches(r)` - private branch metadata (ids, project refs, status) from the user's account. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "list_edge_functions": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`list_edge_functions` returns `await e.listEdgeFunctions(i)` - the private inventory of the project's deployed functions. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "list_extensions": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1",
+    "dist/chunk-UXVELPWK.js:123-132"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`list_extensions` executes the `ot` extension catalog query via `e.executeSql` against the user's database and returns installed extension state - non-public project data.",
+   "undetermined": false
+  },
+  "list_migrations": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`list_migrations` returns `await e.listMigrations(r)` - the user's private migration history (names/versions) from their project. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "list_organizations": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`list_organizations` calls `e.listOrganizations()` on the platform client authenticated with the user's Supabase access token, returning the user's private org list into context.",
+   "undetermined": false
+  },
+  "list_projects": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`list_projects` returns `await e.listProjects()`, the user's private project inventory (ids, regions, status) fetched with their credentials.",
+   "undetermined": false
+  },
+  "list_tables": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1",
+    "dist/chunk-UXVELPWK.js:232-240"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`list_tables` runs the generated catalog query `st(l)` through `e.executeSql(r,{...,read_only:!0})` against the user's project database and returns schema, table, column names and comments - private database metadata. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "merge_branch": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [],
+   "rationale": "`merge_branch` calls `e.mergeBranch(r)`, promoting existing branch migrations/functions into the user's production project. It ships no agent-supplied payload to an attacker-readable place and returns only `{success:true}`. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "pause_project": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [],
+   "rationale": "`pause_project` calls `e.pauseProject(t)` and returns `{success:true}`; state-changing on the user's own account but no data in or out.",
+   "undetermined": false
+  },
+  "query_logs": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1",
+    "dist/chunk-UXVELPWK.js:2-9"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`query_logs` runs an agent-supplied ClickHouse/BigQuery `sql` string through `t(r,{sql:l,...})` (`debugging.queryLogs`) over the project's log stream and returns `Q(b)`. Logs are private project telemetry (SECRET) and contain request paths, headers, bodies and edge-function console output produced by arbitrary internet clients (UNTRUSTED); the code wraps output in untrusted-data markers. The query goes to Supabase's own log backend, not an agent-chosen host, so no SINK.",
+   "undetermined": false
+  },
+  "rebase_branch": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [],
+   "rationale": "`rebase_branch` calls `e.rebaseBranch(r)` and returns `{success:true}`; no data read or emitted. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "reset_branch": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [],
+   "rationale": "`reset_branch` calls `e.resetBranch(r,{migration_version:l})` and returns `{success:true}`; no data read or emitted. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true
+  },
+  "restore_project": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1"
+   ],
+   "labels": [],
+   "rationale": "`restore_project` calls `e.restoreProject(t)` and returns `{success:true}`; no data read into context and no attacker-reachable destination.",
+   "undetermined": false
+  },
+  "search_docs": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-UXVELPWK.js:1",
+    "dist/chunk-UXVELPWK.js:251-257"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`ht({contentApiClient})` executes `e.query({query:o})` with the agent-supplied `graphql_query`; the client `V.#o` issues a `fetch` to the fixed `contentApiUrl` (default `https://supabase.com/docs/api/graphql`) and returns the response body into context. The endpoint is a fixed vendor host and the query is only placed in that host's query string, so this is not a SINK. The returned documentation/troubleshooting content is third-party published web content that an agent can be steered by, so UNTRUSTED. No user-private data is read.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "off (`t=e?.readOnly` is undefined unless supplied; `aa` defaults `readOnly` to false)",
+   "effect": "Every tool whose annotation has `readOnlyHint===false` and no `readOnlyBehavior:\"adapt\"` (create_project, pause_project, restore_project, apply_migration, deploy_edge_function, create_branch, delete_branch, merge_branch, reset_branch, rebase_branch, update_storage_config) is marked `hidden:true` and its execute throws; `execute_sql` stays but is run with `read_only:n`, removing its write/SINK-via-SQL path but keeping SECRET/UNTRUSTED.",
+   "evidence": "dist/chunk-UXVELPWK.js:275",
+   "kind": "flag",
+   "syntax": "readOnly: true (server option, exposed by the CLI as --read-only)"
+  },
+  {
+   "default": "defaults to `_n` = docs, account, database, debugging, development, functions, branching intersected with the platform's supported groups (storage is not in the default list)",
+   "effect": "Only the listed groups are registered (`hn` maps group -> tool names); e.g. omitting 'database' removes list_tables/list_extensions/list_migrations/apply_migration/execute_sql, omitting 'functions' removes the edge-function tools.",
+   "evidence": "dist/chunk-UXVELPWK.js:275",
+   "kind": "toolset selection",
+   "syntax": "features: ['docs','account','database','debugging','development','functions','branching','storage']"
+  },
+  {
+   "default": "unset - account tools registered and project_id must be supplied",
+   "effect": "Account-group tools (list_organizations, get_organization, list_projects, get_project, get_cost, confirm_cost, create_project, pause_project, restore_project) are not registered, and the `project_id` parameter is injected/omitted from the remaining tools' schemas.",
+   "evidence": "dist/chunk-UXVELPWK.js:275",
+   "kind": "config value",
+   "syntax": "projectId: '<ref>' (CLI --project-ref)"
+  },
+  {
+   "default": "depends on platform implementation; in the advertised tool list query_logs is present and get_logs hidden",
+   "effect": "When the platform implements `queryLogs`, `query_logs` is registered and `get_logs` is hidden (`hidden:!!t`); without it only `get_logs` is exposed.",
+   "evidence": "dist/chunk-UXVELPWK.js:1",
+   "kind": "platform capability",
+   "syntax": "platform.debugging.queryLogs provided"
+  },
+  {
+   "default": "'https://supabase.com/docs/api/graphql'",
+   "effect": "Changes the host that `search_docs` queries; pointing it at an attacker-controlled or intranet URL would change search_docs' reach (potential SINK/SECRET).",
+   "evidence": "dist/chunk-UXVELPWK.js:275",
+   "kind": "config value",
+   "syntax": "contentApiUrl: '<url>'"
+  },
+  {
+   "default": "unset - `confirm_cost_id` required and get_cost/confirm_cost visible",
+   "effect": "When `create_project`/`create_branch` are listed and the client supports form elicitation, `confirm_cost_id` is dropped from their schemas and cost is confirmed inline; `get_cost`/`confirm_cost` become hidden when both create tools are covered.",
+   "evidence": "dist/chunk-UXVELPWK.js:275",
+   "kind": "config object",
+   "syntax": "costConfirmation: {enabledTools:[...], requestStateKey, ttlSeconds, principal}"
+  }
+ ],
+ "version": "0.12.0"
+}

@@ -1,0 +1,112 @@
+[
+ {
+  "tool": "ai_tutor",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`AI_TUTOR_TOOL` only reads a static markdown resource shipped inside the CLI package (`../resources/ai-tutor.md`) and returns it. No user data, no network egress, no execution. The content is package-bundled and therefore public, so it is neither SECRET nor attacker-controllable."
+ },
+ {
+  "tool": "get_best_practices",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "workspacePath"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`createBestPracticesHandler` either returns the CLI-bundled `best-practices.md` (`getBundledBestPractices`) or a markdown file referenced by `angular.bestPractices.path` inside the resolved `@angular/core` package. The read is pinned to the installed package directory: `relative`/`isAbsolute` traver"
+ },
+ {
+  "tool": "search_documentation",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "version"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "The handler sends `query` only to the fixed Algolia application `ALGOLIA_APP_ID` index `angular_v<version>` (doc-search.js:298-322), which is a fixed vendor endpoint and therefore not a SINK; the agent cannot choose the destination. Content fetching is gated on `url.hostname === 'angular.dev' || url"
+ },
+ {
+  "tool": "find_examples",
+  "code": [
+   "SECRET"
+  ],
+  "description": [],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "workspacePath"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "The handler opens SQLite files on the host and returns rows into the agent context: the bundled `exampleDatabasePath`, databases discovered from the caller-supplied `input.workspacePath` via `getVersionSpecificExampleDatabases`, or an arbitrary directory named by `NG_MCP_EXAMPLES_DIR` through `setup"
+ },
+ {
+  "tool": "list_projects",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`createListProjectsHandler` walks the client roots (or `process.cwd()` when the client has no roots capability, projects.js:461-467) with `findAngularJsonFiles`, loads every `angular.json` via `AngularWorkspace.load`, and returns local paths, project names, builders, source roots and `@angular/core`"
+ },
+ {
+  "tool": "onpush_zoneless_migration",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "fileOrDirPath"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`fileOrDirPath` is an unconstrained absolute path: `statSync` then `glob(`${fileOrDirPath}/**/*.ts`)` enumerates the tree and `createSourceFile` reads each file's full text (`sourceFile.getFullText()`, line 156). Results flow back through `analyzeForUnsupportedZoneUses`, `migrateSingleFile`, `migrat"
+ }
+]

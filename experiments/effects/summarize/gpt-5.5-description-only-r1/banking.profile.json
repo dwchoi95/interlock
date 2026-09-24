@@ -1,0 +1,239 @@
+{
+ "kind": "python",
+ "notes": [
+  "No source code was provided; judgments are based only on the advertised tool names, descriptions, schemas, and annotations."
+ ],
+ "package": "agentdojo/banking",
+ "source": "(description only)",
+ "tools": {
+  "get_balance": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Returns non-public account data: `Get the balance of the account.` Account balance is SaaS/banking data reached with the user's credentials.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_iban": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Returns non-public account data: `Get the IBAN of the current bank account.` The IBAN is an account identifier for the user's current bank account, so the whole return is treated as a secret identifier.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_most_recent_transactions": {
+   "attacker_named_fields": [
+    "sender"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "sender",
+    "recipient"
+   ],
+   "injectable_output_fields": [
+    "subject"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns private banking history: `Get the list of the most recent transactions`. Transaction lists are account data reached with the user's credentials, so SECRET. They may also include counterparty-authored transaction text such as subjects from incoming payments; the advertised text does not state that all `transactions` are user-authored, so UNTRUSTED is kept under the least-restrictive reading.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_scheduled_transactions": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "recipient"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Returns private banking schedule data: `Get the list of scheduled transactions.` This is account data reached with the user's credentials. The output schema is not advertised; identifiers such as transaction `id` and `recipient` are inferred from the scheduled-transaction update schema, so field details are undetermined.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_user_info": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Returns non-public profile/account data: `Get the user information.` User information in the banking account is SaaS data reached with the user's credentials.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_file": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "file_path"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Reads host file contents from an agent-chosen path: `Reads the contents of the file at the given path.` Host files are non-public data returned into the agent context.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "schedule_transaction": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "recipient"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Can arrange a transfer to an agent-chosen recipient: `Schedule a transaction.` The schema includes `IBAN of the recipient`, `Amount of the transaction`, `Subject of the transaction`, and scheduling fields, so it can deliver/store agent-supplied transaction data for a recipient.",
+   "undetermined": false,
+   "value_args": [
+    "amount",
+    "subject",
+    "date",
+    "recurring"
+   ]
+  },
+  "send_money": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "recipient"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Can send agent-supplied data/value to an agent-chosen recipient: `Sends a transaction to the recipient.` The `recipient` is the IBAN destination; `amount`, `subject`, and `date` are transaction data visible/stored with the transfer.",
+   "undetermined": false,
+   "value_args": [
+    "amount",
+    "subject",
+    "date"
+   ]
+  },
+  "update_password": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Changes account state: `Update the user password.` It stores the new `password` for the current user, but the advertised text does not indicate that it returns secrets or sends data to an attacker-readable destination.",
+   "undetermined": false,
+   "value_args": [
+    "password"
+   ]
+  },
+  "update_scheduled_transaction": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "id",
+    "recipient"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "Can alter a scheduled transfer: `Update a scheduled transaction.` The `id` selects the transaction acted on, and optional `recipient` can set the `IBAN of the recipient`; optional `amount`, `subject`, `date`, and `recurring` carry stored/sent transaction data.",
+   "undetermined": false,
+   "value_args": [
+    "amount",
+    "subject",
+    "date",
+    "recurring"
+   ]
+  },
+  "update_user_info": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Changes account state: `Update the user information.` It stores supplied profile fields for the current user, but the advertised text does not indicate that it returns secrets or sends data to an attacker-readable destination.",
+   "undetermined": false,
+   "value_args": [
+    "first_name",
+    "last_name",
+    "street",
+    "city"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "v1.2"
+}

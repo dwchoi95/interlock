@@ -1,0 +1,290 @@
+{
+ "tools": {
+  "find_organizations": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns non-public Sentry account data because it can `Find organizations that the user has access to in Sentry` and `View organizations in Sentry`. No attacker-controlled source or attacker-chosen destination is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "query"
+   ],
+   "value_args": [
+    "query"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "slug",
+    "regionUrl"
+   ],
+   "attacker_named_fields": []
+  },
+  "find_projects": {
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns non-public Sentry account data because it can `Find projects in Sentry` and `View projects in a Sentry organization`. It also has an agent-supplied `regionUrl` described as `The region URL for the organization you're querying` and mentioning `self-hosted Sentry installations`; from the advertised text it is not settled whether arbitrary hosts are validated, so under the least-restrictive reading a call can make a request to an agent-chosen host and deliver arguments such as `query` there.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "organizationSlug",
+    "regionUrl"
+   ],
+   "value_args": [
+    "query"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "slug"
+   ],
+   "attacker_named_fields": []
+  },
+  "update_issue": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Acts on non-public Sentry data because it can `Update a Sentry issue's status or assignment`. It writes state and can post text because `reason` `will be posted as a comment on the issue's activity feed`. Sentry issues may contain production error details and activity-feed content; the description does not settle exactly what the tool returns, so UNTRUSTED/SECRET are kept under the least-restrictive reading. It is a SINK because `issueUrl` is a URL and `regionUrl` is a URL for `self-hosted Sentry installations`; the text does not state host validation, so agent-supplied `reason` could be delivered to an agent-chosen host or readable issue destination.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "organizationSlug",
+    "regionUrl",
+    "issueId",
+    "issueUrl",
+    "assignedTo"
+   ],
+   "value_args": [
+    "issueUrl",
+    "status",
+    "assignedTo",
+    "ignoreMode",
+    "ignoreDurationMinutes",
+    "ignoreCount",
+    "ignoreWindowMinutes",
+    "ignoreUserCount",
+    "ignoreUserWindowMinutes",
+    "reason"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "issueId",
+    "assignedTo"
+   ],
+   "attacker_named_fields": []
+  },
+  "search_events": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns non-public Sentry telemetry because it can `Search Sentry events and replays` across `errors`, `logs`, `spans`, `metrics`, `profiles`, and `replays`. Results can include attacker-influenced production content such as `Application log entries`, `Exception/crash events with stack traces`, `Raw trace/span events`, and `Session replay results: rage clicks, dead clicks, visited pages, replay users`; the description does not settle authorship, so UNTRUSTED is kept. It is a SINK under the least-restrictive reading because `regionUrl` is an agent-supplied URL for `self-hosted Sentry installations`, and `query`, `fields`, `sort`, or `environment` could be sent to that host.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "organizationSlug",
+    "projectSlug",
+    "regionUrl"
+   ],
+   "value_args": [
+    "query",
+    "fields",
+    "sort",
+    "environment"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "issue",
+    "eventID",
+    "trace",
+    "profileID",
+    "replayID",
+    "user"
+   ],
+   "attacker_named_fields": [
+    "user"
+   ]
+  },
+  "analyze_issue_with_seer": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns non-public production debugging information because it provides `Root cause analysis with code-level explanations`, `Specific file locations and line numbers`, `Concrete code fixes`, and `actual code snippets and fixes` for Sentry issues. It can start stateful processing because it `Starts new AI analysis if needed`. The analyzed issue may include attacker-controlled error/log content; the description does not settle authorship, so UNTRUSTED is kept. It is a SINK under the least-restrictive reading because `issueUrl` and `regionUrl` are URL/host inputs, including `self-hosted Sentry installations`, and `instruction` can be sent with the analysis request.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "organizationSlug",
+    "regionUrl",
+    "issueId",
+    "issueUrl"
+   ],
+   "value_args": [
+    "issueUrl",
+    "instruction"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "issueId"
+   ],
+   "attacker_named_fields": []
+  },
+  "search_issues": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns non-public grouped issue data because it can `Search for grouped issues/problems in Sentry` and returns `metadata like title, status, and user count`. Issue titles and metadata may derive from production errors or user feedback such as `issue.category:feedback`; the description does not settle authorship, so UNTRUSTED is kept. It is a SINK under the least-restrictive reading because `regionUrl` is an agent-supplied URL for `self-hosted Sentry installations`, and `query` can be sent to that host.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "organizationSlug",
+    "projectSlugOrId",
+    "regionUrl"
+   ],
+   "value_args": [
+    "query"
+   ],
+   "injectable_output_fields": [
+    "title"
+   ],
+   "identifier_output_fields": [
+    "issueId",
+    "projectSlugOrId"
+   ],
+   "attacker_named_fields": []
+  },
+  "get_sentry_resource": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns non-public Sentry resources because it can `Fetch a Sentry resource` and supports `issues, events, traces, spans, agent conversations, replays, monitors, preprod snapshots, and snapshot images`. Those resources may contain attacker-influenced production data, transcripts, replay details, or snapshot metadata; the text does not settle authorship, so UNTRUSTED is kept. It is a SINK under the least-restrictive reading because `url` is an agent-supplied `Sentry URL` and the description does not state that arbitrary hosts are rejected, so a request can be made to an agent-chosen URL/host.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "url",
+    "resourceType",
+    "resourceId",
+    "organizationSlug"
+   ],
+   "value_args": [
+    "url"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "resourceId",
+    "issueId",
+    "eventID",
+    "traceID",
+    "gen_ai.conversation.id",
+    "replayID",
+    "monitorSlug",
+    "snapshotId"
+   ],
+   "attacker_named_fields": []
+  },
+  "search_sentry_tools": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Searches the Sentry MCP tool catalog by `name and description` and returns available tool metadata such as `name and schema`. The advertised text does not say it returns user account data, attacker-authored content, or sends data to an attacker-chosen destination; `openWorldHint` is false and the query is for a catalog lookup.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [
+    "query"
+   ],
+   "value_args": [
+    "query"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "execute_sentry_tool": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "This is a meta-tool that can `Execute an available Sentry MCP tool discovered through search_sentry_tools`, including operations for `project management, documentation lookup, preprod snapshots, attachments, DSNs, releases, teams, and issue-specific pivots`. Because the target tool is selected by `name` and arbitrary `arguments` are passed, it inherits the ability to read non-public Sentry data, return attacker-influenced issue/event/documentation content, and perform writes or calls to destinations exposed by catalog tools. The exact reachable catalog is not fully advertised here, so the labels are kept under the least-restrictive reading.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "name",
+    "arguments"
+   ],
+   "value_args": [
+    "arguments"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "Where a tool lacks an advertised result schema, output field names are inferred only from the description. URL and regionUrl based SINK findings are marked undetermined because the advertised text does not state whether implementations restrict or validate hosts."
+ ],
+ "usage": {
+  "input_tokens": 6664,
+  "output_tokens": 7451,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

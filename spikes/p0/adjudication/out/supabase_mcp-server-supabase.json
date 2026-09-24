@@ -1,0 +1,316 @@
+{
+ "package": "@supabase/mcp-server-supabase",
+ "version": "0.12.0",
+ "source": "supabase-mcp-server-supabase-0.12.0 src (from dist sourcemaps); npm pack @supabase/mcp-server-supabase@0.12.0, extracted TS from dist/*.js.map sourcesContent; remote forms from git tag mcp-server-supabase-v0.12.0 README.md",
+ "tools": {
+  "search_docs": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Sends an agent-supplied GraphQL query to the FIXED vendor Content API (supabase.com/docs/api/graphql) returning vendor-authored public docs; fixed vendor host => not SINK, vendor content => not UNTRUSTED.",
+   "evidence": "src/tools/docs-tools.ts:33-53; src/content-api/graphql.ts:157-164 (fetch to configured contentApiUrl, default src/server.ts:121)"
+  },
+  "list_organizations": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns the user's Supabase organizations (private account data) via the management-API access token.",
+   "evidence": "src/tools/account-tools.ts:255-259; src/platform/api-platform.ts:82 GET /v1/organizations"
+  },
+  "get_organization": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns a private organization's details (plan, tags) via the user's token.",
+   "evidence": "src/tools/account-tools.ts:261-265; src/platform/api-platform.ts:90 GET /v1/organizations/{slug}"
+  },
+  "list_projects": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns all of the user's Supabase projects (refs, regions, org ids) via the user's token.",
+   "evidence": "src/tools/account-tools.ts:267-271; src/platform/api-platform.ts:105 GET /v1/projects"
+  },
+  "get_project": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns a private project's details via the user's token.",
+   "evidence": "src/tools/account-tools.ts:273-277; src/platform/api-platform.ts:112 GET /v1/projects/{ref}"
+  },
+  "get_cost": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Computes and returns only a price figure (reads org/projects to derive it but returns {type,recurrence,amount}); no private data surfaced, no write.",
+   "evidence": "src/tools/account-tools.ts:279-290; src/pricing.ts:23-46"
+  },
+  "confirm_cost": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns a hash of the cost object (confirmation id); no data read or written.",
+   "evidence": "src/tools/account-tools.ts:292-296; src/util.ts:34-59 hashObject"
+  },
+  "create_project": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Provisions a new Supabase project (write/side-effect); returns project metadata, does not surface non-public data and creates no attacker-readable channel. Blocked in read-only mode.",
+   "evidence": "src/tools/account-tools.ts:298-448 (readOnly throw :312); src/platform/api-platform.ts:122-144 POST /v1/projects"
+  },
+  "pause_project": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Pauses a project (write only, returns success). Blocked in read-only mode.",
+   "evidence": "src/tools/account-tools.ts:450-459; api-platform.ts:148 POST /v1/projects/{ref}/pause"
+  },
+  "restore_project": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Restores a project (write only, returns success). Blocked in read-only mode.",
+   "evidence": "src/tools/account-tools.ts:461-470; api-platform.ts:162 POST /v1/projects/{ref}/restore"
+  },
+  "list_tables": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns the DB schema (tables/columns/FKs) via a read-only management-API SQL call using the user's token.",
+   "evidence": "src/tools/database-operation-tools.ts:190-336 (read_only:true); api-platform.ts:177 POST /v1/projects/{ref}/database/query"
+  },
+  "list_extensions": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns installed Postgres extensions (private project config) via read-only SQL.",
+   "evidence": "src/tools/database-operation-tools.ts:337-351"
+  },
+  "list_migrations": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns the project's migration history via the user's token.",
+   "evidence": "src/tools/database-operation-tools.ts:352-358; api-platform.ts:205 GET /v1/projects/{ref}/database/migrations"
+  },
+  "apply_migration": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Runs arbitrary agent-supplied DDL/SQL (write) against the DB; can 'create extension pg_net' and 'select net.http_post(url,...)' to POST agent data to an agent-chosen URL => SINK. Returns nothing (intentionally, per code). Blocked in read-only mode.",
+   "evidence": "src/tools/database-operation-tools.ts:359-374 (readOnly throw :363); api-platform.ts:225 POST .../database/migrations; supabase/postgres pg_net net.http_get/http_post (migrations/db/init-scripts/00000000000003-post-setup.sql:46-85)"
+  },
+  "execute_sql": {
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "secondary_extra": [
+    "UNTRUSTED"
+   ],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Runs arbitrary agent-supplied SQL and returns rows (SECRET). By default read_only is false, so it can write and reach pg_net net.http_post to an agent-chosen URL => SINK. Its own wrapper flags returned rows as untrusted; primary model keeps DB rows non-attacker, secondary adds UNTRUSTED.",
+   "evidence": "src/tools/database-operation-tools.ts:375-392 (read_only:readOnly); src/tools/util.ts:91-102 wrapWithUntrustedDataBoundary; pg_net post-setup.sql:69-70"
+  },
+  "query_logs": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Runs read-only SQL over the project's log stream and returns it (SECRET). Edge/API/postgres request logs record request paths, headers, user-agents etc. from arbitrary internet clients hitting the project's public endpoints => attacker-controllable content (UNTRUSTED). Fixed vendor endpoint => not SINK.",
+   "evidence": "src/tools/debugging-tools.ts:323-343 wrapWithUntrustedDataBoundary; api-platform.ts:283 GET .../analytics/endpoints/logs"
+  },
+  "get_advisors": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns security/performance lint findings about the private project via the user's token; vendor-generated content, not attacker-authored.",
+   "evidence": "src/tools/debugging-tools.ts:345-362; api-platform.ts:307 GET .../advisors/security"
+  },
+  "get_project_url": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns the project's public-facing API URL, derived from the project ref and management host; the URL is designed to be embedded in client apps.",
+   "evidence": "src/tools/development-tools.ts:89-95; api-platform.ts:342-345"
+  },
+  "get_publishable_keys": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns the project's publishable/anon API keys via the user's token; legacy anon JWT keys grant (RLS-scoped) DB access, so treated as non-public credential material.",
+   "evidence": "src/tools/development-tools.ts:96-101; api-platform.ts:346 GET .../api-keys"
+  },
+  "generate_typescript_types": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Generates TypeScript types from the DB schema, revealing the private schema.",
+   "evidence": "src/tools/development-tools.ts:103-108; api-platform.ts:412 GET .../types/typescript"
+  },
+  "list_edge_functions": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Lists the project's edge functions (private project config).",
+   "evidence": "src/tools/edge-function-tools.ts:110-116; api-platform.ts:431 GET .../functions"
+  },
+  "get_edge_function": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns edge-function source code (private project code).",
+   "evidence": "src/tools/edge-function-tools.ts:117-123; api-platform.ts:477 GET .../functions/{slug} + body"
+  },
+  "deploy_edge_function": {
+   "labels": [
+    "SINK"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Deploys agent-authored Deno/TypeScript that runs server-side and can fetch() arbitrary URLs => the agent controls both exfil URL and payload => SINK. Returns only function metadata. Blocked in read-only mode.",
+   "evidence": "src/tools/edge-function-tools.ts:124-147 (readOnly throw :135); api-platform.ts:580-648 POST .../functions/deploy"
+  },
+  "create_branch": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Creates a development branch (a DB copy); write side-effect, returns branch metadata, no attacker-readable delivery. Blocked in read-only mode.",
+   "evidence": "src/tools/branching-tools.ts:192-321 (readOnly throw :206); api-platform.ts:669 POST .../branches"
+  },
+  "list_branches": {
+   "labels": [
+    "SECRET"
+   ],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Returns dev branches incl. git_branch names / pr_number (private project config).",
+   "evidence": "src/tools/branching-tools.ts:323-328; api-platform.ts:652 GET .../branches"
+  },
+  "delete_branch": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Deletes a branch (write only, returns success). Blocked in read-only mode.",
+   "evidence": "src/tools/branching-tools.ts:330-339; api-platform.ts:690 DELETE /v1/branches/{id}"
+  },
+  "merge_branch": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Merges branch migrations to parent (write only). Blocked in read-only mode.",
+   "evidence": "src/tools/branching-tools.ts:341-350; api-platform.ts:706 POST .../merge"
+  },
+  "reset_branch": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Resets a branch to a migration version (write only). Blocked in read-only mode.",
+   "evidence": "src/tools/branching-tools.ts:352-363; api-platform.ts:723 POST .../reset"
+  },
+  "rebase_branch": {
+   "labels": [],
+   "secondary_extra": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "rationale": "Rebases a branch on production migrations (write only). Blocked in read-only mode.",
+   "evidence": "src/tools/branching-tools.ts:365-374; api-platform.ts:740 POST .../push"
+  }
+ },
+ "value_conditions": [
+  {
+   "syntax": "--read-only (stdio) / ?read_only=true (mcp.supabase.com) / SupabaseMcpServerOptions.readOnly",
+   "kind": "flag",
+   "effect": "Hides every tool with readOnlyHint:false that is not readOnlyBehavior:'adapt' (writeToolSet): apply_migration, create_project, pause_project, restore_project, create_branch, delete_branch, merge_branch, reset_branch, rebase_branch, deploy_edge_function (+storage update). execute_sql stays ('adapt') but runs with read_only=true so its SINK (pg_net write) is blocked. Net: removes SINK entirely => breaks the SECRET+UNTRUSTED+SINK triple.",
+   "default": "absent => readOnly=false: all write tools present, execute_sql runs read-write.",
+   "evidence": "src/server.ts:252-258 (writeToolSet hidden); src/tools/tool-schemas.ts:142-150 writeToolSet; database-operation-tools.ts:171 readOnlyBehavior 'adapt', :386 read_only:readOnly"
+  },
+  {
+   "syntax": "--project-ref=<ref> / ?project_ref=<ref> / SupabaseMcpServerOptions.projectId",
+   "kind": "flag",
+   "effect": "Excludes ALL account tools (list_organizations, get_organization, list_projects, get_project, get_cost, confirm_cost, create_project, pause_project, restore_project) and injects project_id into the rest. Removes those account SECRET tools but DB/logs/functions SECRET+UNTRUSTED+SINK tools remain.",
+   "default": "absent => projectId undefined: account tools enabled, server spans all orgs/projects.",
+   "evidence": "src/server.ts:191-204 (if !projectId && account); tools/util.ts:38-89 injectableTool"
+  },
+  {
+   "syntax": "--features=<groups> / ?features=<groups> (e.g. database,docs)",
+   "kind": "flag",
+   "effect": "Restricts enabled feature groups; a group's tools are dropped when its name is absent. e.g. omitting 'functions' drops deploy_edge_function (a SINK); omitting 'database' drops execute_sql/apply_migration. Can remove individual labels but not by default.",
+   "default": "absent => DEFAULT_FEATURES = docs,account,database,debugging,development,functions,branching (storage and get_logs NOT enabled).",
+   "evidence": "src/server.ts:83-91 DEFAULT_FEATURES, :173-250; src/util.ts:64-91 parseFeatureGroups"
+  }
+ ],
+ "notes": [
+  "Default feature set enables docs,account,database,debugging,development,functions,branching but NOT storage; get_logs is hidden whenever queryLogs is available (hosted platform), so the default advertised surface is exactly these 29 tools.",
+  "Auth: management-API personal access token via --access-token or SUPABASE_ACCESS_TOKEN; every data tool reaches the user's own Supabase data => SECRET.",
+  "Two independent SINKs at default: deploy_edge_function (agent code with arbitrary fetch) and execute_sql/apply_migration (arbitrary SQL -> pg_net net.http_post to arbitrary URL). Both require write access, so --read-only removes SINK.",
+  "query_logs is the clearest primary-variant UNTRUSTED source: public request logs contain attacker-controlled request metadata. execute_sql/get_edge_function return the user's own data/code (SECRET; UNTRUSTED only under the secondary variant).",
+  "wrapWithUntrustedDataBoundary wraps execute_sql/get_logs/query_logs results in an 'untrusted-data' fence (tools/util.ts:91) but this is a prompt-hardening string, not a removal of the content, so it does not clear the UNTRUSTED label.",
+  "Remote mcp.supabase.com (README of tag mcp-server-supabase-v0.12.0) documents URL query forms project_ref, read_only, features mirroring the CLI flags; OAuth login supplies the token."
+ ]
+}

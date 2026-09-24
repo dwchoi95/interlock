@@ -1,0 +1,51 @@
+{
+ "kind": "pypi",
+ "notes": [
+  "The server uses `get_local_tz(local_timezone)` while building tool descriptions (`server.py:123-127`, `server.py:138-140`, `server.py:158-168`), but the advertised callable tools themselves do not return local host data beyond their computed time results."
+ ],
+ "package": "mcp-server-time",
+ "source": ".cache/sources/.views/pypi_mcp-server-time_2026.8.18_4c572db8f1b3",
+ "tools": {
+  "convert_time": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "server.py:73-120",
+    "server.py:196-207",
+    "server.py:211-213"
+   ],
+   "identifier_output_fields": [
+    "source.timezone",
+    "target.timezone"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "`convert_time` only parses the supplied time, resolves supplied source/target timezones with `ZoneInfo`, converts the datetime locally, and returns a `TimeConversionResult` serialized as JSON. It does not read user files/accounts, fetch attacker-controlled content, send data to an attacker-chosen destination, or execute arbitrary code.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_current_time": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "server.py:61-71",
+    "server.py:189-195",
+    "server.py:211-213"
+   ],
+   "identifier_output_fields": [
+    "timezone"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "`get_current_time` only resolves the supplied `timezone` with `ZoneInfo`, computes `datetime.now(timezone)`, and returns a `TimeResult` serialized as JSON. It does not read user files/accounts, fetch attacker-controlled content, send data to an attacker-chosen destination, or execute arbitrary code.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [],
+ "version": "2026.8.18"
+}

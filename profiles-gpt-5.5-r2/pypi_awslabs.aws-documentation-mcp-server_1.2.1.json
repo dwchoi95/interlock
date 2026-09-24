@@ -1,0 +1,221 @@
+{
+ "kind": "pypi",
+ "notes": [
+  "All advertised tools are registered directly with `@mcp.tool()` in `server_aws.py` and no feature flag or capability gate is shown in the provided code.",
+  "`MCP_USER_AGENT` can override the base User-Agent string (`aws_documentation_mcp_server/server_utils.py:57-64`), but it does not remove tools or labels."
+ ],
+ "package": "awslabs.aws-documentation-mcp-server",
+ "source": ".cache/sources/.views/pypi_awslabs.aws-documentation-mcp-server_1.2.1_b3663971d142",
+ "tools": {
+  "read_documentation": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "aws_documentation_mcp_server/server_aws.py:181-195 validates the supplied `url` against allowed documentation domains and calls `read_documentation_impl`.",
+    "aws_documentation_mcp_server/server_utils.py:85-95 performs an HTTP GET of `url_with_session`.",
+    "aws_documentation_mcp_server/server_utils.py:108-117 takes `response.text`, converts/truncates it, and formats it for return.",
+    "aws_documentation_mcp_server/util.py:216-223 includes the fetched page content in the returned string."
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns text fetched from external documentation pages. The code restricts hosts to `docs.aws.amazon.com` and the configured Neuron docs host, so it is not an arbitrary-host fetch, but the code itself does not prove the returned web-page text cannot contain attacker-authored content; applying the least-restrictive reading, the returned page body is treated as UNTRUSTED. It does not read local/private data and does not execute host code.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "read_sections": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "aws_documentation_mcp_server/server_aws.py:257-275 validates the supplied `url`, checks `section_titles`, and calls `read_sections_impl`.",
+    "aws_documentation_mcp_server/server_utils.py:180-199 builds `url_with_session` including `sections` and performs an HTTP GET.",
+    "aws_documentation_mcp_server/server_utils.py:212-228 reads `response.text`, extracts matching sections, converts to Markdown, and truncates tables.",
+    "aws_documentation_mcp_server/server_utils.py:242 returns the extracted Markdown."
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns selected Markdown converted from an external documentation page. The URL host is allowlisted, but the code does not establish that the page or section text cannot be attacker-authored; under the required least-restrictive reading, the returned section content is UNTRUSTED. It does not read secrets or execute host code.",
+   "undetermined": true,
+   "value_args": [
+    "section_titles"
+   ]
+  },
+  "recommend": {
+   "attacker_named_fields": [
+    "url",
+    "title"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "aws_documentation_mcp_server/server_aws.py:696-705 builds `recommendation_url` using the supplied `url` and performs an HTTP GET to the recommendations API.",
+    "aws_documentation_mcp_server/server_aws.py:726-734 parses recommendation JSON and calls `parse_recommendation_results`.",
+    "aws_documentation_mcp_server/util.py:388-393 appends journey recommendation `url`, `assetTitle`, and context to results.",
+    "aws_documentation_mcp_server/util.py:403-406 appends new-content recommendation `url`, `assetTitle`, and context to results.",
+    "aws_documentation_mcp_server/util.py:414-417 appends similar recommendation `url`, `assetTitle`, and context to results.",
+    "aws_documentation_mcp_server/server_aws.py:734-736 returns the parsed recommendations."
+   ],
+   "identifier_output_fields": [
+    "url",
+    "title"
+   ],
+   "injectable_output_fields": [
+    "url",
+    "title",
+    "context"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns recommendation URLs, titles, and contexts from an external recommendations API. The API endpoint is fixed, but the code does not prove the recommendation text/identifiers cannot be attacker-authored, so the returned fields are treated as UNTRUSTED. It does not fetch the supplied URL directly, read secrets, or execute code.",
+   "undetermined": true,
+   "value_args": [
+    "url"
+   ]
+  },
+  "search_documentation": {
+   "attacker_named_fields": [
+    "search_results.url",
+    "search_results.title",
+    "search_results.recommended_sections",
+    "search_results.sections",
+    "search_results.metadata.additional_urls.url",
+    "search_results.metadata.additional_urls.section_title",
+    "search_results.metadata.additional_urls.section_anchor",
+    "facets",
+    "metadata.discovered_services.name",
+    "metadata.related_tasks.name",
+    "metadata.related_tasks.urls.url_name",
+    "metadata.relationships.to",
+    "metadata.relationships.from_"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "aws_documentation_mcp_server/server_aws.py:459-466 builds a search request using `search_phrase`.",
+    "aws_documentation_mcp_server/server_aws.py:471-481 adds `product_types` and `guide_types` filters to the outbound request when provided.",
+    "aws_documentation_mcp_server/server_aws.py:483-499 posts to the AWS documentation search endpoint, including `search_intent` in the URL when present.",
+    "aws_documentation_mcp_server/server_aws.py:524-542 parses response JSON including `queryId`, facets, and metadata.",
+    "aws_documentation_mcp_server/server_aws.py:557-634 constructs returned `SearchResult` objects from response suggestions, including URL, title, context, sections, recommended sections, and metadata.",
+    "aws_documentation_mcp_server/server_aws.py:638-645 returns the final `SearchResponse`."
+   ],
+   "identifier_output_fields": [
+    "search_results.url",
+    "search_results.title",
+    "search_results.recommended_sections",
+    "search_results.sections",
+    "search_results.metadata.additional_urls.url",
+    "search_results.metadata.additional_urls.section_title",
+    "search_results.metadata.additional_urls.section_anchor",
+    "facets",
+    "metadata.discovered_services.name",
+    "metadata.related_tasks.name",
+    "metadata.related_tasks.urls.url_name",
+    "metadata.relationships.to",
+    "metadata.relationships.from_"
+   ],
+   "injectable_output_fields": [
+    "search_results.url",
+    "search_results.title",
+    "search_results.context",
+    "search_results.recommended_sections",
+    "search_results.sections",
+    "search_results.metadata.additional_urls.url",
+    "search_results.metadata.additional_urls.section_title",
+    "search_results.metadata.additional_urls.section_anchor",
+    "facets",
+    "metadata.discovered_services.name",
+    "metadata.discovered_services.description",
+    "metadata.related_tasks.name",
+    "metadata.related_tasks.description",
+    "metadata.related_tasks.urls.url_name",
+    "metadata.related_tasks.urls.url_description",
+    "metadata.relationships.relation",
+    "metadata.relationships.to",
+    "metadata.relationships.to_description",
+    "metadata.relationships.from_"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns search-result text and identifiers from an external search API. Although the endpoint is fixed to AWS documentation search, the code does not settle whether all indexed result text and metadata are non-attacker-authored; under the least-restrictive reading, result snippets/titles/metadata are UNTRUSTED. The query is sent to a fixed vendor endpoint, so this is not treated as a SINK. [unverified: no cited span contains the tool name or a backticked identifier]",
+   "undetermined": true,
+   "value_args": [
+    "search_phrase",
+    "search_intent",
+    "product_types",
+    "guide_types"
+   ]
+  },
+  "search_table": {
+   "attacker_named_fields": [
+    "section_title",
+    "results.table_heading",
+    "results.columns",
+    "results.parent_columns",
+    "results.child_columns",
+    "results.rows"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "aws_documentation_mcp_server/server_aws.py:363-380 validates `url` and `query`, then calls `search_table_impl`.",
+    "aws_documentation_mcp_server/server_utils.py:262-281 builds a documentation URL including `query`/`section` parameters and performs an HTTP GET.",
+    "aws_documentation_mcp_server/server_utils.py:325 parses tables from the fetched `page_raw`.",
+    "aws_documentation_mcp_server/server_utils.py:362-374 filters parsed table rows and returns table headings, columns, and matching rows.",
+    "aws_documentation_mcp_server/server_utils.py:384-392 returns the `SearchTableResponse`."
+   ],
+   "identifier_output_fields": [
+    "url",
+    "section_title",
+    "results.table_heading",
+    "results.columns",
+    "results.parent_columns",
+    "results.child_columns",
+    "results.rows"
+   ],
+   "injectable_output_fields": [
+    "section_title",
+    "hint",
+    "results.table_heading",
+    "results.columns",
+    "results.parent_columns",
+    "results.child_columns",
+    "results.rows"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns table headings, column names, and row values parsed from an external documentation page. The fetch is limited to allowlisted documentation domains, but the code does not prove the table content cannot be attacker-authored; therefore the table output is treated as UNTRUSTED. It does not access private/local data or execute code.",
+   "undetermined": true,
+   "value_args": [
+    "section_title",
+    "query"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "1.2.1"
+}

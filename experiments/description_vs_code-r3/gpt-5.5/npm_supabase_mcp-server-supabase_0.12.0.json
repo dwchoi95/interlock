@@ -1,0 +1,622 @@
+{
+ "tools": {
+  "search_docs": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Searches fixed Supabase documentation via `Search the Supabase documentation using GraphQL`; a query to a fixed vendor documentation endpoint is not a SINK, and the advertised text does not indicate attacker-authored content or user-private data.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "title",
+    "href",
+    "methodName",
+    "language",
+    "code",
+    "service",
+    "cursor"
+   ],
+   "attacker_named_fields": []
+  },
+  "list_organizations": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns account data from the user's Supabase membership: `Lists all organizations that the user is a member of`, which is non-public SaaS data reached with the user's credentials.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "get_organization": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns private organization details: `Gets details for an organization. Includes subscription plan.`",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "list_projects": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns the user's private project inventory: `Lists all Supabase projects for the user` and helps discover `project ID`.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "organization_id"
+   ],
+   "attacker_named_fields": []
+  },
+  "get_project": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns private Supabase project details: `Gets details for a Supabase project.`",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "organization_id",
+    "region"
+   ],
+   "attacker_named_fields": []
+  },
+  "get_cost": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns organization-specific billing/cost information: `Gets the cost of creating a new project or branch` and `costs can be different for each` organization.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "confirm_cost": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns a non-public capability/identifier for the user's account: `Returns a unique ID for this confirmation which should be passed to create_project or create_branch.` The exact persistence semantics are not fully specified, so this is treated conservatively.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "type",
+    "recurrence",
+    "amount"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "create_project": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Creates state in the user's Supabase account: `Creates a new Supabase project`; the description does not say it returns private contents or writes to an attacker-readable destination.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "organization_id"
+   ],
+   "value_args": [
+    "name"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "id",
+    "name",
+    "project_id"
+   ],
+   "attacker_named_fields": []
+  },
+  "pause_project": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Changes state of a selected project: `Pauses a Supabase project`; no attacker-readable delivery or returned secret is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "project_id"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "restore_project": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Changes state of a selected project: `Restores a Supabase project`; no attacker-readable delivery or returned secret is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "project_id"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "list_tables": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns private database schema metadata for a Supabase project: `Lists all tables` and, when verbose, `column details, primary keys, and foreign key constraints.`",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "schema",
+    "name",
+    "columns",
+    "primary_keys",
+    "foreign_keys"
+   ],
+   "attacker_named_fields": []
+  },
+  "list_extensions": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns private database configuration for the user's project: `Lists all extensions in the database.`",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "list_migrations": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns private database migration history: `Lists all migrations in the database.`",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name",
+    "version"
+   ],
+   "attacker_named_fields": []
+  },
+  "apply_migration": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Writes SQL migration content into the user's database: `Applies a migration to the database` and input `query` is `The SQL query to apply`; the advertised text does not establish attacker-readable delivery or host execution.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "project_id",
+    "name"
+   ],
+   "value_args": [
+    "name",
+    "query"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name",
+    "version"
+   ],
+   "attacker_named_fields": []
+  },
+  "execute_sql": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Can read private database data through `Executes raw SQL in the Postgres database`, and the description explicitly warns: `This may return untrusted user data`. It can also change database state because the annotations mark it non-read-only/destructive and the description says raw SQL, but no attacker-readable destination or host execution is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "project_id"
+   ],
+   "value_args": [
+    "query"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "query_logs": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns private project logs: `query against a Supabase project's unified logs stream`. Logs may include attacker-authored request data in sources such as `edge_logs`, `postgres_logs`, and `function_edge_logs`; the text does not fully specify who can author log contents, so UNTRUSTED is kept conservatively.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ]
+  },
+  "get_advisors": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns private security/performance findings for the user's project: `Gets a list of advisory notices for the Supabase project` and checks for `security vulnerabilities or performance improvements.`",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name",
+    "title",
+    "remediation_url"
+   ],
+   "attacker_named_fields": []
+  },
+  "get_project_url": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns project-specific SaaS data: `Gets the API URL for a project.` Although an API URL may be publishable, the advertised text does not say it is public, so it is treated as non-public project data.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "get_publishable_keys": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns project API keys from the user's account: `Gets all publishable API keys for a project, including legacy anon keys`. Even though they are described as `publishable`, the tool returns account-specific keys reached with the user's credentials.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return",
+    "disabled"
+   ],
+   "attacker_named_fields": []
+  },
+  "generate_typescript_types": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Generates types from private project/database schema: `Generates TypeScript types for a project.`",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": []
+  },
+  "list_edge_functions": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns private deployment inventory for the user's project: `Lists all Edge Functions in a Supabase project.`",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name",
+    "function_slug"
+   ],
+   "attacker_named_fields": []
+  },
+  "get_edge_function": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns private source code/files for the user's project: `Retrieves file contents for an Edge Function in a Supabase project.`",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name",
+    "path",
+    "function_slug"
+   ],
+   "attacker_named_fields": []
+  },
+  "deploy_edge_function": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Writes agent-supplied files to a deployed Supabase function: `Deploys an Edge Function` and `files` are `The files to upload`. The `verify_jwt` flag controls `Whether to require a valid JWT`; when disabled, the deployed function can be an attacker-readable public endpoint if it returns supplied data. The text does not fully spell out public reachability, so SINK is kept conservatively. This is remote vendor execution, not HOSTEXEC on the MCP host.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "project_id",
+    "name"
+   ],
+   "value_args": [
+    "files",
+    "entrypoint_path",
+    "import_map_path",
+    "verify_jwt"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name",
+    "function_slug",
+    "version"
+   ],
+   "attacker_named_fields": []
+  },
+  "create_branch": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Creates account state and returns a private branch project identifier: `Creates a development branch` and `The branch will get its own project_id via the resulting project_ref.`",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "project_id",
+    "name"
+   ],
+   "value_args": [
+    "name"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "project_ref",
+    "project_id",
+    "name"
+   ],
+   "attacker_named_fields": []
+  },
+  "list_branches": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Returns private branch inventory/status for a Supabase project: `Lists all development branches` and returns `branch details including status.`",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "branch_id",
+    "project_ref",
+    "project_id",
+    "name",
+    "status"
+   ],
+   "attacker_named_fields": []
+  },
+  "delete_branch": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Deletes selected account state: `Deletes a development branch`; no attacker-readable delivery or returned secret is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "branch_id"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "merge_branch": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Changes production project state by `Merges migrations and edge functions from a development branch to production`; no direct attacker-readable destination or returned secret is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "branch_id"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "reset_branch": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Destructively changes branch state: `Resets migrations of a development branch` and `untracked data or schema changes will be lost`; no attacker-readable delivery or returned secret is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "branch_id",
+    "migration_version"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "rebase_branch": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "Changes branch state by applying production migrations: `Rebases a development branch on production`; no attacker-readable delivery or returned secret is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "branch_id"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "All judgements are based only on the advertised tool names, descriptions, input schemas, and annotations. Evidence is therefore recorded as the string \"description\" for each tool."
+ ],
+ "usage": {
+  "input_tokens": 6146,
+  "output_tokens": 6959,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

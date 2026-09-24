@@ -1,0 +1,51 @@
+{
+ "kind": "pypi",
+ "notes": [
+  "Only one tool is advertised (`fetch`, server.py:200-206); a `fetch` prompt also exists (server.py:257-284) but prompts are not tools.",
+  "httpx's default transport supports http/https only, so `file://` URLs are unlikely to be readable despite `AnyUrl` accepting them; SECRET rests on loopback/intranet HTTP reachability, which is unrestricted."
+ ],
+ "package": "mcp-server-fetch",
+ "source": ".cache/sources/.views/pypi_mcp-server-fetch_2026.8.18_99ea4bc4141f",
+ "tools": {
+  "fetch": {
+   "default_enabled": true,
+   "evidence": [
+    "server.py:121-126",
+    "server.py:135-148",
+    "server.py:255",
+    "server.py:230-239"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`call_tool` passes the agent-supplied `url` straight to `fetch_url`, which issues `client.get(url, follow_redirects=True)` with no host/scheme allow-list, no private-IP or loopback filtering (server.py:119-126). The response body is returned into the agent context (server.py:255), so arbitrary attacker-controlled web pages become agent input (UNTRUSTED), and any reachable `localhost`/intranet HTTP endpoint the host can talk to is read back to the agent (SECRET). Because the full URL, including query string and path, is agent-chosen, the tool is also an exfiltration channel to an attacker-controlled host (SINK). The only gate is the robots.txt check in `check_may_autonomously_fetch_url`, which an attacker controls on their own host and which does not protect internal endpoints (a 4xx robots.txt simply returns, server.py:92-93). No code execution on the host.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "off (robots.txt checked)",
+   "effect": "Skips the robots.txt permission check entirely; with the flag off (default) the check still runs but is attacker-controlled for attacker-owned hosts and returns early on 4xx robots.txt, so it removes no label.",
+   "evidence": "server.py:234-235",
+   "kind": "CLI flag",
+   "syntax": "--ignore-robots-txt"
+  },
+  {
+   "default": "unset (direct connections)",
+   "effect": "Routes all fetches through the given proxy; does not restrict reachable destinations so labels are unchanged.",
+   "evidence": "server.py:75, server.py:119",
+   "kind": "CLI flag",
+   "syntax": "--proxy-url <url>"
+  },
+  {
+   "default": "ModelContextProtocol/1.0 (Autonomous; ...)",
+   "effect": "Overrides the User-Agent header sent with requests; no effect on reach or labels.",
+   "evidence": "server.py:194-195",
+   "kind": "CLI flag",
+   "syntax": "--user-agent <string>"
+  }
+ ],
+ "version": "2026.8.18"
+}

@@ -1,0 +1,273 @@
+[
+ {
+  "tool": "read_file",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`read_file` uses `readTextFileHandler`, which validates `args.path`, reads file bytes as text via `readFileContent`, `tailFile`, or `headFile`, and returns the file text in `structuredContent.content`/text content. Access is limited to allowed directories, but those may contain non-public local file"
+ },
+ {
+  "tool": "read_text_file",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`read_text_file` uses `readTextFileHandler`, which validates `args.path`, reads the selected local file or requested head/tail, and returns the file text in `structuredContent.content`/text content. This can expose non-public local file contents within allowed directories."
+ },
+ {
+  "tool": "read_media_file",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`read_media_file` validates `args.path`, reads the local file with `readFileAsBase64Stream`, and returns the file bytes as base64 `data` or `resource.blob`; for non-image/audio files it also returns a `file:` URI for the validated path. This can expose non-public local file contents within allowed d"
+ },
+ {
+  "tool": "read_multiple_files",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`read_multiple_files` validates each requested path, reads each file with `readFileContent`, and returns a combined text result containing file contents. This can expose non-public local file contents within allowed directories."
+ },
+ {
+  "tool": "write_file",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "path"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "idempotentHint": true,
+   "destructiveHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`write_file` validates `args.path` and writes `args.content` to a local file within allowed directories. It changes local filesystem state, but the code does not send data to an agent-chosen network/public destination and returns only a success message using the supplied path."
+ },
+ {
+  "tool": "edit_file",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "path"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "idempotentHint": false,
+   "destructiveHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`edit_file` validates `args.path`, reads the existing local file, constructs a unified diff from original and modified content, returns that diff, and writes the modified content unless `dryRun` is true. The returned diff can include non-public local file content from the edited file."
+ },
+ {
+  "tool": "create_directory",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "path"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "idempotentHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`create_directory` validates `args.path` and creates a local directory with `fs.mkdir`. It changes local filesystem state, but the code does not return local file contents or send data to an attacker-readable external destination."
+ },
+ {
+  "tool": "list_directory",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`list_directory` validates `args.path`, reads local directory entries with `fs.readdir`, and returns entry names marked as files or directories. Directory contents and filenames in allowed directories can be non-public local data."
+ },
+ {
+  "tool": "list_directory_with_sizes",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`list_directory_with_sizes` validates `args.path`, reads local directory entries, stats each entry, and returns names plus sizes and summary counts. File names and size metadata in allowed directories can be non-public local data."
+ },
+ {
+  "tool": "directory_tree",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`directory_tree` recursively validates and reads local directories, builds JSON entries containing each `entry.name` and type, and returns the serialized tree. Recursive file and directory names in allowed directories can be non-public local data."
+ },
+ {
+  "tool": "move_file",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "source",
+   "destination"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "idempotentHint": false,
+   "destructiveHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`move_file` validates source and destination paths and renames a local file or directory. It changes local filesystem state, but the code does not return local file contents or send data to an attacker-readable external destination; it returns only a success message containing supplied paths."
+ },
+ {
+  "tool": "search_files",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`search_files` validates the root path, recursively reads local directories, matches names against the supplied pattern, and returns full matching paths. Paths and filenames in allowed directories can be non-public local data."
+ },
+ {
+  "tool": "get_file_info",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`get_file_info` validates `args.path`, calls `getFileStats`, and returns local file or directory metadata such as size, timestamps, type, and permissions. This metadata about allowed-directory files can be non-public local data."
+ },
+ {
+  "tool": "list_allowed_directories",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`list_allowed_directories` returns the server\u2019s configured local allowed directory paths. These host paths are local configuration information and can be non-public."
+ }
+]

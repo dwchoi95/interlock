@@ -1,0 +1,240 @@
+[
+ {
+  "tool": "find_organizations",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "query"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "`find_organizations_default` is registered in the catalog and in `TOP_LEVEL_TOOL_NAMES`; it lists the organizations reachable with the user's Sentry credentials, i.e. non-public account data, into the agent context. Its advertised schema has no `regionUrl` and no free URL, so no outbound agent-chose"
+ },
+ {
+  "tool": "find_projects",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SECRET",
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "organizationSlug",
+   "regionUrl"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "`find_projects_default` returns the user's private project inventory for an organization (SECRET). Its advertised input includes `regionUrl`, which is threaded into `apiServiceFromContext(context, { regionUrl })` (the pattern visible at index.js:41425) to choose the API host; the only visible guard "
+ },
+ {
+  "tool": "update_issue",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "organizationSlug",
+   "regionUrl",
+   "issueId",
+   "issueUrl",
+   "assignedTo"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "idempotentHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "`update_issue_default` mutates and reads an issue in the user's Sentry org and calls `apiService.createIssueComment` with the agent-supplied `reason`; the comment lands in the user's own private issue feed, not a public destination, so that write is not itself a sink. It returns issue state/result t"
+ },
+ {
+  "tool": "search_events",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "organizationSlug",
+   "projectSlug",
+   "regionUrl"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "`search_events_default` queries the user's Sentry errors/logs/spans/replays with their credentials (SECRET). The returned rows carry error messages, log bodies, HTTP URLs, user agents and replay click/URL data that originate from arbitrary third-party traffic against the user's application, so conte"
+ },
+ {
+  "tool": "analyze_issue_with_seer",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "organizationSlug",
+   "regionUrl",
+   "issueId",
+   "issueUrl"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "The handler calls `apiService.getIssue` and `apiService.getAutofixState` with the user's token and returns Seer's root-cause analysis, which quotes the issue's error text, stack frames and source snippets (SECRET). That underlying error content is produced by traffic an attacker can send to the user"
+ },
+ {
+  "tool": "search_issues",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "organizationSlug",
+   "projectSlugOrId",
+   "regionUrl"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "`search_issues_default` lists grouped issues from the user's org with their credentials (SECRET). The formatter emits `issue.title` and `issue.culprit` and explicitly surfaces feedback-category issues containing end-user submitted feedback content, all attacker-influencable through the monitored app"
+ },
+ {
+  "tool": "get_sentry_resource",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url",
+   "resourceType",
+   "resourceId",
+   "organizationSlug"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "`get_sentry_resource_default` fetches issues, events, traces, spans, agent conversations, replays, monitors and preprod snapshot images from the user's Sentry account (SECRET). Those payloads include error messages, replay page URLs, snapshot images and agent-conversation transcripts (LLM inputs/out"
+ },
+ {
+  "tool": "search_sentry_tools",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "query"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "This catalog-infrastructure tool only scores in-process tool `name`/`description` metadata via `scoreTool` and returns names plus JSON schemas built by `zodFieldMapToJsonSchema`; it performs no Sentry API call and reaches no external destination, so it carries no data-flow label."
+ },
+ {
+  "tool": "execute_sentry_tool",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "name",
+   "arguments"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`createExecuteTool` resolves any tool from `catalogTools` via `getSearchableTools` and invokes `tool.handler` with agent-supplied `arguments`, so it inherits the whole catalog's reach: private Sentry data (`get_issue_details`, `get_event_attachment`, `find_dsns`, `whoami`) is SECRET, attacker-influe"
+ }
+]

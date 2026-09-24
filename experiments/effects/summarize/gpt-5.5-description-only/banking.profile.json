@@ -1,0 +1,242 @@
+{
+ "kind": "python",
+ "notes": [
+  "No tools are advertised as disabled by default, so default_enabled is true for all tools.",
+  "No value conditions, environment variables, flags, URL paths, or headers are advertised as removing tools or labels."
+ ],
+ "package": "agentdojo/banking",
+ "source": "(description only)",
+ "tools": {
+  "get_balance": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`Get the balance of the account` returns non-public financial data from the user's bank account.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_iban": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`Get the IBAN of the current bank account` returns non-public bank-account data for the user. The returned IBAN is also an account-number identifier that could be reused in later calls.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_most_recent_transactions": {
+   "attacker_named_fields": [
+    "sender"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "recipient",
+    "sender"
+   ],
+   "injectable_output_fields": [
+    "subject"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`Get the list of the most recent transactions` returns non-public transaction history, so it is SECRET. Transaction histories can include multi-party transaction data; the advertised transaction fields include `subject` and `recipient`, and incoming transaction subjects/counterparty identifiers may be authored by an outside payer, so the output is treated as UNTRUSTED. The exact output schema is not advertised, so this is conservative.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_scheduled_transactions": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "id",
+    "recipient"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`Get the list of scheduled transactions` returns non-public scheduled-payment data in the user's bank account. The exact output schema is not advertised; identifiers are inferred from the advertised scheduled-transaction fields such as `id` and `recipient`.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_user_info": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "first_name",
+    "last_name",
+    "street",
+    "city"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`Get the user information` returns non-public user profile data. The related user-info fields advertised for updates include `first_name`, `last_name`, `street`, and `city`, which are names/address identifiers that could be reused later.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_file": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`Reads the contents of the file at the given path` can return host-local file contents to the agent context, which are non-public under the threat model. The `file_path` is a local path, not an advertised URL or host request, so it is not a READ destination argument.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "schedule_transaction": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "recipient"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`Schedule a transaction` to a `recipient` IBAN can cause agent-supplied transaction details to be delivered to that recipient later; if the IBAN is attacker-controlled, this is an attacker-readable destination.",
+   "undetermined": false,
+   "value_args": [
+    "amount",
+    "subject",
+    "date",
+    "recurring"
+   ]
+  },
+  "send_money": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "recipient"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`Sends a transaction to the recipient`; the `recipient` argument is an agent-chosen IBAN, so transaction data such as `amount`, `subject`, and `date` can be delivered to an attacker-readable bank account if the recipient is attacker-controlled.",
+   "undetermined": false,
+   "value_args": [
+    "amount",
+    "subject",
+    "date"
+   ]
+  },
+  "update_password": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "`Update the user password` changes state in the user's bank account, but the advertised destination is fixed to the current user rather than an attacker-readable, agent-chosen recipient. The new `password` is the value being stored.",
+   "undetermined": false,
+   "value_args": [
+    "password"
+   ]
+  },
+  "update_scheduled_transaction": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "id",
+    "recipient"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`Update a scheduled transaction` changes the scheduled transaction identified by `id`; if `recipient` is set to an attacker-controlled IBAN, agent-supplied transaction details can be delivered to an attacker-readable destination.",
+   "undetermined": false,
+   "value_args": [
+    "amount",
+    "subject",
+    "date",
+    "recurring"
+   ]
+  },
+  "update_user_info": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "`Update the user information` changes state in the user's own bank profile. It does not advertise sending data to an attacker-readable or agent-chosen destination; the profile fields are the values being stored.",
+   "undetermined": false,
+   "value_args": [
+    "first_name",
+    "last_name",
+    "street",
+    "city"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "v1.2"
+}

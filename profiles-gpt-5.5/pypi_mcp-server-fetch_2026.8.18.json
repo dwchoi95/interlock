@@ -1,0 +1,68 @@
+{
+ "kind": "pypi",
+ "notes": [
+  "Only the advertised MCP tool `fetch` is judged. The source also defines a prompt named `fetch`, but it is not in the advertised tools list.",
+  "`max_length`, `start_index`, and `raw` affect formatting/truncation of returned content, not destination selection or stored/sent content."
+ ],
+ "package": "mcp-server-fetch",
+ "source": ".cache/sources/.views/pypi_mcp-server-fetch_2026.8.18_99ea4bc4141f",
+ "tools": {
+  "fetch": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "server.py:111-148",
+    "server.py:121-126",
+    "server.py:135-147",
+    "server.py:142-147",
+    "server.py:151-178",
+    "server.py:223-239",
+    "server.py:244-255",
+    "server.py:66-81",
+    "server.py:94-105"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "`fetch` validates the caller-supplied `url` from the `Fetch` input schema and then uses it in `client.get(url, follow_redirects=True, headers={...})`, returning the fetched response text (or markdown extracted from it) in `TextContent.text`. Because the URL is agent-chosen and `AnyUrl` does not restrict to public internet hosts in the shown code, the tool can fetch `file://`, localhost, intranet, or other non-public reachable URLs if the HTTP client/URL handling permits them; under the rule, because this is not settled by the code, `SECRET` is kept and `undetermined` is true. It returns arbitrary web content controlled by attackers, so it is `UNTRUSTED`. It is also a `SINK` because a READ call to an agent-chosen URL/host sends an outbound request to that destination, and the threat model allows the agent to pass outputs into the `url`, path, or query. The same call may first request the origin's `/robots.txt` via `check_may_autonomously_fetch_url`, also derived from the supplied `url`. No arbitrary host code execution is shown.",
+   "undetermined": true,
+   "value_args": []
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "false",
+   "effect": "Default is false because `argparse` uses `action=\"store_true\"`; when omitted, `call_tool` checks robots.txt before fetching. When supplied, the robots.txt check is skipped, but the `fetch` tool remains advertised and still performs the requested URL fetch, so labels are not removed.",
+   "evidence": "__init__.py:13-21; server.py:181-184; server.py:234-239",
+   "kind": "CLI flag",
+   "syntax": "--ignore-robots-txt"
+  },
+  {
+   "default": "None",
+   "effect": "Default is `None`; when supplied, both robots.txt and page fetches use `AsyncClient(proxy=proxy_url)`, changing network routing but not removing the tool or labels.",
+   "evidence": "__init__.py:18-21; server.py:75-81; server.py:119-126; server.py:237-239",
+   "kind": "CLI flag",
+   "syntax": "--proxy-url <url>"
+  },
+  {
+   "default": "None, falling back to constants",
+   "effect": "Default is the built-in autonomous/manual user agent strings; when supplied, requests use the custom User-Agent header, but the tool and labels remain.",
+   "evidence": "__init__.py:12-21; server.py:23-24; server.py:194-195; server.py:121-126",
+   "kind": "CLI flag",
+   "syntax": "--user-agent <string>"
+  }
+ ],
+ "version": "2026.8.18"
+}

@@ -1,0 +1,135 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Only the six advertised tools were labelled. The experimental tools referenced by the server (`build`, `test`, `e2e`, `modernize`, `devserver.*`) execute `ng` through `host.runCommand` and would be HOSTEXEC, but they are not advertised by default (mcp-server.js:54-60, 171-182).",
+  "`onpush_zoneless_migration` takes a raw absolute path and is not routed through `resolveWorkspaceAndProject`'s root check (workspace-utils.js:101-105), so its file reads are not confined to the MCP roots based on the code shown.",
+  "`search_documentation` decrypts a search-only Algolia key at runtime (doc-search.js:146-148) and always queries the same vendor app/index, so it is not an agent-chosen destination; the optional page fetch is hostname-pinned to angular.dev (doc-search.js:194).",
+  "`get_best_practices` and `find_examples` both accept an arbitrary `workspacePath`; the best-practices path is bounded by a package-boundary traversal check, while the examples path resolution lives in the unprovided `database-discovery` module."
+ ],
+ "package": "@angular/cli",
+ "source": ".cache/sources/.views/npm_angular_cli_21.2.24_a4d5ee93b3af",
+ "tools": {
+  "ai_tutor": {
+   "default_enabled": true,
+   "evidence": [
+    "src/commands/mcp/tools/ai-tutor.js:43"
+   ],
+   "labels": [],
+   "rationale": "`AI_TUTOR_TOOL` only reads a static markdown resource shipped inside the CLI package (`../resources/ai-tutor.md`) and returns it. No user data, no network egress, no execution. The content is package-bundled and therefore public, so it is neither SECRET nor attacker-controllable.",
+   "undetermined": false
+  },
+  "find_examples": {
+   "default_enabled": true,
+   "evidence": [
+    "src/commands/mcp/tools/examples/index.js:115",
+    "src/commands/mcp/tools/examples/index.js:103-104",
+    "src/commands/mcp/tools/examples/index.js:131-146"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "The handler opens SQLite files on the host and returns rows into the agent context: the bundled `exampleDatabasePath`, databases discovered from the caller-supplied `input.workspacePath` via `getVersionSpecificExampleDatabases`, or an arbitrary directory named by `NG_MCP_EXAMPLES_DIR` through `setupRuntimeExamples`. The discovery module (`./database-discovery`) and `queryDatabase`/`validateDatabaseSchema` implementations are not in the provided source, so which host paths can be opened and how much of their content is echoed is not settled; keeping SECRET for local database content read with the user's filesystem access. No network egress or command execution in this file.",
+   "undetermined": true
+  },
+  "get_best_practices": {
+   "default_enabled": true,
+   "evidence": [
+    "src/commands/mcp/tools/best-practices.js:69",
+    "src/commands/mcp/tools/best-practices.js:97-98",
+    "src/commands/mcp/tools/best-practices.js:118-133"
+   ],
+   "labels": [],
+   "rationale": "`createBestPracticesHandler` either returns the CLI-bundled `best-practices.md` (`getBundledBestPractices`) or a markdown file referenced by `angular.bestPractices.path` inside the resolved `@angular/core` package. The read is pinned to the installed package directory: `relative`/`isAbsolute` traversal check plus a 1MB size cap (best-practices.js:118-131), so it cannot exfiltrate arbitrary user files; the returned bytes are published npm package content, not private data. No network sink, no command execution.",
+   "undetermined": false
+  },
+  "list_projects": {
+   "default_enabled": true,
+   "evidence": [
+    "src/commands/mcp/tools/projects.js:482",
+    "src/commands/mcp/tools/projects.js:140-222",
+    "src/commands/mcp/tools/projects.js:508-519"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`createListProjectsHandler` walks the client roots (or `process.cwd()` when the client has no roots capability, projects.js:461-467) with `findAngularJsonFiles`, loads every `angular.json` via `AngularWorkspace.load`, and returns local paths, project names, builders, source roots and `@angular/core` versions (`findAngularCoreVersion` reads local `package.json` files, projects.js:246). This is private host/workspace data surfaced into the agent context. It does not send data anywhere and does not execute commands.",
+   "undetermined": false
+  },
+  "onpush_zoneless_migration": {
+   "default_enabled": true,
+   "evidence": [
+    "src/commands/mcp/tools/onpush-zoneless-migration/zoneless-migration.js:112",
+    "src/commands/mcp/tools/onpush-zoneless-migration/zoneless-migration.js:119",
+    "src/commands/mcp/tools/onpush-zoneless-migration/zoneless-migration.js:136",
+    "src/commands/mcp/tools/onpush-zoneless-migration/zoneless-migration.js:85-99"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`fileOrDirPath` is an unconstrained absolute path: `statSync` then `glob(`${fileOrDirPath}/**/*.ts`)` enumerates the tree and `createSourceFile` reads each file's full text (`sourceFile.getFullText()`, line 156). Results flow back through `analyzeForUnsupportedZoneUses`, `migrateSingleFile`, `migrateTestFile` and `createResponse`, plus error text containing discovered file paths (line 99), so private local source is reachable in the agent context. There is no workspace-root restriction here (unlike `resolveWorkspaceAndProject`). `rankComponentFilesForMigration` only sends file names back to the MCP client via `sampling/createMessage` (line 182), which is the user's own client, not an attacker-readable destination, so no SINK. The helper modules (`prompts`, `migrate-single-file`, `ts-utils`) are not provided, so exactly how much file content is echoed is undetermined; SECRET is kept.",
+   "undetermined": true
+  },
+  "search_documentation": {
+   "default_enabled": true,
+   "evidence": [
+    "src/commands/mcp/tools/doc-search.js:146-153",
+    "src/commands/mcp/tools/doc-search.js:190-199"
+   ],
+   "labels": [],
+   "rationale": "The handler sends `query` only to the fixed Algolia application `ALGOLIA_APP_ID` index `angular_v<version>` (doc-search.js:298-322), which is a fixed vendor endpoint and therefore not a SINK; the agent cannot choose the destination. Content fetching is gated on `url.hostname === 'angular.dev' || url.hostname.endsWith('.angular.dev')` before `fetch` (doc-search.js:194-196), so returned page text comes from the Angular vendor site rather than attacker-controlled hosts; `extractMainContent` only keeps `<main>` text. No local file or credentialed data is returned.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "off - all stable tools including search_documentation are advertised",
+   "effect": "Filters the advertised set to tools with `isLocalOnly === true`, which removes `search_documentation` (the only tool with `isLocalOnly: false`) and hence removes the outbound Algolia/angular.dev network access.",
+   "evidence": "src/commands/mcp/mcp-server.js:157-159; src/commands/mcp/tools/doc-search.js:139",
+   "kind": "CLI option passed into assembleToolDeclarations",
+   "syntax": "--local-only (options.localOnly)"
+  },
+  {
+   "default": "off",
+   "effect": "Filters to tools with `isReadOnly === true`. All six advertised tools are read-only, so labels are unchanged; it does prevent the experimental write/exec tools (`build`, `modernize`) from being added.",
+   "evidence": "src/commands/mcp/mcp-server.js:154-156; src/commands/mcp/tools/build.js:84",
+   "kind": "CLI option passed into assembleToolDeclarations",
+   "syntax": "--read-only (options.readOnly)"
+  },
+  {
+   "default": "empty - none of the experimental tools are advertised",
+   "effect": "Adds EXPERIMENTAL_TOOLS such as `build` and `modernize`, which invoke `context.host.runCommand('ng', args, {cwd})` and would be HOSTEXEC-class additions to the server surface.",
+   "evidence": "src/commands/mcp/mcp-server.js:54-60; src/commands/mcp/mcp-server.js:160-182; src/commands/mcp/tools/build.js:45; src/commands/mcp/tools/modernize.js:116",
+   "kind": "CLI/config list of experimental tool or group names",
+   "syntax": "options.experimentalTools = ['all'|'devserver'|'build'|'test'|'e2e'|'modernize'|...]"
+  },
+  {
+   "default": "unset",
+   "effect": "Adds 'find_examples' to the enabled experimental set; `find_examples` is already in STABLE_TOOLS so this does not change its exposure.",
+   "evidence": "src/commands/mcp/mcp-server.js:161-163",
+   "kind": "environment variable",
+   "syntax": "NG_MCP_CODE_EXAMPLES=1"
+  },
+  {
+   "default": "unset - bundled/workspace-discovered databases are used",
+   "effect": "Redirects `find_examples` to a runtime example database built from that directory (`setupRuntimeExamples`), bypassing workspace discovery and the bundled database.",
+   "evidence": "src/commands/mcp/tools/examples/index.js:103-105",
+   "kind": "environment variable",
+   "syntax": "NG_MCP_EXAMPLES_DIR=<dir>"
+  },
+  {
+   "default": "registered on Node >= 22.16",
+   "effect": "`find_examples` is not registered at all (logger warning, returns false), removing its SECRET reach.",
+   "evidence": "src/commands/mcp/tools/examples/index.js:90-99",
+   "kind": "runtime precondition in shouldRegister",
+   "syntax": "Node.js runtime version < 22.16"
+  },
+  {
+   "default": "falls back to process.cwd() when the client advertises no roots",
+   "effect": "Restricts filesystem reach: `createRootRestrictedHost` roots are set from the client roots and `list_projects`/`resolveWorkspaceAndProject` limit scanning to those roots; without the capability the server falls back to `process.cwd()`.",
+   "evidence": "src/commands/mcp/mcp-server.js:115-129; src/commands/mcp/tools/projects.js:460-468; src/commands/mcp/workspace-utils.js:80-105",
+   "kind": "MCP protocol capability",
+   "syntax": "MCP client `roots` capability / roots/list_changed notification"
+  }
+ ],
+ "version": "21.2.24"
+}

@@ -1,0 +1,638 @@
+[
+ {
+  "tool": "firecrawl_scrape",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url",
+   "profile"
+  ],
+  "annotations": {
+   "title": "Scrape a URL",
+   "readOnlyHint": false,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "`url` is supplied by the agent and passed to `client.scrape(String(url))` or keyless `/v2/scrape`. The code/description does not restrict private, localhost, or intranet URLs, so reachable non-public URL content can be returned (SECRET). Public pages are attacker-controllable (UNTRUSTED). Fetching a"
+ },
+ {
+  "tool": "firecrawl_map",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {
+   "title": "Map a website",
+   "readOnlyHint": true,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "`url` is an agent-supplied URI and is passed to `client.map(String(url))`; the code does not restrict private hosts, so reachable non-public URL inventories may be returned (SECRET). URL inventories under attacker-controlled sites are attacker-authored (UNTRUSTED). The call contacts an agent-chosen "
+ },
+ {
+  "tool": "firecrawl_search",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "includeDomains"
+  ],
+  "annotations": {
+   "title": "Search the web",
+   "readOnlyHint": true,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool searches open web/news/image/developer/research/PDF sources and may return snippets or scraped result content from public web and public GitHub/docs, which are attacker-controllable. Queries go to the fixed Firecrawl API, not an agent-chosen host, so this is not a SINK from the shown code/c"
+ },
+ {
+  "tool": "firecrawl_search_feedback",
+  "code": [],
+  "description": [],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "searchId"
+  ],
+  "annotations": {
+   "title": "Send feedback on a search result",
+   "readOnlyHint": false,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool posts structured feedback to Firecrawl's API, a fixed vendor endpoint, creating a server-side feedback record. It does not contact an agent-chosen host merely because `valuableSources.url` is included as data. The execute body is not fully shown, so no SECRET/UNTRUSTED/SINK label is added b"
+ },
+ {
+  "tool": "firecrawl_feedback",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "endpoint",
+   "jobId"
+  ],
+  "annotations": {
+   "title": "Send feedback on a Firecrawl job",
+   "readOnlyHint": false,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool builds a feedback body and POSTs it to `${apiBase}/v2/feedback`, i.e. the configured Firecrawl API, not to an agent-chosen URL. It stores agent-supplied feedback but the shown destination is fixed vendor infrastructure."
+ },
+ {
+  "tool": "firecrawl_crawl",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url",
+   "includePaths",
+   "excludePaths",
+   "webhook",
+   "allowExternalLinks",
+   "allowSubdomains",
+   "profile"
+  ],
+  "annotations": {
+   "title": "Run a site crawl",
+   "readOnlyHint": false,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "`url` is used to start a server-side crawl, and safe-mode-off schemas can include `webhook`. The code does not show private-host filtering, so reachable intranet/localhost content can be returned (SECRET). Public crawled pages are attacker-controllable (UNTRUSTED). The crawl contacts an agent-chosen"
+ },
+ {
+  "tool": "firecrawl_check_crawl_status",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Get crawl status",
+   "readOnlyHint": true,
+   "openWorldHint": false,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool reads an existing crawl job by `id` from the user's Firecrawl account. Crawl results can include content from arbitrary crawl targets, including attacker-controlled public pages (UNTRUSTED) and potentially non-public targets reached by the crawl job (SECRET)."
+ },
+ {
+  "tool": "firecrawl_extract",
+  "code": [],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "urls"
+  ],
+  "annotations": {
+   "title": "Deprecated: use Scrape JSON",
+   "readOnlyHint": true,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "This deprecated compatibility tool is hidden with `canList: () => false`; validation returns a static deprecation payload and `execute` throws a static `UserError`, so the supplied `urls` are not fetched by the shown code."
+ },
+ {
+  "tool": "firecrawl_agent",
+  "code": [
+   "SINK"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "urls"
+  ],
+  "annotations": {
+   "title": "Start a research agent",
+   "readOnlyHint": false,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool starts an asynchronous Firecrawl agent job using agent-supplied `prompt`, optional `urls`, and `schema`. Seed `urls` cause the remote agent to browse agent-chosen hosts, so it is a SINK. This call returns a job handle, not the researched web content itself, so UNTRUSTED/SECRET apply to the "
+ },
+ {
+  "tool": "firecrawl_agent_status",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Get agent job status",
+   "readOnlyHint": true,
+   "openWorldHint": false,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool reads an existing agent job from the user's Firecrawl account by `id` and returns result data when completed. Agent research can browse/search the web, so final results may contain attacker-controlled public content (UNTRUSTED) and may include non-public content if the job was seeded with r"
+ },
+ {
+  "tool": "firecrawl_interact",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url",
+   "scrapeId",
+   "profile"
+  ],
+  "annotations": {
+   "title": "Interact with a scraped page",
+   "readOnlyHint": false,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "With `url`, the tool first calls `client.scrape(String(url))`, then sends `prompt` or `code` to `client.interact`. The URL is agent-chosen and not restricted to public hosts, so reachable private pages can be exposed (SECRET); public page output is attacker-controlled (UNTRUSTED). Interactions can c"
+ },
+ {
+  "tool": "firecrawl_interact_stop",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "scrapeId"
+  ],
+  "annotations": {
+   "title": "Stop interact session",
+   "readOnlyHint": false,
+   "openWorldHint": false,
+   "destructiveHint": true
+  },
+  "rationale_code": "The tool deletes `/v2/scrape/{scrapeId}/interact` on the fixed Firecrawl API to tear down a browser session. It changes Firecrawl session state but does not return attacker-authored content or contact an agent-chosen external host."
+ },
+ {
+  "tool": "firecrawl_parse",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Parse a local file",
+   "readOnlyHint": true,
+   "openWorldHint": false,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool is for parsing a local file; code imports `readFile`, the annotations state local mode reads a file, and hosted mode mints an upload URL or parses an `uploadRef`. Local file contents are non-public host data returned to the agent (SECRET). Uploads go to Firecrawl/fixed upload URLs rather th"
+ },
+ {
+  "tool": "firecrawl_monitor_create",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SECRET",
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "body",
+   "page",
+   "pages",
+   "includeDomains",
+   "excludeDomains",
+   "email",
+   "webhookUrl"
+  ],
+  "annotations": {
+   "title": "Create monitor",
+   "readOnlyHint": false,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool creates a monitor record in the authenticated Firecrawl account and returns it (SECRET). The inputs can specify `page`/`pages`, `queries`, `email`, `webhookUrl`, or an advanced `body` with targets/notifications, so future checks or notifications can be directed to agent-chosen destinations "
+ },
+ {
+  "tool": "firecrawl_monitor_list",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "List monitors",
+   "readOnlyHint": true,
+   "openWorldHint": false,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool lists monitor records for the authenticated account via `monitorRequest(session, \"/monitor\")`; those account records are non-public SaaS data (SECRET)."
+ },
+ {
+  "tool": "firecrawl_monitor_get",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Get monitor",
+   "readOnlyHint": true,
+   "openWorldHint": false,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool retrieves one monitor by `id`, including configuration and state from the user's Firecrawl account, which is non-public SaaS data (SECRET)."
+ },
+ {
+  "tool": "firecrawl_monitor_update",
+  "code": [
+   "SECRET",
+   "SINK"
+  ],
+  "description": [
+   "SECRET",
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "id",
+   "body"
+  ],
+  "annotations": {
+   "title": "Update monitor",
+   "readOnlyHint": false,
+   "openWorldHint": true,
+   "destructiveHint": true
+  },
+  "rationale_code": "The source excerpt omits the execute body, but the advertised/source documentation says this tool updates monitor fields including targets, webhook, and notification for an existing account monitor. Updating those fields can direct future notifications/checks to agent-chosen destinations (SINK) and "
+ },
+ {
+  "tool": "firecrawl_monitor_delete",
+  "code": [
+   "SECRET"
+  ],
+  "description": [],
+  "code_verified": false,
+  "hidden": [
+   "SECRET"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "id"
+  ],
+  "annotations": {
+   "title": "Delete monitor",
+   "readOnlyHint": false,
+   "openWorldHint": true,
+   "destructiveHint": true
+  },
+  "rationale_code": "The tool deletes `/monitor/{id}` in the authenticated account and returns deletion status. It acts on a non-public monitor record (SECRET) but does not send agent-supplied content to an attacker-chosen destination. [unverified: no cited span contains the tool name or a backticked identifier]"
+ },
+ {
+  "tool": "firecrawl_monitor_run",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "id"
+  ],
+  "annotations": {
+   "title": "Run monitor now",
+   "readOnlyHint": false,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool queues an immediate check for an existing monitor by `id` in the authenticated account and returns the queued check, which is non-public account job data (SECRET). The call-time destination is a monitor ID, not an agent-chosen URL in the schema."
+ },
+ {
+  "tool": "firecrawl_monitor_checks",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "List monitor checks",
+   "readOnlyHint": true,
+   "openWorldHint": false,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool lists historical check runs for a monitor in the user's Firecrawl account. Those check summaries and pagination metadata are non-public account data (SECRET)."
+ },
+ {
+  "tool": "firecrawl_monitor_check",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Get monitor check",
+   "readOnlyHint": true,
+   "openWorldHint": false,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool retrieves one monitor check with page-level diff/snapshot/judgment results from the user's account (SECRET). Diffs and snapshots are derived from monitored web pages, which may be attacker-controlled (UNTRUSTED)."
+ },
+ {
+  "tool": "firecrawl_research_search_papers",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Search research papers",
+   "readOnlyHint": true,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool queries Firecrawl's public research paper corpus and returns paper metadata/abstracts. Public papers, preprints, and abstracts can be authored by outside parties, so returned text is UNTRUSTED. The request goes to a fixed Firecrawl endpoint, not an agent-chosen host. [evidence: documentatio"
+ },
+ {
+  "tool": "firecrawl_research_inspect_paper",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Inspect a paper",
+   "readOnlyHint": true,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool fetches metadata for a public paper identifier from Firecrawl's paper index and returns title, abstract, authors, IDs, and dates. Those public metadata fields can be outside-party authored (UNTRUSTED)."
+ },
+ {
+  "tool": "firecrawl_research_related_papers",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Find related papers via citation graph",
+   "readOnlyHint": true,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool expands public paper IDs through a citation graph and returns ranked candidate papers. Candidate metadata is public literature content and can be outside-party authored (UNTRUSTED); the endpoint is fixed Firecrawl, not agent-chosen."
+ },
+ {
+  "tool": "firecrawl_research_read_paper",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Read a paper",
+   "readOnlyHint": true,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "The source excerpt does not include the execute body, but the advertised/source documentation says this tool retrieves in-body passages from indexed public papers. Paper full text/passages can be authored by outside parties, so output is UNTRUSTED. No agent-chosen host is contacted by the shown cont"
+ },
+ {
+  "tool": "firecrawl_research_search_github",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Search GitHub history",
+   "readOnlyHint": true,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "The source excerpt does not include the execute body, but the advertised/source documentation says it searches indexed public GitHub issue, pull-request, and README content. Public GitHub content is attacker-controllable (UNTRUSTED). [evidence: documentation only]"
+ },
+ {
+  "tool": "firecrawl_developer_search",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Search developer sources",
+   "readOnlyHint": true,
+   "openWorldHint": true,
+   "destructiveHint": false
+  },
+  "rationale_code": "The tool searches an index of public GitHub issues, merged PRs, READMEs, and documentation and formats result IDs, URLs, titles, and passages. Those public developer sources are outside-party/attacker-controllable (UNTRUSTED). The query is sent to a fixed Firecrawl developer search endpoint, not an "
+ }
+]

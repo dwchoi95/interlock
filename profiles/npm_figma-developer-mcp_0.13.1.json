@@ -1,0 +1,72 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Both tools are registered unconditionally at server construction (`Zt`), except `download_figma_images` which is gated by `skipImageDownloads`.",
+  "The bundle's `dist/chunk-CPSYXR2U.js` (`he` path validation) and `dist/common-HYY6FKF5.js` (`downloadFigmaImage`) were not provided; the path-containment and download behaviour is judged from call sites and the error cases (`outside_image_dir`) in dist/chunk-E7X4SVMG.js:1.",
+  "HTTP transport listens on FRAMELINK_HOST/FRAMELINK_PORT (default 127.0.0.1:3333) and accepts per-request Figma tokens via headers; this changes whose data the SECRET label covers but not the labels themselves."
+ ],
+ "package": "figma-developer-mcp",
+ "source": ".cache/sources/.views/npm_figma-developer-mcp_0.13.1_200858b8332d",
+ "tools": {
+  "download_figma_images": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-E7X4SVMG.js:1"
+   ],
+   "labels": [],
+   "rationale": "`Bt` validates `localPath` with `he(u,d)` against the configured `imageDir` (rejecting `outside_image_dir`/`drive_letter_on_posix`), then `Ze` -> `X.downloadImages` -> `W` -> `downloadFigmaImage` fetches only URLs returned by the Figma API (`getImageFillUrls`/`getNodeRenderUrls`), never an agent-supplied URL, so no SINK. It writes/overwrites image files (extension constrained to png|svg|gif by `fileName` regex) inside the image directory and crops them via `je`/`Ft`, which is confined file I/O, not host code execution. The tool result contains only file basenames and pixel dimensions (`finalDimensions`, `cssVariables`), not Figma file content, so it does not return secret or attacker-controlled text into context.",
+   "undetermined": false
+  },
+  "get_figma_data": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/chunk-E7X4SVMG.js:1",
+    "dist/chunk-E7X4SVMG.js:1"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`get_figma_data` calls `X.getRawFile`/`getRawNode` -> `requestWithSize` -> `Ke` (fetch) against `https://api.figma.com/v1` with the user's credentials injected by `getAuthHeaders()` (`X-Figma-Token: this.apiKey` or `Authorization: Bearer ${this.oauthToken}`), and returns the simplified/serialized file content (including node `name` and `text` values, see `Oe`/`Ce`) into the agent context \u2014 that is private data from the user's Figma account, so SECRET. The `fileKey` is an arbitrary agent-supplied alphanumeric key (`Lt.fileKey`), so the tool can also read any link-shared/community Figma file an attacker published; the returned layer names and text strings are then attacker-controllable, so UNTRUSTED. Error paths also echo the Figma API response body back to the caller (`ce`, `Ot`). Not a SINK: the request target is the fixed vendor host `https://api.figma.com/v1` with only a path/id built from input.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "false \u2014 the image download tool is registered by default",
+   "effect": "Does not register the `download_figma_images` tool at all (`o.skipImageDownloads||e.registerTool(k.name,...)`).",
+   "evidence": "dist/chunk-E7X4SVMG.js:1",
+   "kind": "cli flag / env var",
+   "syntax": "--skip-image-downloads / SKIP_IMAGE_DOWNLOADS=true"
+  },
+  {
+   "default": "process.cwd() (server's current working directory)",
+   "effect": "Sets the root directory that `download_figma_images` may write into; `he(localPath, imageDir)` rejects paths resolving outside it.",
+   "evidence": "dist/chunk-E7X4SVMG.js:1",
+   "kind": "cli flag / env var",
+   "syntax": "--image-dir <path> / IMAGE_DIR=<path>"
+  },
+  {
+   "default": "empty; stdio mode refuses to start, HTTP mode falls back to per-request headers",
+   "effect": "Supplies the credential used for Figma API calls; without it (stdio mode) startup fails via `Ne`, and in HTTP mode per-request `X-Figma-Token`/`Authorization: Bearer` headers are used instead (`so`,`ao`,`lo`), so the SECRET reach follows whichever account's token is presented.",
+   "evidence": "dist/chunk-E7X4SVMG.js:1",
+   "kind": "credential env var / cli flag",
+   "syntax": "FIGMA_API_KEY / FIGMA_OAUTH_TOKEN (or --figma-api-key/--figma-oauth-token)"
+  },
+  {
+   "default": "no explicit proxy; environment proxy variables are honoured if present",
+   "effect": "Routes all Figma API and image fetches through the given proxy via `setGlobalDispatcher(new ProxyAgent(...))`/`EnvHttpProxyAgent`; `--proxy=none` disables env proxies.",
+   "evidence": "dist/chunk-E7X4SVMG.js:1",
+   "kind": "cli flag / env var",
+   "syntax": "--proxy <url> / FIGMA_PROXY / HTTP_PROXY,HTTPS_PROXY"
+  },
+  {
+   "default": "telemetry enabled",
+   "effect": "Disables PostHog telemetry (`V`/`ie`) which otherwise posts tool-call metrics and redacted error messages to the fixed endpoint https://us.i.posthog.com; this is server-side, not a tool-reachable sink.",
+   "evidence": "dist/chunk-E7X4SVMG.js:1",
+   "kind": "cli flag / env var",
+   "syntax": "--no-telemetry / FRAMELINK_TELEMETRY=off / DO_NOT_TRACK=1"
+  }
+ ],
+ "version": "0.13.1"
+}

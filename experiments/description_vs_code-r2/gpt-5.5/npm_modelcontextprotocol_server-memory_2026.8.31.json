@@ -1,0 +1,194 @@
+{
+ "tools": {
+  "create_entities": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "This is a state-changing local-memory tool: it can `Create multiple new entities in the knowledge graph`. The advertised destination is only the `knowledge graph`, with no URL, recipient, public repository, or attacker-readable destination, so it is not a SINK from the advertised text. It does not advertise returning data, contacting outside content, or executing code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "name"
+   ],
+   "value_args": [
+    "entityType",
+    "observations"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "create_relations": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "This is a state-changing local-memory tool: it can `Create multiple new relations between entities in the knowledge graph`. The relation record is selected/defined by `from`, `to`, and `relationType`. The advertised destination is only the `knowledge graph`, not an attacker-readable destination, and no code execution or outside content retrieval is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "from",
+    "to",
+    "relationType"
+   ],
+   "value_args": [
+    "relationType"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "add_observations": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "This is a state-changing local-memory tool: it can `Add new observations to existing entities in the knowledge graph`. `entityName` chooses which entity is changed, and `contents` carries the observation text stored. The advertised destination is only the `knowledge graph`, with no attacker-readable sink, outside read, or code execution.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "entityName"
+   ],
+   "value_args": [
+    "contents"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "delete_entities": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "This is a destructive state-changing local-memory tool: it can `Delete multiple entities and their associated relations from the knowledge graph`. `entityNames` identifies the records deleted. It does not advertise sending data to an attacker-readable destination, reading outside content, returning secrets, or executing code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "entityNames"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "delete_observations": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "This is a destructive state-changing local-memory tool: it can `Delete specific observations from entities in the knowledge graph`. `entityName` and `observations` identify the records/content to delete. The advertised operation is only in the `knowledge graph`; it does not advertise any attacker-readable delivery, outside content retrieval, or code execution.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "entityName",
+    "observations"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "delete_relations": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "This is a destructive state-changing local-memory tool: it can `Delete multiple relations from the knowledge graph`. `from`, `to`, and `relationType` identify the relation records deleted. It does not advertise sending agent-supplied data to an attacker-readable destination, reading attacker-controlled content, returning non-public data, or executing code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "from",
+    "to",
+    "relationType"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "read_graph": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Read the entire knowledge graph`, i.e. return the server-memory data store into the agent context. That knowledge graph may contain the user's non-public memory data, so it is SECRET. The advertised text does not indicate that outside parties author this data, that it contacts an agent-chosen host, or that it executes code.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name",
+    "entityType",
+    "observations",
+    "from",
+    "to",
+    "relationType"
+   ],
+   "attacker_named_fields": []
+  },
+  "search_nodes": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Search for nodes in the knowledge graph based on a query` and match against `entity names, types, and observation content`, so it can return non-public memory data from the user's knowledge graph and is SECRET. The `query` only selects what to read; it is not an agent-chosen host or delivery destination. No attacker-authored source or code execution is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name",
+    "entityType",
+    "observations"
+   ],
+   "attacker_named_fields": []
+  },
+  "open_nodes": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `Open specific nodes in the knowledge graph by their names` and `retrieve` entities, so it can return non-public memory data from the user's knowledge graph and is SECRET. `names` selects local records to read, not an outside destination. No attacker-authored source, attacker-readable sink, or code execution is advertised.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [
+    "name",
+    "entityType",
+    "observations"
+   ],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "All judgments are based only on the advertised descriptions and schemas. The tools advertise a local `knowledge graph` memory store and do not advertise URLs, recipients, public posting, or host code execution."
+ ],
+ "usage": {
+  "input_tokens": 2279,
+  "output_tokens": 3849,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

@@ -1,0 +1,192 @@
+{
+ "kind": "pypi",
+ "notes": [
+  "The advertised tools correspond to `server_aws.py`; `server_aws_cn.py` also defines other tools, but they were not in the advertised tool list and are not judged here.",
+  "`MCP_USER_AGENT` can override the base User-Agent string, but it does not remove tools or labels, so it is not listed as a value condition."
+ ],
+ "package": "awslabs.aws-documentation-mcp-server",
+ "source": ".cache/sources/.views/pypi_awslabs.aws-documentation-mcp-server_1.2.1_b3663971d142",
+ "tools": {
+  "read_documentation": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "aws_documentation_mcp_server/server_aws.py:118-133",
+    "aws_documentation_mcp_server/server_aws.py:184-195",
+    "aws_documentation_mcp_server/server_utils.py:37-48",
+    "aws_documentation_mcp_server/server_utils.py:78-95",
+    "aws_documentation_mcp_server/server_utils.py:108-125"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "`read_documentation` is an unconditionally registered read tool. It only accepts URLs matching supported AWS documentation domains and ending in `.html`, then `read_documentation_impl` performs an HTTP GET with redirect allowlist enforcement and returns the fetched page content. The code does not show access to local files, private accounts, arbitrary hosts, state-changing writes, or host execution.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_sections": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "aws_documentation_mcp_server/server_aws.py:198-205",
+    "aws_documentation_mcp_server/server_aws.py:260-275",
+    "aws_documentation_mcp_server/server_utils.py:180-199",
+    "aws_documentation_mcp_server/server_utils.py:212-242"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "`read_sections` is an unconditionally registered read tool. It validates `url` against supported AWS documentation domains and `.html`, requires nonempty `section_titles`, fetches the allowlisted page, extracts requested sections, and returns markdown. The code does not show access to non-public data, arbitrary attacker-chosen hosts, state-changing writes, or host execution.",
+   "undetermined": false,
+   "value_args": [
+    "section_titles"
+   ]
+  },
+  "recommend": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "aws_documentation_mcp_server/server_aws.py:648-652",
+    "aws_documentation_mcp_server/server_aws.py:50",
+    "aws_documentation_mcp_server/server_aws.py:699-707",
+    "aws_documentation_mcp_server/server_aws.py:726-735",
+    "aws_documentation_mcp_server/util.py:368-420",
+    "aws_documentation_mcp_server/models.py:96-101"
+   ],
+   "identifier_output_fields": [
+    "url",
+    "title"
+   ],
+   "injectable_output_fields": [
+    "url",
+    "title",
+    "context"
+   ],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "`recommend` is an unconditionally registered read tool. It sends the supplied `url` as a `path` parameter to the fixed AWS content recommendations endpoint and parses the vendor JSON response into recommendation `url`, `title`, and `context`. The code does not contact an agent-chosen host, access non-public data, change state, or execute host code.",
+   "undetermined": false,
+   "value_args": [
+    "url"
+   ]
+  },
+  "search_documentation": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "aws_documentation_mcp_server/server_aws.py:383-405",
+    "aws_documentation_mcp_server/server_aws.py:49",
+    "aws_documentation_mcp_server/server_aws.py:459-499",
+    "aws_documentation_mcp_server/server_aws.py:524-545",
+    "aws_documentation_mcp_server/server_aws.py:557-645",
+    "aws_documentation_mcp_server/models.py:75-93"
+   ],
+   "identifier_output_fields": [
+    "search_results.url",
+    "search_results.title",
+    "search_results.recommended_sections",
+    "search_results.sections",
+    "search_results.metadata.additional_urls.url",
+    "search_results.metadata.additional_urls.section_title",
+    "search_results.metadata.additional_urls.section_anchor",
+    "facets keys",
+    "facets.product_types",
+    "facets.guide_types",
+    "query_id",
+    "metadata.discovered_services.name",
+    "metadata.related_tasks.name",
+    "metadata.related_tasks.urls.url_name",
+    "metadata.relationships.relation",
+    "metadata.relationships.to",
+    "metadata.relationships.from_"
+   ],
+   "injectable_output_fields": [
+    "search_results.url",
+    "search_results.title",
+    "search_results.context",
+    "search_results.recommended_sections",
+    "search_results.sections",
+    "search_results.metadata.additional_urls.url",
+    "search_results.metadata.additional_urls.section_title",
+    "search_results.metadata.additional_urls.section_anchor",
+    "facets",
+    "metadata.discovered_services.name",
+    "metadata.discovered_services.description",
+    "metadata.related_tasks.name",
+    "metadata.related_tasks.description",
+    "metadata.related_tasks.urls.url_name",
+    "metadata.related_tasks.urls.url_description",
+    "metadata.relationships.relation",
+    "metadata.relationships.to",
+    "metadata.relationships.to_description",
+    "metadata.relationships.from_"
+   ],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "`search_documentation` is an unconditionally registered read/search tool. It sends the search request to the fixed AWS Documentation Search API endpoint `SEARCH_API_URL`, parses the JSON response into `SearchResponse`/`SearchResult` fields, caches the response, and returns it. A query to a fixed vendor endpoint is not a SINK under the threat model, and the code does not show private-data access, arbitrary attacker-chosen destinations, state-changing writes, or host execution.",
+   "undetermined": false,
+   "value_args": [
+    "search_phrase",
+    "search_intent",
+    "product_types",
+    "guide_types"
+   ]
+  },
+  "search_table": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "aws_documentation_mcp_server/server_aws.py:278-295",
+    "aws_documentation_mcp_server/server_aws.py:365-380",
+    "aws_documentation_mcp_server/server_utils.py:262-282",
+    "aws_documentation_mcp_server/server_utils.py:311-325",
+    "aws_documentation_mcp_server/server_utils.py:338-347",
+    "aws_documentation_mcp_server/server_utils.py:384-392"
+   ],
+   "identifier_output_fields": [
+    "url",
+    "section_title",
+    "results.table_heading",
+    "results.columns",
+    "results.parent_columns",
+    "results.child_columns",
+    "results.rows keys"
+   ],
+   "injectable_output_fields": [
+    "results.table_heading",
+    "results.columns",
+    "results.parent_columns",
+    "results.child_columns",
+    "results.rows",
+    "hint"
+   ],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "`search_table` is an unconditionally registered read tool. It validates `url` against supported AWS documentation domains and `.html`, appends `query` and optional `section_title` as query parameters to the allowlisted documentation URL, fetches the page with redirect allowlist enforcement, parses tables, and returns matching rows. The code does not show access to private data, arbitrary attacker-chosen hosts, state-changing writes, or host execution.",
+   "undetermined": false,
+   "value_args": [
+    "section_title",
+    "query"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "1.2.1"
+}

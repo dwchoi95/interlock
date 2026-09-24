@@ -1,0 +1,659 @@
+{
+ "kind": "python",
+ "notes": [
+  "Only the advertised tools were judged. Several travel-listing tools are marked `UNTRUSTED` with `undetermined: true` because the code shows they return third-party-style listing/review fields but does not establish provenance or attacker control."
+ ],
+ "package": "agentdojo/travel",
+ "source": "baselines/agentdojo/src/agentdojo",
+ "tools": {
+  "cancel_calendar_event": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "event_id"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:58-67",
+    "default_suites/v1/tools/calendar_client.py:200-211"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Marks an existing calendar event canceled and sends a fixed cancellation email to the event's existing participants. The output is only a fixed success string containing the input `event_id`; the recipient set is read from the existing event rather than supplied directly in the call.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "check_restaurant_opening_hours": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "restaurant_names"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:262-273"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns restaurant names and `operating_hours` from `restaurants.restaurant_list`. The code does not establish who controls restaurant records, so returned listing text is treated as potentially attacker-controlled.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "create_calendar_event": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "participants"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:43-56",
+    "default_suites/v1/tools/calendar_client.py:161-168"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "participants"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Creates a calendar event, appends the calendar owner email via `participants.append(self.account_email)`, stores it, and returns the `CalendarEvent`, exposing account calendar data. It also sends an email to caller-supplied `participants` with caller-supplied `title`/`description` and the event attachment via `inbox.send_email`, so it is a SINK.",
+   "undetermined": false,
+   "value_args": [
+    "title",
+    "start_time",
+    "end_time",
+    "description",
+    "location"
+   ]
+  },
+  "get_all_car_rental_companies_in_city": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "city"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:279-285"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns car rental company names from a third-party-looking listing. The code does not establish who controls company records, so returned names are treated as potentially attacker-controlled.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_all_hotels_in_city": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "city"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:122-128"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns hotel names from a third-party-looking hotel listing (`hotels.hotel_list`). The code does not establish who controls hotel records, so the attacker-controllability of returned names is undetermined; keeping `UNTRUSTED`.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_all_restaurants_in_city": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "city"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:166-172"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns restaurant names from a third-party-looking restaurant listing. The code does not establish who controls restaurant records, so returned names are treated as potentially attacker-controlled.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_car_fuel_options": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "company_name"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:321-327"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns car rental company names and fuel options from `car_rental.company_list`. The code does not establish who controls company records, so returned listing text is treated as potentially attacker-controlled.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_car_price_per_day": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "company_name"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:330-336"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns entries keyed by `company.name` from the car rental listing. The code does not establish who controls company records, so company-name text is treated as potentially attacker-controlled.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_car_rental_address": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "company_name"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:312-318"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns car rental company names and addresses from `car_rental.company_list`. The code does not establish who controls company records, so returned listing text is treated as potentially attacker-controlled.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_car_types_available": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "company_name"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:288-296"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns car rental company names and available car types from `car_rental.company_list`. The code does not establish who controls company records, so returned listing text is treated as potentially attacker-controlled.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_contact_information_for_restaurants": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "restaurant_names"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:234-245"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns restaurant names and `contact_information` from `restaurants.restaurant_list`. The code does not establish who controls restaurant records, so returned listing text is treated as potentially attacker-controlled.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_cuisine_type_for_restaurants": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "restaurant_names"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:205-216"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns restaurant names and cuisine values from `restaurants.restaurant_list`. The code does not establish who controls restaurant records, so returned listing text is treated as potentially attacker-controlled.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_day_calendar_events": {
+   "attacker_named_fields": [
+    "participants"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "day"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:31-32",
+    "default_suites/v1/tools/calendar_client.py:128-134",
+    "default_suites/v1/tools/types.py:43-50"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "participants"
+   ],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "location"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns the user's calendar events for a day, exposing private event data. Event titles/descriptions/locations may be authored by outside participants, but the code does not settle provenance, so `UNTRUSTED` is kept.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_dietary_restrictions_for_all_restaurants": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "restaurant_names"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:219-231"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns restaurant names and dietary restriction text from `restaurants.restaurant_list`. The code does not establish who controls restaurant records, so returned listing text is treated as potentially attacker-controlled.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_flight_information": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "departure_city",
+    "arrival_city"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:403-417"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns flight listing text from `flights.flight_list`, including airline, flight number, price, and contact information. The code does not establish who controls flight records, so returned listing text is treated as potentially attacker-controlled.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_hotels_address": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "hotel_name"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:142-146"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns hotel names and addresses from `hotels.hotel_list`. The code does not establish who controls hotel records, so returned listing text is treated as potentially attacker-controlled.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_hotels_prices": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "hotel_names"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:131-139"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns entries keyed by `hotel.name` from the hotel listing. The code does not establish who controls hotel records, so hotel-name text is treated as potentially attacker-controlled.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_price_for_restaurants": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "restaurant_names"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:248-259"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns entries keyed by `restaurant.name` from the restaurant listing. The code does not establish who controls restaurant records, so restaurant-name text is treated as potentially attacker-controlled.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_rating_reviews_for_car_rental": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "company_name"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:299-309"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns car rental ratings and joins `company.reviews`; reviews are third-party review text and may contain attacker-authored content. The code does not constrain review provenance.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_rating_reviews_for_hotels": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "hotel_names"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:149-160"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns hotel ratings and joins `hotel.reviews`; reviews are third-party review text and may contain attacker-authored content. The code does not constrain review provenance.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_rating_reviews_for_restaurants": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "restaurant_names"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:191-202"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns restaurant ratings and joins `restaurant.reviews`; reviews are third-party review text and may contain attacker-authored content. The code does not constrain review provenance.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_restaurants_address": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "restaurant_names"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:175-188"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "Returns restaurant names and addresses from `restaurants.restaurant_list`. The code does not establish who controls restaurant records, so returned listing text is treated as potentially attacker-controlled.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_user_information": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:104-116"
+   ],
+   "identifier_output_fields": [
+    "ID Number",
+    "Email",
+    "Phone Number",
+    "Address",
+    "Passport Number",
+    "Bank Account Number",
+    "Credit Card Number"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "Returns personal data from the user's `User` dependency, including ID number, email, phone, address, passport number, bank account number, and credit card number via `get_user_information`.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "reserve_car_rental": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "company",
+    "start_time",
+    "end_time"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:382-400"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Mutates the local `reservation` dependency using the selected company and times and returns a confirmation string. The code does not send the reservation to an external party.",
+   "undetermined": false,
+   "value_args": [
+    "company",
+    "start_time",
+    "end_time"
+   ]
+  },
+  "reserve_hotel": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "hotel",
+    "start_day",
+    "end_day"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:339-356"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Mutates the local `reservation` dependency using the selected hotel and dates and returns a confirmation string. The code does not send the reservation to an external party.",
+   "undetermined": false,
+   "value_args": [
+    "hotel",
+    "start_day",
+    "end_day"
+   ]
+  },
+  "reserve_restaurant": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "restaurant",
+    "start_time"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:359-379"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "Mutates the local `reservation` dependency using the selected restaurant and time and returns a confirmation string. The code does not send the reservation to an external party.",
+   "undetermined": false,
+   "value_args": [
+    "restaurant",
+    "start_time"
+   ]
+  },
+  "search_calendar_events": {
+   "attacker_named_fields": [
+    "participants"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "query",
+    "date"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:69-78",
+    "default_suites/v1/tools/calendar_client.py:171-188",
+    "default_suites/v1/tools/types.py:43-50"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "participants"
+   ],
+   "injectable_output_fields": [
+    "title",
+    "description",
+    "location"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "Searches and returns events from the user's calendar, including event titles, descriptions, times, locations, and participants, so it exposes private calendar data. Calendar event text may originate from other participants/invitations; the code does not settle provenance, so `UNTRUSTED` is kept.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "send_email": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "recipients",
+    "cc",
+    "bcc"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:73-102",
+    "default_suites/v1/tools/email_client.py:154-193"
+   ],
+   "identifier_output_fields": [
+    "id_",
+    "sender",
+    "recipients",
+    "cc",
+    "bcc",
+    "attachments"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "rationale": "Sends caller-supplied `subject`, `body`, and optional attachments to caller-supplied `recipients`, `cc`, and `bcc`, so it is a SINK. It returns the created `Email`, whose `sender` is the user's `account_email` from the inbox dependency, exposing account data not provided in the call.",
+   "undetermined": false,
+   "value_args": [
+    "subject",
+    "body",
+    "attachments"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "v1.2"
+}

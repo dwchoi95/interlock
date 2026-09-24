@@ -1,0 +1,291 @@
+[
+ {
+  "tool": "read_file",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "path"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "Deprecated alias registered with `readTextFileHandler`, which calls `validatePath` then `readFileContent`/`tailFile`/`headFile` and returns raw local file contents to the agent. Any file under the allowed directories (user's own project/home data) is read with the user's credentials, so it returns n"
+ },
+ {
+  "tool": "read_text_file",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "path"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "Same `readTextFileHandler`: reads local file text via `fs.readFile` and returns it in the tool result \u2014 non-public host file content."
+ },
+ {
+  "tool": "read_media_file",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "path"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`readFileAsBase64Stream` streams any local file (mime default `application/octet-stream`, i.e. arbitrary binary) and returns it base64-encoded in the result, exposing non-public host file bytes."
+ },
+ {
+  "tool": "read_multiple_files",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "paths"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "Loops `validatePath` + `readFileContent` over caller-supplied paths and concatenates the contents into the result \u2014 bulk exfiltration of local file content into agent context."
+ },
+ {
+  "tool": "write_file",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "path"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "idempotentHint": true,
+   "destructiveHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`writeFileContent` writes agent-supplied text to a path constrained by `validatePath`/`isPathWithinAllowedDirectories` on the local filesystem. The destination is local and not attacker-readable, so it is not a SINK; it returns only a success string, so no SECRET/UNTRUSTED. Not labelled HOSTEXEC bec"
+ },
+ {
+  "tool": "edit_file",
+  "code": [],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "path"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "idempotentHint": false,
+   "destructiveHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`applyFileEdits` reads the target file, applies agent-supplied replacements and writes atomically inside allowed directories. Output is a unified diff of a file the user already owns and the agent chose; local write is not an attacker-readable destination, so no SINK. The diff does echo file content"
+ },
+ {
+  "tool": "create_directory",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "path"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "idempotentHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  },
+  "rationale_code": "`fs.mkdir` with `recursive:true` on a `validatePath`-checked path; returns only a success message. No data return, no external destination, no execution."
+ },
+ {
+  "tool": "list_directory",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "path"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`fs.readdir` returns the names of files/directories on the user's host, which is non-public local data returned into agent context."
+ },
+ {
+  "tool": "list_directory_with_sizes",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "path"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`fs.readdir` plus `fs.stat` per entry returns local filenames and sizes \u2014 non-public host filesystem metadata."
+ },
+ {
+  "tool": "directory_tree",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "path"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`buildTree` recursively walks the allowed directory with `fs.readdir` and returns the full JSON name/type tree \u2014 non-public host filesystem structure."
+ },
+ {
+  "tool": "move_file",
+  "code": [],
+  "description": [],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "source",
+   "destination"
+  ],
+  "annotations": {
+   "readOnlyHint": false,
+   "idempotentHint": false,
+   "destructiveHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "Both paths pass `validatePath`; `moveFile` renames within allowed directories and returns only a success string. No data disclosure, no external destination, no execution."
+ },
+ {
+  "tool": "search_files",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "path"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`searchFilesWithValidation` recursively walks the local tree and returns full matching paths \u2014 non-public host filesystem information."
+ },
+ {
+  "tool": "get_file_info",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "path"
+  ],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "`getFileStats` returns size, timestamps, permissions and type of a local file \u2014 non-public host metadata."
+ },
+ {
+  "tool": "list_allowed_directories",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "readOnlyHint": true,
+   "openWorldHint": false
+  },
+  "rationale_code": "Returns the absolute local paths of the configured roots (`allowedDirectories`), revealing usernames/home layout of the host \u2014 non-public local configuration data. No input, no write, no network."
+ }
+]

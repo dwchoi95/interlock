@@ -1,0 +1,282 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All advertised tools are returned unconditionally by the `ListToolsRequestSchema` handler, so they are default-enabled.",
+  "The source does not implement per-tool argument validation before `handleToolCall`; it passes `request.params.arguments` directly to `handleToolCall`, and `handleToolCall` passes the same object to `ensureBrowser` before dispatching on tool name."
+ ],
+ "package": "@modelcontextprotocol/server-puppeteer",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-puppeteer_2025.5.12_3b8b5b87279b",
+ "tools": {
+  "puppeteer_click": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "selector"
+   ],
+   "evidence": [
+    "dist/index.js:42",
+    "dist/index.js:100",
+    "dist/index.js:120",
+    "dist/index.js:143",
+    "dist/index.js:184",
+    "dist/index.js:236",
+    "dist/index.js:420"
+   ],
+   "identifier_output_fields": [
+    "content[].text"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK",
+    "HOSTEXEC"
+   ],
+   "rationale": "`puppeteer_click` performs a browser click on an agent-selected CSS `selector`; clicking page elements can submit forms, navigate, or trigger page JavaScript and network requests to the current page's host. Also, all tool calls pass raw `arguments` into `ensureBrowser`, which reads `launchOptions` and passes merged options to `puppeteer.launch`; because there is no source-level filtering of extra properties, this tool can reach the same HOSTEXEC launch path. HOSTEXEC implies SECRET, UNTRUSTED, and SINK.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "puppeteer_evaluate": {
+   "attacker_named_fields": [
+    "content[].text"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "script"
+   ],
+   "evidence": [
+    "dist/index.js:88",
+    "dist/index.js:100",
+    "dist/index.js:120",
+    "dist/index.js:143",
+    "dist/index.js:184",
+    "dist/index.js:319",
+    "dist/index.js:331",
+    "dist/index.js:332",
+    "dist/index.js:342",
+    "dist/index.js:420"
+   ],
+   "identifier_output_fields": [
+    "content[].text"
+   ],
+   "injectable_output_fields": [
+    "content[].text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK",
+    "HOSTEXEC"
+   ],
+   "rationale": "`puppeteer_evaluate` runs caller-supplied JavaScript in the current browser page and returns the result and captured console output. That JavaScript can read page DOM/content, so it can return UNTRUSTED content from attacker-controlled pages or SECRET content from local/intranet/authenticated pages. Browser-page JavaScript can also perform network sends, so `script` can encode both destinations and values. Although browser-page JavaScript alone is not HOSTEXEC under the instructions, all tool calls also pass raw `arguments` into `ensureBrowser`, which reads `launchOptions` and passes merged options to `puppeteer.launch`; because there is no source-level filtering of extra properties, this tool can reach the same HOSTEXEC launch path. HOSTEXEC implies SECRET, UNTRUSTED, and SINK.",
+   "undetermined": false,
+   "value_args": [
+    "script"
+   ]
+  },
+  "puppeteer_fill": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "selector"
+   ],
+   "evidence": [
+    "dist/index.js:53",
+    "dist/index.js:54",
+    "dist/index.js:100",
+    "dist/index.js:120",
+    "dist/index.js:143",
+    "dist/index.js:184",
+    "dist/index.js:256",
+    "dist/index.js:257",
+    "dist/index.js:420"
+   ],
+   "identifier_output_fields": [
+    "content[].text"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK",
+    "HOSTEXEC"
+   ],
+   "rationale": "`puppeteer_fill` types caller-supplied `value` into an element chosen by `selector`; on an attacker-controlled page, page JavaScript can observe those keystrokes or form contents, so this is a SINK. Also, all tool calls pass raw `arguments` into `ensureBrowser`, which reads `launchOptions` and passes merged options to `puppeteer.launch`; because there is no source-level filtering of extra properties, this tool can reach the same HOSTEXEC launch path. HOSTEXEC implies SECRET, UNTRUSTED, and SINK.",
+   "undetermined": false,
+   "value_args": [
+    "value"
+   ]
+  },
+  "puppeteer_hover": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "selector"
+   ],
+   "evidence": [
+    "dist/index.js:77",
+    "dist/index.js:100",
+    "dist/index.js:120",
+    "dist/index.js:143",
+    "dist/index.js:184",
+    "dist/index.js:298",
+    "dist/index.js:299",
+    "dist/index.js:420"
+   ],
+   "identifier_output_fields": [
+    "content[].text"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK",
+    "HOSTEXEC"
+   ],
+   "rationale": "`puppeteer_hover` triggers browser hover events on an element chosen by `selector`; page JavaScript can react to hover events and issue network requests to the current page or other URLs. Also, all tool calls pass raw `arguments` into `ensureBrowser`, which reads `launchOptions` and passes merged options to `puppeteer.launch`; because there is no source-level filtering of extra properties, this tool can reach the same HOSTEXEC launch path. HOSTEXEC implies SECRET, UNTRUSTED, and SINK.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "puppeteer_navigate": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url",
+    "launchOptions"
+   ],
+   "evidence": [
+    "dist/index.js:14",
+    "dist/index.js:15",
+    "dist/index.js:100",
+    "dist/index.js:120",
+    "dist/index.js:122",
+    "dist/index.js:124",
+    "dist/index.js:143",
+    "dist/index.js:187",
+    "README.md:184"
+   ],
+   "identifier_output_fields": [
+    "content[].text"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK",
+    "HOSTEXEC"
+   ],
+   "rationale": "`puppeteer_navigate` takes an agent-chosen `url` and calls `page.goto(args.url)`, so it can make a browser request to an agent-chosen host. It also accepts `launchOptions` as Puppeteer launch options and passes the merged options to `puppeteer.launch`; the README shows `executablePath` as a supported launch option. Because caller-controlled launch options can select a host executable/configuration, this is HOSTEXEC. Per the instructions, HOSTEXEC implies SECRET, UNTRUSTED, and SINK. The dangerous-argument guard only filters some `args` entries and can be bypassed with `allowDangerous`/`ALLOW_DANGEROUS`; it does not remove the broader launch-options execution reach.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "puppeteer_screenshot": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "name"
+   ],
+   "evidence": [
+    "dist/index.js:24",
+    "dist/index.js:31",
+    "dist/index.js:100",
+    "dist/index.js:120",
+    "dist/index.js:143",
+    "dist/index.js:184",
+    "dist/index.js:199",
+    "dist/index.js:200",
+    "dist/index.js:202",
+    "dist/index.js:212",
+    "dist/index.js:224",
+    "dist/index.js:227",
+    "dist/index.js:420"
+   ],
+   "identifier_output_fields": [
+    "content[].text"
+   ],
+   "injectable_output_fields": [
+    "content[].text",
+    "content[].data"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK",
+    "HOSTEXEC"
+   ],
+   "rationale": "`puppeteer_screenshot` captures the current browser page or selected element and returns the screenshot as image data or an encoded data URI, so if the current page is attacker-controlled the output is UNTRUSTED, and if the current page is `file://`, localhost, intranet, or authenticated content it can return SECRET data. The call also writes the screenshot into the server's `screenshots` map under `args.name`. Additionally, all tool calls pass raw `arguments` into `ensureBrowser`, which reads `launchOptions` and passes merged options to `puppeteer.launch`; since the schema does not forbid extra properties in source and the handler does not filter them, this tool can reach the same HOSTEXEC path. HOSTEXEC implies SECRET, UNTRUSTED, and SINK.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "puppeteer_select": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "selector"
+   ],
+   "evidence": [
+    "dist/index.js:65",
+    "dist/index.js:66",
+    "dist/index.js:100",
+    "dist/index.js:120",
+    "dist/index.js:143",
+    "dist/index.js:184",
+    "dist/index.js:277",
+    "dist/index.js:278",
+    "dist/index.js:420"
+   ],
+   "identifier_output_fields": [
+    "content[].text"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK",
+    "HOSTEXEC"
+   ],
+   "rationale": "`puppeteer_select` selects caller-supplied `value` in an element chosen by `selector`; page scripts can observe the resulting selection/change event, so it can send agent-supplied data to the current page and is a SINK. Also, all tool calls pass raw `arguments` into `ensureBrowser`, which reads `launchOptions` and passes merged options to `puppeteer.launch`; because there is no source-level filtering of extra properties, this tool can reach the same HOSTEXEC launch path. HOSTEXEC implies SECRET, UNTRUSTED, and SINK.",
+   "undetermined": false,
+   "value_args": [
+    "value"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "false/absent",
+   "effect": "Allows otherwise-blocked dangerous Chromium launch arguments in `launchOptions.args`; when false/absent and `ALLOW_DANGEROUS` is not `true`, matching dangerous args throw before launch.",
+   "evidence": "dist/index.js:122-127",
+   "kind": "tool argument",
+   "syntax": "allowDangerous: true"
+  },
+  {
+   "default": "unset",
+   "effect": "Allows otherwise-blocked dangerous Chromium launch arguments from environment or tool-provided launch options.",
+   "evidence": "dist/index.js:124",
+   "kind": "environment variable",
+   "syntax": "ALLOW_DANGEROUS=true"
+  },
+  {
+   "default": "{}",
+   "effect": "Supplies default Puppeteer launch options that are parsed and deep-merged with tool-provided `launchOptions` before `puppeteer.launch`.",
+   "evidence": "dist/index.js:114-120",
+   "kind": "environment variable",
+   "syntax": "PUPPETEER_LAUNCH_OPTIONS=<JSON>"
+  },
+  {
+   "default": "unset",
+   "effect": "Switches default launch configuration from non-headless NPX defaults to headless Docker defaults with `--no-sandbox`, `--single-process`, and `--no-zygote`.",
+   "evidence": "dist/index.js:141-143",
+   "kind": "environment variable",
+   "syntax": "DOCKER_CONTAINER"
+  }
+ ],
+ "version": "2025.5.12"
+}

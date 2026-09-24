@@ -1,0 +1,197 @@
+{
+ "kind": "npm",
+ "notes": [
+  "`build`, `modernize`, `test`, `e2e`, and devserver tools appear in the source as experimental tools, but they were not in the advertised tool list provided for judgment, so they are not included as tools here."
+ ],
+ "package": "@angular/cli",
+ "source": ".cache/sources/.views/npm_angular_cli_21.2.24_a4d5ee93b3af",
+ "tools": {
+  "ai_tutor": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "src/commands/mcp/mcp-server.js:42-49",
+    "src/commands/mcp/tools/ai-tutor.js:38-43",
+    "src/commands/mcp/tools/ai-tutor.js:44-55"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "`ai_tutor` is a stable default tool. Its handler only reads the bundled package resource `../resources/ai-tutor.md` and returns it as text. The cited code does not show access to user files, attacker-controlled content, network destinations, writes, or host command execution.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "find_examples": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "src/commands/mcp/mcp-server.js:42-49",
+    "src/commands/mcp/tools/examples/index.js:86-100",
+    "src/commands/mcp/tools/examples/index.js:103-110",
+    "src/commands/mcp/tools/examples/index.js:114-123",
+    "src/commands/mcp/tools/examples/index.js:128-146",
+    "src/commands/mcp/tools/examples/schemas.js:62-99"
+   ],
+   "identifier_output_fields": [
+    "examples.title",
+    "examples.keywords",
+    "examples.required_packages",
+    "examples.related_concepts",
+    "examples.related_tools"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`find_examples` is in the stable default tool list, subject to its registration guard. The handler can use a runtime examples database from local `NG_MCP_EXAMPLES_DIR`, discover version-specific example databases from the supplied local `workspacePath`, open the resulting SQLite database paths read-only, query them, and return example records. Because this can return contents from local databases/files, it is SECRET. Some implementation details (`setupRuntimeExamples`, `getVersionSpecificExampleDatabases`, and `queryDatabase`) are not included, so the exact local database discovery and exact returned field population are undetermined; the SECRET label is kept under the least-restrictive reading rule.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_best_practices": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "src/commands/mcp/mcp-server.js:42-49",
+    "src/commands/mcp/tools/best-practices.js:25-33",
+    "src/commands/mcp/tools/best-practices.js:97-99",
+    "src/commands/mcp/tools/best-practices.js:107-115",
+    "src/commands/mcp/tools/best-practices.js:126-135",
+    "src/commands/mcp/tools/best-practices.js:160-184"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`get_best_practices` is stable and default-enabled. When `workspacePath` is supplied, the handler creates a require context from that local path, resolves the user's installed `@angular/core/package.json`, reads it, follows its `angular.bestPractices.path` inside the package boundary, reads that local file, and returns its contents in `content[].text`. This is local host file content, so it is SECRET. The path traversal and size checks limit the file to the package boundary but do not remove the fact that local file contents can be returned.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_projects": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "src/commands/mcp/mcp-server.js:42-49",
+    "src/commands/mcp/tools/projects.js:35-93",
+    "src/commands/mcp/tools/projects.js:140-146",
+    "src/commands/mcp/tools/projects.js:160-206",
+    "src/commands/mcp/tools/projects.js:244-255",
+    "src/commands/mcp/tools/projects.js:389-408",
+    "src/commands/mcp/tools/projects.js:460-468",
+    "src/commands/mcp/tools/projects.js:481-519"
+   ],
+   "identifier_output_fields": [
+    "workspaces.path",
+    "workspaces.frameworkVersion",
+    "workspaces.projects.name",
+    "workspaces.projects.builder",
+    "workspaces.projects.root",
+    "workspaces.projects.sourceRoot",
+    "workspaces.projects.selectorPrefix",
+    "parsingErrors.filePath",
+    "versioningErrors.filePath"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`list_projects` is stable and default-enabled. It enumerates local filesystem roots, walks directories looking for `angular.json`, reads workspace configuration and nearby `package.json` files, and returns local paths, project names, project metadata, framework versions, and parsing/versioning error paths. This exposes non-public local repository/workspace metadata, so it is SECRET.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "onpush_zoneless_migration": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "src/commands/mcp/mcp-server.js:42-49",
+    "src/commands/mcp/tools/onpush-zoneless-migration/zoneless-migration.js:52-60",
+    "src/commands/mcp/tools/onpush-zoneless-migration/zoneless-migration.js:62-76",
+    "src/commands/mcp/tools/onpush-zoneless-migration/zoneless-migration.js:80-102",
+    "src/commands/mcp/tools/onpush-zoneless-migration/zoneless-migration.js:111-129",
+    "src/commands/mcp/tools/onpush-zoneless-migration/zoneless-migration.js:135-148",
+    "src/commands/mcp/tools/onpush-zoneless-migration/zoneless-migration.js:154-178"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`onpush_zoneless_migration` is stable and default-enabled. It accepts an absolute `fileOrDirPath`, stats it, glob-walks `*.ts` files for directories, creates TypeScript source files from those local paths, reads source text via `getFullText()`, analyzes the content, and returns migration or error responses derived from that local code. This can reveal non-public local source-code information, so it is SECRET. The exact text returned by helper functions such as `analyzeForUnsupportedZoneUses`, `migrateSingleFile`, and `migrateTestFile` is not shown, so output-field details are undetermined; the SECRET label is kept.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "search_documentation": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "src/commands/mcp/mcp-server.js:42-49",
+    "src/commands/mcp/tools/doc-search.js:67-85",
+    "src/commands/mcp/tools/doc-search.js:138-140",
+    "src/commands/mcp/tools/doc-search.js:145-153",
+    "src/commands/mcp/tools/doc-search.js:190-199",
+    "src/commands/mcp/tools/doc-search.js:205-231"
+   ],
+   "identifier_output_fields": [
+    "searchedVersion",
+    "results.title",
+    "results.breadcrumb",
+    "results.url"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "`search_documentation` is stable and default-enabled. It sends searches to a fixed Algolia application/index and, when `includeTopContent` is true, only fetches page content if the result URL hostname is `angular.dev` or a subdomain. A query to a fixed vendor endpoint is not a SINK under the threat model, and the code does not show user-private data access, attacker-chosen hosts, writes, or host execution.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "",
+   "effect": "When true, `assembleToolDeclarations` keeps only tools with `isLocalOnly`; this removes `search_documentation` because it has `isLocalOnly: false`.",
+   "evidence": "src/commands/mcp/mcp-server.js:157-159; src/commands/mcp/tools/doc-search.js:138-140",
+   "kind": "tool_registration",
+   "syntax": "options.localOnly"
+  },
+  {
+   "default": "",
+   "effect": "When true, `assembleToolDeclarations` keeps only tools with `isReadOnly`. All advertised tools here declare `isReadOnly: true`, so this condition does not remove any advertised tool.",
+   "evidence": "src/commands/mcp/mcp-server.js:154-156; src/commands/mcp/tools/ai-tutor.js:38-39; src/commands/mcp/tools/best-practices.js:58-61; src/commands/mcp/tools/doc-search.js:138-140; src/commands/mcp/tools/examples/index.js:86-90; src/commands/mcp/tools/projects.js:122-125; src/commands/mcp/tools/onpush-zoneless-migration/zoneless-migration.js:52-60",
+   "kind": "tool_registration",
+   "syntax": "options.readOnly"
+  },
+  {
+   "default": "",
+   "effect": "`find_examples` is not registered on Node.js versions below 22.16.",
+   "evidence": "src/commands/mcp/tools/examples/index.js:90-99",
+   "kind": "tool_registration",
+   "syntax": "process.versions.node < 22.16"
+  },
+  {
+   "default": "",
+   "effect": "When set, `find_examples` uses a runtime examples database built from that local directory and bypasses the normal bundled/version-specific database resolution.",
+   "evidence": "src/commands/mcp/tools/examples/index.js:103-110",
+   "kind": "data_source",
+   "syntax": "process.env['NG_MCP_EXAMPLES_DIR']"
+  },
+  {
+   "default": "",
+   "effect": "When the MCP client supports roots, local workspace discovery and the restricted host use the client-provided root URIs; otherwise project listing falls back to `process.cwd()`. This changes the local filesystem scope for SECRET data exposure.",
+   "evidence": "src/commands/mcp/mcp-server.js:119-129; src/commands/mcp/tools/projects.js:460-468",
+   "kind": "scope",
+   "syntax": "clientCapabilities?.roots"
+  }
+ ],
+ "version": "21.2.24"
+}

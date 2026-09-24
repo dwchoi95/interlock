@@ -1,0 +1,307 @@
+{
+ "kind": "pypi",
+ "notes": [
+  "All advertised tools are returned unconditionally by `list_tools`, so they are treated as default-enabled (server.py:321-456).",
+  "No tool in the provided code performs `git push`, network I/O, or writes to a public/attacker-readable service; local repository writes are therefore not labeled SINK."
+ ],
+ "package": "mcp-server-git",
+ "source": ".cache/sources/.views/pypi_mcp-server-git_2026.8.18_8128d1e45dc4",
+ "tools": {
+  "git_add": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "repo_path",
+    "files"
+   ],
+   "evidence": [
+    "server.py:132-153",
+    "server.py:533-538"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "The tool stages selected files in the local repository using `repo.git.add`. It validates paths remain under the repository and returns only a fixed success string. The code shows no network send or attacker-readable destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "git_branch": {
+   "attacker_named_fields": [
+    "text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "server.py:273-305",
+    "server.py:585-595"
+   ],
+   "identifier_output_fields": [
+    "text"
+   ],
+   "injectable_output_fields": [
+    "text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns `repo.git.branch(...)` output in `TextContent.text`, exposing local branch/ref names and related repository metadata. Branch or remote-ref names in third-party or multi-writer repositories may be attacker-authored.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "git_checkout": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "repo_path",
+    "branch_name"
+   ],
+   "evidence": [
+    "server.py:214-221",
+    "server.py:571-576"
+   ],
+   "identifier_output_fields": [
+    "text"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "The tool changes local repository state by checking out the supplied `branch_name` and returns a message echoing that argument. The code shows no network send or attacker-readable destination, and the returned text is not read from an outside source.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "git_commit": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "repo_path"
+   ],
+   "evidence": [
+    "server.py:128-130",
+    "server.py:526-531"
+   ],
+   "identifier_output_fields": [
+    "text"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "The tool creates a local Git commit with `repo.index.commit(message)` and returns the resulting commit hash. It changes only the local repository state shown in the code; there is no push, network send, or attacker-readable destination in this implementation.",
+   "undetermined": false,
+   "value_args": [
+    "message"
+   ]
+  },
+  "git_create_branch": {
+   "attacker_named_fields": [
+    "text"
+   ],
+   "default_enabled": true,
+   "destination_args": [
+    "repo_path",
+    "branch_name"
+   ],
+   "evidence": [
+    "server.py:200-212",
+    "server.py:560-568"
+   ],
+   "identifier_output_fields": [
+    "text"
+   ],
+   "injectable_output_fields": [
+    "text"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool writes a new local branch and returns a message containing `base.name`. When `base_branch` is omitted, `base` is `repo.active_branch`, so the output can reveal local repository metadata. Branch/ref names in third-party or multi-writer repositories may be attacker-authored.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "git_diff": {
+   "attacker_named_fields": [
+    "text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "server.py:120-126",
+    "server.py:489-495",
+    "server.py:519-524"
+   ],
+   "identifier_output_fields": [
+    "text"
+   ],
+   "injectable_output_fields": [
+    "text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool validates a `target` ref and returns `repo.git.diff(..., target)` in `TextContent.text`. Diff output can include local/private repository file contents and paths. Commit contents, file names, or branch/ref-derived content from third-party or multi-writer repositories may be attacker-authored.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "git_diff_staged": {
+   "attacker_named_fields": [
+    "text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "server.py:117-118",
+    "server.py:489-495",
+    "server.py:512-517"
+   ],
+   "identifier_output_fields": [
+    "text"
+   ],
+   "injectable_output_fields": [
+    "text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool opens the local repository from `repo_path` and returns `repo.git.diff(..., '--cached')` in `TextContent.text`. Staged diff output can contain local file contents and paths, exposing non-public host/repository data. Diff text from third-party or multi-writer repositories may be attacker-authored.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "git_diff_unstaged": {
+   "attacker_named_fields": [
+    "text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "server.py:114-115",
+    "server.py:489-495",
+    "server.py:505-510"
+   ],
+   "identifier_output_fields": [
+    "text"
+   ],
+   "injectable_output_fields": [
+    "text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool opens the local repository from `repo_path` and returns `repo.git.diff(...)` for unstaged changes in `TextContent.text`. Diff output can contain local file contents and paths, so it can expose non-public host/repository data. File contents and paths from third-party or multi-writer repositories may be attacker-authored.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "git_log": {
+   "attacker_named_fields": [
+    "text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "server.py:159-198",
+    "server.py:548-558"
+   ],
+   "identifier_output_fields": [
+    "text"
+   ],
+   "injectable_output_fields": [
+    "text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool reads local commit history and returns commit hashes, authors, dates, and messages in `TextContent.text`. Private repository history is non-public data. Commit authors and messages in third-party or multi-writer repositories may be attacker-authored.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "git_reset": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "repo_path"
+   ],
+   "evidence": [
+    "server.py:155-157",
+    "server.py:540-545"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "The tool changes local repository state by resetting the index with `repo.index.reset()` and returns only a fixed success string. The code shows no returned secret content and no attacker-readable destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "git_show": {
+   "attacker_named_fields": [
+    "text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "server.py:225-250",
+    "server.py:578-583"
+   ],
+   "identifier_output_fields": [
+    "text"
+   ],
+   "injectable_output_fields": [
+    "text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool reads a local commit and returns metadata plus patch contents in `TextContent.text`, including commit hash, author, date, message, file paths, and diff bytes/text. This can expose private repository contents and metadata. Commit messages, authors, paths, and patch text from third-party or multi-writer repositories may be attacker-authored.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "git_status": {
+   "attacker_named_fields": [
+    "text"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "server.py:111-112",
+    "server.py:489-502"
+   ],
+   "identifier_output_fields": [
+    "text"
+   ],
+   "injectable_output_fields": [
+    "text"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`call_tool` opens the caller-supplied local `repo_path` as a Git repository and returns `git_status(repo)` in `TextContent.text`. `git_status` returns `repo.git.status()`, exposing local repository state such as branch and file names. That is non-public host/repository data, and names/status text in a third-party or multi-writer repository may be attacker-authored.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "undetermined from provided code",
+   "effect": "Restricts every supplied `repo_path` to the configured repository path or a subdirectory via `validate_repo_path`; when `repository is None`, the validation function returns without restriction, so the caller-supplied path may name any local Git repository accessible to the process.",
+   "evidence": "server.py:252-270, server.py:308, server.py:491-495",
+   "kind": "configuration",
+   "syntax": "repository is not None"
+  }
+ ],
+ "version": "2026.8.18"
+}

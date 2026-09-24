@@ -1,0 +1,243 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All tools are advertised together by the `ListToolsRequestSchema` handler; there is no per-tool feature flag in the provided code.",
+  "Read tools contact fixed Slack API endpoints, not agent-chosen hosts, so their READ `destination_args` are empty even when arguments select Slack records."
+ ],
+ "package": "@modelcontextprotocol/server-slack",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-slack_2025.4.25_86a43545fc53",
+ "tools": {
+  "slack_add_reaction": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "channel_id",
+    "timestamp"
+   ],
+   "evidence": [
+    "dist/index.js:64-85",
+    "dist/index.js:219-229",
+    "dist/index.js:322-330",
+    "dist/index.js:393-402"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`slack_add_reaction` writes an agent-supplied `reaction` to a Slack message selected by call-time `channel_id` and `timestamp` via `reactions.add`. This changes Slack state at an agent-chosen message destination, so it is a SINK.",
+   "undetermined": false,
+   "value_args": [
+    "reaction"
+   ]
+  },
+  "slack_get_channel_history": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:86-103",
+    "dist/index.js:158-160",
+    "dist/index.js:231-237",
+    "dist/index.js:332-340",
+    "dist/index.js:393-402"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`slack_get_channel_history` uses the Slack bot bearer token to call `conversations.history` for a call-time `channel_id` and returns the Slack JSON response. Channel history is SaaS data reached with the user's credentials, so SECRET. Slack channel messages are authored in a multi-writer channel, so message content in the returned history is UNTRUSTED.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "slack_get_thread_replies": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:105-122",
+    "dist/index.js:158-160",
+    "dist/index.js:239-245",
+    "dist/index.js:343-351",
+    "dist/index.js:393-402"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`slack_get_thread_replies` uses the Slack bot bearer token to call `conversations.replies` for a call-time `channel_id` and `thread_ts`, then returns the Slack JSON response. Thread replies are Slack workspace SaaS data reached with the user's credentials, so SECRET. Replies in a Slack thread are multi-writer message content and therefore UNTRUSTED.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "slack_get_user_profile": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:141-153",
+    "dist/index.js:158-160",
+    "dist/index.js:260-266",
+    "dist/index.js:361-369",
+    "dist/index.js:393-402"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`slack_get_user_profile` uses the Slack bot bearer token to call `users.profile.get` for a call-time `user_id`, then returns the Slack JSON response. Detailed Slack profile data is SaaS data reached with the user's credentials, so SECRET. Profile text/display fields can be authored by the profiled Slack user, so the returned profile content is UNTRUSTED.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "slack_get_users": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:123-140",
+    "dist/index.js:158-160",
+    "dist/index.js:247-258",
+    "dist/index.js:354-358",
+    "dist/index.js:393-402"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`slack_get_users` uses the Slack bot bearer token to call `users.list` and returns the Slack JSON response. Workspace user information is SaaS data reached with the user's credentials, so SECRET. User profile/display fields in a workspace user list can be authored by the users themselves in a multi-writer service, so the returned content is UNTRUSTED.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "slack_list_channels": {
+   "attacker_named_fields": [
+    "channels"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:158-160",
+    "dist/index.js:163-176",
+    "dist/index.js:178-194",
+    "dist/index.js:293-299",
+    "dist/index.js:393-402"
+   ],
+   "identifier_output_fields": [
+    "channels",
+    "response_metadata.next_cursor"
+   ],
+   "injectable_output_fields": [
+    "channels"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`slack_list_channels` uses the configured Slack bot bearer token in `botHeaders` and reads Slack channel data from `conversations.list` or `conversations.info`, then returns the raw/constructed Slack response to the agent. That is SaaS workspace data reached with the user's credentials, so SECRET. The returned channel objects can include workspace-authored channel metadata such as names/topics/purposes; because Slack channels are multi-writer workspace resources, this output is UNTRUSTED.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "slack_post_message": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "channel_id"
+   ],
+   "evidence": [
+    "dist/index.js:24-40",
+    "dist/index.js:196-205",
+    "dist/index.js:301-309",
+    "dist/index.js:393-402"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`slack_post_message` sends agent-supplied `text` to Slack `chat.postMessage` for the agent-chosen `channel_id`. A Slack channel is an agent-chosen message destination, so this is a SINK. The Slack API host is fixed, but the recipient channel is call-time controlled.",
+   "undetermined": false,
+   "value_args": [
+    "text"
+   ]
+  },
+  "slack_reply_to_thread": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "channel_id",
+    "thread_ts"
+   ],
+   "evidence": [
+    "dist/index.js:42-63",
+    "dist/index.js:207-217",
+    "dist/index.js:311-320",
+    "dist/index.js:393-402"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`slack_reply_to_thread` sends agent-supplied `text` to Slack `chat.postMessage` with call-time `channel_id` and `thread_ts`. This delivers data to an agent-chosen Slack conversation/thread, so it is a SINK.",
+   "undetermined": false,
+   "value_args": [
+    "text"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "Unset environment variables cause exit/no tools.",
+   "effect": "The process prints an error and exits before serving tools. When both are set, the server lists all eight tools unconditionally.",
+   "evidence": "dist/index.js:270-275; dist/index.js:390-403",
+   "kind": "environment",
+   "syntax": "SLACK_BOT_TOKEN unset or SLACK_TEAM_ID unset"
+  },
+  {
+   "default": "Unset: list public channels in the configured team.",
+   "effect": "For `slack_list_channels`, when set the code reads only those predefined IDs via `conversations.info`; when unset, it lists public channels via `conversations.list`. This changes list scope but does not remove the SECRET or UNTRUSTED labels.",
+   "evidence": "dist/index.js:163-184; README.md:221-225",
+   "kind": "environment",
+   "syntax": "SLACK_CHANNEL_IDS=<comma-separated channel IDs>"
+  }
+ ],
+ "version": "2025.4.25"
+}

@@ -1,0 +1,115 @@
+{
+ "tools": {
+  "21st_magic_component_builder": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches/uses `21st.dev (library for searching UI components)` and `ONLY returns the text snippet for that UI component`; component snippets from a public/third-party component library may be attacker-authored. The description does not state whether the 21st.dev corpus is curated or multi-writer, so UNTRUSTED is kept as undetermined. It does not advertise writing files itself (`After calling this tool, you must edit or add files`) and uses a fixed service rather than an agent-chosen host, so it is not labeled SINK or HOSTEXEC.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "searchQuery",
+    "absolutePathToCurrentFile",
+    "absolutePathToProjectDirectory"
+   ],
+   "value_args": [
+    "message",
+    "searchQuery",
+    "context"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "logo_search": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Search and return logos` and can return `Component code` or `raw SVG markup`; logo data/code is public third-party content and may be attacker-controllable for attacker-owned brands or registries. The description does not settle whether the logo source is curated, so UNTRUSTED is kept as undetermined. It searches a fixed logo service/corpus and does not advertise posting to an agent-chosen destination, so it is not labeled SINK or HOSTEXEC.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "queries"
+   ],
+   "value_args": [
+    "queries"
+   ],
+   "injectable_output_fields": [
+    "Component code",
+    "Import instructions"
+   ],
+   "identifier_output_fields": [
+    "Component name"
+   ],
+   "attacker_named_fields": [
+    "Component name"
+   ]
+  },
+  "21st_magic_component_inspiration": {
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool can `fetch data and previews from 21st.dev` and returns `JSON data of matching components` / `text snippet`; public component data from a third-party component library may be attacker-authored. The description does not state whether 21st.dev content is curated or multi-writer, so UNTRUSTED is kept as undetermined. It does not advertise state changes or sending to an agent-chosen host, so it is not labeled SINK or HOSTEXEC.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "searchQuery"
+   ],
+   "value_args": [
+    "message",
+    "searchQuery"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "21st_magic_component_refiner": {
+   "labels": [
+    "SECRET"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool takes `absolutePathToRefiningFile` described as `Absolute path to the file that needs to be refined` and `returns redesigned version of the component`; if it reads that host file, the returned redesigned component may contain non-public local source. The description does not settle whether the server reads the path or only uses the supplied `context`, so SECRET is kept as undetermined. It does not advertise arbitrary execution or delivery to an agent-chosen destination, so it is not labeled HOSTEXEC or SINK.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [
+    "absolutePathToRefiningFile"
+   ],
+   "value_args": [
+    "userMessage",
+    "context"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No tool output schemas were advertised; output fields are inferred only from the descriptions. Fixed vendor/service queries are treated as not SINK, although calls still send argument values out of the agent context for kind/value-argument purposes."
+ ],
+ "usage": {
+  "input_tokens": 2132,
+  "output_tokens": 5608,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ }
+}

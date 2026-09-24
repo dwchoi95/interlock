@@ -1,0 +1,244 @@
+{
+ "tools": {
+  "browser_navigate": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Navigate to a URL` with argument `url` (`The URL to navigate to`) can make a browser request to an agent-chosen URL/host. An attacker-controlled URL can receive data encoded in the request URL. The advertised text does not say it returns page content, so SECRET/UNTRUSTED are not applied to this tool itself.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "url"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_go_back": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Go back to the previous page` can cause navigation/request to a page in browser history, which may be attacker-readable if the prior page was attacker-controlled. There is no call-time destination argument; whether it reloads from network or history cache is not settled by the text, so this is conservative.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_go_forward": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Go forward to the next page` can cause navigation/request to a page in browser history, which may be attacker-readable if the next page was attacker-controlled. There is no call-time destination argument; whether it reloads from network or history cache is not settled by the text, so this is conservative.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_snapshot": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Capture accessibility snapshot of the current page` returns page content into the agent context. The current page can be an attacker-controlled web page, so the returned snapshot is UNTRUSTED. The current page can also be non-public content, such as a logged-in site, `localhost`, intranet, or `file://` page reached by the browser, so it can expose SECRET data. The text does not restrict what the current page may be, so SECRET reach is conservative.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [
+    "ref"
+   ],
+   "attacker_named_fields": []
+  },
+  "browser_click": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Perform click on a web page` sends an agent-selected interaction to the current web page. If the page is attacker-controlled, it can observe the click or use it to trigger a request/action to an attacker-readable destination. The target is selected by the `ref` (`Exact target element reference from the page snapshot`).",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "ref"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_hover": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Hover over element on page` sends an agent-selected browser event to the current web page. If the page is attacker-controlled, it can observe that event or trigger attacker-readable network activity. The target is selected by `ref` (`Exact target element reference from the page snapshot`).",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "ref"
+   ],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_type": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Type text into editable element` sends the `text` (`Text to type into the element`) into the current web page, and `submit` may press Enter after. If the page is attacker-controlled, it can read the typed text or receive it through form submission. The destination element is selected by `ref` (`Exact target element reference from the page snapshot`).",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "ref"
+   ],
+   "value_args": [
+    "text"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_select_option": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Select an option in a dropdown` sends an agent-selected choice to the current web page. If the page is attacker-controlled, it can observe the selected `values` (`Array of values to select in the dropdown`) or submit them. The destination element is selected by `ref` (`Exact target element reference from the page snapshot`).",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [
+    "ref"
+   ],
+   "value_args": [
+    "values"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_press_key": {
+   "labels": [
+    "SINK"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Press a key on the keyboard` sends the `key` (`Name of the key to press or a character to generate`) to the currently focused web page/element. If the current page is attacker-controlled, it can observe the keystroke or use it to trigger submission/navigation. The destination is the current browser focus and is not a call-time schema argument.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "key"
+   ],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_wait": {
+   "labels": [],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Wait for a specified time in seconds` does not advertise reading page content, sending agent-supplied content, or changing remote state. The only argument, `time`, controls duration rather than a destination or stored/sent value.",
+   "default_enabled": true,
+   "undetermined": false,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_get_console_logs": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Get the console logs from the browser` returns console log text from the current browser page into the agent context. Attacker-controlled pages can author console logs, so the output is UNTRUSTED. Console logs from non-public pages, authenticated sites, `localhost`, intranet, or `file://` content may contain SECRET data. The text does not restrict what page the browser is on, so SECRET reach is conservative.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  },
+  "browser_screenshot": {
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "rationale": "`Take a screenshot of the current page` returns the visual content of the current page. If the page is attacker-controlled, the screenshot contains attacker-authored content and is UNTRUSTED. If the current page is authenticated, local, intranet, or `file://` content, the screenshot can expose SECRET data. The text does not restrict what the current page may be, so SECRET reach is conservative.",
+   "default_enabled": true,
+   "undetermined": true,
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [
+  "No source code or output schemas were provided; judgments are based only on the advertised tool names, descriptions, and input schemas.",
+  "Browser page content can be attacker-controlled after navigation to an arbitrary web host, and current-page read tools can expose either attacker-authored content or non-public content depending on what is loaded."
+ ],
+ "usage": {
+  "input_tokens": 296,
+  "output_tokens": 6337,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 1792
+ }
+}

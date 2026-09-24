@@ -1,0 +1,41 @@
+{
+ "kind": "pypi",
+ "notes": [
+  "Both tools are registered unconditionally in `list_tools` (server.py:128-180), so both are default-enabled.",
+  "The only inputs are timezone names and an HH:MM string; invalid values raise `McpError`/`ValueError` (server.py:53-57, 215-216). No sink, secret, or exec surface exists in this server."
+ ],
+ "package": "mcp-server-time",
+ "source": ".cache/sources/.views/pypi_mcp-server-time_2026.8.18_4c572db8f1b3",
+ "tools": {
+  "convert_time": {
+   "default_enabled": true,
+   "evidence": [
+    "server.py:73-120",
+    "server.py:203-207"
+   ],
+   "labels": [],
+   "rationale": "`convert_time` parses the time string with `strptime` and converts via `astimezone`; purely local computation with no outbound request, no file read, and no execution path.",
+   "undetermined": false
+  },
+  "get_current_time": {
+   "default_enabled": true,
+   "evidence": [
+    "server.py:61-71",
+    "server.py:194"
+   ],
+   "labels": [],
+   "rationale": "`get_current_time` only calls `ZoneInfo` and `datetime.now` and returns timezone/date fields; no file, network, or command access. Local time/timezone is not meaningfully non-public data and no attacker-controlled content enters the result.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "Falls back to `get_localzone_name()` or UTC",
+   "effect": "Only changes the timezone string embedded in tool descriptions; does not add or remove any capability or label.",
+   "evidence": "server.py:41-50,126",
+   "kind": "argument",
+   "syntax": "serve(local_timezone=\"<IANA tz>\") (CLI --local-timezone)"
+  }
+ ],
+ "version": "2026.8.18"
+}

@@ -1,0 +1,173 @@
+[
+ {
+  "tool": "get_tasks",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "projectRoot",
+   "tag"
+  ],
+  "annotations": {
+   "title": "Get Tasks",
+   "readOnlyHint": true
+  },
+  "rationale_code": "`get_tasks` reads task data through `n.tasks.list({tag:o,filter:e,includeSubtasks:a})` and returns it as `data:{tasks:c,...}`; task data comes from the user's Task Master project/account and is non-public. It is in the default `$n` core tool set."
+ },
+ {
+  "tool": "next_task",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "file",
+   "complexityReport",
+   "projectRoot",
+   "tag"
+  ],
+  "annotations": {
+   "title": "Next Task",
+   "readOnlyHint": true
+  },
+  "rationale_code": "`next_task` resolves the user's task file and optional complexity report (`de(e,n)`, `fe({...e,tag:r},n)`) and returns the result of `an({tasksJsonPath:a,reportPath:o,projectRoot:e.projectRoot,tag:r},...)`. This exposes non-public local/project task data. Exact returned fields are produced by helper"
+ },
+ {
+  "tool": "get_task",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [
+   "id",
+   "projectRoot",
+   "tag"
+  ],
+  "annotations": {
+   "title": "Get Task",
+   "readOnlyHint": true
+  },
+  "rationale_code": "`get_task` is advertised/registered as `get_task:Nt` and included in the default `$n` core tool set; the changelog describes the MCP `get_task` tool returning structured task objects. This exposes non-public task details from the user's project/account. The implementation body for `Nt` is not visibl"
+ },
+ {
+  "tool": "set_task_status",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "id",
+   "projectRoot",
+   "tag"
+  ],
+  "annotations": {
+   "title": "Set Task Status",
+   "destructiveHint": true
+  },
+  "rationale_code": "`set_task_status` updates local/account task records via `n.tasks.updateStatus(r,i,o)` and returns `data:{message:...,tasks:s}` including prior/new status data from the user's task store. That returned task status information is non-public project/account data. It is in the default `$n` core tool se"
+ },
+ {
+  "tool": "update_subtask",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "id",
+   "file",
+   "projectRoot",
+   "tag"
+  ],
+  "annotations": {
+   "title": "Update Subtask",
+   "destructiveHint": true
+  },
+  "rationale_code": "`update_subtask` resolves a task file with `T({projectRoot:e.projectRoot,file:e.file},t)`, writes to the selected subtask via `mn({tasksJsonPath:o,id:e.id,prompt:e.prompt,research:e.research,...})`, and returns that helper's result. It can expose non-public local/project task data. The `research` ar"
+ },
+ {
+  "tool": "parse_prd",
+  "code": [
+   "SECRET"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [
+   "UNTRUSTED"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "input",
+   "projectRoot",
+   "tag",
+   "output"
+  ],
+  "annotations": {
+   "title": "Parse PRD",
+   "destructiveHint": true
+  },
+  "rationale_code": "`parse_prd` accepts an `input` PRD file path and `projectRoot`, calls `on({...e,tag:a},...)`, and returns the result. It reads the user's local PRD and writes generated task data, so returned content can expose non-public project requirements. Although it may call configured AI providers, those are "
+ },
+ {
+  "tool": "expand_task",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "id",
+   "file",
+   "projectRoot",
+   "tag"
+  ],
+  "annotations": {
+   "title": "Expand Task",
+   "destructiveHint": true
+  },
+  "rationale_code": "`expand_task` resolves the user's task file with `T({projectRoot:e.projectRoot,file:e.file},t)` and calls `Jt({tasksJsonPath:a,id:e.id,num:e.num,research:e.research,prompt:e.prompt,...})`, returning the helper's result. It reads/writes non-public project task data. The `research` flag is passed thro"
+ }
+]

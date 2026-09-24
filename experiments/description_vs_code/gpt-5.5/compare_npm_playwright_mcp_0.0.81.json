@@ -1,0 +1,689 @@
+[
+ {
+  "tool": "browser_close",
+  "code": [],
+  "description": [],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Close browser",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`browser_close` only closes the page; no source handler shown in the bundle and its schema takes no arguments, so it neither returns page content nor delivers data anywhere. [unverified: documentation cannot verify a clearance]"
+ },
+ {
+  "tool": "browser_resize",
+  "code": [],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Resize browser window",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`browser_resize` only sets window width/height (`resize2` command maps to it); no data in or out."
+ },
+ {
+  "tool": "browser_console_messages",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "filename"
+  ],
+  "annotations": {
+   "title": "Get console messages",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "Returns all console messages of the current page. A visited attacker page can emit arbitrary console text (UNTRUSTED), and messages from the user's authenticated / localhost pages are non-public data returned into the agent context (SECRET). Handler body is not in the provided excerpt, so the readin"
+ },
+ {
+  "tool": "browser_handle_dialog",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Handle a dialog",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "Accepting/dismissing a dialog reports the page dialog state and (like other action tools, cf. `setIncludeSnapshot`) a fresh page snapshot, so attacker-page text and content of the user's authenticated pages flow back. `promptText` is handed to the page, but that is a narrow channel; handler body not"
+ },
+ {
+  "tool": "browser_evaluate",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "target",
+   "filename"
+  ],
+  "annotations": {
+   "title": "Evaluate JavaScript",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`evaluate2` runs `eval` of agent-supplied code inside the page via `page.evaluate`/`locator.evaluate` and returns its result. Page DOM of authenticated or intranet/localhost sites is read back (SECRET), the returned value is attacker-controllable when the page is attacker-owned (UNTRUSTED), and the "
+ },
+ {
+  "tool": "browser_file_upload",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "paths"
+  ],
+  "annotations": {
+   "title": "Upload files",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`uploadFile` resolves client filenames and calls `fileChooser.setFiles(paths)`, pushing arbitrary local file contents into the currently open page - if that page is attacker-controlled this exfiltrates host files (SINK, and the file content is non-public data leaving the host). It also sets `setIncl"
+ },
+ {
+  "tool": "browser_drop",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "target",
+   "paths"
+  ],
+  "annotations": {
+   "title": "Drop files or data onto an element",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`drop` delivers agent-supplied `data` (arbitrary MIME-typed strings) and local files from `paths` into the page's drop handler; on an attacker page this is a direct exfiltration channel for both agent data and local file content. Response includes the page snapshot, returning attacker-controlled and"
+ },
+ {
+  "tool": "browser_find",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": false,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Find in page snapshot",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "Searches the accessibility snapshot and returns matching nodes with surrounding context - i.e. page text. Attacker pages supply arbitrary text (UNTRUSTED) and the user's logged-in / intranet pages supply non-public content (SECRET). Handler body not in excerpt. [evidence: documentation only]"
+ },
+ {
+  "tool": "browser_fill_form",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "fields"
+  ],
+  "annotations": {
+   "title": "Fill form",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "Fills multiple fields with agent-supplied values (same mechanism as `fill`/`browser_type`); values land in a page-controlled form that an attacker site can read or submit, so it is a SINK. Responses include the page snapshot, returning attacker-controlled and authenticated page content. Handler body"
+ },
+ {
+  "tool": "browser_press_key",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Press a key",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "Presses a single key on the page; the follow-up response carries a page snapshot (attacker-controlled text, and content of the user's authenticated pages). Keystrokes can trigger a form submit but carry no agent payload themselves. Handler body not present in the excerpt."
+ },
+ {
+  "tool": "browser_type",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "target"
+  ],
+  "annotations": {
+   "title": "Type text",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`type` writes agent-supplied text into a page element with `locator2.fill`/`pressSequentially` and can press Enter to submit; on an attacker-controlled page this delivers arbitrary agent data to the attacker (SINK). `setIncludeSnapshot` returns page content, which is attacker-controllable and may be"
+ },
+ {
+  "tool": "browser_navigate",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "url"
+  ],
+  "annotations": {
+   "title": "Navigate to a URL",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`navigate` sends the browser to any agent-chosen URL via `checkUrlAndNavigate`, so data can be smuggled into the URL to an attacker host (SINK), and the resulting snapshot returns attacker-controlled page content (UNTRUSTED). With the user's persistent profile (or `--allow-unrestricted-file-access` "
+ },
+ {
+  "tool": "browser_navigate_back",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Go back",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`goBack` re-renders a previous page and sets `setIncludeSnapshot`, returning that page's content - possibly an attacker page (UNTRUSTED) or the user's authenticated page (SECRET). No agent-chosen destination, so not a SINK."
+ },
+ {
+  "tool": "browser_network_requests",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "filename"
+  ],
+  "annotations": {
+   "title": "List network requests",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "`requests` enumerates all recorded requests of the session, including URLs of intranet/authenticated endpoints (SECRET), and the URLs themselves come from visited pages an attacker may control (UNTRUSTED)."
+ },
+ {
+  "tool": "browser_network_request",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "index",
+   "filename"
+  ],
+  "annotations": {
+   "title": "Show network request details",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "`request` returns full request/response headers and bodies (`saveResponseBody`, `renderRequestDetails`), which includes cookies and Authorization headers of the user's sessions and private response payloads (SECRET); response bodies from visited sites are attacker-controlled (UNTRUSTED)."
+ },
+ {
+  "tool": "browser_run_code_unsafe",
+  "code": [
+   "HOSTEXEC",
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "HOSTEXEC",
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "filename"
+  ],
+  "annotations": {
+   "title": "Run Playwright code (unsafe)",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "Advertised as running an arbitrary JavaScript function in the Playwright server process and self-described as RCE-equivalent; `runCode2` maps the `run-code` command to `browser_run_code_unsafe` and can also load the code from a file. Arbitrary code in the server process is host execution, which impl"
+ },
+ {
+  "tool": "browser_take_screenshot",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "target",
+   "filename"
+  ],
+  "annotations": {
+   "title": "Take a screenshot",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "Returns a rendered image of the current page into the agent context: attacker-page pixels/text (UNTRUSTED) and views of the user's authenticated or intranet pages (SECRET). Images are added to the response as results (cf. `response2.addResult` for image payloads)."
+ },
+ {
+  "tool": "browser_snapshot",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "target",
+   "filename"
+  ],
+  "annotations": {
+   "title": "Page snapshot",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "`snapshot` captures the full accessibility tree of the current page via `setIncludeFullSnapshot`, returning attacker-controlled page text (UNTRUSTED) and the content of the user's logged-in / localhost pages (SECRET). The optional `filename` writes into the workspace, not a public destination."
+ },
+ {
+  "tool": "browser_click",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": true,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "target"
+  ],
+  "annotations": {
+   "title": "Click",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`click` acts on a page element and `setIncludeSnapshot` returns the resulting page content (attacker-controlled text, or private content of an authenticated page). Clicking can submit data already present in the page but carries no agent payload itself, so no SINK label."
+ },
+ {
+  "tool": "browser_drag",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "startTarget",
+   "endTarget"
+  ],
+  "annotations": {
+   "title": "Drag mouse",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`drag` performs drag-and-drop between two page elements; the response includes the page snapshot, returning attacker-controlled and authenticated page content. Handler body is not in the provided excerpt."
+ },
+ {
+  "tool": "browser_hover",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "target"
+  ],
+  "annotations": {
+   "title": "Hover mouse",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`hover` is part of the snapshot tool set and returns the page snapshot after hovering, bringing attacker-controlled page text and content of the user's authenticated pages into context. Handler body not in the excerpt."
+ },
+ {
+  "tool": "browser_select_option",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SINK"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "overstated": [
+   "SINK"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "target"
+  ],
+  "annotations": {
+   "title": "Select option",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`selectOption` chooses dropdown values in the page and returns the resulting snapshot (attacker-controlled / authenticated page content). Values are constrained to existing options, so it is not a meaningful exfiltration channel. Handler body not in the excerpt."
+ },
+ {
+  "tool": "browser_tabs",
+  "code": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "action",
+   "index",
+   "url"
+  ],
+  "annotations": {
+   "title": "Manage tabs",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`browserTabs` with `action: \"new\"` navigates the new tab to any agent-chosen URL through `checkUrlAndNavigate`, so agent data can be sent to an attacker host (SINK); it then renders tab headers/snapshots, returning attacker page titles/URLs (UNTRUSTED) and the user's authenticated page state (SECRET"
+ },
+ {
+  "tool": "browser_wait_for",
+  "code": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET"
+  ],
+  "code_verified": false,
+  "hidden": [
+   "UNTRUSTED"
+  ],
+  "overstated": [],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "Wait for",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "Waits for text to appear/disappear and returns the resulting page state, so attacker page text and content of the user's authenticated pages reach the agent. Handler body not in the provided excerpt, so labels kept. [evidence: documentation only]"
+ },
+ {
+  "tool": "browser_webmcp_list",
+  "code": [
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "READ",
+  "destination_args_description": [],
+  "annotations": {
+   "title": "List WebMCP tools",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  },
+  "rationale_code": "`webmcpList` renders the tool listing registered by the page itself (`tab2.webmcpTools()`), i.e. names, descriptions and schemas fully controlled by whatever site is loaded - prime prompt-injection content."
+ },
+ {
+  "tool": "browser_webmcp_call",
+  "code": [
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "description": [
+   "SECRET",
+   "SINK",
+   "UNTRUSTED"
+  ],
+  "code_verified": true,
+  "hidden": [],
+  "overstated": [
+   "SECRET"
+  ],
+  "kind_description": "WRITE",
+  "destination_args_description": [
+   "name",
+   "frame"
+  ],
+  "annotations": {
+   "title": "Call a WebMCP tool",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": true
+  },
+  "rationale_code": "`webmcpCall` serializes agent-supplied `params` and runs `callToolInPage` through `frame.evaluate`, handing that data to page-provided JavaScript (an attacker page can read and forward it - SINK), and returns the page-provided output which the tool itself declares untrusted."
+ }
+]

@@ -1,0 +1,123 @@
+{
+ "kind": "npm",
+ "notes": [
+  "All tools are registered unconditionally at module load and served over stdio (`dist/index.js:238-462`, `dist/index.js:499-500`); there are no feature flags or toolsets, so every tool is default-enabled.",
+  "No HTTP client, no child process/eval, and no filesystem path derived from tool arguments anywhere in the file \u2014 hence no SINK and no HOSTEXEC on any tool.",
+  "Storage is a single local JSONL file that only these tools write (`saveGraph`, dist/index.js:82-116). Under the stated threat model an attacker does not control the user's local files, so read-back was not labelled UNTRUSTED; note however that if the agent previously stored web/issue text via `add_observations`, `read_graph`/`search_nodes`/`open_nodes` will replay that text later (memory-poisoning persistence), which is a laundering path rather than a direct attacker-controlled source."
+ ],
+ "package": "@modelcontextprotocol/server-memory",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-memory_2026.8.31_59ad4662270d",
+ "tools": {
+  "add_observations": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:307-313",
+    "dist/index.js:133-146"
+   ],
+   "labels": [],
+   "rationale": "`addObservations` mutates the local graph file and returns the list of observations the caller just supplied. No reading of other user data into context, no network or process execution.",
+   "undetermined": false
+  },
+  "create_entities": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:253-259",
+    "dist/index.js:117-123",
+    "dist/index.js:108-109"
+   ],
+   "labels": [],
+   "rationale": "`createEntities` appends caller-supplied entities to the local JSONL graph via `saveGraph` (`fs.writeFile`/`fs.rename` on `MEMORY_FILE_PATH`). The response only echoes the newly created entities, so no non-public data is returned; the destination is a local file not readable by an attacker, and no code execution or network egress occurs.",
+   "undetermined": false
+  },
+  "create_relations": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:277-283",
+    "dist/index.js:124-132",
+    "dist/index.js:105-109"
+   ],
+   "labels": [],
+   "rationale": "`createRelations` writes caller-supplied relations to the local memory file through `saveGraph` and returns only the echoed input. Purely local persistence: no secret read-back, no attacker-controlled input source, no egress channel.",
+   "undetermined": false
+  },
+  "delete_entities": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:332-338",
+    "dist/index.js:147-152"
+   ],
+   "labels": [],
+   "rationale": "`deleteEntities` filters entities/relations out of the local graph and rewrites the file; the response is a fixed success message. Destructive locally but no data exfiltration, no secret return, no exec.",
+   "undetermined": false
+  },
+  "delete_observations": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:360-366",
+    "dist/index.js:153-162"
+   ],
+   "labels": [],
+   "rationale": "`deleteObservations` rewrites the local memory file with observations removed and returns a constant message. No labelled reach.",
+   "undetermined": false
+  },
+  "delete_relations": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:385-391",
+    "dist/index.js:163-169"
+   ],
+   "labels": [],
+   "rationale": "`deleteRelations` rewrites the local memory file and returns a constant success message. No secret return, no attacker-readable destination, no execution.",
+   "undetermined": false
+  },
+  "open_nodes": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:456-461",
+    "dist/index.js:191-207",
+    "dist/index.js:54"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`openNodes` reads the local memory file via `loadGraph` and returns the requested entities plus every relation touching them, i.e. non-public locally stored user data.",
+   "undetermined": false
+  },
+  "read_graph": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:408-413",
+    "dist/index.js:170-172",
+    "dist/index.js:52-54"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`readGraph` -> `loadGraph` does `fs.readFile(this.memoryFilePath)` and returns the entire persisted knowledge graph (arbitrary private user notes stored under the user's own account/host) into the agent's context, so it is SECRET. The path comes from `MEMORY_FILE_PATH`/`defaultMemoryPath`, not from tool arguments, so it cannot be steered to arbitrary host files by the agent.",
+   "undetermined": false
+  },
+  "search_nodes": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:432-437",
+    "dist/index.js:174-190",
+    "dist/index.js:54"
+   ],
+   "labels": [
+    "SECRET"
+   ],
+   "rationale": "`searchNodes` loads the local memory file with `fs.readFile` and returns matching entities, types and observation text \u2014 the user's private stored memories \u2014 into the agent's context.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "unset \u2014 `memory.jsonl` next to dist/index.js (`defaultMemoryPath`), with one-time migration of a legacy `memory.json`",
+   "effect": "Changes which local file the read tools read and the write tools rewrite; does not remove any tool or label. Relative values are resolved against the server's dist directory.",
+   "evidence": "dist/index.js:14-18",
+   "kind": "env",
+   "syntax": "MEMORY_FILE_PATH=/path/to/custom/memory.jsonl"
+  }
+ ],
+ "version": "2026.8.31"
+}

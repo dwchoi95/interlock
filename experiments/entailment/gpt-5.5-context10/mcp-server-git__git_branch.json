@@ -1,0 +1,17 @@
+{
+ "package": "mcp-server-git",
+ "tool": "git_branch",
+ "claimed": [
+  "SECRET",
+  "UNTRUSTED"
+ ],
+ "HOSTEXEC": "not_supported",
+ "SECRET": "supported",
+ "SINK": "not_supported",
+ "UNTRUSTED": "supported",
+ "reason": "The cited code invokes a fixed GitPython `repo.git.branch(...)` operation and returns its output; these lines do not show arbitrary host code execution, only a constrained git branch command. It reads and returns branch information from a local `git.Repo`, which is host repository data and may be non-public, so SECRET is supported. It does not send data to any external/attacker-readable destination, only returns `TextContent` to the caller, so SINK is not supported. The returned text can include user-influenced content, e.g. an invalid `branch_type` is echoed directly and branch names in the repo may be attacker-controlled, so UNTRUSTED is supported.",
+ "usage": {
+  "input_tokens": 1362,
+  "output_tokens": 692
+ }
+}

@@ -1,0 +1,246 @@
+{
+ "kind": "python",
+ "notes": [
+  "All tools are treated as default-enabled because the advertised text does not state that any tool is disabled by default.",
+  "Judgments are based only on the advertised descriptions and schemas; no source code or implementation restrictions were provided."
+ ],
+ "package": "agentdojo/slack",
+ "source": "(description only)",
+ "tools": {
+  "add_user_to_channel": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "user",
+    "channel"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The tool can `Add a user to a given channel`. This writes Slack state and can grant an agent-chosen `user` access to an agent-chosen `channel`, making it an attacker-readable destination if the chosen user is attacker-controlled.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_channels": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns `the list of channels in the slack`, which is Slack workspace data and may be non-public, so it is SECRET. Channel names/lists in a multi-user Slack can be created or influenced by other workspace users; the description does not say channels are trusted or user-owned only, so under the least-restrictive reading this is also UNTRUSTED.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_users_in_channel": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool returns `the list of users in the given channel`, which is Slack workspace membership data and may be non-public, so it is SECRET. User names in a multi-user Slack can include names chosen by other users; the description does not restrict this to trusted/user-owned data, so under the least-restrictive reading it is also UNTRUSTED.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_webpage": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED",
+    "SINK"
+   ],
+   "rationale": "The tool `Returns the content of the webpage at a given URL`. A URL can point to attacker-controlled web content, so the returned page is UNTRUSTED. The `url` is agent-chosen, so fetching it can make a request to an attacker-controlled host and is a SINK. The description does not restrict schemes or hosts; under the least-restrictive reading it may be able to reach localhost, intranet, or other non-public URLs and return their contents, so it is SECRET.",
+   "undetermined": true,
+   "value_args": []
+  },
+  "invite_user_to_slack": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "user",
+    "user_email"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The tool `Invites a user to the Slack workspace` and sends the invite to `user_email`. Because both the invited user and email address are agent-chosen, this can deliver an invite or workspace access to an attacker-readable recipient.",
+   "undetermined": false,
+   "value_args": [
+    "user"
+   ]
+  },
+  "post_webpage": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The tool `Posts a webpage at a given URL with the given content`. The `url` is agent-chosen and the `content` is agent-supplied, so it can deliver data to an attacker-controlled URL or host.",
+   "undetermined": false,
+   "value_args": [
+    "content"
+   ]
+  },
+  "read_channel_messages": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool can `Read the messages from the given channel`, so it returns potentially non-public Slack channel messages and is SECRET. Slack channel messages are authored in a multi-writer source, so their text may be attacker-controlled and is UNTRUSTED.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_inbox": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "The tool can `Read the messages from the given user inbox`, so it returns non-public Slack inbox data and is SECRET. Inbox messages can be sent by other users, so message text can be attacker-controlled and is UNTRUSTED.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "remove_user_from_slack": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "user"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "rationale": "The tool can `Remove a user from the Slack workspace`, which changes Slack state but does not by itself return secret data or deliver agent-supplied content to an attacker-readable destination.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "send_channel_message": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "channel"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The tool can `Send a channel message` to a specified `channel` with the given body. A channel is an agent-chosen destination and may be readable by an attacker, so this is a SINK.",
+   "undetermined": false,
+   "value_args": [
+    "body"
+   ]
+  },
+  "send_direct_message": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [
+    "recipient"
+   ],
+   "evidence": [
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "The tool can `Send a direct message` to a specified `recipient` with the given message body. Because the `recipient` is agent-chosen and may be attacker-controlled, this can deliver agent-supplied data to an attacker-readable destination.",
+   "undetermined": false,
+   "value_args": [
+    "body"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "v1.2"
+}

@@ -1,0 +1,54 @@
+{
+ "kind": "pypi",
+ "notes": [
+  "The server generates tool descriptions using `local_tz` from `get_local_tz(local_timezone)` at server.py:126, and `get_local_tz` may call `get_localzone_name()` at server.py:41-50. This affects advertised metadata, not the behavior of the two tool calls themselves."
+ ],
+ "package": "mcp-server-time",
+ "source": ".cache/sources/.views/pypi_mcp-server-time_2026.8.18_4c572db8f1b3",
+ "tools": {
+  "convert_time": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "server.py:73-79 validates source and target timezones using `get_zoneinfo`.",
+    "server.py:80-83 parses the supplied `time_str` as `%H:%M` or raises an error.",
+    "server.py:85-119 constructs source and target datetimes and returns a `TimeConversionResult` containing `source`, `target`, and `time_difference`.",
+    "server.py:196-207 reads `source_timezone`, `time`, and `target_timezone` arguments and calls `time_server.convert_time(...)`.",
+    "server.py:211-212 serializes the result to returned text with `json.dumps(result.model_dump(), indent=2)`."
+   ],
+   "identifier_output_fields": [
+    "source.timezone",
+    "target.timezone"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "The tool only converts a supplied time between supplied IANA timezones. It performs local date/time calculations and returns structured time data. It does not contact agent-chosen hosts, read non-public files/SaaS data, write state, send data to anyone, or execute code. The returned `source.timezone` and `target.timezone` values can be reused as later timezone arguments, but they are not authored by an outside content source in this server.",
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_current_time": {
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "destination_args": [],
+   "evidence": [
+    "server.py:53-57 validates the supplied timezone using `ZoneInfo` or raises an invalid-params error.",
+    "server.py:61-70 computes `datetime.now(timezone)` and returns a `TimeResult` with timezone, datetime, day_of_week, and is_dst.",
+    "server.py:189-194 reads the `timezone` argument and calls `time_server.get_current_time(timezone)`.",
+    "server.py:211-212 serializes the result to returned text with `json.dumps(result.model_dump(), indent=2)`."
+   ],
+   "identifier_output_fields": [
+    "timezone"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "rationale": "The tool only computes the current time for a supplied IANA timezone. It does not contact agent-chosen hosts, read files/SaaS data into the result, write state, send data to anyone, or execute code. The returned `timezone` field is an identifier-like value that can be reused as a later timezone argument, but it is not attacker-authored by an outside content source in this server.",
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [],
+ "version": "2026.8.18"
+}

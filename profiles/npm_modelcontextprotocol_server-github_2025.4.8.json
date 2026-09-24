@@ -1,0 +1,312 @@
+{
+ "kind": "npm",
+ "notes": [
+  "Only the bundled `dist/index.js` and README were provided; the `./operations/*.js` helpers and the credential handling in `common/utils` are not shown, so the exact HTTP calls are inferred from the handler names and README tool contracts.",
+  "All 26 tools are registered unconditionally in the ListTools handler (dist/index.js:54-189) and dispatched in one switch (dist/index.js:195-406); there is no toolset/flag gating, so every tool is default-enabled.",
+  "Authentication uses `GITHUB_PERSONAL_ACCESS_TOKEN` (README.md:310-316, README.md:332-336); with a `repo`-scoped token the read tools reach private repositories, which is the basis for the SECRET labels. With a token limited to `public_repo` the SECRET reach would be reduced, but that is not enforced in code.",
+  "No tool performs agent-directed network fetches to arbitrary hosts, filesystem access, or subprocess execution, so no HOSTEXEC and no arbitrary-URL SINK exists; all traffic goes to the fixed GitHub API."
+ ],
+ "package": "@modelcontextprotocol/server-github",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-github_2025.4.8_5edf77157f2c",
+ "tools": {
+  "add_issue_comment": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:315-321"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`issues.addIssueComment` posts an agent-supplied `body` as a comment on any issue, including issues in public repos the attacker can read.",
+   "undetermined": false
+  },
+  "create_branch": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:203-208"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`branches.createBranchFromRef` creates an agent-named ref in an agent-chosen repository; on a public repo the branch name is publicly visible, so agent-supplied text reaches an attacker-readable destination (narrow channel, hence undetermined).",
+   "undetermined": true
+  },
+  "create_issue": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:245-255"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`issues.createIssue` posts agent-supplied `title`/`body` into any repository, including public ones where the issue is world-readable.",
+   "undetermined": false
+  },
+  "create_or_update_file": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:231-236",
+    "dist/index.js:58-61"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`files.createOrUpdateFile` writes agent-supplied `content` and `message` to an agent-chosen `owner`/`repo`/`branch`; the repository may be public, so arbitrary agent data lands in an attacker-readable location.",
+   "undetermined": false
+  },
+  "create_pull_request": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:271-276"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`pulls.createPullRequest` publishes an agent-supplied `title`/`body` to an agent-chosen repository; on a public repo this is attacker-readable output.",
+   "undetermined": false
+  },
+  "create_pull_request_review": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:352-358"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`pulls.createPullRequestReview` publishes an agent-supplied review `body` plus per-line comment bodies on any PR, including PRs in public repos readable by the attacker.",
+   "undetermined": false
+  },
+  "create_repository": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:217-222",
+    "dist/index.js:68-71"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`repository.createRepository` creates a repository from agent-supplied `name`/`description` with `private` optional; a public repo in the user's account makes that agent-chosen text publicly readable, a low-bandwidth but real exfiltration channel.",
+   "undetermined": false
+  },
+  "fork_repository": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:196-201"
+   ],
+   "labels": [],
+   "rationale": "`repository.forkRepository` copies a repo into the user's account or an org; it carries no agent-authored payload to a public destination and returns only fork metadata. It can echo metadata of a repo the user can read privately, which is why this is marked undetermined rather than asserting no reach at all.",
+   "undetermined": true
+  },
+  "get_file_contents": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:224-229"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`files.getFileContents` reads any path of any repo with the user's credentials, returning private repository file contents (SECRET) and, for attacker-owned public repos, attacker-controlled text (UNTRUSTED).",
+   "undetermined": false
+  },
+  "get_issue": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:330-335"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`issues.getIssue` fetches an issue from any repo: private-repo issues read with the user's credentials (SECRET) and public issue bodies authored by attackers (UNTRUSTED).",
+   "undetermined": false
+  },
+  "get_pull_request": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:337-342"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`pulls.getPullRequest` returns PR details for any repo, covering private repository data (SECRET) and attacker-written PR titles/bodies in public repos (UNTRUSTED).",
+   "undetermined": false
+  },
+  "get_pull_request_comments": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:390-395"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`pulls.getPullRequestComments` returns review comments: private repo discussion read with the user's token (SECRET) and public PR comments written by arbitrary parties (UNTRUSTED).",
+   "undetermined": false
+  },
+  "get_pull_request_files": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:368-373"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`pulls.getPullRequestFiles` returns changed files with patch contents: private-repo diffs via the user's PAT (SECRET) and attacker-supplied diff content from public-repo PRs (UNTRUSTED).",
+   "undetermined": false
+  },
+  "get_pull_request_reviews": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:397-402"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`pulls.getPullRequestReviews` returns review bodies and states, private-repo reviews via the user's PAT (SECRET) and attacker-authored review text on public PRs (UNTRUSTED).",
+   "undetermined": false
+  },
+  "get_pull_request_status": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:375-380"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`pulls.getPullRequestStatus` returns combined check statuses of any PR, including private repo check data (SECRET); status contexts/descriptions/target URLs on public PRs come from third-party apps an attacker can influence (UNTRUSTED).",
+   "undetermined": false
+  },
+  "list_commits": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:323-328"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`commits.listCommits` returns commit history of any repo with the user's token: private-repo history (SECRET) and attacker-authored commit messages/author fields from public repos (UNTRUSTED).",
+   "undetermined": false
+  },
+  "list_issues": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:299-305"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`issues.listIssues` reads issues from private repos with the user's PAT (SECRET) and from public repos where issue titles/bodies are written by arbitrary third parties (UNTRUSTED).",
+   "undetermined": false
+  },
+  "list_pull_requests": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:344-350"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`pulls.listPullRequests` lists PRs of an agent-chosen repo, exposing private repo data (SECRET) and third-party-authored PR text from public repos (UNTRUSTED).",
+   "undetermined": false
+  },
+  "merge_pull_request": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:360-366"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`pulls.mergePullRequest` writes agent-supplied `commit_title`/`commit_message` into the repository history of an agent-chosen repo, which may be public.",
+   "undetermined": false
+  },
+  "push_files": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:238-243"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`files.pushFiles` commits an agent-supplied array of file paths/contents to an agent-chosen repo and branch, which may be a public repository readable by the attacker.",
+   "undetermined": false
+  },
+  "search_code": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:278-283"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`search.searchCode` searches with the user's token, so hits can include private repositories' code (SECRET), and public code fragments are attacker-authored (UNTRUSTED).",
+   "undetermined": false
+  },
+  "search_issues": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:285-290"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`search.searchIssues` returns issue/PR titles and bodies; scoped queries can surface private repo issues via the user's PAT (SECRET), and public issue text is fully attacker-controllable (UNTRUSTED).",
+   "undetermined": false
+  },
+  "search_repositories": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:210-215"
+   ],
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "rationale": "`repository.searchRepositories` runs a GitHub search with the user's PAT, so results can include private repositories the token can read (SECRET), and repository names/descriptions/READMEs in results are attacker-authored public content (UNTRUSTED).",
+   "undetermined": false
+  },
+  "search_users": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:292-297"
+   ],
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "rationale": "`search.searchUsers` returns public profile data (names, bios, logins) that any attacker can set on their own account; no non-public data is exposed.",
+   "undetermined": false
+  },
+  "update_issue": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:307-313"
+   ],
+   "labels": [
+    "SINK"
+   ],
+   "rationale": "`issues.updateIssue` writes agent-supplied `title`/`body`/labels onto an issue in an agent-chosen repository, which may be public and attacker-readable.",
+   "undetermined": false
+  },
+  "update_pull_request_branch": {
+   "default_enabled": true,
+   "evidence": [
+    "dist/index.js:382-388"
+   ],
+   "labels": [],
+   "rationale": "`pulls.updatePullRequestBranch` only triggers a base-branch merge and returns `{success:true}`; it neither returns repository content nor carries agent-authored text to a readable destination.",
+   "undetermined": false
+  }
+ },
+ "value_conditions": [],
+ "version": "2025.4.8"
+}
