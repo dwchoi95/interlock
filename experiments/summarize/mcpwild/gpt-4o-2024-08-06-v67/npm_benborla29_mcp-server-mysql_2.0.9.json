@@ -1,0 +1,118 @@
+{
+ "kind": "npm",
+ "notes": [],
+ "package": "@benborla29/mcp-server-mysql",
+ "source": ".cache/sources/.views/npm_benborla29_mcp-server-mysql_2.0.9_012ed52c00ff",
+ "tools": {
+  "mysql_query": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:193-211",
+    "dist/index.js:200",
+    "dist/index.js:218-238"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "dist/index.js:200",
+     "data": "sql",
+     "destination_class": "configured_own_service",
+     "host_or_config": "getPool",
+     "resolved": "configured:config"
+    }
+   ],
+   "rationale": "The `mysql_query` tool executes SQL queries against a MySQL database. The SQL query is taken from the `sql` argument and executed using `executeReadOnlyQuery`, which connects to the database using a configured pool (`getPool`). The result of the query is not directly returned; instead, any error message is returned as part of an error response. The tool is read-only by default, as indicated by the `readOnlyHint` annotation and the absence of write operations in the code.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "Error: ${error.message}",
+     "produced_at": "dist/index.js:208",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:197#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/index.js:197",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:197#1",
+     "origin": "argument_echo",
+     "part": "request.params.name",
+     "produced_at": "dist/index.js:197",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:208#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/index.js:208",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/index.js:208#1",
+     "origin": "computed",
+     "part": "error.message",
+     "produced_at": "dist/index.js:208",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/index.js:200",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "sql"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "false",
+   "effect": "Enables INSERT operations",
+   "evidence": "dist/index.js:20",
+   "kind": "flag",
+   "syntax": "ALLOW_INSERT_OPERATION"
+  },
+  {
+   "default": "false",
+   "effect": "Enables UPDATE operations",
+   "evidence": "dist/index.js:21",
+   "kind": "flag",
+   "syntax": "ALLOW_UPDATE_OPERATION"
+  },
+  {
+   "default": "false",
+   "effect": "Enables DELETE operations",
+   "evidence": "dist/index.js:22",
+   "kind": "flag",
+   "syntax": "ALLOW_DELETE_OPERATION"
+  },
+  {
+   "default": "false",
+   "effect": "Enables DDL operations",
+   "evidence": "dist/index.js:23",
+   "kind": "flag",
+   "syntax": "ALLOW_DDL_OPERATION"
+  }
+ ],
+ "version": "2.0.9"
+}

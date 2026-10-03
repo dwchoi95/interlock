@@ -1,0 +1,10 @@
+# The Chrome DevTools scenarios of Section 5.3: the RQ2 image plus Chromium and the pinned chrome-devtools-mcp, which
+# connects to a Chromium the harness starts with the developer's tabs already open (stubs/chrome_mcp.py).
+FROM interlock-rq2:0806
+RUN apt-get update && apt-get install -y --no-install-recommends chromium \
+ && rm -rf /var/lib/apt/lists/* \
+ && npm install -g chrome-devtools-mcp@1.10.1 @agent-infra/mcp-server-browser@1.2.29
+# @agent-infra/mcp-server-browser takes --executable-path but exposes no sandbox flag; Chromium needs --no-sandbox as
+# root, so point it at this wrapper.
+RUN printf '#!/bin/sh\nexec /usr/bin/chromium --no-sandbox "$@"\n' > /usr/local/bin/chromium-nosandbox \
+ && chmod +x /usr/local/bin/chromium-nosandbox

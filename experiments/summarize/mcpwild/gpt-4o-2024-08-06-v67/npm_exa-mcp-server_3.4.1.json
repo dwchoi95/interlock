@@ -1,0 +1,133 @@
+{
+ "kind": "npm",
+ "notes": [],
+ "package": "exa-mcp-server",
+ "source": ".cache/sources/.views/npm_exa-mcp-server_3.4.1_6e6d2516ca7d",
+ "tools": {
+  "web_fetch_exa": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "urls"
+   ],
+   "evidence": [
+    "dist/stdio.cjs:43389-43512",
+    "dist/stdio.cjs:43435-43512"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/stdio.cjs:43452",
+     "data": "crawlRequest",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "/contents",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The `web_fetch_exa` tool sends a crawl request to the Exa API to fetch full content from specified URLs. The results include content from public sources, controlled by outside parties. The search time is also returned, which is a computed value by the service. The tool makes an outbound call to a literal host in the code, which is the Exa API endpoint for content fetching. [destination_args completed: urls] [unverified outbound: '/contents' resolves to no host or configuration]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "dist/stdio.cjs:43487",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "searchTime",
+     "produced_at": "dist/stdio.cjs:43493",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "maxCharacters"
+   ]
+  },
+  "web_search_exa": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/stdio.cjs:43176-43385",
+    "dist/stdio.cjs:45373-45572"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/stdio.cjs:43230",
+     "data": "searchRequest",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "API_CONFIG.ENDPOINTS.SEARCH",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The `web_search_exa` tool sends a search request to the Exa API with the user's query and returns the search results. The results include content from public sources, which is controlled by outside parties. The search time is also returned, which is a computed value by the service. The tool makes an outbound call to a literal host in the code, which is the Exa API endpoint for search. [unverified outbound: 'API_CONFIG.ENDPOINTS.SEARCH' resolves to no host or configuration]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "dist/stdio.cjs:43146",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "searchTime",
+     "produced_at": "dist/stdio.cjs:43141",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "query",
+    "numResults"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "3.4.1"
+}

@@ -1,0 +1,2743 @@
+{
+ "tools": {
+  "jira_get_user_profile": {
+   "result_contents": [
+    {
+     "part": "user profile information",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves profile information for a specific Jira user based on the `user_identifier`. The result is the user's profile information, which is read from an unknown scope since the description does not specify whether it is public or private.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "jira_search_assignable_users": {
+   "result_contents": [
+    {
+     "part": "list of assignable users",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches for Jira users assignable in a given project or issue based on a query. The result is a list of assignable users, which is read from an unknown scope since the description does not specify whether it is public or private. [received records: list of assignable users taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_get_issue_watchers": {
+   "result_contents": [
+    {
+     "part": "list of watchers",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves the list of watchers for a specific Jira issue. The result is the list of watchers, which is read from an unknown scope since the description does not specify whether it is public or private. [received records: list of watchers taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_add_watcher": {
+   "result_contents": [
+    {
+     "part": "confirmation of watcher addition",
+     "produced_at": "return",
+     "origin": "literal",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "issue_key, user_identifier",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool adds a user as a watcher to a Jira issue. The outbound call sends the issue key and user identifier to the Jira API to perform this action.",
+   "kind": "WRITE",
+   "destination_args": [
+    "issue_key",
+    "user_identifier"
+   ],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_remove_watcher": {
+   "result_contents": [
+    {
+     "part": "confirmation of watcher removal",
+     "produced_at": "return",
+     "origin": "literal",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "issue_key, username or account_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool removes a user from watching a Jira issue. The outbound call sends the issue key and either the username or account ID to the Jira API to perform this action.",
+   "kind": "WRITE",
+   "destination_args": [
+    "issue_key",
+    "username",
+    "account_id"
+   ],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_get_issue": {
+   "result_contents": [
+    {
+     "part": "issue details",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves details of a specific Jira issue. The result is the issue details, which are read from an unknown scope since the description does not specify whether it is public or private. [received records: issue details taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_search": {
+   "result_contents": [
+    {
+     "part": "list of issues",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches Jira issues using JQL. The result is a list of issues, which is read from an unknown scope since the description does not specify whether it is public or private. [received records: list of issues taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_search_fields": {
+   "result_contents": [
+    {
+     "part": "list of fields",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches Jira fields by keyword with fuzzy match. The result is a list of fields, which is read from an unknown scope since the description does not specify whether it is public or private.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "jira_get_field_options": {
+   "result_contents": [
+    {
+     "part": "list of valid options for select, multi-select, radio, checkbox, and cascading select custom fields",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns a list of valid options for custom fields, which is read from the user's Jira account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_get_project_issues": {
+   "result_contents": [
+    {
+     "part": "list of issues for a specific Jira project",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns a list of issues for a specific Jira project, which is read from the user's Jira account. [received records: list of issues for a specific Jira project taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_get_transitions": {
+   "result_contents": [
+    {
+     "part": "available status transitions for a Jira issue",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns available status transitions for a Jira issue, which is read from the user's Jira account. [received records: available status transitions for a Jira issue taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_get_worklog": {
+   "result_contents": [
+    {
+     "part": "worklog entries for a Jira issue",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns worklog entries for a Jira issue, which is read from the user's Jira account. [received records: worklog entries for a Jira issue taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_download_attachments": {
+   "result_contents": [
+    {
+     "part": "attachment contents as base64-encoded content",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns attachment contents as base64-encoded content, which is read from the user's Jira account. [received records: attachment contents as base64-encoded content taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_get_issue_images": {
+   "result_contents": [
+    {
+     "part": "images attached to a Jira issue as inline image content",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns images attached to a Jira issue as inline image content, which is read from the user's Jira account. [received records: images attached to a Jira issue as inline image content taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_get_agile_boards": {
+   "result_contents": [
+    {
+     "part": "list of jira agile boards",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns a list of Jira agile boards, which is read from the user's Jira account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_get_board_issues": {
+   "result_contents": [
+    {
+     "part": "list of issues linked to a specific board filtered by JQL",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns a list of issues linked to a specific board filtered by JQL, which is read from the user's Jira account. [received records: list of issues linked to a specific board filtered by JQL taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_get_sprints_from_board": {
+   "result_contents": [
+    {
+     "part": "sprints",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `jira_get_sprints_from_board` retrieves sprints from a board by state. The result is a list of sprints, which is read from the service. There are no outbound calls or code execution involved.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "jira_get_sprint_issues": {
+   "result_contents": [
+    {
+     "part": "issues",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `jira_get_sprint_issues` retrieves issues from a sprint. The result is a list of issues, which is read from the service. There are no outbound calls or code execution involved. [received records: issues taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_get_link_types": {
+   "result_contents": [
+    {
+     "part": "link_types",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `jira_get_link_types` retrieves all available issue link types. The result is a list of link types, which is read from the service. There are no outbound calls or code execution involved. [received records: link_types taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_create_issue": {
+   "result_contents": [
+    {
+     "part": "issue_key",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "project_key, summary, issue_type, assignee, description, components, additional_fields",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `jira_create_issue` creates a new Jira issue. It sends data to the Jira API, which is a literal host in the code. The result is the key of the created issue, which is computed by the service.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "project_key",
+    "summary",
+    "issue_type",
+    "assignee",
+    "description",
+    "components",
+    "additional_fields"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_batch_create_issues": {
+   "result_contents": [
+    {
+     "part": "issue_keys",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "issues",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `jira_batch_create_issues` creates multiple Jira issues in a batch. It sends data to the Jira API, which is a literal host in the code. The result is a list of keys of the created issues, which is computed by the service.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "issues"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_batch_get_changelogs": {
+   "result_contents": [
+    {
+     "part": "changelogs",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `jira_batch_get_changelogs` retrieves changelogs for multiple Jira issues. The result is a list of changelogs, which is read from the service. There are no outbound calls or code execution involved. [received records: changelogs taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_update_issue": {
+   "result_contents": [
+    {
+     "part": "updated_issue_fields",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "issue_key, fields, additional_fields, components, attachments, return_fields",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `jira_update_issue` updates an existing Jira issue. It sends data to the Jira API, which is a literal host in the code. The result is the updated fields of the issue, which is computed by the service.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "issue_key",
+    "fields",
+    "additional_fields",
+    "components",
+    "attachments",
+    "return_fields"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_assign_issue": {
+   "result_contents": [
+    {
+     "part": "assignment_status",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "issue_key, assignee",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `jira_assign_issue` assigns a Jira issue to a user. It sends data to the Jira API, which is a literal host in the code. The result is the status of the assignment, which is computed by the service.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "issue_key",
+    "assignee"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_delete_issue": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "issue_key",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool deletes an existing Jira issue using the `issue_key`. The operation is destructive and affects the user's Jira account.",
+   "kind": "WRITE",
+   "destination_args": [
+    "issue_key"
+   ],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_move_issue": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "issue_key, target_project_key",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool moves a Jira issue to a different project using the `issue_key` and `target_project_key`. The operation is destructive and affects the user's Jira account.",
+   "kind": "WRITE",
+   "destination_args": [
+    "issue_key",
+    "target_project_key"
+   ],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_add_comment": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "issue_key, body, visibility, public",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool adds a comment to a Jira issue using the `issue_key` and `body`. Optional fields `visibility` and `public` can modify the comment's visibility.",
+   "kind": "WRITE",
+   "destination_args": [
+    "issue_key"
+   ],
+   "value_args": [
+    "body",
+    "visibility",
+    "public"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_edit_comment": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "issue_key, comment_id, body, visibility",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool edits an existing comment on a Jira issue using the `issue_key`, `comment_id`, and `body`. Optional `visibility` can modify the comment's visibility.",
+   "kind": "WRITE",
+   "destination_args": [
+    "issue_key",
+    "comment_id"
+   ],
+   "value_args": [
+    "body",
+    "visibility"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_add_worklog": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "issue_key, time_spent, comment, started, original_estimate, remaining_estimate",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool adds a worklog entry to a Jira issue using the `issue_key` and `time_spent`. Optional fields `comment`, `started`, `original_estimate`, and `remaining_estimate` can be included.",
+   "kind": "WRITE",
+   "destination_args": [
+    "issue_key"
+   ],
+   "value_args": [
+    "time_spent",
+    "comment",
+    "started",
+    "original_estimate",
+    "remaining_estimate"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_link_to_epic": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "issue_key, epic_key",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool links an existing issue to an epic using the `issue_key` and `epic_key`. The operation affects the user's Jira account.",
+   "kind": "WRITE",
+   "destination_args": [
+    "issue_key",
+    "epic_key"
+   ],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_create_issue_link": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "link_type, inward_issue_key, outward_issue_key, comment, comment_visibility",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool creates a link between two Jira issues using `link_type`, `inward_issue_key`, and `outward_issue_key`. Optional `comment` and `comment_visibility` can be included.",
+   "kind": "WRITE",
+   "destination_args": [
+    "inward_issue_key",
+    "outward_issue_key"
+   ],
+   "value_args": [
+    "link_type",
+    "comment",
+    "comment_visibility"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_create_remote_issue_link": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "issue_key, url, title, summary, relationship, icon_url",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool creates a remote issue link for a Jira issue using `issue_key`, `url`, and `title`. Optional fields `summary`, `relationship`, and `icon_url` can be included.",
+   "kind": "WRITE",
+   "destination_args": [
+    "issue_key"
+   ],
+   "value_args": [
+    "url",
+    "title",
+    "summary",
+    "relationship",
+    "icon_url"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_remove_issue_link": {
+   "result_contents": [
+    {
+     "part": "success status or error message",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "link_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Remove a link between two Jira issues` by using the `link_id`. The result is a success status or error message, which is computed by the service. The call is made to the Jira API using the `link_id`. [received records: success status or error message taken as outside-party text]",
+   "kind": "WRITE",
+   "destination_args": [
+    "link_id"
+   ],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_transition_issue": {
+   "result_contents": [
+    {
+     "part": "success status or error message",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "issue_key, transition_id, fields, comment",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool transitions a Jira issue to a new status using `issue_key` and `transition_id`. Optional fields and comments can be included. The result is a success status or error message, computed by the service. The call is made to the Jira API. [received records: success status or error message taken as outside-party text]",
+   "kind": "WRITE",
+   "destination_args": [
+    "issue_key",
+    "transition_id"
+   ],
+   "value_args": [
+    "fields",
+    "comment"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_create_sprint": {
+   "result_contents": [
+    {
+     "part": "sprint_id",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "board_id, name, start_date, end_date, goal",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool creates a Jira sprint for a board using `board_id`, `name`, `start_date`, and `end_date`. The result is a `sprint_id`, computed by the service. The call is made to the Jira API.",
+   "kind": "WRITE",
+   "destination_args": [
+    "board_id"
+   ],
+   "value_args": [
+    "name",
+    "start_date",
+    "end_date",
+    "goal"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_update_sprint": {
+   "result_contents": [
+    {
+     "part": "success status or error message",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "sprint_id, name, state, start_date, end_date, goal",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool updates a Jira sprint using `sprint_id` and optional fields. The result is a success status or error message, computed by the service. The call is made to the Jira API.",
+   "kind": "WRITE",
+   "destination_args": [
+    "sprint_id"
+   ],
+   "value_args": [
+    "name",
+    "state",
+    "start_date",
+    "end_date",
+    "goal"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_add_issues_to_sprint": {
+   "result_contents": [
+    {
+     "part": "success status or error message",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "sprint_id, issue_keys",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool adds issues to a Jira sprint using `sprint_id` and `issue_keys`. The result is a success status or error message, computed by the service. The call is made to the Jira API. [received records: success status or error message taken as outside-party text]",
+   "kind": "WRITE",
+   "destination_args": [
+    "sprint_id"
+   ],
+   "value_args": [
+    "issue_keys"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_move_issues_to_backlog": {
+   "result_contents": [
+    {
+     "part": "success status or error message",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "issue_keys",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool moves issues to the backlog using `issue_keys`. The result is a success status or error message, computed by the service. The call is made to the Jira API.",
+   "kind": "WRITE",
+   "destination_args": [
+    "issue_keys"
+   ],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_get_project_issue_types": {
+   "result_contents": [
+    {
+     "part": "list of issue types",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "project_key",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves available issue types for a Jira project using `project_key`. The result is a list of issue types, read from the service. The call is made to the Jira API. [received records: list of issue types taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [
+    "project_key"
+   ],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_get_create_fields": {
+   "result_contents": [
+    {
+     "part": "fields for issue creation",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "project_key, issue_type_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves fields available for creating an issue of a specific type using `project_key` and `issue_type_id`. The result is the fields for issue creation, read from the service. The call is made to the Jira API. [received records: fields for issue creation taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [
+    "project_key",
+    "issue_type_id"
+   ],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_get_project_versions": {
+   "result_contents": [
+    {
+     "part": "fix versions",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Get all fix versions for a specific Jira project` returns fix versions for a project, which are read from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_get_project_components": {
+   "result_contents": [
+    {
+     "part": "components",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Get all components for a specific Jira project` returns components for a project, which are read from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_get_all_projects": {
+   "result_contents": [
+    {
+     "part": "projects",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Get all Jira projects accessible to the current user` returns projects accessible to the user, which are read from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_search_projects": {
+   "result_contents": [
+    {
+     "part": "matching projects",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Search for Jira projects by name or key prefix` returns a ranked list of matching projects, which are read from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_get_project_fields": {
+   "result_contents": [
+    {
+     "part": "fields",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Get the fields available on issues of a project` returns fields for a project, which are read from the user's account. [received records: fields taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_get_service_desk_for_project": {
+   "result_contents": [
+    {
+     "part": "service desk",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Get the Jira Service Desk associated with a project key` returns the service desk for a project, which is read from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_get_service_desk_queues": {
+   "result_contents": [
+    {
+     "part": "queues",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Get queues for a Jira Service Desk` returns queues for a service desk, which are read from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_get_queue_issues": {
+   "result_contents": [
+    {
+     "part": "issues",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Get issues from a Jira Service Desk queue` returns issues for a queue, which are read from the user's account. [received records: issues taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_get_request_types": {
+   "result_contents": [
+    {
+     "part": "request_types",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Get request types for a Jira Service Management service desk.` implies it reads request types from a service desk, but does not send data out or change state.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "jira_get_request_type_fields": {
+   "result_contents": [
+    {
+     "part": "field_definitions",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Get field definitions for a Jira Service Management request type.` implies it reads field definitions from a service desk, but does not send data out or change state.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "jira_create_customer_request": {
+   "result_contents": [
+    {
+     "part": "customer_request_id",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "service_desk_id, request_type_id, request_field_values, raise_on_behalf_of, request_participants, attachments, strict_on_behalf",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira Service Management",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": true,
+    "argument": "raise_on_behalf_of",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Create a Jira Service Management customer request.` implies it sends data to Jira Service Management to create a request, which involves outbound communication.",
+   "kind": "WRITE",
+   "destination_args": [
+    "raise_on_behalf_of"
+   ],
+   "value_args": [
+    "request_field_values",
+    "request_participants",
+    "attachments"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_create_version": {
+   "result_contents": [
+    {
+     "part": "version_id",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "project_key, name, start_date, release_date, description",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira Service Management",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Create a new fix version in a Jira project.` implies it sends data to Jira Service Management to create a version, which involves outbound communication.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "name",
+    "start_date",
+    "release_date",
+    "description"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_batch_create_versions": {
+   "result_contents": [
+    {
+     "part": "version_ids",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "project_key, versions",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira Service Management",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Batch create multiple versions in a Jira project.` implies it sends data to Jira Service Management to create versions, which involves outbound communication.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "versions"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_update_version": {
+   "result_contents": [
+    {
+     "part": "updated_version_id",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "version_id, name, description, start_date, release_date, archived, released",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira Service Management",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Update an existing fix version in a Jira project.` implies it sends data to Jira Service Management to update a version, which involves outbound communication.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "name",
+    "description",
+    "start_date",
+    "release_date",
+    "archived",
+    "released"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_get_issue_proforma_forms": {
+   "result_contents": [
+    {
+     "part": "form_ids",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Get all ProForma forms associated with a Jira issue.` implies it reads form IDs from a Jira issue, but does not send data out or change state. [received records: form_ids taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_get_proforma_form_details": {
+   "result_contents": [
+    {
+     "part": "form_details",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `Get detailed information about a specific ProForma form.` implies it reads form details from a Jira issue, but does not send data out or change state.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "jira_update_proforma_form_answers": {
+   "result_contents": [
+    {
+     "part": "success or error message",
+     "produced_at": "completion",
+     "origin": "literal",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "issue_key, form_id, answers",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Jira Forms REST API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool updates form field answers using the Jira Forms REST API, which implies an outbound call to the Jira service with the provided issue key, form ID, and answers.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "issue_key",
+    "form_id",
+    "answers"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_get_issue_dates": {
+   "result_contents": [
+    {
+     "part": "dates and status transition history",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves date information and status transition history for a Jira issue, which implies reading from the user's Jira account. [received records: dates and status transition history taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_get_issue_sla": {
+   "result_contents": [
+    {
+     "part": "SLA metrics",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool calculates SLA metrics for a Jira issue, which involves computing values based on data from the user's Jira account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "jira_get_issue_development_info": {
+   "result_contents": [
+    {
+     "part": "development information (PRs, commits, branches)",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves development information linked to a Jira issue, which involves reading from the user's Jira account. [received records: development information (PRs, commits, branches) taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_get_issues_development_info": {
+   "result_contents": [
+    {
+     "part": "development information for multiple issues",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool batch retrieves development information for multiple Jira issues, which involves reading from the user's Jira account. [received records: development information for multiple issues taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_get_project_epic_hierarchy": {
+   "result_contents": [
+    {
+     "part": "epic hierarchy grouped by parent issues",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool fetches and groups epics by parent issues, which involves reading from the user's Jira account. [received records: epic hierarchy grouped by parent issues taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "jira_get_cross_project_dependencies": {
+   "result_contents": [
+    {
+     "part": "cross-project issue links grouped by target project and link type",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool scans issues for cross-project links, which involves reading from the user's Jira account. [received records: cross-project issue links grouped by target project and link type taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "syntax": "JIRA_SLA_WORKING_HOURS_ONLY",
+   "kind": "environment_variable",
+   "effect": "Configures working hours filtering for SLA calculations",
+   "default": "false",
+   "evidence": "description"
+  },
+  {
+   "syntax": "JIRA_SLA_WORKING_HOURS_START",
+   "kind": "environment_variable",
+   "effect": "Configures start time for working hours",
+   "default": "\"09:00\"",
+   "evidence": "description"
+  },
+  {
+   "syntax": "JIRA_SLA_WORKING_HOURS_END",
+   "kind": "environment_variable",
+   "effect": "Configures end time for working hours",
+   "default": "\"17:00\"",
+   "evidence": "description"
+  },
+  {
+   "syntax": "JIRA_SLA_WORKING_DAYS",
+   "kind": "environment_variable",
+   "effect": "Configures working days for SLA calculations",
+   "default": "\"1,2,3,4,5\"",
+   "evidence": "description"
+  },
+  {
+   "syntax": "JIRA_SLA_TIMEZONE",
+   "kind": "environment_variable",
+   "effect": "Configures timezone for SLA calculations",
+   "default": "\"America/New_York\"",
+   "evidence": "description"
+  }
+ ],
+ "notes": [],
+ "usage": {
+  "input_tokens": 19005,
+  "output_tokens": 10855,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 15360
+ }
+}

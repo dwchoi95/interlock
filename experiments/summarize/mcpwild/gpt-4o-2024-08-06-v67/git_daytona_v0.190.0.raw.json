@@ -1,0 +1,2289 @@
+{
+ "batch": {
+  "tools": {
+   "create_folder": {
+    "result_contents": [
+     {
+      "part": "Created folder: ",
+      "produced_at": "apps/cli/mcp/tools/create_folder.go:58",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "*args.FolderPath",
+      "produced_at": "apps/cli/mcp/tools/create_folder.go:58",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "*args.Id, *args.FolderPath, *args.Mode",
+      "destination_class": "configured_own_service",
+      "host_or_config": "daytonaMCPHeaders",
+      "at": "apps/cli/mcp/tools/create_folder.go:51"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/create_folder.go:22-28",
+     "apps/cli/mcp/tools/create_folder.go:31-59"
+    ],
+    "rationale": "The tool creates a folder in a sandbox using the `CreateFolderDeprecated` API call. The result contains a confirmation message with the folder path, which is echoed from the input arguments. The API call is made to a configured service, indicating it is the user's own service.",
+    "kind": "WRITE",
+    "destination_args": [
+     "id"
+    ],
+    "value_args": [
+     "folderPath",
+     "mode"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "create_sandbox": {
+    "result_contents": [],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [],
+    "rationale": "The source code for the `create_sandbox` tool is not provided, so its behavior cannot be determined.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": false,
+    "undetermined": true,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "delete_file": {
+    "result_contents": [
+     {
+      "part": "Deleted file: ",
+      "produced_at": "apps/cli/mcp/tools/delete_file.go:54",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "*args.FilePath",
+      "produced_at": "apps/cli/mcp/tools/delete_file.go:54",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "\nOutput: ",
+      "produced_at": "apps/cli/mcp/tools/delete_file.go:54",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "execResponse.Result",
+      "produced_at": "apps/cli/mcp/tools/delete_file.go:54",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "outside_party",
+      "control_before_rule": "unknown"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "*args.Id, *args.FilePath",
+      "destination_class": "configured_own_service",
+      "host_or_config": "daytonaMCPHeaders",
+      "at": "apps/cli/mcp/tools/delete_file.go:45-47"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/delete_file.go:22-27",
+     "apps/cli/mcp/tools/delete_file.go:30-55"
+    ],
+    "rationale": "The tool deletes a file or directory in a sandbox using the `ExecuteCommandDeprecated` API call. The result includes a confirmation message with the file path and the output of the command execution. The API call is made to a configured service, indicating it is the user's own service. [received records: execResponse.Result taken as outside-party text]",
+    "kind": "WRITE",
+    "destination_args": [
+     "id"
+    ],
+    "value_args": [
+     "filePath"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "destroy_sandbox": {
+    "result_contents": [
+     {
+      "part": "Destroyed sandbox with ID ",
+      "produced_at": "apps/cli/mcp/tools/destroy_sandbox.go:58",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "*args.Id",
+      "produced_at": "apps/cli/mcp/tools/destroy_sandbox.go:58",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "*args.Id",
+      "destination_class": "configured_own_service",
+      "host_or_config": "daytonaMCPHeaders",
+      "at": "apps/cli/mcp/tools/destroy_sandbox.go:43"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/destroy_sandbox.go:21-25",
+     "apps/cli/mcp/tools/destroy_sandbox.go:28-62"
+    ],
+    "rationale": "The tool destroys a sandbox using the `DeleteSandbox` API call. The result contains a confirmation message with the sandbox ID, which is echoed from the input arguments. The API call is made to a configured service, indicating it is the user's own service.",
+    "kind": "WRITE",
+    "destination_args": [
+     "id"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "execute_command": {
+    "result_contents": [],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [],
+    "rationale": "The source code for the `execute_command` tool is not provided, so its behavior cannot be determined.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": false,
+    "undetermined": true,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "file_download": {
+    "result_contents": [
+     {
+      "part": "string(resultJSON)",
+      "produced_at": "apps/cli/mcp/tools/download_file.go:111",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "*args.Id, *args.FilePath",
+      "destination_class": "configured_own_service",
+      "host_or_config": "daytonaMCPHeaders",
+      "at": "apps/cli/mcp/tools/download_file.go:51"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/download_file.go:28-33",
+     "apps/cli/mcp/tools/download_file.go:36-111"
+    ],
+    "rationale": "The tool downloads a file from a sandbox using the `DownloadFileDeprecated` API call. The result contains the file content processed based on its type, which is considered user account data. The API call is made to a configured service, indicating it is the user's own service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "file_upload": {
+    "result_contents": [
+     {
+      "part": "File uploaded successfully: ",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:141",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "*args.FilePath",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:141",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "*args.Id, *args.FilePath, tempFile",
+      "destination_class": "configured_own_service",
+      "host_or_config": "daytonaMCPHeaders",
+      "at": "apps/cli/mcp/tools/upload_file.go:125"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/upload_file.go:27-35",
+     "apps/cli/mcp/tools/upload_file.go:38-141"
+    ],
+    "rationale": "The tool uploads a file to a sandbox using the `UploadFileDeprecated` API call. The result contains a confirmation message with the file path, which is echoed from the input arguments. The API call is made to a configured service, indicating it is the user's own service.",
+    "kind": "WRITE",
+    "destination_args": [
+     "id"
+    ],
+    "value_args": [
+     "filePath",
+     "content",
+     "encoding",
+     "overwrite"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "get_file_info": {
+    "result_contents": [
+     {
+      "part": "string(fileInfoJSON)",
+      "produced_at": "apps/cli/mcp/tools/file_info.go:58",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "*args.Id, *args.FilePath",
+      "destination_class": "configured_own_service",
+      "host_or_config": "daytonaMCPHeaders",
+      "at": "apps/cli/mcp/tools/file_info.go:45"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/file_info.go:22-27",
+     "apps/cli/mcp/tools/file_info.go:30-59"
+    ],
+    "rationale": "The tool retrieves file information from a sandbox using the `GetFileInfoDeprecated` API call. The result contains the file information in JSON format, which is considered user account data. The API call is made to a configured service, indicating it is the user's own service. [received records: string(fileInfoJSON) taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "git_clone": {
+    "result_contents": [
+     {
+      "part": "Cloned repository: ",
+      "produced_at": "apps/cli/mcp/tools/git_clone.go:62",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": " to ",
+      "produced_at": "apps/cli/mcp/tools/git_clone.go:62",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "gitCloneRequest.Url",
+      "produced_at": "apps/cli/mcp/tools/git_clone.go:62",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "outside_party"
+     },
+     {
+      "part": "gitCloneRequest.Path",
+      "produced_at": "apps/cli/mcp/tools/git_clone.go:62",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "gitCloneRequest",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiClient.ToolboxAPI",
+      "at": "apps/cli/mcp/tools/git_clone.go:55"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/git_clone.go:40-63",
+     "apps/cli/mcp/tools/git_clone.go:55"
+    ],
+    "rationale": "The `git_clone` tool clones a Git repository into the Daytona sandbox. It sends a `gitCloneRequest` to the configured own service using `apiClient.ToolboxAPI.GitCloneRepositoryDeprecated`. The result includes a message indicating the repository URL and path, with the URL being attacker-controlled.",
+    "kind": "WRITE",
+    "destination_args": [
+     "url",
+     "id"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "list_files": {
+    "result_contents": [
+     {
+      "part": "filesJSON",
+      "produced_at": "apps/cli/mcp/tools/list_files.go:60",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "dirPath",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiClient.ToolboxAPI",
+      "at": "apps/cli/mcp/tools/list_files.go:47"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/list_files.go:30-61",
+     "apps/cli/mcp/tools/list_files.go:47"
+    ],
+    "rationale": "The `list_files` tool lists files in a directory within the Daytona sandbox. It sends a request to the configured own service using `apiClient.ToolboxAPI.ListFilesDeprecated`. The result is a JSON representation of the files, which is controlled by the service. [received records: filesJSON taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "move_file": {
+    "result_contents": [
+     {
+      "part": "Moved file from ",
+      "produced_at": "apps/cli/mcp/tools/move_file.go:57",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "args.SourcePath",
+      "produced_at": "apps/cli/mcp/tools/move_file.go:57",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": " to ",
+      "produced_at": "apps/cli/mcp/tools/move_file.go:57",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "args.DestPath",
+      "produced_at": "apps/cli/mcp/tools/move_file.go:57",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "args.SourcePath, args.DestPath",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiClient.ToolboxAPI",
+      "at": "apps/cli/mcp/tools/move_file.go:50"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/move_file.go:31-58",
+     "apps/cli/mcp/tools/move_file.go:50"
+    ],
+    "rationale": "The `move_file` tool moves or renames a file within the Daytona sandbox. It sends a request to the configured own service using `apiClient.ToolboxAPI.MoveFileDeprecated`. The result is a message indicating the source and destination paths, which are not attacker-controlled.",
+    "kind": "WRITE",
+    "destination_args": [
+     "sourcePath",
+     "destPath",
+     "id"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "preview_link": {
+    "result_contents": [
+     {
+      "part": "Preview link generated: ",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:119",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "previewURL.Url",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:119",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "args.Port",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiClient.ToolboxAPI",
+      "at": "apps/cli/mcp/tools/preview_link.go:93"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/preview_link.go:36-120",
+     "apps/cli/mcp/tools/preview_link.go:93"
+    ],
+    "rationale": "The `preview_link` tool generates a preview URL for a web application running in the Daytona sandbox. It sends a request to the configured own service using `apiClient.SandboxAPI.GetPortPreviewUrl`. The result includes the generated URL, which is controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   }
+  },
+  "value_conditions": [],
+  "notes": []
+ },
+ "methods": {},
+ "statement_calls": [
+  {
+   "subject": "handler lines apps/cli/mcp/tools/create_folder.go:22-29",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/create_folder.go:23#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/create_folder.go:23#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1306,
+    "output_tokens": 50,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/create_folder.go:31-59",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/create_folder.go:34#0",
+    "apps/cli/mcp/tools/create_folder.go:38#0",
+    "apps/cli/mcp/tools/create_folder.go:42#0",
+    "apps/cli/mcp/tools/create_folder.go:53#0",
+    "apps/cli/mcp/tools/create_folder.go:56#0",
+    "apps/cli/mcp/tools/create_folder.go:58#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/create_folder.go:34#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/create_folder.go:38#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/create_folder.go:42#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/create_folder.go:53#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/create_folder.go:56#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"apps/cli/mcp/tools/create_folder.go:58#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 1774,
+    "output_tokens": 267,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/delete_file.go:22-28",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/delete_file.go:23#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/delete_file.go:23#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1282,
+    "output_tokens": 49,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/delete_file.go:30-55",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/delete_file.go:33#0",
+    "apps/cli/mcp/tools/delete_file.go:37#0",
+    "apps/cli/mcp/tools/delete_file.go:41#0",
+    "apps/cli/mcp/tools/delete_file.go:46#0",
+    "apps/cli/mcp/tools/delete_file.go:49#0",
+    "apps/cli/mcp/tools/delete_file.go:52#0",
+    "apps/cli/mcp/tools/delete_file.go:54#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/delete_file.go:33#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/delete_file.go:37#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/delete_file.go:41#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/delete_file.go:46#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"apps/cli/mcp/tools/delete_file.go:49#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/delete_file.go:52#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"apps/cli/mcp/tools/delete_file.go:54#0\",\"part\":\"literal\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/delete_file.go:54#0\",\"part\":\"argument_echo\",\"origin\":\"argument_echo\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"apps/cli/mcp/tools/delete_file.go:54#0\",\"part\":\"resource_read\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1813,
+    "output_tokens": 401,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/destroy_sandbox.go:21-26",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/destroy_sandbox.go:22#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/destroy_sandbox.go:22#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1251,
+    "output_tokens": 51,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/destroy_sandbox.go:28-62",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/destroy_sandbox.go:31#0",
+    "apps/cli/mcp/tools/destroy_sandbox.go:35#0",
+    "apps/cli/mcp/tools/destroy_sandbox.go:46#0",
+    "apps/cli/mcp/tools/destroy_sandbox.go:56#0",
+    "apps/cli/mcp/tools/destroy_sandbox.go:58#0",
+    "apps/cli/mcp/tools/destroy_sandbox.go:61#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/destroy_sandbox.go:31#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/destroy_sandbox.go:35#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/destroy_sandbox.go:46#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/destroy_sandbox.go:56#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"apps/cli/mcp/tools/destroy_sandbox.go:58#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"apps/cli/mcp/tools/destroy_sandbox.go:61#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1849,
+    "output_tokens": 279,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/download_file.go:28-34",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/download_file.go:29#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/download_file.go:29#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1336,
+    "output_tokens": 49,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/download_file.go:36-111",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/download_file.go:39#0",
+    "apps/cli/mcp/tools/download_file.go:43#0",
+    "apps/cli/mcp/tools/download_file.go:47#0",
+    "apps/cli/mcp/tools/download_file.go:53#0",
+    "apps/cli/mcp/tools/download_file.go:60#0",
+    "apps/cli/mcp/tools/download_file.go:68#0",
+    "apps/cli/mcp/tools/download_file.go:108#0",
+    "apps/cli/mcp/tools/download_file.go:111#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/download_file.go:39#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/download_file.go:43#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/download_file.go:47#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/download_file.go:53#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/download_file.go:60#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/download_file.go:68#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/download_file.go:108#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/download_file.go:111#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2319,
+    "output_tokens": 357,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/upload_file.go:27-36",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/upload_file.go:28#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/upload_file.go:28#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1450,
+    "output_tokens": 49,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/upload_file.go:38-141",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/upload_file.go:41#0",
+    "apps/cli/mcp/tools/upload_file.go:45#0",
+    "apps/cli/mcp/tools/upload_file.go:49#0",
+    "apps/cli/mcp/tools/upload_file.go:53#0",
+    "apps/cli/mcp/tools/upload_file.go:57#0",
+    "apps/cli/mcp/tools/upload_file.go:68#0",
+    "apps/cli/mcp/tools/upload_file.go:72#0",
+    "apps/cli/mcp/tools/upload_file.go:79#0",
+    "apps/cli/mcp/tools/upload_file.go:89#0",
+    "apps/cli/mcp/tools/upload_file.go:109#0",
+    "apps/cli/mcp/tools/upload_file.go:116#0",
+    "apps/cli/mcp/tools/upload_file.go:121#0",
+    "apps/cli/mcp/tools/upload_file.go:127#0",
+    "apps/cli/mcp/tools/upload_file.go:135#0",
+    "apps/cli/mcp/tools/upload_file.go:139#0",
+    "apps/cli/mcp/tools/upload_file.go:141#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/upload_file.go:41#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/upload_file.go:45#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/upload_file.go:49#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/upload_file.go:53#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/upload_file.go:57#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/upload_file.go:68#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/upload_file.go:72#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/upload_file.go:79#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"apps/cli/mcp/tools/upload_file.go:89#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/upload_file.go:109#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/upload_file.go:116#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/upload_file.go:121#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/upload_file.go:127#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/upload_file.go:135#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/upload_file.go:139#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"apps/cli/mcp/tools/upload_file.go:141#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 3236,
+    "output_tokens": 701,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/file_info.go:22-28",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/file_info.go:23#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/file_info.go:23#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1286,
+    "output_tokens": 49,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/file_info.go:30-59",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/file_info.go:33#0",
+    "apps/cli/mcp/tools/file_info.go:37#0",
+    "apps/cli/mcp/tools/file_info.go:41#0",
+    "apps/cli/mcp/tools/file_info.go:47#0",
+    "apps/cli/mcp/tools/file_info.go:53#0",
+    "apps/cli/mcp/tools/file_info.go:56#0",
+    "apps/cli/mcp/tools/file_info.go:58#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/file_info.go:33#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/file_info.go:37#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/file_info.go:41#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/file_info.go:47#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/file_info.go:53#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/file_info.go:56#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"apps/cli/mcp/tools/file_info.go:58#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1837,
+    "output_tokens": 314,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/git_clone.go:27-38",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/git_clone.go:28#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/git_clone.go:28#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1389,
+    "output_tokens": 49,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/git_clone.go:40-63",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/git_clone.go:43#0",
+    "apps/cli/mcp/tools/git_clone.go:47#0",
+    "apps/cli/mcp/tools/git_clone.go:52#0",
+    "apps/cli/mcp/tools/git_clone.go:57#0",
+    "apps/cli/mcp/tools/git_clone.go:60#0",
+    "apps/cli/mcp/tools/git_clone.go:62#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/git_clone.go:43#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/git_clone.go:47#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/git_clone.go:52#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/git_clone.go:57#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/git_clone.go:60#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/git_clone.go:62#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1741,
+    "output_tokens": 270,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/list_files.go:22-28",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/list_files.go:23#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/list_files.go:23#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1282,
+    "output_tokens": 50,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/list_files.go:30-61",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/list_files.go:33#0",
+    "apps/cli/mcp/tools/list_files.go:37#0",
+    "apps/cli/mcp/tools/list_files.go:49#0",
+    "apps/cli/mcp/tools/list_files.go:55#0",
+    "apps/cli/mcp/tools/list_files.go:58#0",
+    "apps/cli/mcp/tools/list_files.go:60#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/list_files.go:33#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/list_files.go:37#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/list_files.go:49#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/list_files.go:55#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/list_files.go:58#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"apps/cli/mcp/tools/list_files.go:60#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1777,
+    "output_tokens": 268,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/move_file.go:22-29",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/move_file.go:23#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/move_file.go:23#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1312,
+    "output_tokens": 51,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/move_file.go:31-58",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/move_file.go:34#0",
+    "apps/cli/mcp/tools/move_file.go:38#0",
+    "apps/cli/mcp/tools/move_file.go:43#0",
+    "apps/cli/mcp/tools/move_file.go:47#0",
+    "apps/cli/mcp/tools/move_file.go:52#0",
+    "apps/cli/mcp/tools/move_file.go:55#0",
+    "apps/cli/mcp/tools/move_file.go:57#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/move_file.go:34#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/move_file.go:38#0\",\"part\":\"sandbox ID is required\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/move_file.go:43#0\",\"part\":\"sourcePath parameter is required\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/move_file.go:47#0\",\"part\":\"destPath parameter is required\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/move_file.go:52#0\",\"part\":\"error moving file: %v\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/move_file.go:52#0\",\"part\":\"err\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/move_file.go:55#0\",\"part\":\"Moved file from %s to %s\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/move_file.go:55#0\",\"part\":\"*args.SourcePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"apps/cli/mcp/tools/move_file.go:55#0\",\"part\":\"*args.DestPath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"apps/cli/mcp/tools/move_file.go:57#0\",\"part\":\"Moved file from %s to %s\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/move_file.go:57#0\",\"part\":\"*args.SourcePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"apps/cli/mcp/tools/move_file.go:57#0\",\"part\":\"*args.DestPath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 1873,
+    "output_tokens": 577,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/preview_link.go:26-34",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/preview_link.go:27#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/preview_link.go:27#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1418,
+    "output_tokens": 51,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines apps/cli/mcp/tools/preview_link.go:36-120",
+   "attempt": 0,
+   "ids": [
+    "apps/cli/mcp/tools/preview_link.go:39#0",
+    "apps/cli/mcp/tools/preview_link.go:43#0",
+    "apps/cli/mcp/tools/preview_link.go:47#0",
+    "apps/cli/mcp/tools/preview_link.go:60#0",
+    "apps/cli/mcp/tools/preview_link.go:64#0",
+    "apps/cli/mcp/tools/preview_link.go:71#0",
+    "apps/cli/mcp/tools/preview_link.go:74#0",
+    "apps/cli/mcp/tools/preview_link.go:85#0",
+    "apps/cli/mcp/tools/preview_link.go:88#0",
+    "apps/cli/mcp/tools/preview_link.go:95#0",
+    "apps/cli/mcp/tools/preview_link.go:102#0",
+    "apps/cli/mcp/tools/preview_link.go:115#0",
+    "apps/cli/mcp/tools/preview_link.go:117#0",
+    "apps/cli/mcp/tools/preview_link.go:119#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"apps/cli/mcp/tools/preview_link.go:39#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/preview_link.go:43#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/preview_link.go:47#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/preview_link.go:60#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/preview_link.go:64#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/preview_link.go:71#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"apps/cli/mcp/tools/preview_link.go:74#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/preview_link.go:85#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/preview_link.go:88#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"apps/cli/mcp/tools/preview_link.go:95#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/preview_link.go:102#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"service\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/preview_link.go:115#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/preview_link.go:117#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"apps/cli/mcp/tools/preview_link.go:119#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 3001,
+    "output_tokens": 632,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  }
+ ],
+ "final": {
+  "tools": {
+   "create_folder": {
+    "result_contents": [
+     {
+      "part": "Created folder: ",
+      "produced_at": "apps/cli/mcp/tools/create_folder.go:58",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "*args.FolderPath",
+      "produced_at": "apps/cli/mcp/tools/create_folder.go:58",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/create_folder.go:38#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/create_folder.go:38",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/create_folder.go:42#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/create_folder.go:42",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/create_folder.go:53#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/create_folder.go:53",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "apps/cli/mcp/tools/create_folder.go:56#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/create_folder.go:56",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "user"
+     },
+     {
+      "id": "apps/cli/mcp/tools/create_folder.go:58#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/create_folder.go:58",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "*args.Id, *args.FolderPath, *args.Mode",
+      "destination_class": "configured_own_service",
+      "host_or_config": "daytonaMCPHeaders",
+      "at": "apps/cli/mcp/tools/create_folder.go:51"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/create_folder.go:22-28",
+     "apps/cli/mcp/tools/create_folder.go:31-59",
+     "apps/cli/mcp/tools/create_folder.go:22-29"
+    ],
+    "rationale": "The tool creates a folder in a sandbox using the `CreateFolderDeprecated` API call. The result contains a confirmation message with the folder path, which is echoed from the input arguments. The API call is made to a configured service, indicating it is the user's own service.",
+    "kind": "WRITE",
+    "destination_args": [
+     "id"
+    ],
+    "value_args": [
+     "folderPath",
+     "mode"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "create_sandbox": {
+    "result_contents": [],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [],
+    "rationale": "The source code for the `create_sandbox` tool is not provided, so its behavior cannot be determined. [destination_args completed: user]",
+    "kind": "WRITE",
+    "destination_args": [
+     "user"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": false,
+    "undetermined": true,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": []
+   },
+   "delete_file": {
+    "result_contents": [
+     {
+      "part": "Deleted file: ",
+      "produced_at": "apps/cli/mcp/tools/delete_file.go:54",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "*args.FilePath",
+      "produced_at": "apps/cli/mcp/tools/delete_file.go:54",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "\nOutput: ",
+      "produced_at": "apps/cli/mcp/tools/delete_file.go:54",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "execResponse.Result",
+      "produced_at": "apps/cli/mcp/tools/delete_file.go:54",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "outside_party",
+      "control_before_rule": "unknown"
+     },
+     {
+      "id": "apps/cli/mcp/tools/delete_file.go:23#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/delete_file.go:23",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/delete_file.go:37#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/delete_file.go:37",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/delete_file.go:41#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/delete_file.go:41",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/delete_file.go:46#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/delete_file.go:46",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "apps/cli/mcp/tools/delete_file.go:49#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/delete_file.go:49",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "apps/cli/mcp/tools/delete_file.go:52#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/delete_file.go:52",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "apps/cli/mcp/tools/delete_file.go:54#0",
+      "part": "literal",
+      "produced_at": "apps/cli/mcp/tools/delete_file.go:54",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "*args.Id, *args.FilePath",
+      "destination_class": "configured_own_service",
+      "host_or_config": "daytonaMCPHeaders",
+      "at": "apps/cli/mcp/tools/delete_file.go:45-47"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/delete_file.go:22-27",
+     "apps/cli/mcp/tools/delete_file.go:30-55",
+     "apps/cli/mcp/tools/delete_file.go:22-28"
+    ],
+    "rationale": "The tool deletes a file or directory in a sandbox using the `ExecuteCommandDeprecated` API call. The result includes a confirmation message with the file path and the output of the command execution. The API call is made to a configured service, indicating it is the user's own service. [received records: execResponse.Result taken as outside-party text]",
+    "kind": "WRITE",
+    "destination_args": [
+     "id"
+    ],
+    "value_args": [
+     "filePath"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "destroy_sandbox": {
+    "result_contents": [
+     {
+      "part": "Destroyed sandbox with ID ",
+      "produced_at": "apps/cli/mcp/tools/destroy_sandbox.go:58",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "*args.Id",
+      "produced_at": "apps/cli/mcp/tools/destroy_sandbox.go:58",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/destroy_sandbox.go:22#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/destroy_sandbox.go:22",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/destroy_sandbox.go:35#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/destroy_sandbox.go:35",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/destroy_sandbox.go:46#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/destroy_sandbox.go:46",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/destroy_sandbox.go:56#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/destroy_sandbox.go:56",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "user"
+     },
+     {
+      "id": "apps/cli/mcp/tools/destroy_sandbox.go:58#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/destroy_sandbox.go:58",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "user"
+     },
+     {
+      "id": "apps/cli/mcp/tools/destroy_sandbox.go:61#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/destroy_sandbox.go:61",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "*args.Id",
+      "destination_class": "configured_own_service",
+      "host_or_config": "daytonaMCPHeaders",
+      "at": "apps/cli/mcp/tools/destroy_sandbox.go:43"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/destroy_sandbox.go:21-25",
+     "apps/cli/mcp/tools/destroy_sandbox.go:28-62",
+     "apps/cli/mcp/tools/destroy_sandbox.go:21-26"
+    ],
+    "rationale": "The tool destroys a sandbox using the `DeleteSandbox` API call. The result contains a confirmation message with the sandbox ID, which is echoed from the input arguments. The API call is made to a configured service, indicating it is the user's own service.",
+    "kind": "WRITE",
+    "destination_args": [
+     "id"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "execute_command": {
+    "result_contents": [],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [],
+    "rationale": "The source code for the `execute_command` tool is not provided, so its behavior cannot be determined.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": false,
+    "undetermined": true,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "file_download": {
+    "result_contents": [
+     {
+      "part": "string(resultJSON)",
+      "produced_at": "apps/cli/mcp/tools/download_file.go:111",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "apps/cli/mcp/tools/download_file.go:29#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/download_file.go:29",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/download_file.go:43#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/download_file.go:43",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/download_file.go:47#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/download_file.go:47",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/download_file.go:53#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/download_file.go:53",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/download_file.go:60#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/download_file.go:60",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/download_file.go:108#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/download_file.go:108",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/download_file.go:111#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/download_file.go:111",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "*args.Id, *args.FilePath",
+      "destination_class": "configured_own_service",
+      "host_or_config": "daytonaMCPHeaders",
+      "at": "apps/cli/mcp/tools/download_file.go:51"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/download_file.go:28-33",
+     "apps/cli/mcp/tools/download_file.go:36-111",
+     "apps/cli/mcp/tools/download_file.go:28-34"
+    ],
+    "rationale": "The tool downloads a file from a sandbox using the `DownloadFileDeprecated` API call. The result contains the file content processed based on its type, which is considered user account data. The API call is made to a configured service, indicating it is the user's own service. [received records: the statement taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "file_upload": {
+    "result_contents": [
+     {
+      "part": "File uploaded successfully: ",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:141",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "*args.FilePath",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:141",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/upload_file.go:28#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:28",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/upload_file.go:45#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:45",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/upload_file.go:49#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:49",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/upload_file.go:53#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:53",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/upload_file.go:57#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:57",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/upload_file.go:68#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:68",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/upload_file.go:72#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:72",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/upload_file.go:79#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:79",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "apps/cli/mcp/tools/upload_file.go:89#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:89",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/upload_file.go:109#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:109",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/upload_file.go:116#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:116",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/upload_file.go:121#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:121",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/upload_file.go:127#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:127",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/upload_file.go:135#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:135",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/upload_file.go:139#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:139",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "apps/cli/mcp/tools/upload_file.go:141#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/upload_file.go:141",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "*args.Id, *args.FilePath, tempFile",
+      "destination_class": "configured_own_service",
+      "host_or_config": "daytonaMCPHeaders",
+      "at": "apps/cli/mcp/tools/upload_file.go:125"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/upload_file.go:27-35",
+     "apps/cli/mcp/tools/upload_file.go:38-141",
+     "apps/cli/mcp/tools/upload_file.go:27-36"
+    ],
+    "rationale": "The tool uploads a file to a sandbox using the `UploadFileDeprecated` API call. The result contains a confirmation message with the file path, which is echoed from the input arguments. The API call is made to a configured service, indicating it is the user's own service.",
+    "kind": "WRITE",
+    "destination_args": [
+     "id"
+    ],
+    "value_args": [
+     "filePath",
+     "content",
+     "encoding",
+     "overwrite"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "get_file_info": {
+    "result_contents": [
+     {
+      "part": "string(fileInfoJSON)",
+      "produced_at": "apps/cli/mcp/tools/file_info.go:58",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "id": "apps/cli/mcp/tools/file_info.go:23#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/file_info.go:23",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/file_info.go:37#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/file_info.go:37",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/file_info.go:41#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/file_info.go:41",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/file_info.go:47#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/file_info.go:47",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/file_info.go:53#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/file_info.go:53",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/file_info.go:56#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/file_info.go:56",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "apps/cli/mcp/tools/file_info.go:58#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/file_info.go:58",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "*args.Id, *args.FilePath",
+      "destination_class": "configured_own_service",
+      "host_or_config": "daytonaMCPHeaders",
+      "at": "apps/cli/mcp/tools/file_info.go:45"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/file_info.go:22-27",
+     "apps/cli/mcp/tools/file_info.go:30-59",
+     "apps/cli/mcp/tools/file_info.go:22-28"
+    ],
+    "rationale": "The tool retrieves file information from a sandbox using the `GetFileInfoDeprecated` API call. The result contains the file information in JSON format, which is considered user account data. The API call is made to a configured service, indicating it is the user's own service. [received records: string(fileInfoJSON) taken as outside-party text] [received records: the statement taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "git_clone": {
+    "result_contents": [
+     {
+      "part": "Cloned repository: ",
+      "produced_at": "apps/cli/mcp/tools/git_clone.go:62",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": " to ",
+      "produced_at": "apps/cli/mcp/tools/git_clone.go:62",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "gitCloneRequest.Url",
+      "produced_at": "apps/cli/mcp/tools/git_clone.go:62",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "outside_party"
+     },
+     {
+      "part": "gitCloneRequest.Path",
+      "produced_at": "apps/cli/mcp/tools/git_clone.go:62",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/git_clone.go:28#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/git_clone.go:28",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/git_clone.go:47#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/git_clone.go:47",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/git_clone.go:57#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/git_clone.go:57",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "apps/cli/mcp/tools/git_clone.go:60#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/git_clone.go:60",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "outside_party"
+     },
+     {
+      "id": "apps/cli/mcp/tools/git_clone.go:62#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/git_clone.go:62",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "outside_party"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "gitCloneRequest",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiClient.ToolboxAPI",
+      "at": "apps/cli/mcp/tools/git_clone.go:55"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/git_clone.go:40-63",
+     "apps/cli/mcp/tools/git_clone.go:55",
+     "apps/cli/mcp/tools/git_clone.go:27-38"
+    ],
+    "rationale": "The `git_clone` tool clones a Git repository into the Daytona sandbox. It sends a `gitCloneRequest` to the configured own service using `apiClient.ToolboxAPI.GitCloneRepositoryDeprecated`. The result includes a message indicating the repository URL and path, with the URL being attacker-controlled.",
+    "kind": "WRITE",
+    "destination_args": [
+     "url",
+     "id"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "list_files": {
+    "result_contents": [
+     {
+      "part": "filesJSON",
+      "produced_at": "apps/cli/mcp/tools/list_files.go:60",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "id": "apps/cli/mcp/tools/list_files.go:37#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/list_files.go:37",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/list_files.go:49#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/list_files.go:49",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/list_files.go:55#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/list_files.go:55",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/list_files.go:58#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/list_files.go:58",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/list_files.go:60#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/list_files.go:60",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "dirPath",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiClient.ToolboxAPI",
+      "at": "apps/cli/mcp/tools/list_files.go:47"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/list_files.go:30-61",
+     "apps/cli/mcp/tools/list_files.go:47",
+     "apps/cli/mcp/tools/list_files.go:22-28"
+    ],
+    "rationale": "The `list_files` tool lists files in a directory within the Daytona sandbox. It sends a request to the configured own service using `apiClient.ToolboxAPI.ListFilesDeprecated`. The result is a JSON representation of the files, which is controlled by the service. [received records: filesJSON taken as outside-party text] [received records: the statement taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "move_file": {
+    "result_contents": [
+     {
+      "part": "Moved file from ",
+      "produced_at": "apps/cli/mcp/tools/move_file.go:57",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "args.SourcePath",
+      "produced_at": "apps/cli/mcp/tools/move_file.go:57",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": " to ",
+      "produced_at": "apps/cli/mcp/tools/move_file.go:57",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "args.DestPath",
+      "produced_at": "apps/cli/mcp/tools/move_file.go:57",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/move_file.go:38#0",
+      "part": "sandbox ID is required",
+      "produced_at": "apps/cli/mcp/tools/move_file.go:38",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/move_file.go:43#0",
+      "part": "sourcePath parameter is required",
+      "produced_at": "apps/cli/mcp/tools/move_file.go:43",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/move_file.go:47#0",
+      "part": "destPath parameter is required",
+      "produced_at": "apps/cli/mcp/tools/move_file.go:47",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/move_file.go:52#0",
+      "part": "error moving file: %v",
+      "produced_at": "apps/cli/mcp/tools/move_file.go:52",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/move_file.go:55#0",
+      "part": "Moved file from %s to %s",
+      "produced_at": "apps/cli/mcp/tools/move_file.go:55",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/move_file.go:57#0",
+      "part": "Moved file from %s to %s",
+      "produced_at": "apps/cli/mcp/tools/move_file.go:57",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "args.SourcePath, args.DestPath",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiClient.ToolboxAPI",
+      "at": "apps/cli/mcp/tools/move_file.go:50"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/move_file.go:31-58",
+     "apps/cli/mcp/tools/move_file.go:50",
+     "apps/cli/mcp/tools/move_file.go:22-29"
+    ],
+    "rationale": "The `move_file` tool moves or renames a file within the Daytona sandbox. It sends a request to the configured own service using `apiClient.ToolboxAPI.MoveFileDeprecated`. The result is a message indicating the source and destination paths, which are not attacker-controlled.",
+    "kind": "WRITE",
+    "destination_args": [
+     "sourcePath",
+     "destPath",
+     "id"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "preview_link": {
+    "result_contents": [
+     {
+      "part": "Preview link generated: ",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:119",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "previewURL.Url",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:119",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "apps/cli/mcp/tools/preview_link.go:43#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:43",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/preview_link.go:47#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:47",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/preview_link.go:60#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:60",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/preview_link.go:64#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:64",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/preview_link.go:71#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:71",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/preview_link.go:74#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:74",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/preview_link.go:85#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:85",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/preview_link.go:88#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:88",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/preview_link.go:95#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:95",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/preview_link.go:102#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:102",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "service"
+     },
+     {
+      "id": "apps/cli/mcp/tools/preview_link.go:115#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:115",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "service"
+     },
+     {
+      "id": "apps/cli/mcp/tools/preview_link.go:117#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:117",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "apps/cli/mcp/tools/preview_link.go:119#0",
+      "part": "the statement",
+      "produced_at": "apps/cli/mcp/tools/preview_link.go:119",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "args.Port",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiClient.ToolboxAPI",
+      "at": "apps/cli/mcp/tools/preview_link.go:93"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "apps/cli/mcp/tools/preview_link.go:36-120",
+     "apps/cli/mcp/tools/preview_link.go:93",
+     "apps/cli/mcp/tools/preview_link.go:26-34"
+    ],
+    "rationale": "The `preview_link` tool generates a preview URL for a web application running in the Daytona sandbox. It sends a request to the configured own service using `apiClient.SandboxAPI.GetPortPreviewUrl`. The result includes the generated URL, which is controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   }
+  },
+  "value_conditions": [],
+  "notes": []
+ },
+ "hashes": {
+  "rubric_sha": "191e69d289880d38",
+  "schema_sha": "0f8d7d93eb07c885",
+  "source_sha": "85282a8ec10821cf"
+ },
+ "run": {
+  "model": "gpt-4o-2024-08-06",
+  "temperature": 0.0,
+  "seed": 0,
+  "files": [
+   "apps/cli/mcp/tools/create_folder.go",
+   "libs/sdk-python/src/daytona/_utils/otel_decorator.py",
+   "apps/cli/mcp/tools/delete_file.go",
+   "apps/cli/mcp/tools/destroy_sandbox.go",
+   "libs/toolbox-api-client-python-async/daytona_toolbox_api_client_async/api/process_api.py",
+   "apps/cli/mcp/tools/download_file.go",
+   "apps/cli/mcp/tools/upload_file.go",
+   "apps/cli/mcp/tools/file_info.go",
+   "apps/cli/mcp/tools/git_clone.go",
+   "apps/cli/mcp/tools/list_files.go",
+   "apps/cli/mcp/tools/move_file.go",
+   "apps/cli/mcp/tools/preview_link.go",
+   "apps/cli/mcp/README.md",
+   "libs/sdk-ruby/lib/daytona/file_system.rb",
+   "libs/toolbox-api-client-python/README.md",
+   "libs/sdk-ruby/spec/daytona/file_system_spec.rb",
+   "libs/toolbox-api-client-ruby/lib/daytona_toolbox_api_client/api/file_system_api.rb",
+   "libs/sdk-python/src/daytona/_sync/filesystem.py",
+   "libs/sdk-python/src/daytona/_async/filesystem.py",
+   "libs/toolbox-api-client-python/daytona_toolbox_api_client/api/file_system_api.py"
+  ]
+ }
+}

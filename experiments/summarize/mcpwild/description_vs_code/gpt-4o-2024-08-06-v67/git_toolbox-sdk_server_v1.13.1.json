@@ -1,0 +1,1699 @@
+{
+ "tools": {
+  "database_overview": {
+   "result_contents": [
+    {
+     "part": "version",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_local",
+     "control": "service"
+    },
+    {
+     "part": "replica_status",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_local",
+     "control": "service"
+    },
+    {
+     "part": "uptime_duration",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_local",
+     "control": "service"
+    },
+    {
+     "part": "max_connection_limit",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_local",
+     "control": "service"
+    },
+    {
+     "part": "current_connections",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_local",
+     "control": "service"
+    },
+    {
+     "part": "active_connections",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_local",
+     "control": "service"
+    },
+    {
+     "part": "percentage_connections_in_use",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "user_local",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": ""
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": ""
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool fetches and returns various statistics about the PostgreSQL server's current state, such as version, uptime, and connection details. These are read from the server and are not influenced by external input.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "execute_sql": {
+   "result_contents": [
+    {
+     "part": "execution_result",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_local",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "host",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": ""
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool executes a SQL statement provided by the user, which implies running code on the host database server. The result of the execution is returned.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "sql"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "HOSTEXEC",
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "get_column_cardinality": {
+   "result_contents": [
+    {
+     "part": "column_name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_local",
+     "control": "service"
+    },
+    {
+     "part": "estimated_cardinality",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "user_local",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": ""
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": ""
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool estimates and returns the cardinality of columns in a specified table using internal database statistics. The results are computed based on the database's state.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "get_query_plan": {
+   "result_contents": [
+    {
+     "part": "query_plan",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "user_local",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": ""
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": ""
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool generates an EXPLAIN plan for a given SQL query without executing it, returning the optimizer's estimated plan.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "query"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_active_queries": {
+   "result_contents": [
+    {
+     "part": "query_list",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_local",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": ""
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": ""
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists currently running queries from the database, providing details such as SQL text and query duration. This information is read from the database's activity statistics.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_autovacuum_configurations": {
+   "result_contents": [
+    {
+     "part": "autovacuum_configurations",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_local",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": ""
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": ""
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists autovacuum-related configurations from the database settings, which are read from the database.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_available_extensions": {
+   "result_contents": [
+    {
+     "part": "extension_list",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_local",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": ""
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": ""
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool discovers and returns a list of available PostgreSQL extensions for installation, which is read from the server.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_database_stats": {
+   "result_contents": [
+    {
+     "part": "database_stats",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_local",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": ""
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": ""
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists performance and activity statistics for each database in the instance, providing insights into various metrics. This information is read from the database statistics. [received records: database_stats taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "list_indexes": {
+   "result_contents": [
+    {
+     "part": "schema name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "table name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "index name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "index type (access method)",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "boolean indicating if it's a unique index",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "boolean indicating if it's for a primary key",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "index definition",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "index size in bytes",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "number of index scans",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "number of index tuples read",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "number of table tuples fetched via index scans",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "boolean indicating if the index has been used at least once",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists properties of user indexes in the database, excluding system schemas. It returns various properties of each index, all of which are read from the user's database account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_installed_extensions": {
+   "result_contents": [
+    {
+     "part": "extension name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "version",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "schema",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "owner",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "description",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists all installed PostgreSQL extensions with their details, which are read from the user's database account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_invalid_indexes": {
+   "result_contents": [
+    {
+     "part": "invalid index details",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists all invalid PostgreSQL indexes, which are read from the user's database account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_locks": {
+   "result_contents": [
+    {
+     "part": "process ID",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "user",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "query text",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "aggregated list of transactions and specific locks",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool identifies all locks held by active processes, showing details read from the user's database account. [received records: process ID, user, query text, aggregated list of transactions and specific locks taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "list_memory_configurations": {
+   "result_contents": [
+    {
+     "part": "configuration name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "current setting",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists PostgreSQL memory-related configurations, which are read from the user's database account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_pg_settings": {
+   "result_contents": [
+    {
+     "part": "parameter name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "current setting",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "unit of measurement",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "short description",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "source of the current setting",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "restart requirement",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists configuration parameters for the PostgreSQL server, which are read from the user's database account. [received records: parameter name, current setting, unit of measurement, short description, source of the current setting, restart requirem taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "list_publication_tables": {
+   "result_contents": [
+    {
+     "part": "publication name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "schema name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "table name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "definition details",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists all publication tables in the database, which are read from the user's database account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_query_stats": {
+   "result_contents": [
+    {
+     "part": "database name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "query text",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "execution count",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "timing metrics",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "rows affected",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "buffer cache I/O statistics",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists performance statistics for executed queries, which are read from the user's database account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_replication_slots": {
+   "result_contents": [
+    {
+     "part": "key details for all PostgreSQL replication slots",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "size of the outstanding WAL",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists details about PostgreSQL replication slots and calculates the size of the outstanding WAL. It reads from the user's database account and does not send data out or execute code.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_roles": {
+   "result_contents": [
+    {
+     "part": "role name, Object ID, maximum number of concurrent connections, boolean indicators for various privileges, password expiration timestamp, list of direct members, list of other roles/groups",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists user-created roles and their attributes from the user's database account. It does not send data out or execute code.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_schemas": {
+   "result_contents": [
+    {
+     "part": "schema name, schema owner, grants, number of functions, number of tables, number of views",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists schemas and their attributes from the user's database account. It does not send data out or execute code.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_sequences": {
+   "result_contents": [
+    {
+     "part": "sequence name, schema name, sequence owner, data type, starting value, minimum value, maximum value, increment value, last value generated",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists sequences and their attributes from the user's database account. It does not send data out or execute code.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_stored_procedure": {
+   "result_contents": [
+    {
+     "part": "schema name, procedure name, procedure owner, language, definition, description",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves stored procedure metadata from the user's database account. It does not send data out or execute code.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_table_stats": {
+   "result_contents": [
+    {
+     "part": "schema name, table name, table size, number of sequential scans, number of index scans, idx_scan_ratio_percent, number of live rows, number of dead rows, dead_row_ratio_percent, total number of rows inserted, updated, deleted, timestamps for last_vacuum, last_autovacuum, last_autoanalyze",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists user table statistics from the user's database account. It does not send data out or execute code.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_tables": {
+   "result_contents": [
+    {
+     "part": "detailed schema information for user-created tables",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists detailed schema information for user-created tables from the user's database account. It does not send data out or execute code. [received records: detailed schema information for user-created tables taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "list_tablespaces": {
+   "result_contents": [
+    {
+     "part": "tablespace name, owner name, size, internal object ID, access control list, tablespace options",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists tablespaces and their attributes from the user's database account. It does not send data out or execute code.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_top_bloated_tables": {
+   "result_contents": [
+    {
+     "part": "schema",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "table",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "live/dead tuples",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "percentage",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "last vacuum/analyze times",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists database tables by bloat signal, returning schema, table, live/dead tuples, percentage, and last vacuum/analyze times. This implies reading from the user's database account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_triggers": {
+   "result_contents": [
+    {
+     "part": "trigger name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "schema name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "table name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "enabled/disabled",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "timing",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "events",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "activation type",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "handler function",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "full definition",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists all non-internal triggers in a database, returning various attributes of each trigger. This implies reading from the user's database account. [received records: trigger name, schema name, table name, enabled/disabled, timing, events, activation type, handler function, full definit taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "list_views": {
+   "result_contents": [
+    {
+     "part": "schemaname",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "viewname",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "ownername",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "definition",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists views in the database, returning schemaname, viewname, ownername, and the definition. This implies reading from the user's database account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "long_running_transactions": {
+   "result_contents": [
+    {
+     "part": "process id",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "database name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "user name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "application name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "client address",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "state",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "connection age",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "transaction age",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "query age",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "last activity age",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "wait event type",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "wait event",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "query string",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool identifies and lists database transactions that exceed a specified time limit, returning various attributes of each transaction. This implies reading from the user's database account. [received records: process id, database name, user name, application name, client address, state, connection age, transaction age, query ag taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "replication_stats": {
+   "result_contents": [
+    {
+     "part": "process ID",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "user name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "application name",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "backend_xmin",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "client IP address",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "connection state",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "sync_state",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "sent_lag",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "write_lag",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "flush_lag",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "replay_lag",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "total_lag",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists replication stats for each replica, returning various attributes including process ID, user name, application name, and lag sizes. This implies reading from the user's database account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [],
+ "usage": {
+  "input_tokens": 6849,
+  "output_tokens": 6589,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 7680
+ }
+}

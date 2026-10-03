@@ -1,0 +1,1718 @@
+{
+ "kind": "python",
+ "notes": [],
+ "package": "agentdojo/travel",
+ "source": "baselines/agentdojo/src/agentdojo",
+ "tools": {
+  "cancel_calendar_event": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "event_id",
+    "at": "default_suites/v1/tools/calendar_client.py:210",
+    "value": true
+   },
+   "destination_args": [
+    "event_id"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:200-211",
+    "default_suites/v1/tools/calendar_client.py:200-204"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "default_suites/v1/tools/calendar_client.py:210",
+     "data": "self.events[event_id].participants, subject, body, attachments",
+     "destination_class": "configured_own_service",
+     "host_or_config": "inbox",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `cancel_calendar_event` cancels an event and notifies participants via email. It marks the event as canceled and sends a notification to the participants, making it a WRITE operation with a delivery to a chosen party.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "f\"Event with ID {event_id} has been canceled and participants have been notified.\"",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:211",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/calendar_client.py:211#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:211",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/calendar_client.py:211#1",
+     "origin": "argument_echo",
+     "part": "event_id",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:211",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "check_restaurant_opening_hours": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:262-273",
+    "default_suites/v1/tools/travel_booking_client.py:262-265"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool `check_restaurant_opening_hours` returns a dictionary with restaurant names and their operating hours. The restaurant names and operating hours are read from the `Restaurants` model, which is public and controlled by outside parties.",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "restaurant.name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:270",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "restaurant.operating_hours",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:270",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:269#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:269",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "create_calendar_event": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "participants",
+    "at": "default_suites/v1/tools/calendar_client.py:162-167",
+    "value": true
+   },
+   "destination_args": [
+    "participants"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:137-168",
+    "default_suites/v1/tools/calendar_client.py:137-146"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "default_suites/v1/tools/calendar_client.py:162-167",
+     "data": "recipients, subject, body, attachments",
+     "destination_class": "configured_own_service",
+     "host_or_config": "inbox",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `create_calendar_event` creates a new calendar event and sends an email to the participants. The event is created using user-provided details, and the email is sent to the specified participants, making it a WRITE operation with a delivery to a chosen party.",
+   "result_contents": [
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "new_event",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:168",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/calendar_client.py:164#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:164",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "default_suites/v1/tools/calendar_client.py:164#1",
+     "origin": "argument_echo",
+     "part": "title",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:164",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "title",
+    "start_time",
+    "end_time",
+    "description",
+    "location"
+   ]
+  },
+  "get_all_car_rental_companies_in_city": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:279-285",
+    "default_suites/v1/tools/travel_booking_client.py:279-287"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool `get_all_car_rental_companies_in_city` returns a string listing car rental companies in a city. The company names are computed from the `CarRental` model, which is public and controlled by outside parties.",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "computed",
+     "part": "company_names",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:284",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:285#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:285",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_all_hotels_in_city": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:122-128",
+    "default_suites/v1/tools/travel_booking_client.py:38-44"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_all_hotels_in_city` function returns a string that lists hotel names in a given city. The hotel names are read from the `Hotels` object, which is annotated with `Depends(\"hotels\")`, indicating they are sourced from a public resource. The result includes a literal prefix 'Hotel Names: ' and the list of hotel names.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "Hotel Names: ",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:127",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "hotel names",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:127",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "id": "default_suites/v1/tools/travel_booking_client.py:42#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:42",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "id": "default_suites/v1/tools/travel_booking_client.py:128#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:128",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_all_restaurants_in_city": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:166-172",
+    "default_suites/v1/tools/travel_booking_client.py:166-174"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The `get_all_restaurants_in_city` function returns a string that lists restaurant names in a given city. The restaurant names are read from the `Restaurants` object, which is annotated with `Depends(\"restaurants\")`, indicating they are sourced from a public resource. The result includes a literal prefix 'Restaurant in {city}: ' and the list of restaurant names.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "Restaurant in {city}: ",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:171",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "restaurant names",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:171",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:172#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:172",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_car_fuel_options": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:321-327",
+    "default_suites/v1/tools/travel_booking_client.py:321-323"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool `get_car_fuel_options` retrieves the fuel options for car rental companies. It reads the `company.name` and `company.fuel_options` from the `car_rental.company_list`. Both are public information controlled by outside parties.",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "company.name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:327",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "company.fuel_options",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:327",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "id": "default_suites/v1/tools/travel_booking_client.py:327#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:327",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_car_price_per_day": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:330-336",
+    "default_suites/v1/tools/travel_booking_client.py:330-332"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool `get_car_price_per_day` retrieves the price per day for car rental companies. It reads the `company.name` and `company.price_per_day` from the `car_rental.company_list`. Both are public information controlled by outside parties.",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "company.name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:336",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "company.price_per_day",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:336",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:336#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:336",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_car_rental_address": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:312-318",
+    "default_suites/v1/tools/travel_booking_client.py:312-314"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool `get_car_rental_address` retrieves the address of car rental companies. It reads the `company.name` and `company.address` from the `car_rental.company_list`. Both are public information controlled by outside parties.",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "company.name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:318",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "company.address",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:318",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "id": "default_suites/v1/tools/travel_booking_client.py:318#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:318",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_car_types_available": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:288-296",
+    "default_suites/v1/tools/travel_booking_client.py:288-290"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool `get_car_types_available` returns a dictionary with car rental company names and their available car types. The company names and car types are read from the `CarRental` model, which is public and controlled by outside parties.",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "company.name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:295",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "company.car_types_available",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:295",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:294#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:294",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_contact_information_for_restaurants": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:234-245",
+    "default_suites/v1/tools/travel_booking_client.py:234-237"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool `get_contact_information_for_restaurants` returns a dictionary with restaurant names and their contact information. The restaurant names and contact information are read from the `Restaurants` model, which is public and controlled by outside parties.",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "restaurant.name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:242",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "restaurant.contact_information",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:242",
+     "scope": "public"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_cuisine_type_for_restaurants": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:205-216",
+    "default_suites/v1/tools/travel_booking_client.py:205-208"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The `get_cuisine_type_for_restaurants` function returns a dictionary mapping restaurant names to their cuisine types. The restaurant names and cuisine types are read from the `Restaurants` object, which is annotated with `Depends(\"restaurants\")`, indicating they are sourced from a public resource.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "restaurant name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:213",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "cuisine type",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:213",
+     "scope": "public"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_day_calendar_events": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:128-134",
+    "default_suites/v1/tools/calendar_client.py:128-136"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool `get_day_calendar_events` retrieves events for a specific day from the user's calendar. It reads the events for the given day, which are part of the user's account data. [received records: calendar.get_by_day(date.date()) taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "calendar.get_by_day(date.date())",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:134",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "day"
+   ]
+  },
+  "get_dietary_restrictions_for_all_restaurants": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:219-231",
+    "default_suites/v1/tools/travel_booking_client.py:219-222"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool `get_dietary_restrictions_for_all_restaurants` returns a dictionary with restaurant names and their dietary restrictions. The restaurant names and dietary restrictions are read from the `Restaurants` model, which is public and controlled by outside parties.",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "restaurant.name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:228",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "restaurant.dietary_restrictions",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:228",
+     "scope": "public"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_flight_information": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:403-417",
+    "default_suites/v1/tools/travel_booking_client.py:403-407"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_flight_information` function retrieves flight information based on the departure and arrival cities. It returns a list of flight details, which are read from the `flights` resource. The information is public and controlled by the service, as it is based on the flight data available in the system.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "Airline: {flight.airline}, Flight Number: {flight.flight_number}, Departure Time: {flight.departure_time}, Arrival Time: {flight.arrival_time}, Price: {flight.price}, Contact Information: {flight.contact_information}",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:413",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:413#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:413",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "id": "default_suites/v1/tools/travel_booking_client.py:413#1",
+     "origin": "resource_read",
+     "part": "flight.airline",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:413",
+     "scope": "unknown"
+    },
+    {
+     "control": "outside_party",
+     "id": "default_suites/v1/tools/travel_booking_client.py:413#2",
+     "origin": "resource_read",
+     "part": "flight.flight_number",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:413",
+     "scope": "unknown"
+    },
+    {
+     "control": "outside_party",
+     "id": "default_suites/v1/tools/travel_booking_client.py:413#3",
+     "origin": "resource_read",
+     "part": "flight.departure_time",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:413",
+     "scope": "unknown"
+    },
+    {
+     "control": "outside_party",
+     "id": "default_suites/v1/tools/travel_booking_client.py:413#4",
+     "origin": "resource_read",
+     "part": "flight.arrival_time",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:413",
+     "scope": "unknown"
+    },
+    {
+     "control": "outside_party",
+     "id": "default_suites/v1/tools/travel_booking_client.py:413#5",
+     "origin": "resource_read",
+     "part": "flight.price",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:413",
+     "scope": "unknown"
+    },
+    {
+     "control": "unknown",
+     "id": "default_suites/v1/tools/travel_booking_client.py:413#6",
+     "origin": "unknown",
+     "part": "flight.c",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:413",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:417#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:417",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/travel_booking_client.py:403-417",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_hotels_address": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:142-146",
+    "default_suites/v1/tools/travel_booking_client.py:142-148"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The `get_hotels_address` function returns a dictionary mapping hotel names to their addresses. The hotel names and addresses are read from the `Hotels` object, which is annotated with `Depends(\"hotels\")`, indicating they are sourced from a public resource.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "hotel name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:146",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "hotel address",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:146",
+     "scope": "public"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_hotels_prices": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:131-139",
+    "default_suites/v1/tools/travel_booking_client.py:131-141"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_hotels_prices` function returns a dictionary mapping hotel names to their price ranges. The hotel names and prices are read from the `Hotels` object, which is annotated with `Depends(\"hotels\")`, indicating they are sourced from a public resource. The price range is computed from the `price_min` and `price_max` fields of each hotel.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "hotel name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:136",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "Price range: {hotel.price_min} - {hotel.price_max}",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:136",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:136#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:136",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "default_suites/v1/tools/travel_booking_client.py:136#1",
+     "origin": "resource_read",
+     "part": "hotel.price_min",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:136",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "default_suites/v1/tools/travel_booking_client.py:136#2",
+     "origin": "resource_read",
+     "part": "hotel.price_max",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:136",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_price_for_restaurants": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:248-259",
+    "default_suites/v1/tools/travel_booking_client.py:248-251"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool `get_price_for_restaurants` returns a dictionary with restaurant names and their price per person. The restaurant names and prices are read from the `Restaurants` model, which is public and controlled by outside parties.",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "restaurant.name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:256",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "restaurant.price_per_person",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:256",
+     "scope": "public"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_rating_reviews_for_car_rental": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:299-309",
+    "default_suites/v1/tools/travel_booking_client.py:299-301"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool `get_rating_reviews_for_car_rental` returns a dictionary with car rental company names, ratings, and reviews. The company names, ratings, and reviews are read from the `CarRental` model, which is public and controlled by outside parties.",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "company.name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:306",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "company.rating",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:306",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "company.reviews",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:306",
+     "scope": "public"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_rating_reviews_for_hotels": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:149-160",
+    "default_suites/v1/tools/travel_booking_client.py:149-152"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_rating_reviews_for_hotels` function returns a dictionary mapping hotel names to their ratings and reviews. The hotel names, ratings, and reviews are read from the `Hotels` object, which is annotated with `Depends(\"hotels\")`, indicating they are sourced from a public resource. The reviews are considered to be controlled by outside parties as they are user-generated content.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "hotel name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:157",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "Rating: {hotel.rating}",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:157",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "Reviews: {hotel.reviews}",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:157",
+     "scope": "public"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_rating_reviews_for_restaurants": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:191-202",
+    "default_suites/v1/tools/travel_booking_client.py:191-194"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool `get_rating_reviews_for_restaurants` returns a dictionary with restaurant names, ratings, and reviews. The restaurant names, ratings, and reviews are read from the `Restaurants` model, which is public and controlled by outside parties.",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "restaurant.name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:199",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "restaurant.rating",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:199",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "restaurant.reviews",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:199",
+     "scope": "public"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_restaurants_address": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:175-188",
+    "default_suites/v1/tools/travel_booking_client.py:175-178"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The `get_restaurants_address` function returns a dictionary mapping restaurant names to their addresses. The restaurant names and addresses are read from the `Restaurants` object, which is annotated with `Depends(\"restaurants\")`, indicating they are sourced from a public resource.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "restaurant name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:183",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "restaurant address",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:183",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:188#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:188",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_user_information": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:104-116",
+    "default_suites/v1/tools/travel_booking_client.py:104-118"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_user_information` function returns a dictionary with user information fields such as first name, last name, ID number, email, phone number, address, passport number, bank account number, and credit card number. These fields are read from the `User` object, which is annotated with `Depends(\"user\")`, indicating they are sourced from the user's account. [received records: First Name, Last Name, ID Number, Email, Phone Number, Address, Passport Number, Bank Account Number, Credit Card Number taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "First Name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:107",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "Last Name",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:108",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "ID Number",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:109",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "Email",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:110",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "Phone Number",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:111",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "Address",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:112",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "Passport Number",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:113",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "Bank Account Number",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:114",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "Credit Card Number",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:115",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "reserve_car_rental": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "company"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:382-400",
+    "default_suites/v1/tools/travel_booking_client.py:382-388"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The `reserve_car_rental` function creates a reservation for a car rental. It uses the user's phone number as contact information and sets the reservation details. The result is a success message indicating the reservation details. There are no outbound calls or code execution beyond setting the reservation details. [destination_args completed: company]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "Reservation for a car at {company} from {start_time} to {end_time} has been made successfully.",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:400",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:400#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:400",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:400#1",
+     "origin": "argument_echo",
+     "part": "company",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:400",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:400#2",
+     "origin": "argument_echo",
+     "part": "start_time",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:400",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:400#3",
+     "origin": "argument_echo",
+     "part": "end_time",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:400",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/travel_booking_client.py:382-400",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "reserve_hotel": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "hotel"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:339-356",
+    "default_suites/v1/tools/travel_booking_client.py:339-345"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The tool `reserve_hotel` makes a reservation for a hotel using user-provided details. It updates the reservation object with the user's contact information and reservation details, but does not send data to an external party. [destination_args completed: hotel]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "f\"Reservation for {hotel} from {start_day} to {end_day} has been made successfully.\"",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:356",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:356#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:356",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:356#1",
+     "origin": "argument_echo",
+     "part": "hotel",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:356",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:356#2",
+     "origin": "argument_echo",
+     "part": "start_day",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:356",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:356#3",
+     "origin": "argument_echo",
+     "part": "end_day",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:356",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "start_day",
+    "end_day"
+   ]
+  },
+  "reserve_restaurant": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "restaurant"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/travel_booking_client.py:359-379",
+    "default_suites/v1/tools/travel_booking_client.py:359-364"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The `reserve_restaurant` function creates a reservation for a restaurant. It uses the user's phone number as contact information and sets the reservation details. The result is a success message indicating the reservation details. There are no outbound calls or code execution beyond setting the reservation details. [destination_args completed: restaurant]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "Reservation for {restaurant} from {start_time} to {end_time} on {reservation_date} has been made successfully.",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:379",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:379#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:379",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:379#1",
+     "origin": "argument_echo",
+     "part": "restaurant",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:379",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:379#2",
+     "origin": "computed",
+     "part": "start_time",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:379",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:379#3",
+     "origin": "computed",
+     "part": "end_time",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:379",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/travel_booking_client.py:379#4",
+     "origin": "computed",
+     "part": "reservation_date",
+     "produced_at": "default_suites/v1/tools/travel_booking_client.py:379",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/travel_booking_client.py:359-379",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_calendar_events": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:171-188",
+    "default_suites/v1/tools/calendar_client.py:171-175"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool `search_calendar_events` searches for calendar events based on a query and an optional date. It returns a list of matching events, which are computed from the user's calendar data.",
+   "result_contents": [
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "matches",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:188",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "query",
+    "date"
+   ]
+  },
+  "send_email": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "recipients",
+    "at": "default_suites/v1/tools/email_client.py:193",
+    "value": true
+   },
+   "destination_args": [
+    "recipients",
+    "bcc",
+    "cc"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:154-193",
+    "default_suites/v1/tools/email_client.py:73-81"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "default_suites/v1/tools/email_client.py:193",
+     "data": "recipients, subject, body, parsed_attachments, cc, bcc",
+     "destination_class": "configured_own_service",
+     "host_or_config": "inbox",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The `send_email` function sends an email with the specified recipients, subject, body, and optional attachments, cc, and bcc. The email is sent using the `inbox.send_email` method, which is part of the configured own service. The recipients are chosen by the argument, making it a delivery to a chosen party. [destination_args completed: bcc, cc]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "Email",
+     "produced_at": "default_suites/v1/tools/email_client.py:193",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/email_client.py:193#0",
+     "origin": "argument_echo",
+     "part": "recipients",
+     "produced_at": "default_suites/v1/tools/email_client.py:193",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/email_client.py:154-193",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "subject",
+    "body",
+    "attachments"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "v1.2"
+}

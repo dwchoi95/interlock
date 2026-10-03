@@ -1,0 +1,405 @@
+{
+ "batch": {
+  "tools": {
+   "install_repo_mcp_server": {
+    "result_contents": [
+     {
+      "part": "Node.js is not installed, please install it!",
+      "produced_at": "lib/index.mjs:203",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Installed MCP server via npx successfully! Tell the user to restart the app",
+      "produced_at": "lib/index.mjs:215",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Python uv is not installed, please install it! Tell users to go to https://docs.astral.sh/uv",
+      "produced_at": "lib/index.mjs:225",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Installed MCP server via uvx successfully! Tell the user to restart the app",
+      "produced_at": "lib/index.mjs:236",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "host",
+     "at": "lib/index.mjs:210"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/index.mjs:196-240",
+     "lib/index.mjs:242-246"
+    ],
+    "rationale": "The tool `install_repo_mcp_server` installs an MCP server using either `npx` or `uvx`. It checks for the presence of Node.js and Python uv, and installs the server using the appropriate tool. The installation commands are executed on the host machine using `spawnPromise`, which runs the supplied command (`npx` or `uvx`) with the provided arguments and environment variables. The tool does not send data to an external destination, but it does execute commands on the host machine.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "name",
+     "args",
+     "env"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "HOSTEXEC"
+    ],
+    "injectable_output_fields": []
+   },
+   "install_local_mcp_server": {
+    "result_contents": [
+     {
+      "part": "Path ${dirPath} does not exist locally!",
+      "produced_at": "lib/index.mjs:165",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Installed the following servers via npm successfully! ${Object.keys(servers).join(';')} Tell the user to restart the app",
+      "produced_at": "lib/index.mjs:180",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Can't figure out how to install ${dirPath}",
+      "produced_at": "lib/index.mjs:189",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "host",
+     "at": "lib/index.mjs:172"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/index.mjs:158-194",
+     "lib/index.mjs:242-251"
+    ],
+    "rationale": "The tool `install_local_mcp_server` installs an MCP server from a local directory. It checks if the directory exists and contains a `package.json` file. If so, it attempts to install the server using `npm install` and registers the server with Claude Desktop. The installation commands are executed on the host machine using `spawnPromise`, which runs the `npm install` command in the specified directory. The tool does not send data to an external destination, but it does execute commands on the host machine.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "path",
+     "args",
+     "env"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "HOSTEXEC"
+    ],
+    "injectable_output_fields": []
+   }
+  },
+  "value_conditions": [],
+  "notes": []
+ },
+ "methods": {},
+ "statement_calls": [
+  {
+   "subject": "handler lines lib/index.mjs:158-194",
+   "attempt": 0,
+   "ids": [
+    "lib/index.mjs:159#0",
+    "lib/index.mjs:161#0",
+    "lib/index.mjs:165#0",
+    "lib/index.mjs:165#1",
+    "lib/index.mjs:176#0",
+    "lib/index.mjs:180#0",
+    "lib/index.mjs:180#1",
+    "lib/index.mjs:185#0",
+    "lib/index.mjs:189#0",
+    "lib/index.mjs:189#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/index.mjs:159#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/index.mjs:161#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/index.mjs:165#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/index.mjs:165#1\",\"part\":\"dirPath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/index.mjs:176#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/index.mjs:180#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/index.mjs:180#1\",\"part\":\"Object.keys(servers).join(\\\";\\\")\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/index.mjs:185#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/index.mjs:189#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/index.mjs:189#1\",\"part\":\"dirPath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 1825,
+    "output_tokens": 411,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/index.mjs:196-240",
+   "attempt": 0,
+   "ids": [
+    "lib/index.mjs:197#0",
+    "lib/index.mjs:199#0",
+    "lib/index.mjs:211#0",
+    "lib/index.mjs:221#0",
+    "lib/index.mjs:232#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/index.mjs:197#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/index.mjs:199#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/index.mjs:211#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/index.mjs:221#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/index.mjs:232#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1649,
+    "output_tokens": 197,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/index.mjs:242-251",
+   "attempt": 0,
+   "ids": [
+    "lib/index.mjs:246#0",
+    "lib/index.mjs:251#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/index.mjs:246#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/index.mjs:251#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1376,
+    "output_tokens": 84,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  }
+ ],
+ "final": {
+  "tools": {
+   "install_repo_mcp_server": {
+    "result_contents": [
+     {
+      "part": "Node.js is not installed, please install it!",
+      "produced_at": "lib/index.mjs:203",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Installed MCP server via npx successfully! Tell the user to restart the app",
+      "produced_at": "lib/index.mjs:215",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Python uv is not installed, please install it! Tell users to go to https://docs.astral.sh/uv",
+      "produced_at": "lib/index.mjs:225",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Installed MCP server via uvx successfully! Tell the user to restart the app",
+      "produced_at": "lib/index.mjs:236",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/index.mjs:199#0",
+      "part": "the statement",
+      "produced_at": "lib/index.mjs:199",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/index.mjs:211#0",
+      "part": "the statement",
+      "produced_at": "lib/index.mjs:211",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/index.mjs:221#0",
+      "part": "the statement",
+      "produced_at": "lib/index.mjs:221",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/index.mjs:232#0",
+      "part": "the statement",
+      "produced_at": "lib/index.mjs:232",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "host",
+     "at": "lib/index.mjs:210"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/index.mjs:196-240",
+     "lib/index.mjs:242-246",
+     "lib/index.mjs:29-52"
+    ],
+    "rationale": "The tool `install_repo_mcp_server` installs an MCP server using either `npx` or `uvx`. It checks for the presence of Node.js and Python uv, and installs the server using the appropriate tool. The installation commands are executed on the host machine using `spawnPromise`, which runs the supplied command (`npx` or `uvx`) with the provided arguments and environment variables. The tool does not send data to an external destination, but it does execute commands on the host machine.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "name",
+     "args",
+     "env"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "HOSTEXEC"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "install_local_mcp_server": {
+    "result_contents": [
+     {
+      "part": "Path ${dirPath} does not exist locally!",
+      "produced_at": "lib/index.mjs:165",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Installed the following servers via npm successfully! ${Object.keys(servers).join(';')} Tell the user to restart the app",
+      "produced_at": "lib/index.mjs:180",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Can't figure out how to install ${dirPath}",
+      "produced_at": "lib/index.mjs:189",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/index.mjs:165#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/index.mjs:165",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/index.mjs:165#1",
+      "part": "dirPath",
+      "produced_at": "lib/index.mjs:165",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "lib/index.mjs:180#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/index.mjs:180",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/index.mjs:180#1",
+      "part": "Object.keys(servers).join(\";\")",
+      "produced_at": "lib/index.mjs:180",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "lib/index.mjs:189#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/index.mjs:189",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/index.mjs:189#1",
+      "part": "dirPath",
+      "produced_at": "lib/index.mjs:189",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "host",
+     "at": "lib/index.mjs:172"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/index.mjs:158-194",
+     "lib/index.mjs:242-251",
+     "lib/index.mjs:53-76"
+    ],
+    "rationale": "The tool `install_local_mcp_server` installs an MCP server from a local directory. It checks if the directory exists and contains a `package.json` file. If so, it attempts to install the server using `npm install` and registers the server with Claude Desktop. The installation commands are executed on the host machine using `spawnPromise`, which runs the `npm install` command in the specified directory. The tool does not send data to an external destination, but it does execute commands on the host machine.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "path",
+     "args",
+     "env"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "HOSTEXEC",
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   }
+  },
+  "value_conditions": [],
+  "notes": []
+ },
+ "hashes": {
+  "rubric_sha": "191e69d289880d38",
+  "schema_sha": "0f8d7d93eb07c885",
+  "source_sha": "fc2d217ab5e02884"
+ },
+ "run": {
+  "model": "gpt-4o-2024-08-06",
+  "temperature": 0.0,
+  "seed": 0,
+  "files": [
+   "lib/index.mjs"
+  ]
+ }
+}

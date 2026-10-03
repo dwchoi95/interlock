@@ -1,0 +1,815 @@
+{
+ "tools": {
+  "search_papers": {
+   "result_contents": [
+    {
+     "part": "total_results",
+     "produced_at": "response",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    },
+    {
+     "part": "returned",
+     "produced_at": "response",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    },
+    {
+     "part": "has_more",
+     "produced_at": "response",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    },
+    {
+     "part": "next_start",
+     "produced_at": "response",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    },
+    {
+     "part": "abstract_mode",
+     "produced_at": "response",
+     "origin": "argument_echo",
+     "scope": "none",
+     "control": "none"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "query, max_results, start, abstract_mode, date_from, date_to, categories, sort_by",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "arXiv",
+     "at": "search_papers"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "search_papers"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "search_papers"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches arXiv with the provided query and parameters, returning computed results like total_results and next_start. It makes an outbound call to arXiv with the search parameters.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [
+    "query",
+    "max_results",
+    "start",
+    "abstract_mode",
+    "date_from",
+    "date_to",
+    "categories",
+    "sort_by"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "download_paper": {
+   "result_contents": [
+    {
+     "part": "text content",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_local",
+     "control": "service"
+    },
+    {
+     "part": "is_truncated",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "paper_id, start, max_chars, return_full_text, force",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "arXiv",
+     "at": "download_paper"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "download_paper"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "download_paper"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool downloads a paper from arXiv and stores it locally, returning the text content. It makes an outbound call to arXiv with the paper ID and other parameters.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "paper_id",
+    "start",
+    "max_chars",
+    "return_full_text",
+    "force"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_papers": {
+   "result_contents": [
+    {
+     "part": "id, title, authors, published, arxiv_version, versioned_id",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_local",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "list_papers"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "list_papers"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists metadata of papers downloaded and stored locally, without making outbound calls.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "read_paper": {
+   "result_contents": [
+    {
+     "part": "text content",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_local",
+     "control": "service"
+    },
+    {
+     "part": "is_truncated",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "read_paper"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "read_paper"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads the text content of a locally stored paper, returning it in markdown format. No outbound calls are made.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [
+    "paper_id",
+    "start",
+    "max_chars",
+    "return_full_text"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "get_abstract": {
+   "result_contents": [
+    {
+     "part": "title, authors, abstract, categories, published date, PDF URL",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "public",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "paper_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "arXiv",
+     "at": "get_abstract"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "get_abstract"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "get_abstract"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool fetches the abstract and metadata of a paper from arXiv, making an outbound call with the paper ID.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [
+    "paper_id"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "semantic_search": {
+   "result_contents": [
+    {
+     "part": "search results",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "user_local",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "semantic_search"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "semantic_search"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool performs a semantic search over locally downloaded papers, returning computed results without making outbound calls.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [
+    "query",
+    "paper_id",
+    "max_results"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "reindex": {
+   "result_contents": [],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "reindex"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "reindex"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool rebuilds the local semantic index for downloaded papers without making outbound calls.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "clear_existing"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "citation_graph": {
+   "result_contents": [
+    {
+     "part": "citation and reference results",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "public",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "paper_id, max_citations",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Semantic Scholar",
+     "at": "citation_graph"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "citation_graph"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "citation_graph"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves citation and reference data from Semantic Scholar, making an outbound call with the paper ID and max_citations.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [
+    "paper_id",
+    "max_citations"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "export_citations": {
+   "result_contents": [
+    {
+     "part": "rendered BibTeX",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    },
+    {
+     "part": "per-paper status/error",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool exports BibTeX citations using authoritative arXiv metadata and returns the rendered BibTeX plus per-paper status/error. There are no outbound calls or code execution.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "watch_topic": {
+   "result_contents": [],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool saves or updates a persistent research topic watch. There are no outbound calls or code execution.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "topic",
+    "categories"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "check_alerts": {
+   "result_contents": [
+    {
+     "part": "summary with new paper counts, has_more, and full paper metadata per topic",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool checks saved topic watches for newly published papers and returns a summary with new paper counts and metadata. There are no outbound calls or code execution.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [
+    "topic"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "list_watches": {
+   "result_contents": [
+    {
+     "part": "each watch's topic, categories, last_checked timestamp, and other stored fields",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "user"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists all saved topic watches without checking for new papers. It returns each watch's details. There are no outbound calls or code execution.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "unwatch_topic": {
+   "result_contents": [],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool deletes a saved topic watch by exact topic string. There are no outbound calls or code execution.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "topic"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "get_paper_latex": {
+   "result_contents": [
+    {
+     "part": "bounded original LaTeX source",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool downloads, processes, caches, and returns bounded original LaTeX source. There are no outbound calls or code execution.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [
+    "paper_id",
+    "start",
+    "max_chars",
+    "return_full_text"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "list_paper_latex_sections": {
+   "result_contents": [
+    {
+     "part": "compact outline of headings from original LaTeX source",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns a compact outline of headings from original LaTeX source. There are no outbound calls or code execution.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [
+    "paper_id",
+    "start",
+    "max_sections"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "get_paper_latex_section": {
+   "result_contents": [
+    {
+     "part": "bounded LaTeX section",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "unknown",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns one bounded LaTeX section by outline ID or title. There are no outbound calls or code execution.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [
+    "paper_id",
+    "section_id",
+    "start",
+    "max_chars",
+    "return_full_text"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "get_paper_outline": {
+   "result_contents": [
+    {
+     "part": "paginated heading outline",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns a computed paginated heading outline for a downloaded paper. The scope is unknown because the source of the paper is not specified. There are no outbound calls or code execution.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "read_paper_section": {
+   "result_contents": [
+    {
+     "part": "markdown section",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns a computed markdown section by outline ID or unique title. The scope is unknown because the source of the paper is not specified. There are no outbound calls or code execution.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "search_paper_text": {
+   "result_contents": [
+    {
+     "part": "bounded matching passages",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns computed bounded matching passages for a downloaded paper. The scope is unknown because the source of the paper is not specified. There are no outbound calls or code execution.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  }
+ },
+ "value_conditions": [],
+ "notes": [],
+ "usage": {
+  "input_tokens": 5883,
+  "output_tokens": 3176,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 5760
+ }
+}

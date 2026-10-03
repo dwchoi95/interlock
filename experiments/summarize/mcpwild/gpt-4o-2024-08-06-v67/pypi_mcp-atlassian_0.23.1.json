@@ -1,0 +1,5426 @@
+{
+ "kind": "pypi",
+ "notes": [],
+ "package": "mcp-atlassian",
+ "source": ".cache/sources/.views/pypi_mcp-atlassian_0.23.1_da2e5e53117e",
+ "tools": {
+  "jira_add_comment": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "issue_key"
+   ],
+   "evidence": [
+    "servers/jira.py:2230-1511"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:1502",
+     "data": "issue_key, body",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_add_comment` tool adds a comment to a Jira issue using the `self.jira.add_comment` method, which sends the `issue_key` and `body` to the configured Jira service. The result is a JSON string indicating success, with a message constructed from a literal string and the comment details. There are no attacker-controlled fields in the result. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "{\"success\": true, \"message\": \"Comment added successfully\", \"comment\": comment.to_simplified_dict()}",
+     "produced_at": "jira/issues.py:1510",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "body"
+   ]
+  },
+  "jira_add_issues_to_sprint": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "sprint_id"
+   ],
+   "evidence": [
+    "servers/jira.py:3003-3029",
+    "jira/sprints.py:133-150"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3024",
+     "data": "sprint_id, issue_keys",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_add_issues_to_sprint` tool adds issues to a Jira sprint using the `add_issues_to_sprint` method from the `SprintsMixin` class. The result is a JSON string indicating success, which is a literal string (scope: none, control: none). The tool makes an outbound call to the configured Jira service to add the issues to the sprint, passing the `sprint_id` and `issue_keys` as data. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "{\"message\": \"Issues added to sprint successfully\"}",
+     "produced_at": "servers/jira.py:3029",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3026#0",
+     "origin": "literal",
+     "part": "Successfully moved",
+     "produced_at": "servers/jira.py:3026",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3026#1",
+     "origin": "computed",
+     "part": "len(keys_list)",
+     "produced_at": "servers/jira.py:3026",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/sprints.py:147#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/sprints.py:147",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/sprints.py:147#1",
+     "origin": "argument_echo",
+     "part": "sprint_id",
+     "produced_at": "jira/sprints.py:147",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "issue_keys"
+   ]
+  },
+  "jira_add_watcher": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "issue_key",
+    "user_identifier"
+   ],
+   "evidence": [
+    "jira/watchers.py:61",
+    "jira/watchers.py:63-66"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "jira/watchers.py:61",
+     "data": "issue_key, user_identifier",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.config.url",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_add_watcher` tool returns a JSON string with a success status and a message indicating the user was added as a watcher. The success status is a literal value, and the message is computed. The tool makes an outbound call to the configured Jira service using the issue_key and user_identifier to add the watcher. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "success",
+     "produced_at": "jira/watchers.py:63",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "message",
+     "produced_at": "jira/watchers.py:64",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/watchers.py:65",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "user",
+     "produced_at": "jira/watchers.py:66",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/watchers.py:64#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/watchers.py:64",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/watchers.py:64#1",
+     "origin": "argument_echo",
+     "part": "user_identifier",
+     "produced_at": "jira/watchers.py:64",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/watchers.py:64#2",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/watchers.py:64",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_add_worklog": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "issue_key"
+   ],
+   "evidence": [
+    "servers/jira.py:2230-1667"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "jira/worklog.py:139",
+     "data": "issue_key, time_spent, comment, started, original_estimate, remaining_estimate",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_add_worklog` tool adds a worklog entry to a Jira issue using the `self.jira.post` method, which sends the `issue_key`, `time_spent`, `comment`, `started`, `original_estimate`, and `remaining_estimate` to the configured Jira service. The result is a JSON object with details about the worklog entry, including computed fields like `id`, `created`, `updated`, and `author`. There are no attacker-controlled fields in the result. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "{\"id\": result.get(\"id\"), \"comment\": self._clean_text(comment_text or \"\"), \"created\": str(parse_date(result.get(\"created\", \"\"))), \"updated\": str(parse_date(result.get(\"updated\", \"\"))), \"started\": str(parse_date(result.get(\"started\", \"\"))), \"time_spent\": result.get(\"timeSpent\", \"\"), \"time_spent_seconds\": result.get(\"timeSpentSeconds\", 0), \"author\": result.get(\"author\", {}).get(\"displayName\", \"Unknown\"), \"original_estimate_updated\": original_estimate_updated, \"remaining_estimate_updated\": remaining_estimate_updated}",
+     "produced_at": "jira/worklog.py:152",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "time_spent",
+    "comment",
+    "started",
+    "original_estimate",
+    "remaining_estimate"
+   ]
+  },
+  "jira_assign_issue": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "assignee"
+   ],
+   "evidence": [
+    "jira/issues.py:1316-1379"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:1369",
+     "data": "issue_key, assignee",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool assigns a Jira issue to a user using the `assign_issue` method, which calls the Jira API with the issue key and assignee. The result is the updated issue, which is read from the API response. [received records: updated issue taken as outside-party text] [destination_args completed: assignee] [received records: the statement taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "updated issue",
+     "produced_at": "jira/issues.py:1375",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "jira/issues.py:1375#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "jira/issues.py:1375",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1378#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1378",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1378#1",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/issues.py:1378",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "jira/issues.py:1378#2",
+     "origin": "computed",
+     "part": "error_msg",
+     "produced_at": "jira/issues.py:1378",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1379#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1379",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1379#1",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/issues.py:1379",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "jira/issues.py:1379#2",
+     "origin": "computed",
+     "part": "error_msg",
+     "produced_at": "jira/issues.py:1379",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "issue_key"
+   ]
+  },
+  "jira_batch_create_issues": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "jira/issues.py:1831-1975"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:1933",
+     "data": "issue_updates",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool creates multiple Jira issues in a batch using the `batch_create_issues` method, which calls the Jira API with the issue updates. The result is a list of created issues, which is read from the API response. [received records: list of created issues taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "list of created issues",
+     "produced_at": "jira/issues.py:1959",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#1",
+     "origin": "argument_echo",
+     "part": "project_key=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#2",
+     "origin": "argument_echo",
+     "part": "summary=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#3",
+     "origin": "argument_echo",
+     "part": "issue_type=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1895#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1895",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "jira/issues.py:1895#1",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "jira/issues.py:1895",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1916#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1916",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1916#1",
+     "origin": "argument_echo",
+     "part": "project_key",
+     "produced_at": "jira/issues.py:1916",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1916#2",
+     "origin": "argument_echo",
+     "part": "summary",
+     "produced_at": "jira/issues.py:1916",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1916#3",
+     "origin": "argument_echo",
+     "part": "issue_type",
+     "produced_at": "jira/issues.py:1916",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1924#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1924",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "jira/issues.py:1924#1",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "jira/issues.py:1924",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1935#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1935",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1935#1",
+     "origin": "computed",
+     "part": "type(response)",
+     "produced_at": "jira/issues.py:1935",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1948#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1948",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1948#1",
+     "origin": "computed",
+     "part": "type(issue_data)",
+     "produced_at": "jira/issues.py:1948",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1962#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1962",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1962#1",
+     "origin": "computed",
+     "part": "issue_key",
+     "produced_at": "jira/issues.py:1962",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "jira/issues.py:1962#2",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "jira/issues.py:1962",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1969#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1969",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "jira/issues.py:1969#1",
+     "origin": "unknown",
+     "part": "error",
+     "produced_at": "jira/issues.py:1969",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1974#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1974",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "jira/issues.py:1974#1",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "jira/issues.py:1974",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "issues",
+    "validate_only"
+   ]
+  },
+  "jira_batch_create_versions": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "project_key"
+   ],
+   "evidence": [
+    "servers/jira.py:3680-3728"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3721",
+     "data": "{\"project\": project_key, \"name\": version['name'], \"startDate\": version.get('startDate'), \"releaseDate\": version.get('releaseDate'), \"description\": version.get('description')}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_batch_create_versions` creates multiple versions in a Jira project. It sends a POST request to the Jira API with the endpoint `/rest/api/2/version` for each version in the provided list, using the project key and version details. The response is processed and returned as a JSON string. The result is controlled by the service as it is processed from the API response. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "json.dumps(result, indent=2, ensure_ascii=False)",
+     "produced_at": "servers/jira.py:3727",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:3727#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3727",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "versions"
+   ]
+  },
+  "jira_batch_get_changelogs": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "jira/issues.py:1977-2029"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:2002",
+     "data": "issueIdsOrKeys, fieldIds",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool retrieves changelogs for multiple Jira issues using the `batch_get_changelogs` method, which calls the Jira API with the issue IDs or keys. The result is a list of changelogs, which is read from the API response. [received records: list of changelogs taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "list of changelogs",
+     "produced_at": "jira/issues.py:2029",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:2029#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "jira/issues.py:2029",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_create_customer_request": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "service_desk_id",
+    "request_type_id"
+   ],
+   "evidence": [
+    "servers/jira.py:637-821"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:721",
+     "data": "{\"serviceDeskId\": str(service_desk_id), \"requestTypeId\": str(request_type_id), \"requestFieldValues\": formatted_field_values, \"raiseOnBehalfOf\": raise_on_behalf_of, \"requestParticipants\": request_participants}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_create_customer_request` creates a Jira Service Management customer request. It sends a POST request to the Jira API with the endpoint `rest/servicedeskapi/request` and a payload containing the service desk ID, request type ID, request field values, and optional parameters like `raiseOnBehalfOf` and `requestParticipants`. The response is processed by `JiraCustomerRequest.from_api_response`, which reads the data from the user's account. The result is controlled by the service as it is processed from the API response. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "JiraCustomerRequest.from_api_response(response, portal_url=self._build_portal_url(response, service_desk_id), created_mode=(\"created_on_behalf_of\" if raise_on_behalf_of else \"created_direct\"), on_behalf_user=raise_on_behalf_of, request_participants=request_participants or [], warnings=warnings)",
+     "produced_at": "servers/jira.py:740-749",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:652#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:652",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:655#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:655",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:676#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:676",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:680#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:680",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:682#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:682",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:735#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:735",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:763#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:763",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "request_field_values",
+    "raise_on_behalf_of",
+    "request_participants",
+    "attachments"
+   ]
+  },
+  "jira_create_issue": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "assignee"
+   ],
+   "evidence": [
+    "jira/issues.py:597-773"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:728",
+     "data": "fields",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool creates a new Jira issue using the `create_issue` method, which calls the Jira API with the issue fields. The result is the created issue, which is read from the API response. [received records: created issue taken as outside-party text] [destination_args completed: assignee] [received records: issue_key taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "created issue",
+     "produced_at": "jira/issues.py:773",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:650#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:650",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "jira/issues.py:650#1",
+     "origin": "computed",
+     "part": "epic_type_id",
+     "produced_at": "jira/issues.py:650",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:657#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:657",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "jira/issues.py:657#1",
+     "origin": "computed",
+     "part": "subtask_type_id",
+     "produced_at": "jira/issues.py:657",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:684#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:684",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "jira/issues.py:684#1",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "jira/issues.py:684",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:730#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:730",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:730#1",
+     "origin": "computed",
+     "part": "type(response)",
+     "produced_at": "jira/issues.py:730",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:746#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:746",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "jira/issues.py:746#1",
+     "origin": "resource_read",
+     "part": "issue_key",
+     "produced_at": "jira/issues.py:746",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:746#2",
+     "origin": "argument_echo",
+     "part": "assignee",
+     "produced_at": "jira/issues.py:746",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "jira/issues.py:746#3",
+     "origin": "unknown",
+     "part": "e",
+     "produced_at": "jira/issues.py:746",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:755#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:755",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "jira/issues.py:755#1",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/issues.py:755",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:761#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:761",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "jira/issues.py:761#1",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/issues.py:761",
+     "scope": "unknown"
+    },
+    {
+     "control": "service",
+     "id": "jira/issues.py:761#2",
+     "origin": "computed",
+     "part": "str(update_error)",
+     "produced_at": "jira/issues.py:761",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:770#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:770",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "jira/issues.py:770#1",
+     "origin": "computed",
+     "part": "type(issue_data)",
+     "produced_at": "jira/issues.py:770",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "project_key",
+    "summary",
+    "issue_type",
+    "description",
+    "components",
+    "additional_fields"
+   ]
+  },
+  "jira_create_issue_link": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "link_type",
+    "inward_issue_key",
+    "outward_issue_key"
+   ],
+   "evidence": [
+    "servers/jira.py:2559-149"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "jira/links.py:137",
+     "data": "link_type, inward_issue_key, outward_issue_key, comment, comment_visibility",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_create_issue_link` tool creates a link between two Jira issues using the `self.jira.create_issue_link` method, which sends the `link_type`, `inward_issue_key`, `outward_issue_key`, `comment`, and `comment_visibility` to the configured Jira service. The result is a JSON string indicating success, with a message constructed from a literal string and the `inward` and `outward` issue keys. There are no attacker-controlled fields in the result. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "{\"success\": True, \"message\": \"Link created between {inward} and {outward}\", \"link_type\": data[\"type\"][\"name\"], \"inward_issue\": inward, \"outward_issue\": outward}",
+     "produced_at": "jira/links.py:144",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "comment",
+    "comment_visibility"
+   ]
+  },
+  "jira_create_remote_issue_link": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "issue_key",
+    "url"
+   ],
+   "evidence": [
+    "servers/jira.py:2560-215"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "jira/links.py:207",
+     "data": "issue_key, link_data",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "configured:endpoint"
+    }
+   ],
+   "rationale": "The `jira_create_remote_issue_link` tool creates a remote issue link for a Jira issue using the `self.jira.post` method, which sends the `issue_key` and `link_data` to the configured Jira service. The result is a JSON string indicating success, with a message constructed from a literal string and the `issue_key`, `link_title`, and `link_url`. There are no attacker-controlled fields in the result. [destination_args completed: url] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "{\"success\": True, \"message\": \"Remote link created for issue {issue_key}\", \"issue_key\": issue_key, \"link_title\": link_data[\"object\"][\"title\"], \"link_url\": link_data[\"object\"][\"url\"], \"relationship\": link_data.get(\"relationship\", \"\")}",
+     "produced_at": "jira/links.py:211",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "title",
+    "summary",
+    "relationship",
+    "icon_url"
+   ]
+  },
+  "jira_create_sprint": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "board_id"
+   ],
+   "evidence": [
+    "servers/jira.py:2859-2897",
+    "jira/sprints.py:170-229"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:2890",
+     "data": "board_id, sprint_name, start_date, end_date, goal",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_create_sprint` tool creates a new sprint for a board using the `create_sprint` method from the `SprintsMixin` class. The result is a JSON string representing the created sprint object, which is read from the service response (scope: user_account, control: service). The tool makes an outbound call to the configured Jira service to create the sprint, passing the `board_id`, `sprint_name`, `start_date`, `end_date`, and `goal` as data. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "sprint.to_simplified_dict()",
+     "produced_at": "servers/jira.py:2897",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:2897#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:2897",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/sprints.py:222#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/sprints.py:222",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "jira/sprints.py:222#1",
+     "origin": "resource_read",
+     "part": "sprint",
+     "produced_at": "jira/sprints.py:222",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/sprints.py:225#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/sprints.py:225",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/sprints.py:225#1",
+     "origin": "computed",
+     "part": "type(sprint)",
+     "produced_at": "jira/sprints.py:225",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "name",
+    "start_date",
+    "end_date",
+    "goal"
+   ]
+  },
+  "jira_create_version": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "project_key"
+   ],
+   "evidence": [
+    "servers/jira.py:3680-3728"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3721",
+     "data": "{\"project\": project_key, \"name\": name, \"startDate\": start_date, \"releaseDate\": release_date, \"description\": description}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_create_version` creates a new fix version in a Jira project. It sends a POST request to the Jira API with the endpoint `/rest/api/2/version` and a payload containing the project key, version name, start date, release date, and description. The response is processed and returned as a JSON string. The result is controlled by the service as it is processed from the API response. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "json.dumps(version, indent=2, ensure_ascii=False)",
+     "produced_at": "servers/jira.py:3727",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:3727#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3727",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "name",
+    "start_date",
+    "release_date",
+    "description"
+   ]
+  },
+  "jira_delete_issue": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "issue_key"
+   ],
+   "evidence": [
+    "servers/jira.py:2201-2227"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:2224",
+     "data": "issue_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_delete_issue` tool deletes a Jira issue using the `self.jira.delete_issue` method, which sends the `issue_key` to the configured Jira service. The result is a JSON string indicating success, with a message constructed from a literal string and the `issue_key`. There are no attacker-controlled fields in the result. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "{\"message\": \"Issue {issue_key} has been deleted successfully.\"}",
+     "produced_at": "servers/jira.py:2225",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:2225#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:2225",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:2225#1",
+     "origin": "argument_echo",
+     "part": "\"message\": f\"Issue {issue_key} has been deleted successfully.\"",
+     "produced_at": "servers/jira.py:2225",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_download_attachments": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "jira/issues.py:1061-1075"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:1061",
+     "data": "issue_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_download_attachments` downloads attachments from a Jira issue using the `self.jira.get_field_options` method. The result includes a success status and the fetched attachments, which are read from the user's Jira account. [received records: result taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "success",
+     "produced_at": "jira/issues.py:1075",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "result",
+     "produced_at": "jira/issues.py:1075",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1071#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1071",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1071#1",
+     "origin": "argument_echo",
+     "part": "api_field_id",
+     "produced_at": "jira/issues.py:1071",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1071#2",
+     "origin": "argument_echo",
+     "part": "key",
+     "produced_at": "jira/issues.py:1071",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1071#3",
+     "origin": "computed",
+     "part": "formatted_value",
+     "produced_at": "jira/issues.py:1071",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1075#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1075",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1075#1",
+     "origin": "argument_echo",
+     "part": "key",
+     "produced_at": "jira/issues.py:1075",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_edit_comment": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "issue_key",
+    "comment_id"
+   ],
+   "evidence": [
+    "servers/jira.py:2230-1511"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:1502",
+     "data": "issue_key, comment_id, body",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_edit_comment` tool edits an existing comment on a Jira issue using the `self.jira.edit_comment` method, which sends the `issue_key`, `comment_id`, and `body` to the configured Jira service. The result is a JSON string indicating success, with a message constructed from a literal string and the comment details. There are no attacker-controlled fields in the result. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "{\"success\": true, \"message\": \"Comment edited successfully\", \"comment\": comment.to_simplified_dict()}",
+     "produced_at": "jira/issues.py:1510",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "body"
+   ]
+  },
+  "jira_get_agile_boards": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:1447-1497"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:1489",
+     "data": "board_name, project_key, board_type, start, limit",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_agile_boards` retrieves agile boards using the `self.jira.get_all_agile_boards_model` method. The result includes a success status and the fetched boards, which are read from the user's Jira account. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "success",
+     "produced_at": "servers/jira.py:1497",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "result",
+     "produced_at": "servers/jira.py:1497",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:1497#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:1497",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_all_projects": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:3173-3200"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3199",
+     "data": "include_archived",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_all_projects` retrieves all Jira projects accessible to the current user. It calls `jira.get_all_projects` with the `include_archived` parameter to fetch the projects, which are then returned as a JSON string. The result is a list of projects, which is read from the user's Jira account, hence the scope is `user_account`. The control is `service` because the server composes the response. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "projects",
+     "produced_at": "servers/jira.py:3199",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_board_issues": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:1504-1617"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:1605",
+     "data": "board_id, jql, fields, start, limit, expand",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_board_issues` retrieves issues linked to a specific board using the `self.jira.get_issues_for_board` method. The result includes a success status and the fetched issues, which are read from the user's Jira account. [received records: result taken as outside-party text] [received records: json.dumps(result, indent=2, ensure_ascii=False), json.dumps(result, indent=2, ensure_ascii=False) taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "success",
+     "produced_at": "servers/jira.py:1617",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "result",
+     "produced_at": "servers/jira.py:1617",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:1526#0",
+     "origin": "literal",
+     "part": "Comma-separated fields to return in the results.",
+     "produced_at": "servers/jira.py:1526",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:1555#0",
+     "origin": "literal",
+     "part": "fields: Comma-separated fields to return.",
+     "produced_at": "servers/jira.py:1555",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "servers/jira.py:1577#0",
+     "origin": "resource_read",
+     "part": "json.dumps(result, indent=2, ensure_ascii=False)",
+     "produced_at": "servers/jira.py:1577",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "servers/jira.py:1617#0",
+     "origin": "resource_read",
+     "part": "json.dumps(result, indent=2, ensure_ascii=False)",
+     "produced_at": "servers/jira.py:1617",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_create_fields": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:3080-3126",
+    "jira/projects.py:377-444"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3116",
+     "data": "project_key, issue_type_id",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_get_create_fields` tool retrieves fields available for creating an issue of a specific type using the `get_create_fields` method from the `ProjectsMixin` class. The result is a JSON string with a list of fields, which is read from the service response (scope: user_account, control: service). The tool makes an outbound call to the configured Jira service to get the fields, passing the `project_key` and `issue_type_id` as data. [received records: fields taken as outside-party text] [received records: the statement, the statement taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "fields",
+     "produced_at": "servers/jira.py:3126",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "servers/jira.py:3118#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3118",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "servers/jira.py:3126#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3126",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/projects.py:407#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "jira/projects.py:407",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/projects.py:408#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/projects.py:408",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/projects.py:408#1",
+     "origin": "computed",
+     "part": "type(meta)",
+     "produced_at": "jira/projects.py:408",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/projects.py:442#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/projects.py:442",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/projects.py:442#1",
+     "origin": "argument_echo",
+     "part": "project_key",
+     "produced_at": "jira/projects.py:442",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/projects.py:442#2",
+     "origin": "argument_echo",
+     "part": "issue_type_id",
+     "produced_at": "jira/projects.py:442",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/projects.py:442#3",
+     "origin": "computed",
+     "part": "e",
+     "produced_at": "jira/projects.py:442",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_cross_project_dependencies": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "project_key"
+   ],
+   "evidence": [
+    "jira/issues.py:1866-1889"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:1878",
+     "data": "project_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_get_cross_project_dependencies` tool finds all cross-project issue links for a project. It sends the `project_key` to the configured Jira service (`self.jira`) using `jira.batch_create_issues`. The result includes a success flag and an error message, which are literals controlled by the service. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "success flag",
+     "produced_at": "jira/issues.py:1887",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "error message",
+     "produced_at": "jira/issues.py:1887",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#1",
+     "origin": "argument_echo",
+     "part": "project_key=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#2",
+     "origin": "argument_echo",
+     "part": "summary=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#3",
+     "origin": "argument_echo",
+     "part": "issue_type=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_field_options": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "jira/issues.py:1061-1075"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:1061",
+     "data": "field_id, context_id, project_key, issue_type",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_field_options` fetches field options from the Jira API using the `self.jira.get_field_options` method. The result includes a success status and the fetched options, which are read from the user's Jira account. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "success",
+     "produced_at": "jira/issues.py:1075",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "result",
+     "produced_at": "jira/issues.py:1075",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1071#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1071",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1071#1",
+     "origin": "argument_echo",
+     "part": "api_field_id",
+     "produced_at": "jira/issues.py:1071",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1071#2",
+     "origin": "argument_echo",
+     "part": "key",
+     "produced_at": "jira/issues.py:1071",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1071#3",
+     "origin": "computed",
+     "part": "formatted_value",
+     "produced_at": "jira/issues.py:1071",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1075#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1075",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1075#1",
+     "origin": "argument_echo",
+     "part": "key",
+     "produced_at": "jira/issues.py:1075",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_issue": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:687",
+    "servers/jira.py:735"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:687",
+     "data": "issue_key, fields, expand, comment_limit, properties, update_history",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.config.url",
+     "resolved": "literal:your-company.atlassian.net (configuration override: config)"
+    }
+   ],
+   "rationale": "The `jira_get_issue` tool returns a JSON string with the details of a Jira issue. The issue details are read from the Jira service. The tool makes an outbound call to the configured Jira service using the issue_key, fields, expand, comment_limit, properties, and update_history to fetch the issue details. [own-service call resolves to the literal host your-company.atlassian.net (configuration override: config); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "issue details",
+     "produced_at": "servers/jira.py:735",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:735#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:735",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_issue_dates": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "issue_key"
+   ],
+   "evidence": [
+    "jira/issues.py:1866-1889"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:1878",
+     "data": "issue_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_get_issue_dates` tool retrieves date information and status transition history for a Jira issue. It sends the `issue_key` to the configured Jira service (`self.jira`) using `jira.batch_create_issues`. The result includes a success flag and an error message, which are literals controlled by the service. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "success flag",
+     "produced_at": "jira/issues.py:1887",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "error message",
+     "produced_at": "jira/issues.py:1887",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#1",
+     "origin": "argument_echo",
+     "part": "project_key=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#2",
+     "origin": "argument_echo",
+     "part": "summary=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#3",
+     "origin": "argument_echo",
+     "part": "issue_type=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_issue_development_info": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "issue_key"
+   ],
+   "evidence": [
+    "jira/issues.py:1866-1889"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:1878",
+     "data": "issue_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_get_issue_development_info` tool retrieves development information linked to a Jira issue. It sends the `issue_key` to the configured Jira service (`self.jira`) using `jira.batch_create_issues`. The result includes a success flag and an error message, which are literals controlled by the service. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "success flag",
+     "produced_at": "jira/issues.py:1887",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "error message",
+     "produced_at": "jira/issues.py:1887",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#1",
+     "origin": "argument_echo",
+     "part": "project_key=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#2",
+     "origin": "argument_echo",
+     "part": "summary=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#3",
+     "origin": "argument_echo",
+     "part": "issue_type=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_issue_images": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "jira/issues.py:1061-1075"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:1061",
+     "data": "issue_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_issue_images` retrieves image attachments from a Jira issue using the `self.jira.get_field_options` method. The result includes a success status and the fetched images, which are read from the user's Jira account. [received records: result taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "success",
+     "produced_at": "jira/issues.py:1075",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "result",
+     "produced_at": "jira/issues.py:1075",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1071#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1071",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1071#1",
+     "origin": "argument_echo",
+     "part": "api_field_id",
+     "produced_at": "jira/issues.py:1071",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1071#2",
+     "origin": "argument_echo",
+     "part": "key",
+     "produced_at": "jira/issues.py:1071",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1071#3",
+     "origin": "computed",
+     "part": "formatted_value",
+     "produced_at": "jira/issues.py:1071",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1075#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1075",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1075#1",
+     "origin": "argument_echo",
+     "part": "key",
+     "produced_at": "jira/issues.py:1075",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_issue_proforma_forms": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:3914-3946"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3916",
+     "data": "{}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_issue_proforma_forms` retrieves all ProForma forms associated with a Jira issue. It makes a call to the Jira API using the `self.jira.get_issue_forms` method. The response is processed into a JSON object containing the forms and their count. The result is controlled by the service as it is processed from the API response. [received records: {\"success\": True, \"forms\": forms_data, \"count\": len(forms)} taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "{\"success\": True, \"forms\": forms_data, \"count\": len(forms)}",
+     "produced_at": "servers/jira.py:3918",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3926#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:3926",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3926#1",
+     "origin": "argument_echo",
+     "part": "str(e)",
+     "produced_at": "servers/jira.py:3926",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3928#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:3928",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3928#1",
+     "origin": "argument_echo",
+     "part": "str(e)",
+     "produced_at": "servers/jira.py:3928",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3934#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:3934",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3934#1",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "servers/jira.py:3934",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3943#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:3943",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3943#1",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "servers/jira.py:3943",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:3943#2",
+     "origin": "computed",
+     "part": "error_message",
+     "produced_at": "servers/jira.py:3943",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:3946#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3946",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_issue_sla": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "issue_key"
+   ],
+   "evidence": [
+    "jira/issues.py:1866-1889"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:1878",
+     "data": "issue_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_get_issue_sla` tool calculates SLA metrics for a Jira issue. It sends the `issue_key` to the configured Jira service (`self.jira`) using `jira.batch_create_issues`. The result includes a success flag and an error message, which are literals controlled by the service. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "success flag",
+     "produced_at": "jira/issues.py:1887",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "error message",
+     "produced_at": "jira/issues.py:1887",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#1",
+     "origin": "argument_echo",
+     "part": "project_key=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#2",
+     "origin": "argument_echo",
+     "part": "summary=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#3",
+     "origin": "argument_echo",
+     "part": "issue_type=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_issue_watchers": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:458",
+    "servers/jira.py:459"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:458",
+     "data": "issue_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.config.url",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_get_issue_watchers` tool returns a JSON string with the watcher count and a list of watchers for a Jira issue. Both the watcher count and list of watchers are read from the Jira service. The tool makes an outbound call to the configured Jira service using the issue_key to fetch the watchers. [received records: the statement taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "watcher count",
+     "produced_at": "servers/jira.py:459",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "list of watchers",
+     "produced_at": "servers/jira.py:459",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "servers/jira.py:459#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:459",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_issues_development_info": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "issue_keys"
+   ],
+   "evidence": [
+    "jira/issues.py:1866-1889"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:1878",
+     "data": "issue_keys",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_get_issues_development_info` tool retrieves development information for multiple Jira issues. It sends the `issue_keys` to the configured Jira service (`self.jira`) using `jira.batch_create_issues`. The result includes a success flag and an error message, which are literals controlled by the service. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "success flag",
+     "produced_at": "jira/issues.py:1887",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "error message",
+     "produced_at": "jira/issues.py:1887",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#1",
+     "origin": "argument_echo",
+     "part": "project_key=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#2",
+     "origin": "argument_echo",
+     "part": "summary=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#3",
+     "origin": "argument_echo",
+     "part": "issue_type=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_link_types": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "jira/links.py:19-46"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "jira/links.py:32",
+     "data": "none",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool retrieves all available issue link types using the `get_issue_link_types` method, which calls the Jira API. The result is a list of link types, which is read from the API response. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "list of issue link types",
+     "produced_at": "jira/links.py:44",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "jira/links.py:35#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "jira/links.py:35",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/links.py:36#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/links.py:36",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/links.py:36#1",
+     "origin": "computed",
+     "part": "type(link_types_response)",
+     "produced_at": "jira/links.py:36",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_proforma_form_details": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:3976-3995"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3978",
+     "data": "{}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_proforma_form_details` retrieves detailed information about a specific ProForma form. It makes a call to the Jira API using the `self.jira.get_form_details` method. The response is processed into a JSON object containing the form details. The result is controlled by the service as it is processed from the API response. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "{\"success\": True, \"form\": form.to_simplified_dict()}",
+     "produced_at": "servers/jira.py:3987",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3982#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:3982",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3982#1",
+     "origin": "argument_echo",
+     "part": "form_id",
+     "produced_at": "servers/jira.py:3982",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3982#2",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "servers/jira.py:3982",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3995#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:3995",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "servers/jira.py:3995#1",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "servers/jira.py:3995",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_project_components": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:3153-3166"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3165",
+     "data": "project_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_project_components` retrieves all components for a specific Jira project. It calls `jira.get_project_components` with the `project_key` to fetch the components, which are then returned as a JSON string. The result is a list of components, which is read from the user's Jira account, hence the scope is `user_account`. The control is `service` because the server composes the response. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "components",
+     "produced_at": "servers/jira.py:3166",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:3166#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3166",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_project_epic_hierarchy": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "project_key"
+   ],
+   "evidence": [
+    "jira/issues.py:1866-1889"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:1878",
+     "data": "project_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_get_project_epic_hierarchy` tool groups a project's epics under their cross-project parent issues. It sends the `project_key` to the configured Jira service (`self.jira`) using `jira.batch_create_issues`. The result includes a success flag and an error message, which are literals controlled by the service. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "success flag",
+     "produced_at": "jira/issues.py:1887",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "error message",
+     "produced_at": "jira/issues.py:1887",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#1",
+     "origin": "argument_echo",
+     "part": "project_key=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#2",
+     "origin": "argument_echo",
+     "part": "summary=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#3",
+     "origin": "argument_echo",
+     "part": "issue_type=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_project_fields": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:3326-3409"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3404",
+     "data": "project_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_project_fields` retrieves the fields available on issues of a project. It calls `jira.get_service_desk_for_project` with the `project_key` to fetch the fields, which are then returned as a JSON string. The result is a list of fields, which is read from the user's Jira account, hence the scope is `user_account`. The control is `service` because the server composes the response. [received records: fields taken as outside-party text] [received records: the statement taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "fields",
+     "produced_at": "servers/jira.py:3409",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3355#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:3355",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "servers/jira.py:3355#1",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "servers/jira.py:3355",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3357#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:3357",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "servers/jira.py:3357#1",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "servers/jira.py:3357",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3359#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:3359",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "servers/jira.py:3359#1",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "servers/jira.py:3359",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3361#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:3361",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3361#1",
+     "origin": "argument_echo",
+     "part": "project_key",
+     "produced_at": "servers/jira.py:3361",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "servers/jira.py:3361#2",
+     "origin": "unknown",
+     "part": "error_message",
+     "produced_at": "servers/jira.py:3361",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3363#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3363",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "servers/jira.py:3368#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3368",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:3409#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3409",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_project_issue_types": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:3036-3073",
+    "jira/projects.py:313-369"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3061",
+     "data": "project_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_get_project_issue_types` tool retrieves available issue types for a Jira project using the `get_project_issue_types` method from the `ProjectsMixin` class. The result is a JSON string with a list of issue types, which is read from the service response (scope: user_account, control: service). The tool makes an outbound call to the configured Jira service to get the issue types, passing the `project_key` as data. [received records: issue_types taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "issue_types",
+     "produced_at": "servers/jira.py:3073",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:3072#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3072",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:3073#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3073",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/projects.py:336#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "jira/projects.py:336",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/projects.py:337#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/projects.py:337",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/projects.py:337#1",
+     "origin": "computed",
+     "part": "type(meta)",
+     "produced_at": "jira/projects.py:337",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_project_issues": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:1082-1116"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:1112",
+     "data": "project_key, start, limit",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_project_issues` retrieves issues for a specific project using the `self.jira.get_project_issues` method. The result includes a success status and the fetched issues, which are read from the user's Jira account. [received records: result taken as outside-party text] [received records: the statement taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "success",
+     "produced_at": "servers/jira.py:1116",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "result",
+     "produced_at": "servers/jira.py:1116",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "servers/jira.py:1116#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:1116",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_project_versions": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:3133-3146"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3145",
+     "data": "project_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_project_versions` retrieves all fix versions for a specific Jira project. It calls `jira.get_project_versions` with the `project_key` to fetch the versions, which are then returned as a JSON string. The result is a list of versions, which is read from the user's Jira account, hence the scope is `user_account`. The control is `service` because the server composes the response. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "versions",
+     "produced_at": "servers/jira.py:3146",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:3146#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3146",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_queue_issues": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:3458-3505"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3500",
+     "data": "service_desk_id, queue_id, start_at, limit",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_queue_issues` retrieves issues from a Jira Service Desk queue. It calls `jira.get_queue_issues` with the `service_desk_id`, `queue_id`, `start_at`, and `limit` parameters to fetch the issues, which are then returned as a JSON string. The result is a list of issues, which is read from the user's Jira account, hence the scope is `user_account`. The control is `service` because the server composes the response. [received records: issues taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "issues",
+     "produced_at": "servers/jira.py:3505",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_request_type_fields": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:410-436"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:422",
+     "data": "{}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_request_type_fields` retrieves field definitions for a Jira Service Management request type. It makes a call to the Jira API using the `self.jira.get` method with the endpoint `rest/servicedeskapi/servicedesk/{service_desk_id}/requesttype/{request_type_id}/field`. The response is processed by `JiraRequestTypeFieldsResult.from_api_response`, which reads the data from the user's account. The result is controlled by the service as it is processed from the API response. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "JiraRequestTypeFieldsResult.from_api_response(response, service_desk_id=service_desk_id, request_type_id=request_type_id)",
+     "produced_at": "servers/jira.py:432-436",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:412#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:412",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "servers/jira.py:412#1",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "servers/jira.py:412",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:414#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:414",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "servers/jira.py:414#1",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "servers/jira.py:414",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:418#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:418",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:418#1",
+     "origin": "argument_echo",
+     "part": "query!r",
+     "produced_at": "servers/jira.py:418",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:421#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:421",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:421#1",
+     "origin": "argument_echo",
+     "part": "query!r",
+     "produced_at": "servers/jira.py:421",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "servers/jira.py:421#2",
+     "origin": "unknown",
+     "part": "error_message",
+     "produced_at": "servers/jira.py:421",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_request_types": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:380-409"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:394",
+     "data": "{\"start\": start_at, \"limit\": limit}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_request_types` retrieves request types for a Jira Service Management service desk. It makes a call to the Jira API using the `self.jira.get` method with the endpoint `rest/servicedeskapi/servicedesk/{service_desk_id}/requesttype` and parameters `start` and `limit`. The response is processed by `JiraRequestTypesResult.from_api_response`, which reads the data from the user's account. The result is controlled by the service as it is processed from the API response. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "JiraRequestTypesResult.from_api_response(response, service_desk_id=service_desk_id)",
+     "produced_at": "servers/jira.py:405-407",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_service_desk_for_project": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:3326-3409"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3404",
+     "data": "project_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_service_desk_for_project` retrieves the Jira Service Desk associated with a project key. It calls `jira.get_service_desk_for_project` with the `project_key` to fetch the service desk, which is then returned as a JSON string. The result is a service desk object, which is read from the user's Jira account, hence the scope is `user_account`. The control is `service` because the server composes the response. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "service_desk",
+     "produced_at": "servers/jira.py:3407",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3355#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:3355",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "servers/jira.py:3355#1",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "servers/jira.py:3355",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3357#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:3357",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "servers/jira.py:3357#1",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "servers/jira.py:3357",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3359#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:3359",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "servers/jira.py:3359#1",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "servers/jira.py:3359",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3361#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:3361",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3361#1",
+     "origin": "argument_echo",
+     "part": "project_key",
+     "produced_at": "servers/jira.py:3361",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "servers/jira.py:3361#2",
+     "origin": "unknown",
+     "part": "error_message",
+     "produced_at": "servers/jira.py:3361",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3363#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3363",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:3368#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3368",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:3409#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3409",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_service_desk_queues": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:3412-3455"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3449",
+     "data": "service_desk_id, start_at, limit",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_service_desk_queues` retrieves queues for a Jira Service Desk. It calls `jira.get_service_desk_queues` with the `service_desk_id`, `start_at`, and `limit` parameters to fetch the queues, which are then returned as a JSON string. The result is a list of queues, which is read from the user's Jira account, hence the scope is `user_account`. The control is `service` because the server composes the response. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "queues",
+     "produced_at": "servers/jira.py:3455",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:3455#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3455",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_sprint_issues": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "jira/search.py:294-335"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "jira/search.py:330",
+     "data": "sprint_id, fields, start, limit",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool retrieves issues from a sprint using the `get_sprint_issues` method, which calls the Jira API with the sprint ID and other parameters. The result is a list of issues, which is read from the API response.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "sprint issues",
+     "produced_at": "jira/search.py:311",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "jira/search.py:322#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/search.py:322",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/search.py:322#1",
+     "origin": "argument_echo",
+     "part": "sprint_id!r",
+     "produced_at": "jira/search.py:322",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/search.py:329#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/search.py:329",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/search.py:329#1",
+     "origin": "computed",
+     "part": "sprint_id_int",
+     "produced_at": "jira/search.py:329",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "jira_get_sprints_from_board": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "jira/sprints.py:19-41"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "jira/sprints.py:35",
+     "data": "board_id, state, start, limit",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool retrieves sprints from a board using the `get_all_sprints_from_board` method, which calls the Jira API with the board ID and other parameters. The result is a list of sprints, which is read from the API response. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "list of sprints",
+     "produced_at": "jira/sprints.py:41",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "id": "jira/sprints.py:41#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "jira/sprints.py:41",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_transitions": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:1123-1145"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:1143",
+     "data": "issue_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_transitions` fetches available transitions for a Jira issue using the `self.jira.get_available_transitions` method. The result includes a success status and the fetched transitions, which are read from the user's Jira account. [received records: result taken as outside-party text] [received records: the statement taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "success",
+     "produced_at": "servers/jira.py:1145",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "result",
+     "produced_at": "servers/jira.py:1145",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "servers/jira.py:1145#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:1145",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_user_profile": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:308"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:308",
+     "data": "user_identifier",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.config.url",
+     "resolved": "configured:download_url"
+    }
+   ],
+   "rationale": "The `jira_get_user_profile` tool returns a JSON string with a success status and either user profile data or an error message. The success status is a literal value, while the error message and user identifier are echoed from the input arguments. The tool makes an outbound call to the configured Jira service using the `user_identifier` to fetch the user profile. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "success",
+     "produced_at": "servers/jira.py:308",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "error",
+     "produced_at": "servers/jira.py:300",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "user_identifier",
+     "produced_at": "servers/jira.py:301",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_get_worklog": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:1152-1165"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:1162",
+     "data": "issue_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_get_worklog` retrieves worklog entries for a Jira issue using the `self.jira.get_worklogs` method. The result includes a success status and the fetched worklogs, which are read from the user's Jira account. [received records: result taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "success",
+     "produced_at": "servers/jira.py:1165",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "result",
+     "produced_at": "servers/jira.py:1165",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_link_to_epic": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "issue_key",
+    "epic_key"
+   ],
+   "evidence": [
+    "servers/jira.py:2516-2552"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:2547",
+     "data": "issue_key, epic_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_link_to_epic` tool links an existing issue to an epic using the `self.jira.link_issue_to_epic` method, which sends the `issue_key` and `epic_key` to the configured Jira service. The result is a JSON string indicating success, with a message constructed from a literal string and the `issue_key` and `epic_key`. There are no attacker-controlled fields in the result. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "{\"message\": \"Issue {issue_key} has been linked to epic {epic_key}.\", \"issue\": issue.to_simplified_dict()}",
+     "produced_at": "servers/jira.py:2549",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:2549#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "servers/jira.py:2549",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:2549#1",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "servers/jira.py:2549",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:2549#2",
+     "origin": "argument_echo",
+     "part": "epic_key",
+     "produced_at": "servers/jira.py:2549",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_move_issue": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "issue_key",
+    "target_project_key"
+   ],
+   "evidence": [
+    "servers/jira.py:2230-1683"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:1599",
+     "data": "issue_key, target_project_key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The `jira_move_issue` tool moves a Jira issue to a different project using the `self.jira._post_api3` method, which sends the `issue_key` and `target_project_key` to the configured Jira service. The result is a JSON string indicating success or failure, with messages constructed from literal strings and the `issue_key`, `target_project_key`, and `error_msg`. There are no attacker-controlled fields in the result. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "{\"message\": \"Bulk move task completed with {invalid_count} invalid or inaccessible issue(s)\"}",
+     "produced_at": "jira/issues.py:1658",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "{\"message\": \"Failed to move issue {issue_key} to project {target_project_key}: {error_msg}\"}",
+     "produced_at": "jira/issues.py:1682",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_move_issues_to_backlog": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "issue_keys"
+   ],
+   "evidence": [
+    "servers/jira.py:3003-3029",
+    "jira/sprints.py:152-168"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3024",
+     "data": "issue_keys",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_move_issues_to_backlog` tool moves issues to the backlog using the `move_issues_to_backlog` method from the `SprintsMixin` class. The result is a JSON string indicating success, with a message and the list of issue keys, which is computed (scope: none, control: service). The tool makes an outbound call to the configured Jira service to move the issues to the backlog, passing the `issue_keys` as data. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "{\"message\": f\"Successfully moved {len(keys_list)} issue(s) to backlog\", \"issue_keys\": keys_list}",
+     "produced_at": "servers/jira.py:3029",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3026#0",
+     "origin": "literal",
+     "part": "Successfully moved",
+     "produced_at": "servers/jira.py:3026",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "servers/jira.py:3026#1",
+     "origin": "computed",
+     "part": "len(keys_list)",
+     "produced_at": "servers/jira.py:3026",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_remove_issue_link": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "link_id"
+   ],
+   "evidence": [
+    "servers/jira.py:2743-2765",
+    "jira/links.py:263-285"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "jira/links.py:284",
+     "data": "link_id",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_remove_issue_link` tool removes a link between two Jira issues using the `remove_issue_link` method from the `LinksMixin` class. The result is a JSON string indicating success, with a message and the link ID, which is a literal string (scope: none, control: none). The tool makes an outbound call to the configured Jira service to remove the link, passing the `link_id` as data. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "{\"success\": True, \"message\": (f\"Link with ID {link_id} has been removed\"), \"link_id\": link_id}",
+     "produced_at": "jira/links.py:286",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:2765#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:2765",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_remove_watcher": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "issue_key",
+    "username",
+    "account_id"
+   ],
+   "evidence": [
+    "jira/watchers.py:92",
+    "jira/watchers.py:94-97"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "jira/watchers.py:92",
+     "data": "issue_key, username, account_id",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.config.url",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_remove_watcher` tool returns a JSON string with a success status and a message indicating the user was removed from watching the issue. The success status is a literal value, and the message is computed. The tool makes an outbound call to the configured Jira service using the issue_key, username, and account_id to remove the watcher. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "success",
+     "produced_at": "jira/watchers.py:94",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "message",
+     "produced_at": "jira/watchers.py:95",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/watchers.py:96",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "user",
+     "produced_at": "jira/watchers.py:97",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/watchers.py:95#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/watchers.py:95",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/watchers.py:95#1",
+     "origin": "argument_echo",
+     "part": "user_display",
+     "produced_at": "jira/watchers.py:95",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/watchers.py:95#2",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/watchers.py:95",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_search": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:843",
+    "servers/jira.py:857"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:843",
+     "data": "jql, fields, limit, start_at, projects_filter, expand, page_token",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.config.url",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The `jira_search` tool returns a JSON string with the search results for Jira issues. The search results are read from the Jira service. The tool makes an outbound call to the configured Jira service using the jql, fields, limit, start_at, projects_filter, expand, and page_token to perform the search.",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "search results",
+     "produced_at": "servers/jira.py:857",
+     "scope": "public"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "jira_search_assignable_users": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:396",
+    "servers/jira.py:428"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:396",
+     "data": "query, project_key, issue_key, limit",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.config.url",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_search_assignable_users` tool returns a JSON string with a success status, a count of users, and a list of users. The success status is a literal value, the count is computed, and the users list is read from the Jira service. The tool makes an outbound call to the configured Jira service using the query, project_key, issue_key, and limit to search for assignable users. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "success",
+     "produced_at": "servers/jira.py:404",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "count",
+     "produced_at": "servers/jira.py:405",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "users",
+     "produced_at": "servers/jira.py:406",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "error",
+     "produced_at": "servers/jira.py:425",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "query",
+     "produced_at": "servers/jira.py:426",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_search_fields": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:893",
+    "servers/jira.py:894"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:893",
+     "data": "keyword, limit, refresh",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.config.url",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_search_fields` tool returns a JSON string with the search results for Jira fields. The search results are read from the Jira service. The tool makes an outbound call to the configured Jira service using the keyword, limit, and refresh to perform the search. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "search results",
+     "produced_at": "servers/jira.py:894",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:894#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:894",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_search_projects": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "servers/jira.py:3241-3297"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3292",
+     "data": "query, max_results, current_project_ids",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_search_projects` searches for Jira projects by name or key prefix. It calls `jira.search_projects` with the `query`, `max_results`, and `current_project_ids` parameters to fetch the projects, which are then returned as a JSON string. The result is a list of projects, which is read from the user's Jira account, hence the scope is `user_account`. The control is `service` because the server composes the response. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "projects",
+     "produced_at": "servers/jira.py:3292",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "jira_transition_issue": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "issue_key",
+    "transition_id"
+   ],
+   "evidence": [
+    "servers/jira.py:2773-2789",
+    "jira/transitions.py:120-224"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "jira/transitions.py:221",
+     "data": "issue_key, transition_id, fields, comment",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_transition_issue` tool transitions a Jira issue to a new status using the `transition_issue` method from the `TransitionsMixin` class. The result is a JSON string indicating success, with a message and the updated issue object, which is a literal string (scope: none, control: none). The tool makes an outbound call to the configured Jira service to perform the transition, passing the `issue_key`, `transition_id`, `fields`, and `comment` as data. [received records: t.id, t.name taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "{\"success\": True, \"message\": (f\"Issue {issue_key} transitioned successfully\"), \"issue\": result}",
+     "produced_at": "jira/transitions.py:224",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/transitions.py:176#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/transitions.py:176",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "jira/transitions.py:176#1",
+     "origin": "resource_read",
+     "part": "t.id",
+     "produced_at": "jira/transitions.py:176",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "jira/transitions.py:176#2",
+     "origin": "resource_read",
+     "part": "t.name",
+     "produced_at": "jira/transitions.py:176",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/transitions.py:179#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/transitions.py:179",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/transitions.py:179#1",
+     "origin": "argument_echo",
+     "part": "id_to_check",
+     "produced_at": "jira/transitions.py:179",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/transitions.py:181#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/transitions.py:181",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "jira/transitions.py:181#1",
+     "origin": "computed",
+     "part": "available_transitions",
+     "produced_at": "jira/transitions.py:181",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/transitions.py:201#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/transitions.py:201",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/transitions.py:201#1",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/transitions.py:201",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/transitions.py:202#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/transitions.py:202",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/transitions.py:202#1",
+     "origin": "computed",
+     "part": "normalized_transition_id",
+     "produced_at": "jira/transitions.py:202",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/transitions.py:204#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/transitions.py:204",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "jira/transitions.py:204#1",
+     "origin": "computed",
+     "part": "fields_for_api",
+     "produced_at": "jira/transitions.py:204",
+     "scope": "user_account"
+    },
+    {
+     "control": "user",
+     "id": "jira/transitions.py:204#2",
+     "origin": "computed",
+     "part": "update_for_api",
+     "produced_at": "jira/transitions.py:204",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/transitions.py:216#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/transitions.py:216",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/transitions.py:216#1",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/transitions.py:216",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/transitions.py:220#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/transitions.py:220",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "jira/transitions.py:220#1",
+     "origin": "computed",
+     "part": "base_url",
+     "produced_at": "jira/transitions.py:220",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/transitions.py:220#2",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/transitions.py:220",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "fields",
+    "comment"
+   ]
+  },
+  "jira_update_issue": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "jira/issues.py:1128-1314"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:1261",
+     "data": "update_fields",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool updates an existing Jira issue using the `update_issue` method, which calls the Jira API with the issue fields. The result is the updated issue, which is read from the API response. [received records: updated issue taken as outside-party text] [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "updated issue",
+     "produced_at": "jira/issues.py:1309",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1195#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1195",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1195#1",
+     "origin": "argument_echo",
+     "part": "value",
+     "produced_at": "jira/issues.py:1195",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1221#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1221",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "jira/issues.py:1221#1",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "jira/issues.py:1221",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1230#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1230",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1230#1",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/issues.py:1230",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1230#2",
+     "origin": "argument_echo",
+     "part": "value",
+     "produced_at": "jira/issues.py:1230",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1256#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1256",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1256#1",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/issues.py:1256",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1271#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1271",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1271#1",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/issues.py:1271",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1271#2",
+     "origin": "computed",
+     "part": "attachments_result",
+     "produced_at": "jira/issues.py:1271",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1275#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1275",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1275#1",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/issues.py:1275",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "jira/issues.py:1275#2",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "jira/issues.py:1275",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1288#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1288",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1288#1",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/issues.py:1288",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1289#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "jira/issues.py:1289",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1296#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "jira/issues.py:1296",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1297#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1297",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1297#1",
+     "origin": "computed",
+     "part": "type(issue_data)",
+     "produced_at": "jira/issues.py:1297",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1313#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1313",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1313#1",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/issues.py:1313",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1313#2",
+     "origin": "computed",
+     "part": "error_msg",
+     "produced_at": "jira/issues.py:1313",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1314#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1314",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1314#1",
+     "origin": "argument_echo",
+     "part": "issue_key",
+     "produced_at": "jira/issues.py:1314",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1314#2",
+     "origin": "computed",
+     "part": "error_msg",
+     "produced_at": "jira/issues.py:1314",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "issue_key",
+    "fields",
+    "additional_fields",
+    "components",
+    "attachments",
+    "return_fields"
+   ]
+  },
+  "jira_update_proforma_form_answers": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "issue_key",
+    "form_id"
+   ],
+   "evidence": [
+    "jira/issues.py:1866-1889"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "jira/issues.py:1878",
+     "data": "issues_list",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_update_proforma_form_answers` tool updates form answers by creating issues in batch. It sends the `issues_list` to the configured Jira service (`self.jira`) using `jira.batch_create_issues`. The result includes a success message and a list of created issues, which are computed based on the user's account data. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "literal",
+     "part": "success message",
+     "produced_at": "jira/issues.py:1887",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "list of created issues",
+     "produced_at": "jira/issues.py:1887",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#1",
+     "origin": "argument_echo",
+     "part": "project_key=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#2",
+     "origin": "argument_echo",
+     "part": "summary=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/issues.py:1874#3",
+     "origin": "argument_echo",
+     "part": "issue_type=",
+     "produced_at": "jira/issues.py:1874",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "answers"
+   ]
+  },
+  "jira_update_sprint": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "sprint_id"
+   ],
+   "evidence": [
+    "servers/jira.py:2905-2951",
+    "jira/sprints.py:74-131"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:2943",
+     "data": "sprint_id, name, state, start_date, end_date, goal",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The `jira_update_sprint` tool updates a Jira sprint using the `update_sprint` method from the `SprintsMixin` class. The result is a JSON string representing the updated sprint object, which is read from the service response (scope: user_account, control: service). The tool makes an outbound call to the configured Jira service to update the sprint, passing the `sprint_id`, `name`, `state`, `start_date`, `end_date`, and `goal` as data. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "sprint.to_simplified_dict()",
+     "produced_at": "servers/jira.py:2951",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "jira/sprints.py:121#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/sprints.py:121",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/sprints.py:121#1",
+     "origin": "computed",
+     "part": "type(updated_sprint)",
+     "produced_at": "jira/sprints.py:121",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "jira/sprints.py:127#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/sprints.py:127",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "id": "jira/sprints.py:127#1",
+     "origin": "resource_read",
+     "part": "str(e.response.content)",
+     "produced_at": "jira/sprints.py:127",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "jira/sprints.py:130#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "jira/sprints.py:130",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "jira/sprints.py:130#1",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "jira/sprints.py:130",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "name",
+    "state",
+    "start_date",
+    "end_date",
+    "goal"
+   ]
+  },
+  "jira_update_version": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "version_id"
+   ],
+   "evidence": [
+    "servers/jira.py:3680-3728"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "servers/jira.py:3721",
+     "data": "{\"name\": name, \"description\": description, \"startDate\": start_date, \"releaseDate\": release_date, \"archived\": archived, \"released\": released}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "self.jira",
+     "resolved": "literal:api.atlassian.com (configuration override: api_url)"
+    }
+   ],
+   "rationale": "The tool `jira_update_version` updates an existing fix version in a Jira project. It sends a PUT request to the Jira API with the endpoint `/rest/api/2/version/{version_id}` and a payload containing the fields to update. The response is processed and returned as a JSON string. The result is controlled by the service as it is processed from the API response. [own-service call resolves to the literal host api.atlassian.com (configuration override: api_url); class kept, undetermined] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "json.dumps(result, indent=2, ensure_ascii=False)",
+     "produced_at": "servers/jira.py:3727",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "servers/jira.py:3727#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "servers/jira.py:3727",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "name",
+    "description",
+    "start_date",
+    "release_date",
+    "archived",
+    "released"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "0.23.1"
+}

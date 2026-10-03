@@ -1,0 +1,5381 @@
+{
+ "kind": "git",
+ "notes": [
+  "asked again for 7 unjudged tools",
+  "source budget lowered to 300000 bytes to fit the model's context"
+ ],
+ "package": "mcp-grafana",
+ "source": ".cache/sources/.views/git_https___github.com_grafana_mcp-grafana_v1.6.1_1f1468ab6009",
+ "tools": {
+  "add_activity_to_incident": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "incidentId"
+   ],
+   "evidence": [
+    "tools/incident.go:217-230",
+    "tools/incident.go:220",
+    "tools/incident.go:232-240"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/incident.go:220",
+     "data": "incident.AddActivityRequest{IncidentID: args.IncidentID, ActivityKind: \"userNote\", Body: args.Body, EventTime: args.EventTime}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.IncidentClientFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `addActivityToIncident` adds a note to an existing incident. It reads the incident activity from the user's account and sends the activity details to the configured incident service. The result is the activity item read from the service.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "activity",
+     "produced_at": "tools/incident.go:229",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/incident.go:227#0",
+     "origin": "literal",
+     "part": "add activity to incident:",
+     "produced_at": "tools/incident.go:227",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "body",
+    "eventTime"
+   ]
+  },
+  "alerting_manage_routing": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/alerting_routing.go:71-88",
+    "tools/alerting_routing.go:92-100",
+    "tools/alerting_routing.go:103-116",
+    "tools/alerting_routing.go:125-141",
+    "tools/alerting_routing.go:145-153",
+    "tools/alerting_routing.go:156-165"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/alerting_routing.go:95",
+     "data": "provisioning.NewGetPolicyTreeParamsWithContext(ctx)",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaClientFromContext(ctx)",
+     "resolved": "unresolved"
+    },
+    {
+     "at": "tools/alerting_routing.go:109",
+     "data": "provisioning.NewGetContactpointsParams().WithContext(ctx)",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaClientFromContext(ctx)",
+     "resolved": "configured:os.environ"
+    },
+    {
+     "at": "tools/alerting_routing.go:130",
+     "data": "provisioning.NewGetMuteTimingsParamsWithContext(ctx)",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaClientFromContext(ctx)",
+     "resolved": "unresolved"
+    },
+    {
+     "at": "tools/alerting_routing.go:148",
+     "data": "provisioning.NewGetMuteTimingParamsWithContext(ctx).WithName(name)",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaClientFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `alerting_manage_routing` manages alerting routing configurations by retrieving notification policies, contact points, and time intervals from the user's account. It sends requests to the configured Grafana service to fetch these details. [received records: notification policies, contact point details, time intervals, time interval taken as outside-party text] [received records: the statement, resp.Payload taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "notification policies",
+     "produced_at": "tools/alerting_routing.go:100",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "contact point details",
+     "produced_at": "tools/alerting_routing.go:116",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "time intervals",
+     "produced_at": "tools/alerting_routing.go:141",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "time interval",
+     "produced_at": "tools/alerting_routing.go:153",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerting_routing.go:73#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/alerting_routing.go:73",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "tools/alerting_routing.go:82#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/alerting_routing.go:82",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "tools/alerting_routing.go:86#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/alerting_routing.go:86",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerting_routing.go:88#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/alerting_routing.go:88",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/alerting_routing.go:98#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/alerting_routing.go:98",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "tools/alerting_routing.go:100#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools/alerting_routing.go:100",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerting_routing.go:111#0",
+     "origin": "literal",
+     "part": "get contact point",
+     "produced_at": "tools/alerting_routing.go:111",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerting_routing.go:114#0",
+     "origin": "literal",
+     "part": "contact point",
+     "produced_at": "tools/alerting_routing.go:114",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "tools/alerting_routing.go:116#0",
+     "origin": "resource_read",
+     "part": "resp.Payload",
+     "produced_at": "tools/alerting_routing.go:116",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerting_routing.go:132#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/alerting_routing.go:132",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerting_routing.go:151#0",
+     "origin": "literal",
+     "part": "get time interval",
+     "produced_at": "tools/alerting_routing.go:151",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "alerting_manage_rules": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/alerting.go:42-51"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/alerting.go:45",
+     "data": "manageRulesRead",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaClientFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `alerting_manage_rules` manages alert rules by reading them from the user's account. It sends requests to the configured Grafana service to fetch these rules. [received records: alert rules taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "alert rules",
+     "produced_at": "tools/alerting.go:45",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "alerting_manage_silences": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/alerting_silences.go:276-292",
+    "tools/alerting_silences.go:381-390",
+    "tools/alerting_silences.go:430-439"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/alerting_silences.go:387",
+     "data": "c.silenceRequest(ctx, http.MethodGet, silencesBasePath+\"/silences\", params, nil, &out)",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaClientFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `alerting_manage_silences` manages alert silences by listing them from the user's account. It sends requests to the configured Grafana service to fetch these silences. [received records: silences taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "silences",
+     "produced_at": "tools/alerting_silences.go:388",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerting_silences.go:279#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/alerting_silences.go:279",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerting_silences.go:284#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/alerting_silences.go:284",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerting_silences.go:388#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/alerting_silences.go:388",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "analyze_loki_labels": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/loki_label_analyzer.go:961-1003",
+    "tools/loki_label_analyzer.go:1007-1016"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/loki_label_analyzer.go:966",
+     "data": "AuditLokiLabelStrategyParams{DatasourceUID: args.DatasourceUID, Selector: args.Selector, MaxLabels: args.MaxLabels, StartRFC3339: args.StartRFC3339, EndRFC3339: args.EndRFC3339, Labels: args.Labels, ExpectedBaseLabels: args.ExpectedBaseLabels}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaClientFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `analyze_loki_labels` audits a Loki label strategy and optionally diagnoses query performance. It computes the audit and diagnosis based on the user's account data and sends requests to the configured Grafana service for live data.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "label strategy audit",
+     "produced_at": "tools/loki_label_analyzer.go:979",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "query performance diagnosis",
+     "produced_at": "tools/loki_label_analyzer.go:998",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/loki_label_analyzer.go:963#0",
+     "origin": "literal",
+     "part": "either datasourceUid or labels must be supplied",
+     "produced_at": "tools/loki_label_analyzer.go:963",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/loki_label_analyzer.go:1003#0",
+     "origin": "computed",
+     "part": "out",
+     "produced_at": "tools/loki_label_analyzer.go:1003",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "check_datasources_health": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/datasources.go:802-906",
+    "tools/datasources.go:909-918"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/datasources.go:806",
+     "data": "datasources.NewGetDataSourcesParamsWithContext(ctx)",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaClientFromContext(ctx)",
+     "resolved": "configured:process.env"
+    }
+   ],
+   "rationale": "The tool `check_datasources_health` checks the health of datasources by querying the user's account. It sends requests to the configured Grafana service to perform these checks.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "datasource health check result",
+     "produced_at": "tools/datasources.go:906",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:815#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:815",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:817#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:817",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:898#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:898",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "create_annotation": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/annotations.go:86-130",
+    "tools/annotations.go:133-142"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/annotations.go:124",
+     "data": "models.PostAnnotationsCmd{DashboardUID: args.DashboardUID, PanelID: args.PanelID, Time: args.Time, TimeEnd: args.TimeEnd, Tags: args.Tags, Text: &args.Text, Data: args.Data}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaClientFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `create_annotation` creates a new annotation on a dashboard or panel. It sends the annotation details to the configured Grafana service and returns the creation result.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "annotation creation result",
+     "produced_at": "tools/annotations.go:130",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/annotations.go:92#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/annotations.go:92",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/annotations.go:104#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/annotations.go:104",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/annotations.go:110#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/annotations.go:110",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/annotations.go:127#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/annotations.go:127",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "dashboardUid",
+    "panelId",
+    "time",
+    "timeEnd",
+    "tags",
+    "text",
+    "data"
+   ]
+  },
+  "create_datasource": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "tools/datasources.go:307-405",
+    "tools/datasources.go:455-464"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/datasources.go:354",
+     "data": "datasources.NewAddDataSourceParamsWithContext(ctx).WithBody(body)",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaClientFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `create_datasource` creates a new datasource by sending the datasource details to the configured Grafana service. It returns the creation result, including the UID and health check. [destination_args completed: url]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "datasource creation result",
+     "produced_at": "tools/datasources.go:405",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:324#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:324",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:328#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:328",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:376#0",
+     "origin": "literal",
+     "part": "Message: fmt.Sprintf(\"health check failed: %s\", err)",
+     "produced_at": "tools/datasources.go:376",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:386#0",
+     "origin": "computed",
+     "part": "configPageURL := fmt.Sprintf(\"%s/connections/datasources/edit/%s\", grafanaURL, result.UID)",
+     "produced_at": "tools/datasources.go:386",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:387#0",
+     "origin": "literal",
+     "part": "result.NextSteps = fmt.Sprintf(\"Visit the datasource configuration page to finish setting it up: %s\", configPageURL)",
+     "produced_at": "tools/datasources.go:387",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:399#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:399",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:405#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:405",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "name",
+    "type",
+    "access",
+    "database",
+    "basicAuth",
+    "isDefault",
+    "fields"
+   ]
+  },
+  "create_folder": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/folder.go:21-41",
+    "tools/folder.go:35",
+    "tools/folder.go:44-53"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/folder.go:35",
+     "data": "{\"Title\":args.Title,\"UID\":args.UID,\"ParentUID\":args.ParentUID}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaClientFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The `createFolder` function sends a request to create a folder in the user's Grafana account. The result is the created folder, which is read from the service response.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "folder",
+     "produced_at": "tools/folder.go:41",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/folder.go:23#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/folder.go:23",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/folder.go:39#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/folder.go:39",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/folder.go:41#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools/folder.go:41",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "title",
+    "uid",
+    "parentUid"
+   ]
+  },
+  "create_incident": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/incident.go:166-198",
+    "tools/incident.go:175",
+    "tools/incident.go:201-209"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/incident.go:175",
+     "data": "{\"Title\":args.Title,\"Severity\":args.Severity,\"RoomPrefix\":args.RoomPrefix,\"IsDrill\":args.IsDrill,\"Status\":args.Status,\"AttachCaption\":args.AttachCaption,\"AttachURL\":args.AttachURL,\"Labels\":args.Labels}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.IncidentClientFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The `createIncident` function sends a request to create an incident in the user's Grafana account. The result is the created incident, which is read from the service response.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "incident",
+     "produced_at": "tools/incident.go:198",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/incident.go:186#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/incident.go:186",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/incident.go:192#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/incident.go:192",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/incident.go:196#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/incident.go:196",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "title",
+    "severity",
+    "roomPrefix",
+    "isDrill",
+    "status",
+    "attachCaption",
+    "attachUrl",
+    "labels"
+   ]
+  },
+  "create_snapshot": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/snapshot.go:169-198",
+    "tools/snapshot.go:186",
+    "tools/snapshot.go:249-258"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/snapshot.go:186",
+     "data": "args",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaConfigFromContext(ctx)",
+     "resolved": "configured:endpoint"
+    }
+   ],
+   "rationale": "The `createSnapshot` function sends a request to create a snapshot in the user's Grafana account. The result is the created snapshot, which is read from the service response.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "snapshot",
+     "produced_at": "tools/snapshot.go:198",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/snapshot.go:172#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:172",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/snapshot.go:175#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:175",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/snapshot.go:180#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:180",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/snapshot.go:183#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:183",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/snapshot.go:188#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:188",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/snapshot.go:191#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:191",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/snapshot.go:196#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:196",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "dashboard",
+    "name",
+    "expires",
+    "external",
+    "key",
+    "deleteKey"
+   ]
+  },
+  "delete_annotation": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/annotations.go:202-221",
+    "tools/annotations.go:215",
+    "tools/annotations.go:223-232"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/annotations.go:215",
+     "data": "{\"id\":strconv.FormatInt(args.ID,10)}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaClientFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The `deleteAnnotation` function sends a request to delete an annotation in the user's Grafana account. The result is the response from the service, indicating the deletion status.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "delete_annotation_response",
+     "produced_at": "tools/annotations.go:221",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/annotations.go:208#0",
+     "origin": "literal",
+     "part": "delete annotation: id is required and must be positive, got %d",
+     "produced_at": "tools/annotations.go:208",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/annotations.go:218#0",
+     "origin": "literal",
+     "part": "delete annotation: %w",
+     "produced_at": "tools/annotations.go:218",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "id"
+   ]
+  },
+  "delete_snapshot": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/snapshot.go:201-224",
+    "tools/snapshot.go:212",
+    "tools/snapshot.go:260-269"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/snapshot.go:212",
+     "data": "{\"key\":url.PathEscape(args.Key)}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaConfigFromContext(ctx)",
+     "resolved": "literal:localhost (configuration override: BaseURL)"
+    }
+   ],
+   "rationale": "The `deleteSnapshot` function sends a request to delete a snapshot in the user's Grafana account. The result is the response from the service, indicating the deletion status. [own-service call resolves to the literal host localhost (configuration override: BaseURL); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "delete_snapshot_response",
+     "produced_at": "tools/snapshot.go:224",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/snapshot.go:204#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:204",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/snapshot.go:209#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:209",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/snapshot.go:217#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:217",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "key"
+   ]
+  },
+  "diff_tempo_traces": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/tempo.go:380-419",
+    "tools/tempo.go:414",
+    "tools/tempo.go:701-710"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/tempo.go:414",
+     "data": "{\"Base\":{\"TraceID\":args.BaseTraceID,\"Start\":baseStart,\"End\":baseEnd},\"Compare\":{\"TraceID\":args.CompareTraceID,\"Start\":compareStart,\"End\":compareEnd},\"Format\":format}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "tempoBackendForDatasource(ctx,args.DatasourceUID)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The `diffTempoTraces` function sends a request to compare two traces in the user's Tempo datasource. The result is the trace diff, which is read from the service response.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "trace_diff",
+     "produced_at": "tools/tempo.go:419",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "tools/tempo.go:419#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:419",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "datasourceUid",
+    "base_trace_id",
+    "compare_trace_id",
+    "base_start",
+    "base_end",
+    "compare_start",
+    "compare_end",
+    "format"
+   ]
+  },
+  "find_error_pattern_logs": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/sift.go:322-397",
+    "tools/sift.go:348",
+    "tools/sift.go:401-409"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/sift.go:348",
+     "data": "{\"Labels\":map[string]string{},\"Start\":args.Start,\"End\":args.End,\"Checks\":[\"ErrorPatternLogs\"]}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "siftClientFromContext(ctx)",
+     "resolved": "configured:getEnv"
+    }
+   ],
+   "rationale": "The `findErrorPatternLogs` function sends a request to create an investigation with an ErrorPatternLogs check in the user's Sift account. The result is the analysis, which is read from the service response.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "error_pattern_logs_analysis",
+     "produced_at": "tools/sift.go:397",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:327#0",
+     "origin": "literal",
+     "part": "creating Sift client: %w",
+     "produced_at": "tools/sift.go:327",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:350#0",
+     "origin": "literal",
+     "part": "creating investigation: %w",
+     "produced_at": "tools/sift.go:350",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:357#0",
+     "origin": "literal",
+     "part": "getting analyses: %w",
+     "produced_at": "tools/sift.go:357",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:370#0",
+     "origin": "literal",
+     "part": "ErrorPatternLogs analysis not found in investigation %s",
+     "produced_at": "tools/sift.go:370",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "tools/sift.go:378#0",
+     "origin": "computed",
+     "part": "errorPatternLogsAnalysis",
+     "produced_at": "tools/sift.go:378",
+     "scope": "unknown"
+    },
+    {
+     "control": "unknown",
+     "id": "tools/sift.go:383#0",
+     "origin": "computed",
+     "part": "errorPatternLogsAnalysis",
+     "produced_at": "tools/sift.go:383",
+     "scope": "unknown"
+    },
+    {
+     "control": "unknown",
+     "id": "tools/sift.go:397#0",
+     "origin": "computed",
+     "part": "errorPatternLogsAnalysis",
+     "produced_at": "tools/sift.go:397",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "name",
+    "labelSelector",
+    "start",
+    "end"
+   ]
+  },
+  "find_slow_requests": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/sift.go:419-469",
+    "tools/sift.go:445",
+    "tools/sift.go:473-481"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/sift.go:445",
+     "data": "{\"Labels\":map[string]string{},\"Start\":args.Start,\"End\":args.End,\"Checks\":[\"SlowRequests\"]}",
+     "destination_class": "configured_own_service",
+     "host_or_config": "siftClientFromContext(ctx)",
+     "resolved": "configured:getEnv"
+    }
+   ],
+   "rationale": "The `findSlowRequests` function sends a request to create an investigation with a SlowRequests check in the user's Sift account. The result is the analysis, which is read from the service response.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "slow_requests_analysis",
+     "produced_at": "tools/sift.go:469",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:466#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/sift.go:466",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "name",
+    "labelSelector",
+    "start",
+    "end"
+   ]
+  },
+  "generate_deeplink": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/navigation.go:192-194",
+    "tools/navigation.go:200-289",
+    "tools/navigation.go:317-326"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "tools/navigation.go:253",
+     "data": "payload",
+     "destination_class": "configured_own_service",
+     "host_or_config": "cfg.URL",
+     "resolved": "configured:process.env"
+    }
+   ],
+   "rationale": "The tool generates a deeplink URL based on the provided parameters. If shortening is requested, it attempts to shorten the URL by making a POST request to the configured Grafana service (`cfg.URL`). The resulting URL is returned as the output.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "deeplink URL",
+     "produced_at": "tools/navigation.go:193",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/navigation.go:206#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/navigation.go:206",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/navigation.go:211#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/navigation.go:211",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/navigation.go:215#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/navigation.go:215",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/navigation.go:224#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/navigation.go:224",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/navigation.go:236#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/navigation.go:236",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/navigation.go:245#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/navigation.go:245",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/navigation.go:250#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/navigation.go:250",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/navigation.go:255#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/navigation.go:255",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/navigation.go:261#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/navigation.go:261",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/navigation.go:267#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/navigation.go:267",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/navigation.go:270#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/navigation.go:270",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/navigation.go:278#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/navigation.go:278",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/navigation.go:281#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/navigation.go:281",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/navigation.go:288#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/navigation.go:288",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_alert_group": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/oncall.go:554-610",
+    "tools/oncall.go:612-621"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/oncall.go:588",
+     "data": "alertGroupID",
+     "destination_class": "configured_own_service",
+     "host_or_config": "cfg.URL",
+     "resolved": "configured:getEnv"
+    }
+   ],
+   "rationale": "The tool retrieves alert group details from the configured OnCall service using the provided alert group ID. The details are read from the service and returned as the output. [received records: alert group details taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "alert group details",
+     "produced_at": "tools/oncall.go:555",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/oncall.go:587#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/oncall.go:587",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/oncall.go:590#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/oncall.go:590",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/oncall.go:595#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/oncall.go:595",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_annotation_tags": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/annotations.go:240-260",
+    "tools/annotations.go:263-272"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/annotations.go:255",
+     "data": "tag, limitStr",
+     "destination_class": "configured_own_service",
+     "host_or_config": "cfg.URL",
+     "resolved": "configured:process.env"
+    }
+   ],
+   "rationale": "The tool fetches annotation tags from the configured Grafana service using optional filters. The tags are read from the service and returned as the output.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "annotation tags",
+     "produced_at": "tools/annotations.go:255",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/annotations.go:257#0",
+     "origin": "literal",
+     "part": "get annotation tags: %w",
+     "produced_at": "tools/annotations.go:257",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_annotations": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/annotations.go:32-54",
+    "tools/annotations.go:57-66"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/annotations.go:49",
+     "data": "req",
+     "destination_class": "configured_own_service",
+     "host_or_config": "cfg.URL",
+     "resolved": "configured:process.env"
+    }
+   ],
+   "rationale": "The tool retrieves annotations from the configured Grafana service using the provided filters. The annotations are read from the service and returned as the output.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "annotations",
+     "produced_at": "tools/annotations.go:49",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/annotations.go:51#0",
+     "origin": "literal",
+     "part": "get annotations:",
+     "produced_at": "tools/annotations.go:51",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_assertions": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/asserts.go:96-141",
+    "tools/asserts.go:144-153"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/asserts.go:136",
+     "data": "reqBody",
+     "destination_class": "configured_own_service",
+     "host_or_config": "cfg.URL",
+     "resolved": "configured:getEnv"
+    }
+   ],
+   "rationale": "The tool fetches assertion summaries from the configured Asserts service using the provided parameters. The summaries are read from the service and returned as the output.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "assertion summary",
+     "produced_at": "tools/asserts.go:141",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "id": "tools/asserts.go:141#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/asserts.go:141",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_current_oncall_users": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/oncall.go:277-321",
+    "tools/oncall.go:323-332"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/oncall.go:291",
+     "data": "scheduleID",
+     "destination_class": "configured_own_service",
+     "host_or_config": "cfg.URL",
+     "resolved": "configured:getEnv"
+    }
+   ],
+   "rationale": "The tool retrieves the list of users currently on-call for a specific schedule from the configured OnCall service. The list is read from the service and returned as the output.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "current on-call users",
+     "produced_at": "tools/oncall.go:296",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/oncall.go:287#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/oncall.go:287",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/oncall.go:293#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/oncall.go:293",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/oncall.go:303#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/oncall.go:303",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "tools/oncall.go:320#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/oncall.go:320",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_dashboard_by_uid": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/datasources.go:480-506"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/datasources.go:483",
+     "data": "uid",
+     "destination_class": "configured_own_service",
+     "host_or_config": "cfg.URL",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool retrieves the complete dashboard details from the configured Grafana service using the provided UID. The details are read from the service and returned as the output. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "dashboard details",
+     "produced_at": "tools/datasources.go:482",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:489#0",
+     "origin": "literal",
+     "part": "datasource with UID '%s' not found. Please check if the datasource exists and is accessible",
+     "produced_at": "tools/datasources.go:489",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:502#0",
+     "origin": "literal",
+     "part": "datasource with UID '%s' not found. Please check if the datasource exists and is accessible",
+     "produced_at": "tools/datasources.go:502",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:504#0",
+     "origin": "literal",
+     "part": "get datasource by uid %s: %w",
+     "produced_at": "tools/datasources.go:504",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_dashboard_panel_queries": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/datasources.go:513-531"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/datasources.go:515",
+     "data": "uid, panelId, variables",
+     "destination_class": "configured_own_service",
+     "host_or_config": "cfg.URL",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool retrieves panel queries from a Grafana dashboard using the provided UID and optional panel ID and variables. The queries are read from the service and returned as the output. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "panel queries",
+     "produced_at": "tools/datasources.go:513",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:527#0",
+     "origin": "argument_echo",
+     "part": "datasource with name '%s' not found. Please check if the datasource exists and is accessible",
+     "produced_at": "tools/datasources.go:527",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:529#0",
+     "origin": "argument_echo",
+     "part": "get datasource by name %s: %w",
+     "produced_at": "tools/datasources.go:529",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_dashboard_property": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "tools/navigation.go:192",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/navigation.go:192"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_dashboard_property` tool retrieves specific parts of a dashboard using JSONPath expressions. The result is a dashboard property, which is read from the user's account (user_account scope) and controlled by the service. There are no outbound calls or code execution involved. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "dashboard property",
+     "produced_at": "tools/navigation.go:192",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "tools/navigation.go:192",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_dashboard_summary": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "tools/navigation.go:192",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/navigation.go:192"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_dashboard_summary` tool provides a compact summary of a dashboard, including metadata like title and panel count. The summary is read from the user's account (user_account scope) and controlled by the service. There are no outbound calls or code execution involved. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "dashboard summary",
+     "produced_at": "tools/navigation.go:192",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "tools/navigation.go:192",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_datasource": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "tools/datasources.go:540",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/datasources.go:540",
+    "tools/datasources.go:550-559"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_datasource` tool retrieves detailed information about a specific datasource by UID or name. The result is the full datasource model, read from the user's account (user_account scope) and controlled by the service. There are no outbound calls or code execution involved.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "datasource details",
+     "produced_at": "tools/datasources.go:540",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:542#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:542",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:545#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:545",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:547#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:547",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "tools/datasources.go:540",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_doc": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "tools/datasources.go:540",
+    "value": false
+   },
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "tools/datasources.go:540"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The `get_doc` tool fetches a Grafana documentation page. The result is the documentation content, which is public and controlled by the service. There are no outbound calls or code execution involved. [destination_args completed: url] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "documentation content",
+     "produced_at": "tools/datasources.go:540",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:542#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:542",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:545#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:545",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:547#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:547",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "tools/datasources.go:540",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_incident": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/incident.go:257-269",
+    "tools/incident.go:261",
+    "tools/incident.go:271-280"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/incident.go:261",
+     "data": "incident.GetIncidentRequest",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "incident.NewIncidentsService",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The `getIncident` function retrieves incident details using the `incident.NewIncidentsService` to call `GetIncident`. The result includes various incident fields such as `IncidentID`, `Title`, `Status`, `Severity`, `CreatedTime`, `ModifiedTime`, `IncidentStart`, `IsDrill`, and `CustomFields`, all of which are read from the user's account and controlled by the service. [unverified outbound: 'incident.NewIncidentsService' resolves to no host or configuration]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "IncidentID",
+     "produced_at": "tools/incident.go:74",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "Title",
+     "produced_at": "tools/incident.go:75",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "Status",
+     "produced_at": "tools/incident.go:76",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "Severity",
+     "produced_at": "tools/incident.go:77",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "CreatedTime",
+     "produced_at": "tools/incident.go:78",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "ModifiedTime",
+     "produced_at": "tools/incident.go:79",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "IncidentStart",
+     "produced_at": "tools/incident.go:80",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "IsDrill",
+     "produced_at": "tools/incident.go:81",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "CustomFields",
+     "produced_at": "tools/incident.go:60",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/incident.go:265#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/incident.go:265",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_oncall_shift": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "tools/oncall.go:254",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/oncall.go:254",
+    "tools/oncall.go:253-262"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_oncall_shift` tool retrieves detailed information for a specific Grafana OnCall shift using its ID. The result is the full shift details, read from the user's account (user_account scope) and controlled by the service. There are no outbound calls or code execution involved.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "shift details",
+     "produced_at": "tools/oncall.go:254",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "tools/oncall.go:254",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_panel_image": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "tools/navigation.go:192",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/navigation.go:192"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The `get_panel_image` tool renders a Grafana dashboard panel or full dashboard as a PNG image and returns it as base64 encoded data. The result is computed and controlled by the service. There are no outbound calls or code execution involved. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "base64 encoded image",
+     "produced_at": "tools/navigation.go:192",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "tools/navigation.go:192",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_plugin": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "tools/navigation.go:192",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/navigation.go:192"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_plugin` tool checks whether a Grafana plugin is installed and retrieves its details. The result is the plugin details, read from the user's account (user_account scope) and controlled by the service. There are no outbound calls or code execution involved. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "plugin details",
+     "produced_at": "tools/navigation.go:192",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "tools/navigation.go:192",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_sift_analysis": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/sift.go:211-234",
+    "tools/sift.go:238-247"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/sift.go:229",
+     "data": "investigationID, analysisID",
+     "destination_class": "configured_own_service",
+     "host_or_config": "client.getSiftAnalysis",
+     "reclassified_from": "literal_host_in_code",
+     "resolved": "configured:getEnv"
+    }
+   ],
+   "rationale": "The tool retrieves a specific analysis from an investigation using the `getSiftAnalysis` method. The result is the analysis data, which is read from the service and returned to the user. [outbound reclassified from the code's destination]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "analysis",
+     "produced_at": "tools/sift.go:234",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:215#0",
+     "origin": "literal",
+     "part": "creating Sift client: %w",
+     "produced_at": "tools/sift.go:215",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:221#0",
+     "origin": "literal",
+     "part": "invalid investigation ID format: %w",
+     "produced_at": "tools/sift.go:221",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:226#0",
+     "origin": "literal",
+     "part": "invalid analysis ID format: %w",
+     "produced_at": "tools/sift.go:226",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:231#0",
+     "origin": "literal",
+     "part": "getting analysis: %w",
+     "produced_at": "tools/sift.go:231",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_sift_investigation": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/sift.go:173-190",
+    "tools/sift.go:194-203"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/sift.go:186",
+     "data": "id",
+     "destination_class": "configured_own_service",
+     "host_or_config": "client.getSiftInvestigation",
+     "reclassified_from": "literal_host_in_code",
+     "resolved": "configured:getEnv"
+    }
+   ],
+   "rationale": "The tool retrieves an existing investigation using the `getSiftInvestigation` method. The result is the investigation data, which is read from the service and returned to the user. [outbound reclassified from the code's destination]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "investigation",
+     "produced_at": "tools/sift.go:190",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:176#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/sift.go:176",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:182#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/sift.go:182",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:187#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/sift.go:187",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_snapshot": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/snapshot.go:143-166",
+    "tools/snapshot.go:238-247"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/snapshot.go:154",
+     "data": "key",
+     "destination_class": "configured_own_service",
+     "host_or_config": "cfg.URL",
+     "resolved": "literal:localhost (configuration override: BaseURL)"
+    }
+   ],
+   "rationale": "The tool retrieves a snapshot by key using the `doSnapshotRequest` method. The result is the snapshot data, which is read from the service and returned to the user. [own-service call resolves to the literal host localhost (configuration override: BaseURL); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "snapshot",
+     "produced_at": "tools/snapshot.go:166",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/snapshot.go:146#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:146",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/snapshot.go:151#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:151",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/snapshot.go:159#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:159",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_tempo_trace": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/tempo.go:354-365",
+    "tools/tempo.go:690-699"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/tempo.go:360",
+     "data": "traceID",
+     "destination_class": "configured_own_service",
+     "host_or_config": "backend.doGet",
+     "resolved": "literal:localhost (configuration override: BaseURL)"
+    }
+   ],
+   "rationale": "The tool retrieves a specific trace by ID using the `doGet` method. The result is the trace data, which is read from the service and returned to the user. [own-service call resolves to the literal host localhost (configuration override: BaseURL); class kept, undetermined]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "trace",
+     "produced_at": "tools/tempo.go:365",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "tools/tempo.go:365#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:365",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "get_tempo_traceql_docs": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/tempo.go:649-654",
+    "tools/tempo.go:734-743"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The tool retrieves static TraceQL documentation based on the provided topic. The result is a literal string containing the documentation, which is returned to the user.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "traceql-docs",
+     "produced_at": "tools/tempo.go:654",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/tempo.go:652#0",
+     "origin": "argument_echo",
+     "part": "invalid topic \"<args.Topic>\": must be 'basic', 'aggregates', 'structural', or 'metrics'",
+     "produced_at": "tools/tempo.go:652",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/tempo.go:654#0",
+     "origin": "resource_read",
+     "part": "doc",
+     "produced_at": "tools/tempo.go:654",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "grafana_api_request": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "endpoint"
+   ],
+   "evidence": [
+    "tools/navigation.go:31-54"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/navigation.go:49",
+     "data": "endpoint, method, body",
+     "destination_class": "configured_own_service",
+     "host_or_config": "grafanaBaseURLFromContext",
+     "resolved": "configured:BaseURL"
+    }
+   ],
+   "rationale": "The tool makes an authenticated HTTP request to the Grafana API using the provided endpoint, method, and body. The result is the API response, which is read from the service and returned to the user. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "response",
+     "produced_at": "tools/navigation.go:54",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "body"
+   ]
+  },
+  "install_plugin": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "pluginId"
+   ],
+   "evidence": [
+    "tools/navigation.go:31-54"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/navigation.go:49",
+     "data": "pluginId, version",
+     "destination_class": "configured_own_service",
+     "host_or_config": "grafanaBaseURLFromContext",
+     "resolved": "configured:BaseURL"
+    }
+   ],
+   "rationale": "The tool installs a Grafana plugin by its plugin ID and optional version. The result is the installation outcome, which is read from the service and returned to the user. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "installation_result",
+     "produced_at": "tools/navigation.go:54",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "version"
+   ]
+  },
+  "list_alert_groups": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/oncall.go:473-537",
+    "tools/oncall.go:539-548"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/oncall.go:478",
+     "data": "page, alertGroupID, routeID, integrationID, state, teamID, startedAt, labels, name",
+     "destination_class": "configured_own_service",
+     "host_or_config": "amixrListAlertGroups",
+     "reclassified_from": "literal_host_in_code",
+     "resolved": "configured:getEnv"
+    }
+   ],
+   "rationale": "The tool lists alert groups from Grafana OnCall using the `amixrListAlertGroups` method. The result is the list of alert groups, which is read from the service and returned to the user. [outbound reclassified from the code's destination]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "alert_groups",
+     "produced_at": "tools/oncall.go:537",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/oncall.go:483#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/oncall.go:483",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/oncall.go:519#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/oncall.go:519",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/oncall.go:536#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/oncall.go:536",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "tools/oncall.go:541#0",
+     "origin": "literal",
+     "part": "List alert groups from Grafana OnCall with filtering options. Supports filtering by alert group ID, route ID, integration ID, state (new, acknowledged, resolved, silenced), team ID, time range, labels, and name. For time ranges, use format '{start}_{end}' ISO 8601 timestamp range (e.g., '2025-01-19T00:00:00_2025-01-19T23:59:59' for a specific day). For labels, use format 'key:value' (e.g., ['env:prod', 'severity:high']). Returns a list of alert group objects with their details. Supports pagination.",
+     "produced_at": "tools/oncall.go:541",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_dashboard_versions": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/datasources.go:69"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool lists versions of a dashboard, returning metadata such as version number, author, timestamp, and save message. These are read from the user's account, controlled by the service. [received records: version number, author, timestamp, save message taken as outside-party text] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "version number",
+     "produced_at": "tools/datasources.go:69",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "author",
+     "produced_at": "tools/datasources.go:69",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "timestamp",
+     "produced_at": "tools/datasources.go:69",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "save message",
+     "produced_at": "tools/datasources.go:69",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_datasources": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/datasources.go:126-128",
+    "tools/datasources.go:444-453"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool lists datasources configured in Grafana, returning summaries of each datasource, the total count, and whether more results exist. These are read from the user's account, controlled by the service.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "datasource summary",
+     "produced_at": "tools/datasources.go:126",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "total count",
+     "produced_at": "tools/datasources.go:127",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "has more",
+     "produced_at": "tools/datasources.go:128",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_incident_custom_fields": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/incident.go:124"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool lists custom fields configured for incidents, including their type and options. These details are read from the user's account, controlled by the service. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "custom field details",
+     "produced_at": "tools/incident.go:124",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_incidents": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/incident.go:132-133",
+    "tools/incident.go:137-146"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool lists incidents, returning previews of each incident and whether more results exist. These are read from the user's account, controlled by the service.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "incident previews",
+     "produced_at": "tools/incident.go:132",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "has more",
+     "produced_at": "tools/incident.go:133",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_loki_label_names": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/loki_label_analyzer.go:162"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool lists label names found in logs within a specified datasource and time range. These are read from the user's account, controlled by the service. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "label names",
+     "produced_at": "tools/loki_label_analyzer.go:162",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_loki_label_values": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/loki_label_analyzer.go:187"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool retrieves unique values associated with a specific label name within a datasource and time range. These values are read from the user's account, controlled by the service. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "label values",
+     "produced_at": "tools/loki_label_analyzer.go:187",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/loki_label_analyzer.go:188#0",
+     "origin": "literal",
+     "part": "listing values for",
+     "produced_at": "tools/loki_label_analyzer.go:188",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_oncall_schedules": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/oncall.go:184",
+    "tools/oncall.go:201-210"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool lists OnCall schedules, returning summaries of each schedule. These are read from the user's account, controlled by the service.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "schedule summaries",
+     "produced_at": "tools/oncall.go:184",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_oncall_teams": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/oncall.go:364",
+    "tools/oncall.go:376-385"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool lists teams configured in Grafana OnCall, returning team objects with their details. These are read from the user's account, controlled by the service.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "team objects",
+     "produced_at": "tools/oncall.go:364",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_oncall_users": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/oncall.go:395",
+    "tools/oncall.go:411",
+    "tools/oncall.go:448-457"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "tools/oncall.go:411",
+     "data": "ListOnCallUsersParams",
+     "destination_class": "configured_own_service",
+     "host_or_config": "aapi.NewUserService",
+     "reclassified_from": "literal_host_in_code",
+     "resolved": "configured:process.env"
+    }
+   ],
+   "rationale": "The tool `list_oncall_users` retrieves a list of users from Grafana OnCall. The result is a list of user objects with their details, which is read from the OnCall service. The outbound call is made to the OnCall API to fetch this list. [outbound reclassified from the code's destination]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "List of OnCall users",
+     "produced_at": "tools/oncall.go:395",
+     "scope": "public"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_prometheus_label_names": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/prometheus.go:100",
+    "tools/prometheus.go:102",
+    "tools/prometheus.go:360-369"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/prometheus.go:102",
+     "data": "ListPrometheusLabelNamesParams",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "prometheus.NewLabelService",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `list_prometheus_label_names` retrieves a list of label names from a Prometheus-compatible datasource. The result is a list of label names, which is read from the datasource. The outbound call is made to the Prometheus API to fetch this list. [unverified outbound: 'prometheus.NewLabelService' resolves to no host or configuration]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "List of label names",
+     "produced_at": "tools/prometheus.go:100",
+     "scope": "public"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_prometheus_label_values": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/prometheus.go:150",
+    "tools/prometheus.go:152",
+    "tools/prometheus.go:419-428"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/prometheus.go:152",
+     "data": "ListPrometheusLabelValuesParams",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "prometheus.NewLabelService",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `list_prometheus_label_values` retrieves a list of label values for a specific label name from a Prometheus-compatible datasource. The result is a list of label values, which is read from the datasource. The outbound call is made to the Prometheus API to fetch this list. [unverified outbound: 'prometheus.NewLabelService' resolves to no host or configuration]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "List of label values",
+     "produced_at": "tools/prometheus.go:150",
+     "scope": "public"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_prometheus_metric_metadata": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/prometheus.go:200",
+    "tools/prometheus.go:202",
+    "tools/prometheus.go:56-65"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/prometheus.go:202",
+     "data": "ListPrometheusMetricMetadataParams",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "prometheus.NewMetricService",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `list_prometheus_metric_metadata` retrieves metadata about metrics from a Prometheus-compatible datasource. The result is a list of metric metadata, which is read from the datasource. The outbound call is made to the Prometheus API to fetch this metadata. [unverified outbound: 'prometheus.NewMetricService' resolves to no host or configuration]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "List of metric metadata",
+     "produced_at": "tools/prometheus.go:200",
+     "scope": "public"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_prometheus_metric_names": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/prometheus.go:250",
+    "tools/prometheus.go:252",
+    "tools/prometheus.go:255-264"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/prometheus.go:252",
+     "data": "ListPrometheusMetricNamesParams",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "prometheus.NewMetricService",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `list_prometheus_metric_names` retrieves a list of metric names from a Prometheus-compatible datasource. The result is a list of metric names, which is read from the datasource. The outbound call is made to the Prometheus API to fetch this list. [unverified outbound: 'prometheus.NewMetricService' resolves to no host or configuration]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "List of metric names",
+     "produced_at": "tools/prometheus.go:250",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/prometheus.go:252#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/prometheus.go:252",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_provisioning_repositories": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/provisioning.go:50",
+    "tools/provisioning.go:52",
+    "tools/provisioning.go:160-171"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/provisioning.go:52",
+     "data": "ListProvisioningRepositoriesParams",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "provisioning.NewRepositoryService",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `list_provisioning_repositories` retrieves a list of provisioning repositories configured for the Grafana instance. The result is a list of repositories, which is read from the provisioning service. The outbound call is made to the provisioning API to fetch this list. [unverified outbound: 'provisioning.NewRepositoryService' resolves to no host or configuration]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "List of provisioning repositories",
+     "produced_at": "tools/provisioning.go:50",
+     "scope": "public"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_pyroscope_label_names": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/pyroscope.go:100",
+    "tools/pyroscope.go:102",
+    "tools/pyroscope.go:45-54"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/pyroscope.go:102",
+     "data": "ListPyroscopeLabelNamesParams",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "pyroscope.NewLabelService",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `list_pyroscope_label_names` retrieves a list of label names from a Pyroscope datasource. The result is a list of label names, which is read from the datasource. The outbound call is made to the Pyroscope API to fetch this list. [unverified outbound: 'pyroscope.NewLabelService' resolves to no host or configuration]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "List of Pyroscope label names",
+     "produced_at": "tools/pyroscope.go:100",
+     "scope": "public"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_pyroscope_label_values": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/pyroscope.go:150",
+    "tools/pyroscope.go:152",
+    "tools/pyroscope.go:106-115"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/pyroscope.go:152",
+     "data": "ListPyroscopeLabelValuesParams",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "pyroscope.NewLabelService",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `list_pyroscope_label_values` retrieves a list of label values for a specific label name from a Pyroscope datasource. The result is a list of label values, which is read from the datasource. The outbound call is made to the Pyroscope API to fetch this list. [unverified outbound: 'pyroscope.NewLabelService' resolves to no host or configuration]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "List of Pyroscope label values",
+     "produced_at": "tools/pyroscope.go:150",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/pyroscope.go:150#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/pyroscope.go:150",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_pyroscope_profile_types": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "data_source_uid",
+    "at": "tools/tempo.go:52",
+    "value": true
+   },
+   "destination_args": [
+    "data_source_uid"
+   ],
+   "evidence": [
+    "tools/tempo.go:52-79"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/tempo.go:52",
+     "data": "query parameters",
+     "destination_class": "argument_named_destination",
+     "host_or_config": "datasourceUID"
+    }
+   ],
+   "rationale": "The tool queries a Pyroscope datasource using the provided UID and retrieves available profile types. The result is a list of profile types, which is read from the datasource and controlled by the service. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "profile types",
+     "produced_at": "tools/tempo.go:79",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/tempo.go:55#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:55",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/tempo.go:76#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:76",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "id": "tools/tempo.go:79#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:79",
+     "scope": "public"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "list_sift_investigations": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/sift.go:254-271",
+    "tools/sift.go:275-284"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/sift.go:266",
+     "data": "limit parameter",
+     "destination_class": "configured_own_service",
+     "host_or_config": "siftClient",
+     "resolved": "configured:getEnv"
+    }
+   ],
+   "rationale": "The tool retrieves a list of Sift investigations from the configured service, using an optional limit parameter. The result is controlled by the service and reveals the user's account state.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "investigations",
+     "produced_at": "tools/sift.go:271",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_snapshots": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/snapshot.go:114-140",
+    "tools/snapshot.go:227-236"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/snapshot.go:128",
+     "data": "query parameters",
+     "destination_class": "configured_own_service",
+     "host_or_config": "grafanaConfig",
+     "resolved": "configured:endpoint"
+    }
+   ],
+   "rationale": "The tool lists Grafana dashboard snapshots using optional query and limit parameters. The result is controlled by the service and reveals the user's account state.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "snapshots",
+     "produced_at": "tools/snapshot.go:140",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/snapshot.go:117#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:117",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/snapshot.go:130#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:130",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/snapshot.go:133#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:133",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/snapshot.go:138#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/snapshot.go:138",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_tempo_attribute_names": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "datasourceUid",
+    "at": "tools/tempo.go:459",
+    "value": true
+   },
+   "destination_args": [
+    "datasourceUid"
+   ],
+   "evidence": [
+    "tools/tempo.go:448-470",
+    "tools/tempo.go:712-721"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/tempo.go:459",
+     "data": "query parameters",
+     "destination_class": "argument_named_destination",
+     "host_or_config": "datasourceUID"
+    }
+   ],
+   "rationale": "The tool queries a Tempo datasource using the provided UID and retrieves available attribute names. The result is a list of attribute names, which is read from the datasource and controlled by the service.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "attribute names",
+     "produced_at": "tools/tempo.go:470",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "id": "tools/tempo.go:451#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:451",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/tempo.go:461#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:461",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/tempo.go:466#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:466",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "id": "tools/tempo.go:470#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:470",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_tempo_attribute_values": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "datasourceUid",
+    "at": "tools/tempo.go:510",
+    "value": true
+   },
+   "destination_args": [
+    "datasourceUid"
+   ],
+   "evidence": [
+    "tools/tempo.go:496-514",
+    "tools/tempo.go:723-732"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/tempo.go:510",
+     "data": "query parameters",
+     "destination_class": "argument_named_destination",
+     "host_or_config": "datasourceUID"
+    }
+   ],
+   "rationale": "The tool queries a Tempo datasource using the provided UID and retrieves values for a specified attribute name. The result is a list of attribute values, which is read from the datasource and controlled by the service.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "attribute values",
+     "produced_at": "tools/tempo.go:514",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/tempo.go:499#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:499",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/tempo.go:505#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:505",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/tempo.go:512#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:512",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "query_loki_logs": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "datasourceUid",
+    "at": "tools/sift.go:708",
+    "value": true
+   },
+   "destination_args": [
+    "datasourceUid"
+   ],
+   "evidence": [
+    "tools/sift.go:706-719"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/sift.go:708",
+     "data": "query parameters",
+     "destination_class": "argument_named_destination",
+     "host_or_config": "datasourceUID"
+    }
+   ],
+   "rationale": "The tool queries a Loki datasource using the provided UID and LogQL query, returning matching log entries. The result is controlled by the service and reveals the user's account state. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "log entries",
+     "produced_at": "tools/sift.go:719",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:714#0",
+     "origin": "literal",
+     "part": "querying Loki: %w",
+     "produced_at": "tools/sift.go:714",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "query_loki_patterns": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "datasourceUid",
+    "at": "tools/tempo.go:289",
+    "value": true
+   },
+   "destination_args": [
+    "datasourceUid"
+   ],
+   "evidence": [
+    "tools/tempo.go:275-295"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/tempo.go:289",
+     "data": "query parameters",
+     "destination_class": "argument_named_destination",
+     "host_or_config": "datasourceUID"
+    }
+   ],
+   "rationale": "The tool queries a Loki datasource using the provided UID and LogQL stream selector, returning detected log patterns. The result is controlled by the service and reveals public data. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "log patterns",
+     "produced_at": "tools/tempo.go:295",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "id": "tools/tempo.go:294#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:294",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "query_loki_stats": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "datasourceUid",
+    "at": "tools/tempo.go:329",
+    "value": true
+   },
+   "destination_args": [
+    "datasourceUid"
+   ],
+   "evidence": [
+    "tools/tempo.go:297-333"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/tempo.go:329",
+     "data": "query parameters",
+     "destination_class": "argument_named_destination",
+     "host_or_config": "datasourceUID"
+    }
+   ],
+   "rationale": "The tool queries a Loki datasource using the provided UID and LogQL matcher expression, returning index-level statistics. The result is controlled by the service and reveals public data. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "log statistics",
+     "produced_at": "tools/tempo.go:333",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/tempo.go:300#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:300",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/tempo.go:308#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:308",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/tempo.go:326#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:326",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/tempo.go:331#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:331",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "query_prometheus": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "datasourceUid"
+   ],
+   "evidence": [
+    "tools/sift.go:709-719"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/sift.go:710",
+     "data": "Prometheus query",
+     "destination_class": "argument_named_destination",
+     "host_or_config": "args.DatasourceUID"
+    }
+   ],
+   "rationale": "The tool queries a Prometheus-compatible datasource using a PromQL expression. The result is read from the datasource and returned as a service-controlled response. The query is sent to a destination specified by the 'datasourceUid' argument. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "Prometheus query result",
+     "produced_at": "tools/sift.go:719",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:714#0",
+     "origin": "literal",
+     "part": "querying Loki: %w",
+     "produced_at": "tools/sift.go:714",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "expr"
+   ]
+  },
+  "query_prometheus_histogram": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "datasourceUid"
+   ],
+   "evidence": [
+    "tools/sift.go:709-719"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/sift.go:710",
+     "data": "Histogram query",
+     "destination_class": "argument_named_destination",
+     "host_or_config": "args.DatasourceUID"
+    }
+   ],
+   "rationale": "The tool queries a Prometheus histogram using a generated PromQL expression. The result is read from the datasource and returned as a service-controlled response. The query is sent to a destination specified by the 'datasourceUid' argument. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "Histogram query result",
+     "produced_at": "tools/sift.go:719",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:714#0",
+     "origin": "literal",
+     "part": "querying Loki: %w",
+     "produced_at": "tools/sift.go:714",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "metric",
+    "percentile"
+   ]
+  },
+  "query_pyroscope": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "data_source_uid"
+   ],
+   "evidence": [
+    "tools/sift.go:709-719"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/sift.go:710",
+     "data": "Pyroscope query",
+     "destination_class": "argument_named_destination",
+     "host_or_config": "args.DataSourceUID"
+    }
+   ],
+   "rationale": "The tool queries a Pyroscope datasource for profiles or metrics. The result is read from the datasource and returned as a service-controlled response. The query is sent to a destination specified by the 'data_source_uid' argument. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "Pyroscope query result",
+     "produced_at": "tools/sift.go:719",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:714#0",
+     "origin": "literal",
+     "part": "querying Loki: %w",
+     "produced_at": "tools/sift.go:714",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "profile_type"
+   ]
+  },
+  "query_tempo_metrics": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "datasourceUid"
+   ],
+   "evidence": [
+    "tools/sift.go:709-719"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/sift.go:710",
+     "data": "Tempo metrics query",
+     "destination_class": "argument_named_destination",
+     "host_or_config": "args.DatasourceUID"
+    }
+   ],
+   "rationale": "The tool queries a Tempo datasource for trace-derived metrics using a TraceQL query. The result is read from the datasource and returned as a service-controlled response. The query is sent to a destination specified by the 'datasourceUid' argument. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "Tempo metrics query result",
+     "produced_at": "tools/sift.go:719",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:714#0",
+     "origin": "literal",
+     "part": "querying Loki: %w",
+     "produced_at": "tools/sift.go:714",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "query"
+   ]
+  },
+  "search_dashboards": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/sift.go:709-719"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "tools/sift.go:710",
+     "data": "Dashboard search query",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaClientFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool searches Grafana dashboards based on the provided query and filters. The result is read from the configured Grafana service and returned as a service-controlled response. The search query is sent to the user's configured Grafana service. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "Dashboard search result",
+     "produced_at": "tools/sift.go:719",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:714#0",
+     "origin": "literal",
+     "part": "querying Loki: %w",
+     "produced_at": "tools/sift.go:714",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "query"
+   ]
+  },
+  "search_docs": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/sift.go:709-719"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/sift.go:710",
+     "data": "Documentation search query",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "mcpgrafana.GrafanaClientFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool searches Grafana documentation based on the provided query and filters. The result is read from the Grafana documentation service and returned as a service-controlled response. The search query is sent to a fixed host in the code. [unverified outbound: 'mcpgrafana.GrafanaClientFromContext(ctx)' resolves to no host or configuration] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "Documentation search result",
+     "produced_at": "tools/sift.go:719",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:714#0",
+     "origin": "literal",
+     "part": "querying Loki: %w",
+     "produced_at": "tools/sift.go:714",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "query"
+   ]
+  },
+  "search_folders": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/sift.go:709-719"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "tools/sift.go:710",
+     "data": "Folder search query",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaClientFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool searches Grafana folders based on the provided query. The result is read from the configured Grafana service and returned as a service-controlled response. The search query is sent to the user's configured Grafana service. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "Folder search result",
+     "produced_at": "tools/sift.go:719",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:714#0",
+     "origin": "literal",
+     "part": "querying Loki: %w",
+     "produced_at": "tools/sift.go:714",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "query"
+   ]
+  },
+  "search_plugin_information": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/sift.go:709-719"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/sift.go:710",
+     "data": "Plugin search query",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "mcpgrafana.GrafanaClientFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool searches the Grafana plugin catalog based on the provided query. The result is read from the Grafana plugin service and returned as a service-controlled response. The search query is sent to a fixed host in the code. [unverified outbound: 'mcpgrafana.GrafanaClientFromContext(ctx)' resolves to no host or configuration] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "Plugin search result",
+     "produced_at": "tools/sift.go:719",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/sift.go:714#0",
+     "origin": "literal",
+     "part": "querying Loki: %w",
+     "produced_at": "tools/sift.go:714",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "query"
+   ]
+  },
+  "search_tempo_traces": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/tempo.go:275-295",
+    "tools/tempo.go:668-677"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/tempo.go:289",
+     "data": "args.Query, args.Start, args.End",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaConfigFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `search_tempo_traces` sends a TraceQL query to a Tempo datasource and returns the search results. The results are read from the datasource, which is a public resource, and the control over the content is by an outside party since the datasource can be influenced by external data. The outbound call is made to a configured own service, as the datasource UID is provided by the user, and the base URL is derived from the Grafana configuration context.",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "body",
+     "produced_at": "tools/tempo.go:294",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "id": "tools/tempo.go:294#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools/tempo.go:294",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "query",
+    "start",
+    "end"
+   ]
+  },
+  "suggest_loki_alloy_label_config": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/loki_label_analyzer.go:22-23"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The tool `suggest_loki_alloy_label_config` generates a configuration snippet for Alloy based on the provided label set. The result is computed by the service and does not involve any external data or outbound calls.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "Alloy loki.process snippet",
+     "produced_at": "tools/loki_label_analyzer.go:22",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "approvedLabels",
+    "componentName",
+    "forwardTo",
+    "normalizeLogLevel",
+    "requiredLabels"
+   ]
+  },
+  "update_alert_group": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "alertGroupId"
+   ],
+   "evidence": [
+    "tools/oncall.go:663-698",
+    "tools/oncall.go:719-728"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "tools/oncall.go:676",
+     "data": "args.AlertGroupID, action",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaConfigFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `update_alert_group` updates the state of an alert group and returns the updated state. The result includes the alert group ID (echoed argument), the action taken, whether the update was successful, the resulting state, and any state warning. The outbound call is made to a configured own service to update the alert group state.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "result.AlertGroupID",
+     "produced_at": "tools/oncall.go:629",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "result.Action",
+     "produced_at": "tools/oncall.go:630",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "result.Updated",
+     "produced_at": "tools/oncall.go:631",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "result.State",
+     "produced_at": "tools/oncall.go:632",
+     "scope": "public"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "result.StateWarning",
+     "produced_at": "tools/oncall.go:633",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/oncall.go:665#0",
+     "origin": "literal",
+     "part": "alertGroupId is required",
+     "produced_at": "tools/oncall.go:665",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/oncall.go:691#0",
+     "origin": "literal",
+     "part": "the %s succeeded but the resulting state could not be read back (does the caller have alert-groups:read?): %s",
+     "produced_at": "tools/oncall.go:691",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "state"
+   ]
+  },
+  "update_annotation": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "id"
+   ],
+   "evidence": [
+    "tools/annotations.go:154-184",
+    "tools/annotations.go:186-195"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "tools/annotations.go:177",
+     "data": "args.ID, args.Text, args.Time, args.TimeEnd, args.Tags, args.Data",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaConfigFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `update_annotation` updates an annotation by ID and returns the updated annotation. The result is read from the service, and the outbound call is made to a configured own service to update the annotation.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "resp",
+     "produced_at": "tools/annotations.go:183",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/annotations.go:181#0",
+     "origin": "literal",
+     "part": "update annotation: %w",
+     "produced_at": "tools/annotations.go:181",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "text",
+    "time",
+    "timeEnd",
+    "tags",
+    "data"
+   ]
+  },
+  "update_dashboard": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "uid"
+   ],
+   "evidence": [
+    "tools/datasources.go:579-684"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "tools/datasources.go:660",
+     "data": "args.Dashboard, args.Operations, args.FolderUid, args.Message, args.Overwrite, args.Uid, args.UserId",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaConfigFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `update_dashboard` updates a dashboard by either creating a new one or applying patch operations to an existing one. The result is read from the service, and the outbound call is made to a configured own service to update the dashboard. [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "result",
+     "produced_at": "tools/datasources.go:683",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:587#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:587",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:589#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:589",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/datasources.go:610#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:610",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:664#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:664",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:674#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:674",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/datasources.go:683#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:683",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "dashboard",
+    "operations",
+    "folderUid",
+    "message",
+    "overwrite",
+    "userId"
+   ]
+  },
+  "update_datasource": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "uid",
+    "url"
+   ],
+   "evidence": [
+    "tools/datasources.go:579-684",
+    "tools/datasources.go:466-475"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/datasources.go:660",
+     "data": "args.Uid, args.Name, args.Url, args.Access, args.Database, args.BasicAuth, args.IsDefault, args.JsonData, args.Fields",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaConfigFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `update_datasource` updates non-secret fields of a datasource by UID. The result is read from the service, and the outbound call is made to a configured own service to update the datasource. [destination_args completed: url]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "result",
+     "produced_at": "tools/datasources.go:683",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:587#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:587",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:589#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:589",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/datasources.go:610#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:610",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:664#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:664",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/datasources.go:674#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:674",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/datasources.go:683#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools/datasources.go:683",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "name",
+    "access",
+    "database",
+    "basicAuth",
+    "isDefault",
+    "jsonData",
+    "fields"
+   ]
+  },
+  "update_incident": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "incidentId"
+   ],
+   "evidence": [
+    "tools/incident.go:296-360",
+    "tools/incident.go:362-371"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/incident.go:346",
+     "data": "args.IncidentID, args.Status, args.Severity, args.Title, args.CustomFields",
+     "destination_class": "configured_own_service",
+     "host_or_config": "mcpgrafana.GrafanaConfigFromContext(ctx)",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool `update_incident` updates an incident by ID, allowing changes to status, severity, title, and custom fields. The result is read from the service, and the outbound call is made to a configured own service to update the incident.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "result",
+     "produced_at": "tools/incident.go:359",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/incident.go:298#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/incident.go:298",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/incident.go:301#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/incident.go:301",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/incident.go:322#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/incident.go:322",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/incident.go:332#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/incident.go:332",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/incident.go:342#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/incident.go:342",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/incident.go:355#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/incident.go:355",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/incident.go:359#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/incident.go:359",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "status",
+    "severity",
+    "title",
+    "customFields"
+   ]
+  },
+  "user_info": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/oncall.go:324-332"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool `user_info` retrieves information about the current Grafana identity, including login, email, name, and organization access. The result is read from the user's account, and there are no outbound calls. [received records: user information taken as outside-party text] [unverified: no cited span contains the tool name or a backticked identifier, or lies inside the tool's handler block]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "user information",
+     "produced_at": "tools/oncall.go:327",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "validate_provisioning_file": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/provisioning.go:80-110",
+    "tools/provisioning.go:384-395"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "tools/provisioning.go:90",
+     "data": "repo, path, ref",
+     "destination_class": "configured_own_service",
+     "host_or_config": "GRAFANA_URL",
+     "resolved": "configured:settings"
+    }
+   ],
+   "rationale": "The tool `validate_provisioning_file` validates a file in a provisioning repository by dry-run applying it. The results include whether the file is valid, the action that would be taken, the resource type, and any errors. These are computed values based on the validation process. The tool makes an outbound call to the configured Grafana service to perform the validation, using the repository, path, and ref as parameters. There is no execution of supplied code or delivery to a chosen party.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "valid",
+     "produced_at": "tools/provisioning.go:100",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "action",
+     "produced_at": "tools/provisioning.go:101",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "resourceType",
+     "produced_at": "tools/provisioning.go:102",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "errors",
+     "produced_at": "tools/provisioning.go:103",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/provisioning.go:82#0",
+     "origin": "literal",
+     "part": "grafana URL is not configured",
+     "produced_at": "tools/provisioning.go:82",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/provisioning.go:100#0",
+     "origin": "literal",
+     "part": "build transport: %w",
+     "produced_at": "tools/provisioning.go:100",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/provisioning.go:104#0",
+     "origin": "literal",
+     "part": "/apis/provisioning.grafana.app/v0alpha1/namespaces/%s/repositories",
+     "produced_at": "tools/provisioning.go:104",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/provisioning.go:108#0",
+     "origin": "literal",
+     "part": "create request: %w",
+     "produced_at": "tools/provisioning.go:108",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [],
+ "version": "1.6.1"
+}

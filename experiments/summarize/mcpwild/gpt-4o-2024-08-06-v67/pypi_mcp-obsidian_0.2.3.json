@@ -1,0 +1,1063 @@
+{
+ "kind": "pypi",
+ "notes": [],
+ "package": "mcp-obsidian",
+ "source": ".cache/sources/.views/pypi_mcp-obsidian_0.2.3_793e6ca769a5",
+ "tools": {
+  "obsidian_append_content": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "filepath"
+   ],
+   "evidence": [
+    "tools.py:192-229",
+    "tools.py:193-195"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools.py:222",
+     "data": "args.get(\"filepath\", \"\"), args[\"content\"]",
+     "destination_class": "configured_own_service",
+     "host_or_config": "obsidian_host",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool appends content to a file in the user's Obsidian vault. It reads the file path and content from the arguments and uses the `api.append_content` method to perform the operation. The arguments are sent to the configured Obsidian service, and the result is a success message with the file path echoed back.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "f\"Successfully appended content to {args['filepath']}\"",
+     "produced_at": "tools.py:227",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:227#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools.py:227",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "tools.py:227#1",
+     "origin": "argument_echo",
+     "part": "args['filepath']",
+     "produced_at": "tools.py:227",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "content"
+   ]
+  },
+  "obsidian_batch_get_file_contents": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools.py:541-578",
+    "tools.py:542-544"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools.py:571",
+     "data": "args[\"filepaths\"]",
+     "destination_class": "configured_own_service",
+     "host_or_config": "obsidian_host",
+     "resolved": "configured:obsidian_host"
+    }
+   ],
+   "rationale": "The tool retrieves the contents of multiple files from the user's vault. The file paths are sent to the configured Obsidian service, and the contents are fetched from the user's account. [received records: content taken as outside-party text] [received records: the statement taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "tools.py:574-577",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "id": "tools.py:573#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools.py:573",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "filepaths"
+   ]
+  },
+  "obsidian_complex_search": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools.py:390-452",
+    "tools.py:391-393"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools.py:445",
+     "data": "args.get(\"query\", \"\")",
+     "destination_class": "configured_own_service",
+     "host_or_config": "obsidian_host",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool performs a complex search using a JsonLogic query on the user's vault. The results are fetched from the user's account, and the query is sent to the configured Obsidian service. [received records: results taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "results",
+     "produced_at": "tools.py:447-451",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "tools.py:447#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools.py:447",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "query"
+   ]
+  },
+  "obsidian_delete_file": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "filepath"
+   ],
+   "evidence": [
+    "tools.py:347-388",
+    "tools.py:348-350"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools.py:381",
+     "data": "args[\"filepath\"]",
+     "destination_class": "configured_own_service",
+     "host_or_config": "obsidian_host",
+     "resolved": "configured:obsidian_host"
+    }
+   ],
+   "rationale": "The tool deletes a file or directory in the user's Obsidian vault. It reads the file path from the arguments and uses the `api.delete_file` method to perform the operation. The file path is sent to the configured Obsidian service, and the result is a success message with the file path echoed back.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "f\"Successfully deleted {args['filepath']}\"",
+     "produced_at": "tools.py:386",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:386#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools.py:386",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "tools.py:386#1",
+     "origin": "argument_echo",
+     "part": "args['filepath']",
+     "produced_at": "tools.py:386",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "obsidian_get_file_contents": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools.py:94-128",
+    "tools.py:95-97"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools.py:121",
+     "data": "args[\"filepath\"]",
+     "destination_class": "configured_own_service",
+     "host_or_config": "obsidian_host",
+     "resolved": "configured:obsidian_host"
+    }
+   ],
+   "rationale": "The tool retrieves the contents of a specified file in the user's Obsidian vault. It reads the file path from the arguments and uses the `api.get_file_contents` method to fetch the content, which is then returned as JSON. The file path is sent to the configured Obsidian service, and the result is controlled by the service. [received records: json.dumps(content, indent=2) taken as outside-party text] [received records: the statement taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "json.dumps(content, indent=2)",
+     "produced_at": "tools.py:126",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "id": "tools.py:123#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools.py:123",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "obsidian_get_frontmatter": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools.py:500-538",
+    "tools.py:501-503"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools.py:531",
+     "data": "args[\"filepath\"]",
+     "destination_class": "configured_own_service",
+     "host_or_config": "obsidian_host",
+     "resolved": "configured:obsidian_host"
+    }
+   ],
+   "rationale": "The tool retrieves the YAML frontmatter of a note from the user's vault. The file path is sent to the configured Obsidian service, and the frontmatter is fetched from the user's account.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "fm",
+     "produced_at": "tools.py:534-537",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "tools.py:533#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools.py:533",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "filepath"
+   ]
+  },
+  "obsidian_get_periodic_note": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools.py:580-629",
+    "tools.py:581-583"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools.py:622",
+     "data": "period,type",
+     "destination_class": "configured_own_service",
+     "host_or_config": "obsidian_host",
+     "resolved": "configured:obsidian_host"
+    }
+   ],
+   "rationale": "The tool retrieves the current periodic note for a specified period from the user's vault. The period and type are sent to the configured Obsidian service, and the note is fetched from the user's account.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "tools.py:625-628",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:614#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools.py:614",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:614#1",
+     "origin": "argument_echo",
+     "part": "period",
+     "produced_at": "tools.py:614",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:614#2",
+     "origin": "literal",
+     "part": "', '.join(valid_periods)",
+     "produced_at": "tools.py:614",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:619#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools.py:619",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:619#1",
+     "origin": "argument_echo",
+     "part": "type",
+     "produced_at": "tools.py:619",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:619#2",
+     "origin": "literal",
+     "part": "', '.join(valid_types)",
+     "produced_at": "tools.py:619",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "period",
+    "type"
+   ]
+  },
+  "obsidian_get_recent_changes": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools.py:691-736",
+    "tools.py:692-694"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools.py:729",
+     "data": "limit, days",
+     "destination_class": "configured_own_service",
+     "host_or_config": "obsidian_host",
+     "resolved": "configured:obsidian_host"
+    }
+   ],
+   "rationale": "The tool retrieves recently modified files from the user's vault. The limit and days are sent to the configured Obsidian service, and the changes are fetched from the user's account. [received records: results taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "results",
+     "produced_at": "tools.py:732-735",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:704#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools.py:704",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:722#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools.py:722",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:722#1",
+     "origin": "argument_echo",
+     "part": "limit",
+     "produced_at": "tools.py:722",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:726#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools.py:726",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:726#1",
+     "origin": "argument_echo",
+     "part": "days",
+     "produced_at": "tools.py:726",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "limit",
+    "days"
+   ]
+  },
+  "obsidian_get_recent_periodic_notes": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools.py:631-689",
+    "tools.py:632-634"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools.py:682",
+     "data": "period, limit, include_content",
+     "destination_class": "configured_own_service",
+     "host_or_config": "obsidian_host",
+     "resolved": "configured:obsidian_host"
+    }
+   ],
+   "rationale": "The tool retrieves the most recent periodic notes for a specified period type from the user's vault. The period, limit, and include_content flag are sent to the configured Obsidian service, and the notes are fetched from the user's account.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "results",
+     "produced_at": "tools.py:685-688",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:649#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools.py:649",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:671#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools.py:671",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:671#1",
+     "origin": "argument_echo",
+     "part": "period",
+     "produced_at": "tools.py:671",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:671#2",
+     "origin": "computed",
+     "part": "', '.join(valid_periods)",
+     "produced_at": "tools.py:671",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:675#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools.py:675",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:675#1",
+     "origin": "argument_echo",
+     "part": "limit",
+     "produced_at": "tools.py:675",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:679#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools.py:679",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:679#1",
+     "origin": "argument_echo",
+     "part": "include_content",
+     "produced_at": "tools.py:679",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools.py:684#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools.py:684",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "period",
+    "limit",
+    "include_content"
+   ]
+  },
+  "obsidian_list_files_in_dir": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools.py:58-92"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools.py:85",
+     "data": "args[\"dirpath\"]",
+     "destination_class": "configured_own_service",
+     "host_or_config": "obsidian_host",
+     "resolved": "configured:obsidian_host"
+    }
+   ],
+   "rationale": "The tool lists files in a specified directory within the user's Obsidian vault. It reads the directory path from the arguments and uses the `api.list_files_in_dir` method to fetch the list of files, which is then returned as JSON. The directory path is sent to the configured Obsidian service, and the result is controlled by the service. [received records: json.dumps(files, indent=2) taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "json.dumps(files, indent=2)",
+     "produced_at": "tools.py:90",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "tools.py:87#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools.py:87",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "obsidian_list_files_in_vault": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools.py:31-56"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools.py:49",
+     "data": "",
+     "destination_class": "configured_own_service",
+     "host_or_config": "obsidian_host",
+     "resolved": "configured:obsidian_host"
+    }
+   ],
+   "rationale": "The tool lists all files and directories in the root of the user's Obsidian vault. It uses the `api.list_files_in_vault` method to fetch the list, which is then returned as JSON. The call is made to the configured Obsidian service, and the result is controlled by the service. [received records: json.dumps(files, indent=2) taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "json.dumps(files, indent=2)",
+     "produced_at": "tools.py:54",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "obsidian_patch_content": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "filepath"
+   ],
+   "evidence": [
+    "tools.py:231-299",
+    "tools.py:232-234"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools.py:286",
+     "data": "args.get(\"filepath\", \"\"), args.get(\"operation\", \"\"), args.get(\"target_type\", \"\"), args.get(\"target\", \"\"), args.get(\"content\", \"\")",
+     "destination_class": "configured_own_service",
+     "host_or_config": "obsidian_host",
+     "resolved": "configured:obsidian_host"
+    }
+   ],
+   "rationale": "The tool inserts content into an existing note in the user's Obsidian vault. It reads the file path, operation, target type, target, and content from the arguments and uses the `api.patch_content` method to perform the operation. The arguments are sent to the configured Obsidian service, and the result is a success message with the file path echoed back.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "f\"Successfully patched content in {args['filepath']}\"",
+     "produced_at": "tools.py:297",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:297#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools.py:297",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "tools.py:297#1",
+     "origin": "argument_echo",
+     "part": "args['filepath']",
+     "produced_at": "tools.py:297",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "content"
+   ]
+  },
+  "obsidian_put_content": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "filepath"
+   ],
+   "evidence": [
+    "tools.py:301-344",
+    "tools.py:302-304"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools.py:337",
+     "data": "args.get(\"filepath\", \"\"), args[\"content\"]",
+     "destination_class": "configured_own_service",
+     "host_or_config": "obsidian_host",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool creates a new file or overwrites an existing file's content in the user's Obsidian vault. It reads the file path and content from the arguments and uses the `api.put_content` method to perform the operation. The arguments are sent to the configured Obsidian service, and the result is a success message with the file path echoed back.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "f\"Successfully uploaded content to {args['filepath']}\"",
+     "produced_at": "tools.py:342",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:342#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools.py:342",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "tools.py:342#1",
+     "origin": "argument_echo",
+     "part": "args['filepath']",
+     "produced_at": "tools.py:342",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "content"
+   ]
+  },
+  "obsidian_search_by_tag": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools.py:454-497",
+    "tools.py:455-457"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools.py:490",
+     "data": "args[\"tag\"], args.get(\"dirpath\")",
+     "destination_class": "configured_own_service",
+     "host_or_config": "obsidian_host",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool searches for notes with a specific tag in the user's vault. The tag and optional directory path are sent to the configured Obsidian service, and the results are fetched from the user's account.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "paths",
+     "produced_at": "tools.py:492-496",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "tools.py:492#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools.py:492",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "tag",
+    "dirpath"
+   ]
+  },
+  "obsidian_simple_search": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools.py:130-190",
+    "tools.py:131-133"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools.py:163",
+     "data": "args[\"query\"], context_length",
+     "destination_class": "configured_own_service",
+     "host_or_config": "obsidian_host",
+     "resolved": "configured:obsidian_host"
+    }
+   ],
+   "rationale": "The tool performs a simple text search across all files in the user's Obsidian vault. It reads the search query and context length from the arguments and uses the `api.search` method to perform the search, returning the results as JSON. The query and context length are sent to the configured Obsidian service, and the result is controlled by the service. [received records: json.dumps(formatted_results, indent=2) taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "json.dumps(formatted_results, indent=2)",
+     "produced_at": "tools.py:188",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools.py:148#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools.py:148",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools.py:185#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools.py:185",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  }
+ },
+ "value_conditions": [],
+ "version": "0.2.3"
+}

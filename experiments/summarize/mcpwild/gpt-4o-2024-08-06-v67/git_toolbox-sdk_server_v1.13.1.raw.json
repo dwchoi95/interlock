@@ -1,0 +1,3825 @@
+{
+ "batch": {
+  "tools": {
+   "database_overview": {
+    "result_contents": [
+     {
+      "part": "Fetches the current state of the PostgreSQL server, returning the version, whether it's a replica, uptime duration, maximum connection limit, number of current connections, number of active connections, and the percentage of connections in use.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:196-198",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:196-198"
+    ],
+    "rationale": "The `database_overview` tool fetches the current state of the PostgreSQL server, including version, replica status, uptime, connection limits, and usage. This information is returned as a literal string composed by the service, with no outbound calls or supplied code execution involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "execute_sql": {
+    "result_contents": [
+     {
+      "part": "Use this tool to execute a single SQL statement.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:26-29",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "The SQL statement to execute",
+      "destination_class": "configured_own_service",
+      "host_or_config": "postgresql-source",
+      "at": "internal/prebuiltconfigs/tools/postgres.yaml:26-29"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:26-29"
+    ],
+    "rationale": "The `execute_sql` tool executes a single SQL statement on the configured PostgreSQL service. The SQL statement is sent to the service, which is configured as `postgresql-source`. The result is a literal description of the tool's purpose.",
+    "kind": "WRITE",
+    "destination_args": [
+     "sql"
+    ],
+    "value_args": [
+     "sql"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "get_column_cardinality": {
+    "result_contents": [
+     {
+      "part": "Estimates the number of unique values (cardinality) quickly for one or all columns in a specific PostgreSQL table by using the database's internal statistics, returning the results in descending order of estimated cardinality.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:221-223",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:221-223"
+    ],
+    "rationale": "The `get_column_cardinality` tool estimates the cardinality of columns in a PostgreSQL table using internal statistics. The result is a literal description of the tool's function, with no outbound calls or supplied code execution involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "get_query_plan": {
+    "result_contents": [
+     {
+      "part": "Generate a PostgreSQL EXPLAIN plan in JSON format for a single SQL statement\u2014without executing it. This returns the optimizer's estimated plan, costs, and rows (no ANALYZE, no extra options).",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:173-176",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "The SQL statement for which to generate the plan",
+      "destination_class": "configured_own_service",
+      "host_or_config": "postgresql-source",
+      "at": "internal/prebuiltconfigs/tools/postgres.yaml:173-176"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:173-176"
+    ],
+    "rationale": "The `get_query_plan` tool generates an EXPLAIN plan for a SQL statement without executing it. The SQL statement is sent to the configured PostgreSQL service (`postgresql-source`) to generate the plan. The result is a literal description of the tool's purpose.",
+    "kind": "WRITE",
+    "destination_args": [
+     "query"
+    ],
+    "value_args": [
+     "query"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "list_active_queries": {
+    "result_contents": [
+     {
+      "part": "List the top N (default 50) currently running queries (state='active') from pg_stat_activity, ordered by longest-running first. Returns pid, user, database, application_name, client_addr, state, wait_event_type/wait_event, backend/xact/query start times, computed query_duration, and the SQL text.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:38-41",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:38-41"
+    ],
+    "rationale": "The `list_active_queries` tool lists currently running queries from `pg_stat_activity`. The result is a literal description of the tool's function, with no outbound calls or supplied code execution involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "list_autovacuum_configurations": {
+    "result_contents": [
+     {
+      "part": "List PostgreSQL autovacuum-related configurations (name and current setting) from pg_settings.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:74-82",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Query to list autovacuum configurations",
+      "destination_class": "configured_own_service",
+      "host_or_config": "postgresql-source",
+      "at": "internal/prebuiltconfigs/tools/postgres.yaml:74-82"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:74-82"
+    ],
+    "rationale": "The `list_autovacuum_configurations` tool queries the PostgreSQL service for autovacuum-related configurations. The query is sent to the configured service (`postgresql-source`). The result is a literal description of the tool's purpose.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "list_available_extensions": {
+    "result_contents": [
+     {
+      "part": "Discover all PostgreSQL extensions available for installation on this server, returning name, default_version, and description.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:44-47",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:44-47"
+    ],
+    "rationale": "The `list_available_extensions` tool lists all PostgreSQL extensions available for installation. The result is a literal description of the tool's function, with no outbound calls or supplied code execution involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "list_database_stats": {
+    "result_contents": [
+     {
+      "part": "Lists the key performance and activity statistics for each PostgreSQL database in the instance, offering insights into cache efficiency, transaction throughput, row-level activity, temporary file usage, and contention.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:246-248",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:246-248"
+    ],
+    "rationale": "The `list_database_stats` tool provides performance and activity statistics for PostgreSQL databases. The result is a literal description of the tool's function, with no outbound calls or supplied code execution involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "list_indexes": {
+    "result_contents": [
+     {
+      "part": "schema name, table name, index name, index type (access method), a boolean indicating if it's a unique index, a boolean indicating if it's for a primary key, the index definition, index size in bytes, the number of index scans, the number of index tuples read, the number of table tuples fetched via index scans, and a boolean indicating if the index has been used at least once.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:206-208",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:206-208"
+    ],
+    "rationale": "The tool `list_indexes` reads index details from the user's database, including schema name, table name, index name, index type, uniqueness, primary key status, definition, size, usage statistics, and usage status. This information is read from the database and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "list_installed_extensions": {
+    "result_contents": [
+     {
+      "part": "name, version, schema, owner, and description of installed PostgreSQL extensions.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:50-52",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:50-52"
+    ],
+    "rationale": "The tool `list_installed_extensions` retrieves details about installed PostgreSQL extensions, including their name, version, schema, owner, and description. This information is read from the user's database and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "list_invalid_indexes": {
+    "result_contents": [
+     {
+      "part": "schema name, index name, table name, index size, readiness, validity, and index definition of invalid indexes.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:154-156",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:154-156"
+    ],
+    "rationale": "The tool `list_invalid_indexes` lists invalid indexes in the user's database, providing details such as schema name, index name, table name, index size, readiness, validity, and index definition. This information is read from the database and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "list_locks": {
+    "result_contents": [
+     {
+      "part": "process ID, user, query text, and an aggregated list of all transactions and specific locks (relation, mode, grant status) associated with each process.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:62-64",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:62-64"
+    ],
+    "rationale": "The tool `list_locks` identifies locks held by active processes in the user's database, showing process ID, user, query text, and details of transactions and locks. This information is read from the database and controlled by the service. [received records: process ID, user, query text, and an aggregated list of all transactions and specific locks (relation, mode, grant statu taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "list_memory_configurations": {
+    "result_contents": [
+     {
+      "part": "name and current setting of memory-related configurations from pg_settings.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:85-88",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:85-88"
+    ],
+    "rationale": "The tool `list_memory_configurations` lists memory-related configurations from the user's database, including the name and current setting. This information is read from the database and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "list_pg_settings": {
+    "result_contents": [
+     {
+      "part": "parameter name, current setting, unit, short description, source of the current setting, and whether a restart is required when the parameter value is changed.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:241-244",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:241-244"
+    ],
+    "rationale": "The tool `list_pg_settings` retrieves configuration parameters for the PostgreSQL server, including parameter name, current setting, unit, description, source, and restart requirement. This information is read from the database and controlled by the service. [received records: parameter name, current setting, unit, short description, source of the current setting, and whether a restart is requir taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "list_publication_tables": {
+    "result_contents": [
+     {
+      "part": "publication name, schema name, table name, and definition details indicating if it publishes all tables, whether it replicates inserts, updates, deletes, or truncates, and the publication owner.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:231-234",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:231-234"
+    ],
+    "rationale": "The tool `list_publication_tables` lists publication tables in the user's database, providing details such as publication name, schema name, table name, and replication details. This information is read from the database and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "list_query_stats": {
+    "result_contents": [
+     {
+      "part": "database name, query text, execution count, timing metrics (total, min, max, mean), rows affected, and buffer cache I/O statistics (hits and reads).",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:216-218",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:216-218"
+    ],
+    "rationale": "The tool `list_query_stats` lists performance statistics for executed queries in the user's database, including database name, query text, execution count, timing metrics, rows affected, and I/O statistics. This information is read from the database and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "list_replication_slots": {
+    "result_contents": [
+     {
+      "part": "slot_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:140",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "slot_type",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:141",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "plugin",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:142",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "database",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:143",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "temporary",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:144",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "active",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:145",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "restart_lsn",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:146",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "confirmed_flush_lsn",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:147",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "xmin",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:148",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "catalog_xmin",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:149",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "retained_wal",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:150",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:133-151"
+    ],
+    "rationale": "The `list_replication_slots` tool retrieves details about PostgreSQL replication slots from the user's account. The result includes slot names, types, and other attributes, all of which are read from the database and controlled by the service. The tool does not make any outbound calls or execute supplied code.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "list_roles": {
+    "result_contents": [
+     {
+      "part": "role_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "Object ID",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "maximum number of concurrent connections",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "superuser status",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "privilege inheritance",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "ability to create roles",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "ability to create databases",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "ability to log in",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "replication privilege",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "ability to bypass row-level security",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "password expiration timestamp",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "direct members",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "roles/groups membership",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:251-253"
+    ],
+    "rationale": "The `list_roles` tool retrieves information about user-created roles in the PostgreSQL database. The result includes role names, permissions, and other attributes, all of which are read from the database and controlled by the service. The tool does not make any outbound calls or execute supplied code.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "list_schemas": {
+    "result_contents": [
+     {
+      "part": "schema name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:193",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "schema owner",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:193",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "grants",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:193",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "number of functions",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:193",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "number of tables",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:193",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "number of views",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:193",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:191-193"
+    ],
+    "rationale": "The `list_schemas` tool retrieves information about schemas in the PostgreSQL database. The result includes schema names, owners, grants, and counts of functions, tables, and views, all of which are read from the database and controlled by the service. The tool does not make any outbound calls or execute supplied code.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "list_sequences": {
+    "result_contents": [
+     {
+      "part": "sequence name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "schema name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "sequence owner",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "data type",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "starting value",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "minimum value",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "maximum value",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "increment value",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "last value",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:211-213"
+    ],
+    "rationale": "The `list_sequences` tool retrieves information about sequences in the PostgreSQL database. The result includes sequence names, schema names, owners, data types, and other attributes, all of which are read from the database and controlled by the service. The tool does not make any outbound calls or execute supplied code.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "list_stored_procedure": {
+    "result_contents": [
+     {
+      "part": "schema name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:258",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "procedure name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:258",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "procedure owner",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:258",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "language",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:258",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "definition",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:258",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "description",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:258",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:256-258"
+    ],
+    "rationale": "The `list_stored_procedure` tool retrieves metadata about stored procedures in the PostgreSQL database. The result includes schema names, procedure names, owners, languages, definitions, and descriptions, all of which are read from the database and controlled by the service. The tool does not make any outbound calls or execute supplied code.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "list_table_stats": {
+    "result_contents": [
+     {
+      "part": "schema name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "table name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "table size in bytes",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "number of sequential scans",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "number of index scans",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "idx_scan_ratio_percent",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "number of live rows",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "number of dead rows",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "dead_row_ratio_percent",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "total number of rows inserted",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "total number of rows updated",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "total number of rows deleted",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "last_vacuum",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "last_autovacuum",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "last_autoanalyze",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:226-228"
+    ],
+    "rationale": "The `list_table_stats` tool retrieves statistics about user tables in the PostgreSQL database. The result includes schema names, table names, sizes, scan counts, row counts, and maintenance timestamps, all of which are read from the database and controlled by the service. The tool does not make any outbound calls or execute supplied code.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "list_tables": {
+    "result_contents": [
+     {
+      "part": "object type",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:34",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "columns",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:34",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "constraints",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:34",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "indexes",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:34",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "triggers",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:34",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "owner",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:34",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "comment",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:34",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:31-34"
+    ],
+    "rationale": "The `list_tables` tool retrieves detailed schema information about user-created tables in the PostgreSQL database. The result includes object types, columns, constraints, indexes, triggers, owners, and comments, all of which are read from the database and controlled by the service. The tool does not make any outbound calls or execute supplied code. [received records: object type, columns, constraints, indexes, triggers, owner, comment taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "list_tablespaces": {
+    "result_contents": [
+     {
+      "part": "tablespace name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:238",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "owner name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:238",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "size in bytes",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:238",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "internal object ID",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:238",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "access control list",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:238",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "tablespace options",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:238",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:236-238"
+    ],
+    "rationale": "The `list_tablespaces` tool retrieves information about tablespaces in the PostgreSQL database. The result includes tablespace names, owner names, sizes, object IDs, access control lists, and options, all of which are read from the database and controlled by the service. The tool does not make any outbound calls or execute supplied code.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "list_top_bloated_tables": {
+    "result_contents": [
+     {
+      "part": "schema_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:115",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "relation_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:116",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "live_tuples",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:117",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "dead_tuples",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:118",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "dead_tuple_percentage",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:119",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "last_vacuum",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:120",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "last_autovacuum",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:121",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "last_analyze",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:122",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "last_autoanalyze",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:123",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "internal/prebuiltconfigs/tools/postgres.yaml:114-126"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:108-126"
+    ],
+    "rationale": "The tool `list_top_bloated_tables` executes a SQL query to list tables by dead-tuple count, returning schema, table, live/dead tuples, percentage, and last vacuum/analyze times. The results are read from the user's database, hence the scope is `user_account` and control is `service`. No outbound calls or code execution is involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "list_triggers": {
+    "result_contents": [
+     {
+      "part": "trigger_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "schema_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "table_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "enabled",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "timing",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "events",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "activation",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "handler_function",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "definition",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "internal/prebuiltconfigs/tools/postgres.yaml:202"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:201-203"
+    ],
+    "rationale": "The tool `list_triggers` retrieves information about triggers from the user's database, including trigger name, schema, table, and other attributes. The data is read from the user's account, so the scope is `user_account` and control is `service`. No outbound calls or code execution is involved. [received records: trigger_name, schema_name, table_name, enabled, timing, events, activation, handler_function, definition taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "list_views": {
+    "result_contents": [
+     {
+      "part": "schemaname",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:187",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "viewname",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:187",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "ownername",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:187",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "definition",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:187",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "internal/prebuiltconfigs/tools/postgres.yaml:187"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:186-188"
+    ],
+    "rationale": "The tool `list_views` retrieves view information from the user's database, including schema, view name, owner, and definition. The data is read from the user's account, so the scope is `user_account` and control is `service`. No outbound calls or code execution is involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "long_running_transactions": {
+    "result_contents": [
+     {
+      "part": "process_id",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "database_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "user_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "application_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "client_address",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "state",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "connection_age",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "transaction_age",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "query_age",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "last_activity_age",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "wait_event_type",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "wait_event",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "query_string",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "internal/prebuiltconfigs/tools/postgres.yaml:57"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:56-59"
+    ],
+    "rationale": "The tool `long_running_transactions` identifies transactions exceeding a specified time limit, returning details like process ID, database name, user name, and query string. The data is read from the user's database, so the scope is `user_account` and control is `service`. No outbound calls or code execution is involved. [received records: process_id, database_name, user_name, application_name, client_address, state, connection_age, transaction_age, query_ag taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "replication_stats": {
+    "result_contents": [
+     {
+      "part": "process_id",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "user_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "application_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "backend_xmin",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "client_ip_address",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "connection_state",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "sync_state",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "sent_lag",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "write_lag",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "flush_lag",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "replay_lag",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "total_lag",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "internal/prebuiltconfigs/tools/postgres.yaml:69"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:68-71"
+    ],
+    "rationale": "The tool `replication_stats` lists replication details such as process ID, user name, application name, and lag sizes. The data is read from the user's database, so the scope is `user_account` and control is `service`. No outbound calls or code execution is involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   }
+  },
+  "value_conditions": [],
+  "notes": []
+ },
+ "methods": {},
+ "statement_calls": [],
+ "final": {
+  "tools": {
+   "database_overview": {
+    "result_contents": [
+     {
+      "part": "Fetches the current state of the PostgreSQL server, returning the version, whether it's a replica, uptime duration, maximum connection limit, number of current connections, number of active connections, and the percentage of connections in use.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:196-198",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:196-198"
+    ],
+    "rationale": "The `database_overview` tool fetches the current state of the PostgreSQL server, including version, replica status, uptime, connection limits, and usage. This information is returned as a literal string composed by the service, with no outbound calls or supplied code execution involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "execute_sql": {
+    "result_contents": [
+     {
+      "part": "Use this tool to execute a single SQL statement.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:26-29",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "The SQL statement to execute",
+      "destination_class": "configured_own_service",
+      "host_or_config": "postgresql-source",
+      "at": "internal/prebuiltconfigs/tools/postgres.yaml:26-29"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:26-29"
+    ],
+    "rationale": "The `execute_sql` tool executes a single SQL statement on the configured PostgreSQL service. The SQL statement is sent to the service, which is configured as `postgresql-source`. The result is a literal description of the tool's purpose.",
+    "kind": "WRITE",
+    "destination_args": [
+     "sql"
+    ],
+    "value_args": [
+     "sql"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "get_column_cardinality": {
+    "result_contents": [
+     {
+      "part": "Estimates the number of unique values (cardinality) quickly for one or all columns in a specific PostgreSQL table by using the database's internal statistics, returning the results in descending order of estimated cardinality.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:221-223",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:221-223"
+    ],
+    "rationale": "The `get_column_cardinality` tool estimates the cardinality of columns in a PostgreSQL table using internal statistics. The result is a literal description of the tool's function, with no outbound calls or supplied code execution involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "get_query_plan": {
+    "result_contents": [
+     {
+      "part": "Generate a PostgreSQL EXPLAIN plan in JSON format for a single SQL statement\u2014without executing it. This returns the optimizer's estimated plan, costs, and rows (no ANALYZE, no extra options).",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:173-176",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "The SQL statement for which to generate the plan",
+      "destination_class": "configured_own_service",
+      "host_or_config": "postgresql-source",
+      "at": "internal/prebuiltconfigs/tools/postgres.yaml:173-176"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:173-176"
+    ],
+    "rationale": "The `get_query_plan` tool generates an EXPLAIN plan for a SQL statement without executing it. The SQL statement is sent to the configured PostgreSQL service (`postgresql-source`) to generate the plan. The result is a literal description of the tool's purpose.",
+    "kind": "WRITE",
+    "destination_args": [
+     "query"
+    ],
+    "value_args": [
+     "query"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_active_queries": {
+    "result_contents": [
+     {
+      "part": "List the top N (default 50) currently running queries (state='active') from pg_stat_activity, ordered by longest-running first. Returns pid, user, database, application_name, client_addr, state, wait_event_type/wait_event, backend/xact/query start times, computed query_duration, and the SQL text.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:38-41",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:38-41"
+    ],
+    "rationale": "The `list_active_queries` tool lists currently running queries from `pg_stat_activity`. The result is a literal description of the tool's function, with no outbound calls or supplied code execution involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_autovacuum_configurations": {
+    "result_contents": [
+     {
+      "part": "List PostgreSQL autovacuum-related configurations (name and current setting) from pg_settings.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:74-82",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Query to list autovacuum configurations",
+      "destination_class": "configured_own_service",
+      "host_or_config": "postgresql-source",
+      "at": "internal/prebuiltconfigs/tools/postgres.yaml:74-82"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:74-82"
+    ],
+    "rationale": "The `list_autovacuum_configurations` tool queries the PostgreSQL service for autovacuum-related configurations. The query is sent to the configured service (`postgresql-source`). The result is a literal description of the tool's purpose.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_available_extensions": {
+    "result_contents": [
+     {
+      "part": "Discover all PostgreSQL extensions available for installation on this server, returning name, default_version, and description.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:44-47",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:44-47"
+    ],
+    "rationale": "The `list_available_extensions` tool lists all PostgreSQL extensions available for installation. The result is a literal description of the tool's function, with no outbound calls or supplied code execution involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_database_stats": {
+    "result_contents": [
+     {
+      "part": "Lists the key performance and activity statistics for each PostgreSQL database in the instance, offering insights into cache efficiency, transaction throughput, row-level activity, temporary file usage, and contention.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:246-248",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:246-248"
+    ],
+    "rationale": "The `list_database_stats` tool provides performance and activity statistics for PostgreSQL databases. The result is a literal description of the tool's function, with no outbound calls or supplied code execution involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_indexes": {
+    "result_contents": [
+     {
+      "part": "schema name, table name, index name, index type (access method), a boolean indicating if it's a unique index, a boolean indicating if it's for a primary key, the index definition, index size in bytes, the number of index scans, the number of index tuples read, the number of table tuples fetched via index scans, and a boolean indicating if the index has been used at least once.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:206-208",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:206-208"
+    ],
+    "rationale": "The tool `list_indexes` reads index details from the user's database, including schema name, table name, index name, index type, uniqueness, primary key status, definition, size, usage statistics, and usage status. This information is read from the database and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_installed_extensions": {
+    "result_contents": [
+     {
+      "part": "name, version, schema, owner, and description of installed PostgreSQL extensions.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:50-52",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:50-52"
+    ],
+    "rationale": "The tool `list_installed_extensions` retrieves details about installed PostgreSQL extensions, including their name, version, schema, owner, and description. This information is read from the user's database and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_invalid_indexes": {
+    "result_contents": [
+     {
+      "part": "schema name, index name, table name, index size, readiness, validity, and index definition of invalid indexes.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:154-156",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:154-156"
+    ],
+    "rationale": "The tool `list_invalid_indexes` lists invalid indexes in the user's database, providing details such as schema name, index name, table name, index size, readiness, validity, and index definition. This information is read from the database and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_locks": {
+    "result_contents": [
+     {
+      "part": "process ID, user, query text, and an aggregated list of all transactions and specific locks (relation, mode, grant status) associated with each process.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:62-64",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:62-64"
+    ],
+    "rationale": "The tool `list_locks` identifies locks held by active processes in the user's database, showing process ID, user, query text, and details of transactions and locks. This information is read from the database and controlled by the service. [received records: process ID, user, query text, and an aggregated list of all transactions and specific locks (relation, mode, grant statu taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "list_memory_configurations": {
+    "result_contents": [
+     {
+      "part": "name and current setting of memory-related configurations from pg_settings.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:85-88",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:85-88"
+    ],
+    "rationale": "The tool `list_memory_configurations` lists memory-related configurations from the user's database, including the name and current setting. This information is read from the database and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_pg_settings": {
+    "result_contents": [
+     {
+      "part": "parameter name, current setting, unit, short description, source of the current setting, and whether a restart is required when the parameter value is changed.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:241-244",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:241-244"
+    ],
+    "rationale": "The tool `list_pg_settings` retrieves configuration parameters for the PostgreSQL server, including parameter name, current setting, unit, description, source, and restart requirement. This information is read from the database and controlled by the service. [received records: parameter name, current setting, unit, short description, source of the current setting, and whether a restart is requir taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "list_publication_tables": {
+    "result_contents": [
+     {
+      "part": "publication name, schema name, table name, and definition details indicating if it publishes all tables, whether it replicates inserts, updates, deletes, or truncates, and the publication owner.",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:231-234",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:231-234"
+    ],
+    "rationale": "The tool `list_publication_tables` lists publication tables in the user's database, providing details such as publication name, schema name, table name, and replication details. This information is read from the database and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_query_stats": {
+    "result_contents": [
+     {
+      "part": "database name, query text, execution count, timing metrics (total, min, max, mean), rows affected, and buffer cache I/O statistics (hits and reads).",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:216-218",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:216-218"
+    ],
+    "rationale": "The tool `list_query_stats` lists performance statistics for executed queries in the user's database, including database name, query text, execution count, timing metrics, rows affected, and I/O statistics. This information is read from the database and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_replication_slots": {
+    "result_contents": [
+     {
+      "part": "slot_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:140",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "slot_type",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:141",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "plugin",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:142",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "database",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:143",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "temporary",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:144",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "active",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:145",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "restart_lsn",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:146",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "confirmed_flush_lsn",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:147",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "xmin",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:148",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "catalog_xmin",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:149",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "retained_wal",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:150",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:133-151"
+    ],
+    "rationale": "The `list_replication_slots` tool retrieves details about PostgreSQL replication slots from the user's account. The result includes slot names, types, and other attributes, all of which are read from the database and controlled by the service. The tool does not make any outbound calls or execute supplied code.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_roles": {
+    "result_contents": [
+     {
+      "part": "role_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "Object ID",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "maximum number of concurrent connections",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "superuser status",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "privilege inheritance",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "ability to create roles",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "ability to create databases",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "ability to log in",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "replication privilege",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "ability to bypass row-level security",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "password expiration timestamp",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "direct members",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "roles/groups membership",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:253",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:251-253"
+    ],
+    "rationale": "The `list_roles` tool retrieves information about user-created roles in the PostgreSQL database. The result includes role names, permissions, and other attributes, all of which are read from the database and controlled by the service. The tool does not make any outbound calls or execute supplied code.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_schemas": {
+    "result_contents": [
+     {
+      "part": "schema name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:193",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "schema owner",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:193",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "grants",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:193",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "number of functions",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:193",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "number of tables",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:193",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "number of views",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:193",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:191-193"
+    ],
+    "rationale": "The `list_schemas` tool retrieves information about schemas in the PostgreSQL database. The result includes schema names, owners, grants, and counts of functions, tables, and views, all of which are read from the database and controlled by the service. The tool does not make any outbound calls or execute supplied code.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_sequences": {
+    "result_contents": [
+     {
+      "part": "sequence name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "schema name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "sequence owner",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "data type",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "starting value",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "minimum value",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "maximum value",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "increment value",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "last value",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:213",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:211-213"
+    ],
+    "rationale": "The `list_sequences` tool retrieves information about sequences in the PostgreSQL database. The result includes sequence names, schema names, owners, data types, and other attributes, all of which are read from the database and controlled by the service. The tool does not make any outbound calls or execute supplied code.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_stored_procedure": {
+    "result_contents": [
+     {
+      "part": "schema name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:258",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "procedure name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:258",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "procedure owner",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:258",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "language",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:258",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "definition",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:258",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "description",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:258",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:256-258"
+    ],
+    "rationale": "The `list_stored_procedure` tool retrieves metadata about stored procedures in the PostgreSQL database. The result includes schema names, procedure names, owners, languages, definitions, and descriptions, all of which are read from the database and controlled by the service. The tool does not make any outbound calls or execute supplied code.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_table_stats": {
+    "result_contents": [
+     {
+      "part": "schema name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "table name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "table size in bytes",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "number of sequential scans",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "number of index scans",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "idx_scan_ratio_percent",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "number of live rows",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "number of dead rows",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "dead_row_ratio_percent",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "total number of rows inserted",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "total number of rows updated",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "total number of rows deleted",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "last_vacuum",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "last_autovacuum",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "last_autoanalyze",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:228",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:226-228"
+    ],
+    "rationale": "The `list_table_stats` tool retrieves statistics about user tables in the PostgreSQL database. The result includes schema names, table names, sizes, scan counts, row counts, and maintenance timestamps, all of which are read from the database and controlled by the service. The tool does not make any outbound calls or execute supplied code.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_tables": {
+    "result_contents": [
+     {
+      "part": "object type",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:34",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "columns",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:34",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "constraints",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:34",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "indexes",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:34",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "triggers",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:34",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "owner",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:34",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "comment",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:34",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:31-34"
+    ],
+    "rationale": "The `list_tables` tool retrieves detailed schema information about user-created tables in the PostgreSQL database. The result includes object types, columns, constraints, indexes, triggers, owners, and comments, all of which are read from the database and controlled by the service. The tool does not make any outbound calls or execute supplied code. [received records: object type, columns, constraints, indexes, triggers, owner, comment taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "list_tablespaces": {
+    "result_contents": [
+     {
+      "part": "tablespace name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:238",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "owner name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:238",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "size in bytes",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:238",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "internal object ID",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:238",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "access control list",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:238",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "tablespace options",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:238",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:236-238"
+    ],
+    "rationale": "The `list_tablespaces` tool retrieves information about tablespaces in the PostgreSQL database. The result includes tablespace names, owner names, sizes, object IDs, access control lists, and options, all of which are read from the database and controlled by the service. The tool does not make any outbound calls or execute supplied code.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_top_bloated_tables": {
+    "result_contents": [
+     {
+      "part": "schema_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:115",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "relation_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:116",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "live_tuples",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:117",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "dead_tuples",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:118",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "dead_tuple_percentage",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:119",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "last_vacuum",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:120",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "last_autovacuum",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:121",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "last_analyze",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:122",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "last_autoanalyze",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:123",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "internal/prebuiltconfigs/tools/postgres.yaml:114-126"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:108-126"
+    ],
+    "rationale": "The tool `list_top_bloated_tables` executes a SQL query to list tables by dead-tuple count, returning schema, table, live/dead tuples, percentage, and last vacuum/analyze times. The results are read from the user's database, hence the scope is `user_account` and control is `service`. No outbound calls or code execution is involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_triggers": {
+    "result_contents": [
+     {
+      "part": "trigger_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "schema_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "table_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "enabled",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "timing",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "events",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "activation",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "handler_function",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "definition",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:202",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "internal/prebuiltconfigs/tools/postgres.yaml:202"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:201-203"
+    ],
+    "rationale": "The tool `list_triggers` retrieves information about triggers from the user's database, including trigger name, schema, table, and other attributes. The data is read from the user's account, so the scope is `user_account` and control is `service`. No outbound calls or code execution is involved. [received records: trigger_name, schema_name, table_name, enabled, timing, events, activation, handler_function, definition taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "list_views": {
+    "result_contents": [
+     {
+      "part": "schemaname",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:187",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "viewname",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:187",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "ownername",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:187",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "definition",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:187",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "internal/prebuiltconfigs/tools/postgres.yaml:187"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:186-188"
+    ],
+    "rationale": "The tool `list_views` retrieves view information from the user's database, including schema, view name, owner, and definition. The data is read from the user's account, so the scope is `user_account` and control is `service`. No outbound calls or code execution is involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "long_running_transactions": {
+    "result_contents": [
+     {
+      "part": "process_id",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "database_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "user_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "application_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "client_address",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "state",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "connection_age",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "transaction_age",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "query_age",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "last_activity_age",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "wait_event_type",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "wait_event",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "part": "query_string",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:57",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "internal/prebuiltconfigs/tools/postgres.yaml:57"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:56-59"
+    ],
+    "rationale": "The tool `long_running_transactions` identifies transactions exceeding a specified time limit, returning details like process ID, database name, user name, and query string. The data is read from the user's database, so the scope is `user_account` and control is `service`. No outbound calls or code execution is involved. [received records: process_id, database_name, user_name, application_name, client_address, state, connection_age, transaction_age, query_ag taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "replication_stats": {
+    "result_contents": [
+     {
+      "part": "process_id",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "user_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "application_name",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "backend_xmin",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "client_ip_address",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "connection_state",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "sync_state",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "sent_lag",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "write_lag",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "flush_lag",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "replay_lag",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "total_lag",
+      "produced_at": "internal/prebuiltconfigs/tools/postgres.yaml:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "internal/prebuiltconfigs/tools/postgres.yaml:69"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "internal/prebuiltconfigs/tools/postgres.yaml:68-71"
+    ],
+    "rationale": "The tool `replication_stats` lists replication details such as process ID, user name, application name, and lag sizes. The data is read from the user's database, so the scope is `user_account` and control is `service`. No outbound calls or code execution is involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   }
+  },
+  "value_conditions": [],
+  "notes": []
+ },
+ "hashes": {
+  "rubric_sha": "191e69d289880d38",
+  "schema_sha": "0f8d7d93eb07c885",
+  "source_sha": "b21d8440b02c139a"
+ },
+ "run": {
+  "model": "gpt-4o-2024-08-06",
+  "temperature": 0.0,
+  "seed": 0,
+  "files": [
+   "docs/en/integrations/snowflake/samples/runme.py",
+   "internal/prebuiltconfigs/tools/postgres.yaml",
+   "internal/prebuiltconfigs/tools/alloydb-omni.yaml",
+   "internal/prebuiltconfigs/tools/alloydb-postgres.yaml",
+   "internal/prebuiltconfigs/tools/cloud-sql-postgres.yaml",
+   "docs/en/integrations/postgres/prebuilt-configs/postgresql.md",
+   "docs/en/integrations/postgres/prebuilt-configs/alloydb-omni.md",
+   "docs/en/integrations/cloud-sql-pg/prebuilt-configs/cloud-sql-for-postgresql.md",
+   "docs/en/integrations/alloydb/prebuilt-configs/alloydb-postgres.md",
+   "tests/common.go",
+   "tests/tool.go",
+   "docs/CLOUDSQLPG_README.md",
+   "evals/evalsets/cloud-sql-postgres.json",
+   "CHANGELOG.md",
+   "docs/ALLOYDBPG_README.md",
+   "internal/prebuiltconfigs/tools/mysql.yaml"
+  ]
+ }
+}

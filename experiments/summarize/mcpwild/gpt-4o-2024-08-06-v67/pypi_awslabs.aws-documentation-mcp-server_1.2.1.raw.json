@@ -1,0 +1,1338 @@
+{
+ "batch": {
+  "tools": {
+   "read_documentation": {
+    "result_contents": [
+     {
+      "part": "Markdown content of the AWS documentation",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:195",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "url_str, max_length, start_index, SESSION_UUID",
+      "destination_class": "argument_named_destination",
+      "host_or_config": "url_str",
+      "at": "aws_documentation_mcp_server/server_aws.py:195"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": true,
+     "argument": "url",
+     "at": "aws_documentation_mcp_server/server_aws.py:195"
+    },
+    "evidence": [
+     "aws_documentation_mcp_server/server_aws.py:118-195"
+    ],
+    "rationale": "The `read_documentation` tool fetches content from a URL provided by the user, which must be from the `docs.aws.amazon.com` domain and end with `.html`. The content is converted to markdown format and returned. The tool makes an outbound call to the URL specified by the `url` argument, making it a `WRITE` operation with the destination argument being `url`. The result is the markdown content of the fetched page, which is public and controlled by an outside party.",
+    "kind": "WRITE",
+    "destination_args": [
+     "url"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "read_sections": {
+    "result_contents": [
+     {
+      "part": "Filtered markdown content containing only the requested sections",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:275",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "url_str, section_titles, SESSION_UUID",
+      "destination_class": "argument_named_destination",
+      "host_or_config": "url_str",
+      "at": "aws_documentation_mcp_server/server_aws.py:275"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": true,
+     "argument": "url",
+     "at": "aws_documentation_mcp_server/server_aws.py:275"
+    },
+    "evidence": [
+     "aws_documentation_mcp_server/server_aws.py:198-275"
+    ],
+    "rationale": "The `read_sections` tool extracts specific sections from a documentation page specified by the `url` argument. It makes an outbound call to the URL, which must end with `.html`, and returns the filtered markdown content of the requested sections. The operation is a `WRITE` because it sends data to a user-specified URL, with `url` as the destination argument.",
+    "kind": "WRITE",
+    "destination_args": [
+     "url"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "search_table": {
+    "result_contents": [
+     {
+      "part": "SearchTableResponse with matching rows grouped by table",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:380",
+      "origin": "computed",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "url_str, section_title, query, max_rows, SESSION_UUID",
+      "destination_class": "argument_named_destination",
+      "host_or_config": "url_str",
+      "at": "aws_documentation_mcp_server/server_aws.py:380"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": true,
+     "argument": "url",
+     "at": "aws_documentation_mcp_server/server_aws.py:380"
+    },
+    "evidence": [
+     "aws_documentation_mcp_server/server_aws.py:278-380"
+    ],
+    "rationale": "The `search_table` tool searches for specific rows in a table on a documentation page specified by the `url` argument. It makes an outbound call to the URL, which must be from the `docs.aws.amazon.com` domain and end with `.html`. The result is a `SearchTableResponse` with matching rows, making it a `WRITE` operation with `url` as the destination argument.",
+    "kind": "WRITE",
+    "destination_args": [
+     "url"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": []
+   },
+   "search_documentation": {
+    "result_contents": [
+     {
+      "part": "List of search results with URLs, titles, query ID, context snippets, and facets for filtering",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:645",
+      "origin": "computed",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "search_phrase, search_intent, limit, product_types, guide_types, SESSION_UUID",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "SEARCH_API_URL",
+      "at": "aws_documentation_mcp_server/server_aws.py:491"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "aws_documentation_mcp_server/server_aws.py:383-645"
+    ],
+    "rationale": "The `search_documentation` tool uses the AWS Documentation Search API to find documentation pages matching a search phrase. It sends a POST request to a fixed API URL (`SEARCH_API_URL`) with the search parameters. The result is a list of search results, making it a `WRITE` operation with no destination arguments since the host is fixed in the code.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "search_phrase",
+     "search_intent",
+     "limit",
+     "product_types",
+     "guide_types"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": []
+   },
+   "recommend": {
+    "result_contents": [
+     {
+      "part": "List of recommended pages with URLs, titles, and context",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:736",
+      "origin": "computed",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "url_str, SESSION_UUID",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "RECOMMENDATIONS_API_URL",
+      "at": "aws_documentation_mcp_server/server_aws.py:704"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "aws_documentation_mcp_server/server_aws.py:648-736"
+    ],
+    "rationale": "The `recommend` tool fetches content recommendations for a documentation page specified by the `url` argument. It sends a GET request to a fixed API URL (`RECOMMENDATIONS_API_URL`) with the URL and session ID as parameters. The result is a list of recommended pages, making it a `WRITE` operation with no destination arguments since the host is fixed in the code.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "url"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": []
+   }
+  },
+  "value_conditions": [],
+  "notes": []
+ },
+ "methods": {},
+ "statement_calls": [
+  {
+   "subject": "handler lines aws_documentation_mcp_server/server_aws.py:118-195",
+   "attempt": 0,
+   "ids": [
+    "aws_documentation_mcp_server/server_aws.py:124#0",
+    "aws_documentation_mcp_server/server_aws.py:130#0",
+    "aws_documentation_mcp_server/server_aws.py:175#0",
+    "aws_documentation_mcp_server/server_aws.py:176#0",
+    "aws_documentation_mcp_server/server_aws.py:186#0",
+    "aws_documentation_mcp_server/server_aws.py:189#0",
+    "aws_documentation_mcp_server/server_aws.py:189#1",
+    "aws_documentation_mcp_server/server_aws.py:192#0",
+    "aws_documentation_mcp_server/server_aws.py:192#1",
+    "aws_documentation_mcp_server/server_aws.py:195#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"aws_documentation_mcp_server/server_aws.py:124#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:130#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:175#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:176#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:186#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:189#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:189#1\",\"part\":\"url_str\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"aws_documentation_mcp_server/server_aws.py:192#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:192#1\",\"part\":\"url_str\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"aws_documentation_mcp_server/server_aws.py:195#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2647,
+    "output_tokens": 460,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines aws_documentation_mcp_server/server_aws.py:198-275",
+   "attempt": 0,
+   "ids": [
+    "aws_documentation_mcp_server/server_aws.py:262#0",
+    "aws_documentation_mcp_server/server_aws.py:265#0",
+    "aws_documentation_mcp_server/server_aws.py:265#1",
+    "aws_documentation_mcp_server/server_aws.py:268#0",
+    "aws_documentation_mcp_server/server_aws.py:268#1",
+    "aws_documentation_mcp_server/server_aws.py:275#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"aws_documentation_mcp_server/server_aws.py:262#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:265#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:265#1\",\"part\":\"url_str\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"aws_documentation_mcp_server/server_aws.py:268#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:268#1\",\"part\":\"url_str\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"aws_documentation_mcp_server/server_aws.py:275#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2543,
+    "output_tokens": 280,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines aws_documentation_mcp_server/server_aws.py:278-380",
+   "attempt": 0,
+   "ids": [
+    "aws_documentation_mcp_server/server_aws.py:291#0",
+    "aws_documentation_mcp_server/server_aws.py:358#0",
+    "aws_documentation_mcp_server/server_aws.py:367#0",
+    "aws_documentation_mcp_server/server_aws.py:370#0",
+    "aws_documentation_mcp_server/server_aws.py:370#1",
+    "aws_documentation_mcp_server/server_aws.py:373#0",
+    "aws_documentation_mcp_server/server_aws.py:373#1",
+    "aws_documentation_mcp_server/server_aws.py:380#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"aws_documentation_mcp_server/server_aws.py:291#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:358#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:367#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:370#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:370#1\",\"part\":\"url_str\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"aws_documentation_mcp_server/server_aws.py:373#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:373#1\",\"part\":\"url_str\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"aws_documentation_mcp_server/server_aws.py:380#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2953,
+    "output_tokens": 370,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines aws_documentation_mcp_server/server_aws.py:383-532",
+   "attempt": 0,
+   "ids": [
+    "aws_documentation_mcp_server/server_aws.py:393#0",
+    "aws_documentation_mcp_server/server_aws.py:450#0",
+    "aws_documentation_mcp_server/server_aws.py:457#0",
+    "aws_documentation_mcp_server/server_aws.py:457#1",
+    "aws_documentation_mcp_server/server_aws.py:469#0",
+    "aws_documentation_mcp_server/server_aws.py:474#0",
+    "aws_documentation_mcp_server/server_aws.py:479#0",
+    "aws_documentation_mcp_server/server_aws.py:483#0",
+    "aws_documentation_mcp_server/server_aws.py:483#1",
+    "aws_documentation_mcp_server/server_aws.py:483#2",
+    "aws_documentation_mcp_server/server_aws.py:501#0",
+    "aws_documentation_mcp_server/server_aws.py:501#1",
+    "aws_documentation_mcp_server/server_aws.py:504#0",
+    "aws_documentation_mcp_server/server_aws.py:511#0",
+    "aws_documentation_mcp_server/server_aws.py:511#1",
+    "aws_documentation_mcp_server/server_aws.py:514#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"aws_documentation_mcp_server/server_aws.py:393#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:450#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:457#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:457#1\",\"part\":\"search_phrase\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"aws_documentation_mcp_server/server_aws.py:469#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:474#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:479#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:483#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:483#1\",\"part\":\"SEARCH_API_URL\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:483#2\",\"part\":\"SESSION_UUID\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:501#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:501#1\",\"part\":\"str(e)\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:504#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:511#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:511#1\",\"part\":\"response.status_code\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:514#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 3703,
+    "output_tokens": 733,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines aws_documentation_mcp_server/server_aws.py:533-645",
+   "attempt": 0,
+   "ids": [
+    "aws_documentation_mcp_server/server_aws.py:544#0",
+    "aws_documentation_mcp_server/server_aws.py:544#1",
+    "aws_documentation_mcp_server/server_aws.py:547#0",
+    "aws_documentation_mcp_server/server_aws.py:576#0",
+    "aws_documentation_mcp_server/server_aws.py:576#1",
+    "aws_documentation_mcp_server/server_aws.py:576#2",
+    "aws_documentation_mcp_server/server_aws.py:576#3",
+    "aws_documentation_mcp_server/server_aws.py:577#0",
+    "aws_documentation_mcp_server/server_aws.py:577#1",
+    "aws_documentation_mcp_server/server_aws.py:582#0",
+    "aws_documentation_mcp_server/server_aws.py:582#1",
+    "aws_documentation_mcp_server/server_aws.py:583#0",
+    "aws_documentation_mcp_server/server_aws.py:583#1",
+    "aws_documentation_mcp_server/server_aws.py:586#0",
+    "aws_documentation_mcp_server/server_aws.py:586#1",
+    "aws_documentation_mcp_server/server_aws.py:589#0",
+    "aws_documentation_mcp_server/server_aws.py:589#1",
+    "aws_documentation_mcp_server/server_aws.py:589#2",
+    "aws_documentation_mcp_server/server_aws.py:589#3",
+    "aws_documentation_mcp_server/server_aws.py:593#0",
+    "aws_documentation_mcp_server/server_aws.py:594#0",
+    "aws_documentation_mcp_server/server_aws.py:594#1",
+    "aws_documentation_mcp_server/server_aws.py:596#0",
+    "aws_documentation_mcp_server/server_aws.py:596#1",
+    "aws_documentation_mcp_server/server_aws.py:596#2",
+    "aws_documentation_mcp_server/server_aws.py:596#3",
+    "aws_documentation_mcp_server/server_aws.py:598#0",
+    "aws_documentation_mcp_server/server_aws.py:598#1",
+    "aws_documentation_mcp_server/server_aws.py:598#2",
+    "aws_documentation_mcp_server/server_aws.py:602#0",
+    "aws_documentation_mcp_server/server_aws.py:602#1",
+    "aws_documentation_mcp_server/server_aws.py:602#2",
+    "aws_documentation_mcp_server/server_aws.py:602#3",
+    "aws_documentation_mcp_server/server_aws.py:602#4",
+    "aws_documentation_mcp_server/server_aws.py:615#0",
+    "aws_documentation_mcp_server/server_aws.py:615#1",
+    "aws_documentation_mcp_server/server_aws.py:615#2",
+    "aws_documentation_mcp_server/server_aws.py:615#3",
+    "aws_documentation_mcp_server/server_aws.py:634#0",
+    "aws_documentation_mcp_server/server_aws.py:636#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"aws_documentation_mcp_server/server_aws.py:544#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:544#1\",\"part\":\"str(e)\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:547#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:576#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:576#1\",\"part\":\"i + 1\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:576#2\",\"part\":\"title\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:576#3\",\"part\":\"url\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:577#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:577#1\",\"part\":\"list(metadata.keys())\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:582#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:582#1\",\"part\":\"sections_data\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:583#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:583#1\",\"part\":\"type(sections_data)\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:586#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:586#1\",\"part\":\"len(sections_data)\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:589#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:589#1\",\"part\":\"idx\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:589#2\",\"part\":\"section_data\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:589#3\",\"part\":\"type(section_data)\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:593#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:594#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:594#1\",\"part\":\"section_data\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:596#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:596#1\",\"part\":\"title\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:596#2\",\"part\":\"url\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:596#3\",\"part\":\"e\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:598#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:598#1\",\"part\":\"title\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:598#2\",\"part\":\"url\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:602#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:602#1\",\"part\":\"len(sections)\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:602#2\",\"part\":\"title\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:602#3\",\"part\":\"url\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:602#4\",\"part\":\"sections\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:615#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:615#1\",\"part\":\"len(recommended_sections)\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:615#2\",\"part\":\"title\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:615#3\",\"part\":\"url\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:634#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:636#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 4179,
+    "output_tokens": 1841,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines aws_documentation_mcp_server/server_aws.py:533-645",
+   "attempt": 0,
+   "ids": [
+    "aws_documentation_mcp_server/server_aws.py:636#1",
+    "aws_documentation_mcp_server/server_aws.py:636#2",
+    "aws_documentation_mcp_server/server_aws.py:637#0",
+    "aws_documentation_mcp_server/server_aws.py:637#1",
+    "aws_documentation_mcp_server/server_aws.py:645#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"aws_documentation_mcp_server/server_aws.py:636#1\",\"part\":\"len(results)\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:636#2\",\"part\":\"search_phrase\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"aws_documentation_mcp_server/server_aws.py:637#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:637#1\",\"part\":\"query_id\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:645#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 772,
+    "output_tokens": 232,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1920
+   }
+  },
+  {
+   "subject": "handler lines aws_documentation_mcp_server/server_aws.py:648-736",
+   "attempt": 0,
+   "ids": [
+    "aws_documentation_mcp_server/server_aws.py:697#0",
+    "aws_documentation_mcp_server/server_aws.py:697#1",
+    "aws_documentation_mcp_server/server_aws.py:699#0",
+    "aws_documentation_mcp_server/server_aws.py:699#1",
+    "aws_documentation_mcp_server/server_aws.py:699#2",
+    "aws_documentation_mcp_server/server_aws.py:699#3",
+    "aws_documentation_mcp_server/server_aws.py:709#0",
+    "aws_documentation_mcp_server/server_aws.py:709#1",
+    "aws_documentation_mcp_server/server_aws.py:712#0",
+    "aws_documentation_mcp_server/server_aws.py:715#0",
+    "aws_documentation_mcp_server/server_aws.py:715#1",
+    "aws_documentation_mcp_server/server_aws.py:718#0",
+    "aws_documentation_mcp_server/server_aws.py:729#0",
+    "aws_documentation_mcp_server/server_aws.py:729#1",
+    "aws_documentation_mcp_server/server_aws.py:732#0",
+    "aws_documentation_mcp_server/server_aws.py:735#0",
+    "aws_documentation_mcp_server/server_aws.py:735#1",
+    "aws_documentation_mcp_server/server_aws.py:735#2",
+    "aws_documentation_mcp_server/server_aws.py:736#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"aws_documentation_mcp_server/server_aws.py:697#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:697#1\",\"part\":\"url_str\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"aws_documentation_mcp_server/server_aws.py:699#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:699#1\",\"part\":\"RECOMMENDATIONS_API_URL\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:699#2\",\"part\":\"url_str\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"aws_documentation_mcp_server/server_aws.py:699#3\",\"part\":\"SESSION_UUID\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:709#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:709#1\",\"part\":\"str(e)\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:712#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:715#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:715#1\",\"part\":\"response.status_code\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:718#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:729#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:729#1\",\"part\":\"str(e)\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:732#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:735#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:735#1\",\"part\":\"len(results)\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"aws_documentation_mcp_server/server_aws.py:735#2\",\"part\":\"url_str\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"aws_documentation_mcp_server/server_aws.py:736#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 3007,
+    "output_tokens": 875,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  }
+ ],
+ "final": {
+  "tools": {
+   "read_documentation": {
+    "result_contents": [
+     {
+      "part": "Markdown content of the AWS documentation",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:195",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:189#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:189",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:189#1",
+      "part": "url_str",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:189",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:192#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:192",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:192#1",
+      "part": "url_str",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:192",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "url_str, max_length, start_index, SESSION_UUID",
+      "destination_class": "argument_named_destination",
+      "host_or_config": "url_str",
+      "at": "aws_documentation_mcp_server/server_aws.py:195"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": true,
+     "argument": "url",
+     "at": "aws_documentation_mcp_server/server_aws.py:195"
+    },
+    "evidence": [
+     "aws_documentation_mcp_server/server_aws.py:118-195",
+     "aws_documentation_mcp_server/server_aws.py:119-133"
+    ],
+    "rationale": "The `read_documentation` tool fetches content from a URL provided by the user, which must be from the `docs.aws.amazon.com` domain and end with `.html`. The content is converted to markdown format and returned. The tool makes an outbound call to the URL specified by the `url` argument, making it a `WRITE` operation with the destination argument being `url`. The result is the markdown content of the fetched page, which is public and controlled by an outside party.",
+    "kind": "WRITE",
+    "destination_args": [
+     "url"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "read_sections": {
+    "result_contents": [
+     {
+      "part": "Filtered markdown content containing only the requested sections",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:275",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:265#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:265",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:265#1",
+      "part": "url_str",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:265",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:268#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:268",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:268#1",
+      "part": "url_str",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:268",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "url_str, section_titles, SESSION_UUID",
+      "destination_class": "argument_named_destination",
+      "host_or_config": "url_str",
+      "at": "aws_documentation_mcp_server/server_aws.py:275"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": true,
+     "argument": "url",
+     "at": "aws_documentation_mcp_server/server_aws.py:275"
+    },
+    "evidence": [
+     "aws_documentation_mcp_server/server_aws.py:198-275",
+     "aws_documentation_mcp_server/server_aws.py:199-205"
+    ],
+    "rationale": "The `read_sections` tool extracts specific sections from a documentation page specified by the `url` argument. It makes an outbound call to the URL, which must end with `.html`, and returns the filtered markdown content of the requested sections. The operation is a `WRITE` because it sends data to a user-specified URL, with `url` as the destination argument.",
+    "kind": "WRITE",
+    "destination_args": [
+     "url"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "search_table": {
+    "result_contents": [
+     {
+      "part": "SearchTableResponse with matching rows grouped by table",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:380",
+      "origin": "computed",
+      "scope": "public",
+      "control": "service"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:370#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:370",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:370#1",
+      "part": "url_str",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:370",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:373#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:373",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:373#1",
+      "part": "url_str",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:373",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "url_str, section_title, query, max_rows, SESSION_UUID",
+      "destination_class": "argument_named_destination",
+      "host_or_config": "url_str",
+      "at": "aws_documentation_mcp_server/server_aws.py:380"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": true,
+     "argument": "url",
+     "at": "aws_documentation_mcp_server/server_aws.py:380"
+    },
+    "evidence": [
+     "aws_documentation_mcp_server/server_aws.py:278-380",
+     "aws_documentation_mcp_server/server_aws.py:279-295"
+    ],
+    "rationale": "The `search_table` tool searches for specific rows in a table on a documentation page specified by the `url` argument. It makes an outbound call to the URL, which must be from the `docs.aws.amazon.com` domain and end with `.html`. The result is a `SearchTableResponse` with matching rows, making it a `WRITE` operation with `url` as the destination argument.",
+    "kind": "WRITE",
+    "destination_args": [
+     "url"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "search_documentation": {
+    "result_contents": [
+     {
+      "part": "List of search results with URLs, titles, query ID, context snippets, and facets for filtering",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:645",
+      "origin": "computed",
+      "scope": "public",
+      "control": "service"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:457#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:457",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:457#1",
+      "part": "search_phrase",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:457",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:483#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:483",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:483#1",
+      "part": "SEARCH_API_URL",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:483",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:483#2",
+      "part": "SESSION_UUID",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:483",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:501#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:501",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:501#1",
+      "part": "str(e)",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:501",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:511#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:511",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:511#1",
+      "part": "response.status_code",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:511",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:544#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:544",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:544#1",
+      "part": "str(e)",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:544",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:576#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:576",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:576#1",
+      "part": "i + 1",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:576",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:576#2",
+      "part": "title",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:576",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:576#3",
+      "part": "url",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:576",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:577#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:577",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:577#1",
+      "part": "list(metadata.keys())",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:577",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:582#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:582",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:582#1",
+      "part": "sections_data",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:582",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:583#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:583",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:583#1",
+      "part": "type(sections_data)",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:583",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:586#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:586",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:586#1",
+      "part": "len(sections_data)",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:586",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:589#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:589",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:589#1",
+      "part": "idx",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:589",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:589#2",
+      "part": "section_data",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:589",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:589#3",
+      "part": "type(section_data)",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:589",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:594#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:594",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:594#1",
+      "part": "section_data",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:594",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:596#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:596",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:596#1",
+      "part": "title",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:596",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:596#2",
+      "part": "url",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:596",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:596#3",
+      "part": "e",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:596",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:598#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:598",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:598#1",
+      "part": "title",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:598",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:598#2",
+      "part": "url",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:598",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:602#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:602",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:602#1",
+      "part": "len(sections)",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:602",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:602#2",
+      "part": "title",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:602",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:602#3",
+      "part": "url",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:602",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:602#4",
+      "part": "sections",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:602",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:615#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:615",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:615#1",
+      "part": "len(recommended_sections)",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:615",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:615#2",
+      "part": "title",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:615",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:615#3",
+      "part": "url",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:615",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:636#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:636",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:636#1",
+      "part": "len(results)",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:636",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:636#2",
+      "part": "search_phrase",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:636",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:637#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:637",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:637#1",
+      "part": "query_id",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:637",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "search_phrase, search_intent, limit, product_types, guide_types, SESSION_UUID",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "SEARCH_API_URL",
+      "at": "aws_documentation_mcp_server/server_aws.py:491"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "aws_documentation_mcp_server/server_aws.py:383-645",
+     "aws_documentation_mcp_server/server_aws.py:384-405"
+    ],
+    "rationale": "The `search_documentation` tool uses the AWS Documentation Search API to find documentation pages matching a search phrase. It sends a POST request to a fixed API URL (`SEARCH_API_URL`) with the search parameters. The result is a list of search results, making it a `WRITE` operation with no destination arguments since the host is fixed in the code.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "search_phrase",
+     "search_intent",
+     "limit",
+     "product_types",
+     "guide_types"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "recommend": {
+    "result_contents": [
+     {
+      "part": "List of recommended pages with URLs, titles, and context",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:736",
+      "origin": "computed",
+      "scope": "public",
+      "control": "service"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:697#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:697",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:697#1",
+      "part": "url_str",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:697",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:699#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:699",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:699#1",
+      "part": "RECOMMENDATIONS_API_URL",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:699",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:699#2",
+      "part": "url_str",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:699",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:699#3",
+      "part": "SESSION_UUID",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:699",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:709#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:709",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:709#1",
+      "part": "str(e)",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:709",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:715#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:715",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:715#1",
+      "part": "response.status_code",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:715",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:729#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:729",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:729#1",
+      "part": "str(e)",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:729",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:735#0",
+      "part": "fixed text of the template",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:735",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:735#1",
+      "part": "len(results)",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:735",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "aws_documentation_mcp_server/server_aws.py:735#2",
+      "part": "url_str",
+      "produced_at": "aws_documentation_mcp_server/server_aws.py:735",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "url_str, SESSION_UUID",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "RECOMMENDATIONS_API_URL",
+      "at": "aws_documentation_mcp_server/server_aws.py:704"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "aws_documentation_mcp_server/server_aws.py:648-736",
+     "aws_documentation_mcp_server/server_aws.py:649-652"
+    ],
+    "rationale": "The `recommend` tool fetches content recommendations for a documentation page specified by the `url` argument. It sends a GET request to a fixed API URL (`RECOMMENDATIONS_API_URL`) with the URL and session ID as parameters. The result is a list of recommended pages, making it a `WRITE` operation with no destination arguments since the host is fixed in the code. [destination_args completed: url]",
+    "kind": "WRITE",
+    "destination_args": [
+     "url"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   }
+  },
+  "value_conditions": [],
+  "notes": []
+ },
+ "hashes": {
+  "rubric_sha": "191e69d289880d38",
+  "schema_sha": "0f8d7d93eb07c885",
+  "source_sha": "370357b01075027f"
+ },
+ "run": {
+  "model": "gpt-4o-2024-08-06",
+  "temperature": 0.0,
+  "seed": 0,
+  "files": [
+   "aws_documentation_mcp_server/server_aws_cn.py",
+   "aws_documentation_mcp_server/server_aws.py",
+   "aws_documentation_mcp_server/server_utils.py",
+   "aws_documentation_mcp_server/util.py",
+   "aws_documentation_mcp_server/models.py"
+  ]
+ }
+}

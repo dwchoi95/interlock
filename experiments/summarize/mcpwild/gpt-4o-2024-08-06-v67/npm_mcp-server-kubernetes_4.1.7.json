@@ -1,0 +1,3885 @@
+{
+ "kind": "npm",
+ "notes": [],
+ "package": "mcp-server-kubernetes",
+ "source": ".cache/sources/.views/npm_mcp-server-kubernetes_4.1.7_aefabed4bb85",
+ "tools": {
+  "cleanup": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:206-208"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The `cleanup` tool calls `k8sManager.cleanup()` which does not return any result content. It does not make any outbound calls or run supplied code. It is a WRITE operation as it deletes resources.",
+   "result_contents": [],
+   "runs_supplied_code": {
+    "at": "dist/index.js:206-208",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "exec_in_pod": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "name",
+    "command"
+   ],
+   "evidence": [
+    "dist/tools/exec_in_pod.js:62-129",
+    "dist/tools/exec_in_pod.js:22-53"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "HOSTEXEC",
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/exec_in_pod.js:87",
+     "data": "kubectl exec ${name} -n ${namespace} -- ${command}",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    }
+   ],
+   "rationale": "The tool executes a command inside a Kubernetes pod using `kubectl exec`, which runs the command on the host machine. The result includes the command's output or error message, indicating the execution status. [unverified exec: the cited line calls no known host execution API]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "Command exited with code ${error.status}\\n--- stdout ---\\n${stdout}\\n--- stderr ---\\n${stderr}",
+     "produced_at": "dist/tools/exec_in_pod.js:121",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "Failed to execute command in pod: ${error.stderr || error.message}",
+     "produced_at": "dist/tools/exec_in_pod.js:128",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "${result}",
+     "produced_at": "dist/tools/exec_in_pod.js:97",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/exec_in_pod.js:24#0",
+     "origin": "literal",
+     "part": "description: \"Execute a command in a Kubernetes pod or container and return the output. Command must be an array of strings where the first element is the executable and remaining elements are arguments. This executes directly without shell interpretation for security.\"",
+     "produced_at": "dist/tools/exec_in_pod.js:24",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/exec_in_pod.js:74#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/exec_in_pod.js:74",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/exec_in_pod.js:74#1",
+     "origin": "computed",
+     "part": "i",
+     "produced_at": "dist/tools/exec_in_pod.js:74",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/exec_in_pod.js:80#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/exec_in_pod.js:80",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/exec_in_pod.js:83#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/exec_in_pod.js:83",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/exec_in_pod.js:85#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/exec_in_pod.js:85",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/exec_in_pod.js:121#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/exec_in_pod.js:121",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/exec_in_pod.js:121#1",
+     "origin": "computed",
+     "part": "error.status",
+     "produced_at": "dist/tools/exec_in_pod.js:121",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/exec_in_pod.js:122#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/exec_in_pod.js:122",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "id": "dist/tools/exec_in_pod.js:122#1",
+     "origin": "resource_read",
+     "part": "stdout",
+     "produced_at": "dist/tools/exec_in_pod.js:122",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/exec_in_pod.js:123#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/exec_in_pod.js:123",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "id": "dist/tools/exec_in_pod.js:123#1",
+     "origin": "resource_read",
+     "part": "stderr",
+     "produced_at": "dist/tools/exec_in_pod.js:123",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/exec_in_pod.js:128#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/exec_in_pod.js:128",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "id": "dist/tools/exec_in_pod.js:128#1",
+     "origin": "resource_read",
+     "part": "error.stderr || error.message",
+     "produced_at": "dist/tools/exec_in_pod.js:128",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/tools/exec_in_pod.js:87",
+    "where": "host"
+   },
+   "undetermined": true,
+   "value_args": []
+  },
+  "explain_resource": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/kubectl-operations.js:87-116",
+    "dist/tools/kubectl-operations.js:4-36"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/kubectl-operations.js:104",
+     "data": "kubectl explain command with args",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    }
+   ],
+   "rationale": "The `explain_resource` tool constructs a `kubectl explain` command using the provided input parameters and executes it using `executeKubectlCommand`. The result of the command is returned as text. The command is executed locally, and the result is read from the local execution of the command.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "text",
+     "produced_at": "dist/tools/kubectl-operations.js:109",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:92#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-operations.js:92",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:92#1",
+     "origin": "argument_echo",
+     "part": "params.apiVersion",
+     "produced_at": "dist/tools/kubectl-operations.js:92",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:95#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-operations.js:95",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:98#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-operations.js:98",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:101#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-operations.js:101",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:101#1",
+     "origin": "argument_echo",
+     "part": "params.output",
+     "produced_at": "dist/tools/kubectl-operations.js:101",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:103#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-operations.js:103",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:115#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-operations.js:115",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-operations.js:115#1",
+     "origin": "computed",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-operations.js:115",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "install_helm_chart": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "name",
+    "chart"
+   ],
+   "evidence": [
+    "dist/tools/helm-operations.js:288-358",
+    "dist/tools/helm-operations.js:25-69"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/helm-operations.js:324",
+     "data": "helm install command with args",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "helm"
+    }
+   ],
+   "rationale": "The `install_helm_chart` tool constructs a `helm install` command using the provided input parameters and executes it using `executeCommand`. The result of the command is returned as text. The command is executed locally, and the result is read from the local execution of the command.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "text",
+     "produced_at": "dist/tools/helm-operations.js:337",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:311#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/helm-operations.js:311",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/helm-operations.js:315#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/helm-operations.js:315",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:320#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/helm-operations.js:320",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:320#1",
+     "origin": "computed",
+     "part": "Date.now()",
+     "produced_at": "dist/tools/helm-operations.js:320",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:323#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "dist/tools/helm-operations.js:323",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:339#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/helm-operations.js:339",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:339#1",
+     "origin": "argument_echo",
+     "part": "params.name",
+     "produced_at": "dist/tools/helm-operations.js:339",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:339#2",
+     "origin": "argument_echo",
+     "part": "params.namespace",
+     "produced_at": "dist/tools/helm-operations.js:339",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:352#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/helm-operations.js:352",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/helm-operations.js:352#1",
+     "origin": "computed",
+     "part": "error.message",
+     "produced_at": "dist/tools/helm-operations.js:352",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "values",
+    "valuesFile"
+   ]
+  },
+  "kubectl_apply": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/kubectl-apply.js:38-127",
+    "dist/tools/kubectl-apply.js:9-37"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/kubectl-apply.js:86",
+     "data": "command, args",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    }
+   ],
+   "rationale": "The `kubectl_apply` tool executes a `kubectl apply` command and returns the result. The result content is read from the Kubernetes API, scoped to the user's account, and controlled by the service. It makes a local call to execute the command. It is a WRITE operation as it applies changes to the cluster. [received records: content taken as outside-party text] [received records: the statement taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "dist/tools/kubectl-apply.js:100-107",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-apply.js:63#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-apply.js:63",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-apply.js:63#1",
+     "origin": "computed",
+     "part": "Date.now()",
+     "produced_at": "dist/tools/kubectl-apply.js:63",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-apply.js:97#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-apply.js:97",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-apply.js:97#1",
+     "origin": "computed",
+     "part": "tempFile",
+     "produced_at": "dist/tools/kubectl-apply.js:97",
+     "scope": "user_local"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-apply.js:97#2",
+     "origin": "unknown",
+     "part": "err",
+     "produced_at": "dist/tools/kubectl-apply.js:97",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "dist/tools/kubectl-apply.js:100#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-apply.js:100",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-apply.js:116#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-apply.js:116",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-apply.js:116#1",
+     "origin": "computed",
+     "part": "tempFile",
+     "produced_at": "dist/tools/kubectl-apply.js:116",
+     "scope": "user_local"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-apply.js:116#2",
+     "origin": "unknown",
+     "part": "err",
+     "produced_at": "dist/tools/kubectl-apply.js:116",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-apply.js:119#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-apply.js:119",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-apply.js:119#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-apply.js:119",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-apply.js:126#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-apply.js:126",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-apply.js:126#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-apply.js:126",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/tools/kubectl-apply.js:38-127",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "kubectl_context": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/kubectl-context.js:43-282",
+    "dist/tools/kubectl-context.js:4-42"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/kubectl-context.js:113",
+     "data": "kubectl config command with args",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    }
+   ],
+   "rationale": "The `kubectl_context` tool constructs a `kubectl config` command based on the operation specified (list, get, set) and executes it using `execFileSyncSafe`. The result of the command is returned as text. The command is executed locally, and the result is read from the local execution of the command.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "text",
+     "produced_at": "dist/tools/kubectl-context.js:273",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-context.js:55#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-context.js:55",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-context.js:95#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-context.js:95",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-context.js:103#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-context.js:103",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-context.js:164#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-context.js:164",
+     "scope": "user_local"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/kubectl-context.js:180#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-context.js:180",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-context.js:193#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-context.js:193",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-context.js:231#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-context.js:231",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/kubectl-context.js:231#1",
+     "origin": "argument_echo",
+     "part": "name",
+     "produced_at": "dist/tools/kubectl-context.js:231",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/kubectl-context.js:242#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-context.js:242",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-context.js:248#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-context.js:248",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/kubectl-context.js:248#1",
+     "origin": "argument_echo",
+     "part": "name",
+     "produced_at": "dist/tools/kubectl-context.js:248",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-context.js:262#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-context.js:262",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/kubectl-context.js:262#1",
+     "origin": "argument_echo",
+     "part": "name",
+     "produced_at": "dist/tools/kubectl-context.js:262",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-context.js:267#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-context.js:267",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/kubectl-context.js:267#1",
+     "origin": "argument_echo",
+     "part": "operation",
+     "produced_at": "dist/tools/kubectl-context.js:267",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-context.js:269#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-context.js:269",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-context.js:282#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-context.js:282",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-context.js:282#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-context.js:282",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "kubectl_create": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/kubectl-create.js:154-398",
+    "dist/tools/kubectl-create.js:9-153"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/kubectl-create.js:371",
+     "data": "command, args",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    }
+   ],
+   "rationale": "The `kubectl_create` tool executes a `kubectl create` command and returns the result. The result content is read from the Kubernetes API, scoped to the user's account, and controlled by the service. It makes a local call to execute the command. It is a WRITE operation as it creates resources in the cluster. [received records: content taken as outside-party text] [received records: the statement taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "dist/tools/kubectl-create.js:379-385",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:87#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-create.js:87",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:164#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:164",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:164#1",
+     "origin": "argument_echo",
+     "part": "input.resourceType",
+     "produced_at": "dist/tools/kubectl-create.js:164",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:194#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:194",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:194#1",
+     "origin": "argument_echo",
+     "part": "label",
+     "produced_at": "dist/tools/kubectl-create.js:194",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:194#2",
+     "origin": "computed",
+     "part": "Date.now()",
+     "produced_at": "dist/tools/kubectl-create.js:194",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:194#3",
+     "origin": "computed",
+     "part": "tempFiles.length",
+     "produced_at": "dist/tools/kubectl-create.js:194",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:194#4",
+     "origin": "argument_echo",
+     "part": "ext",
+     "produced_at": "dist/tools/kubectl-create.js:194",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:208#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:208",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:208#1",
+     "origin": "argument_echo",
+     "part": "entry.key",
+     "produced_at": "dist/tools/kubectl-create.js:208",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:208#2",
+     "origin": "computed",
+     "part": "tempFile",
+     "produced_at": "dist/tools/kubectl-create.js:208",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:232#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:232",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:232#1",
+     "origin": "argument_echo",
+     "part": "literal",
+     "produced_at": "dist/tools/kubectl-create.js:232",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:239#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:239",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:239#1",
+     "origin": "argument_echo",
+     "part": "file",
+     "produced_at": "dist/tools/kubectl-create.js:239",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:255#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:255",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:255#1",
+     "origin": "argument_echo",
+     "part": "literal",
+     "produced_at": "dist/tools/kubectl-create.js:255",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:262#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:262",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:262#1",
+     "origin": "argument_echo",
+     "part": "file",
+     "produced_at": "dist/tools/kubectl-create.js:262",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:279#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:279",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:279#1",
+     "origin": "argument_echo",
+     "part": "port",
+     "produced_at": "dist/tools/kubectl-create.js:279",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:290#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:290",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:290#1",
+     "origin": "argument_echo",
+     "part": "input.image",
+     "produced_at": "dist/tools/kubectl-create.js:290",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:290#2",
+     "origin": "argument_echo",
+     "part": "input.schedule",
+     "produced_at": "dist/tools/kubectl-create.js:290",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:304#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:304",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:304#1",
+     "origin": "argument_echo",
+     "part": "input.image",
+     "produced_at": "dist/tools/kubectl-create.js:304",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:307#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:307",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:307#1",
+     "origin": "argument_echo",
+     "part": "input.replicas",
+     "produced_at": "dist/tools/kubectl-create.js:307",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:311#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:311",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:311#1",
+     "origin": "argument_echo",
+     "part": "input.port",
+     "produced_at": "dist/tools/kubectl-create.js:311",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:318#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:318",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:318#1",
+     "origin": "argument_echo",
+     "part": "input.image",
+     "produced_at": "dist/tools/kubectl-create.js:318",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:321#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-create.js:321",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:325#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:325",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:325#1",
+     "origin": "argument_echo",
+     "part": "input.resourceType",
+     "produced_at": "dist/tools/kubectl-create.js:325",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:330#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-create.js:330",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:335#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-create.js:335",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:341#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:341",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:341#1",
+     "origin": "argument_echo",
+     "part": "annotation",
+     "produced_at": "dist/tools/kubectl-create.js:341",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:346#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-create.js:346",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:350#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-create.js:350",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:353#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-create.js:353",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:356#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-create.js:356",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:365#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:365",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-create.js:365#1",
+     "origin": "computed",
+     "part": "tempFile",
+     "produced_at": "dist/tools/kubectl-create.js:365",
+     "scope": "user_local"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-create.js:365#2",
+     "origin": "unknown",
+     "part": "err",
+     "produced_at": "dist/tools/kubectl-create.js:365",
+     "scope": "unknown"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "dist/tools/kubectl-create.js:378#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-create.js:378",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:390#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:390",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-create.js:390#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-create.js:390",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-create.js:397#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-create.js:397",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-create.js:397#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-create.js:397",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/tools/kubectl-create.js:154-398",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "kubectl_delete": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/kubectl-delete.js:58-188",
+    "dist/tools/kubectl-delete.js:9-57"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/kubectl-delete.js:133",
+     "data": "command, args",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    }
+   ],
+   "rationale": "The `kubectl_delete` tool executes a `kubectl delete` command and returns the result. The result content is read from the Kubernetes API, scoped to the user's account, and controlled by the service. It makes a local call to execute the command. It is a WRITE operation as it deletes resources from the cluster. [received records: content taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "dist/tools/kubectl-delete.js:147-154",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-delete.js:88#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-delete.js:88",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-delete.js:88#1",
+     "origin": "computed",
+     "part": "Date.now()",
+     "produced_at": "dist/tools/kubectl-delete.js:88",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/kubectl-delete.js:90#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-delete.js:90",
+     "scope": "user_local"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/kubectl-delete.js:93#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-delete.js:93",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-delete.js:102#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-delete.js:102",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-delete.js:104#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-delete.js:104",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-delete.js:107#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-delete.js:107",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-delete.js:112#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-delete.js:112",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-delete.js:117#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-delete.js:117",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-delete.js:121#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-delete.js:121",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-delete.js:125#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-delete.js:125",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-delete.js:125#1",
+     "origin": "argument_echo",
+     "part": "input.gracePeriodSeconds",
+     "produced_at": "dist/tools/kubectl-delete.js:125",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-delete.js:129#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-delete.js:129",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-delete.js:144#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-delete.js:144",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-delete.js:144#1",
+     "origin": "computed",
+     "part": "tempFile",
+     "produced_at": "dist/tools/kubectl-delete.js:144",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-delete.js:144#2",
+     "origin": "unknown",
+     "part": "err",
+     "produced_at": "dist/tools/kubectl-delete.js:144",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-delete.js:163#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-delete.js:163",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/kubectl-delete.js:163#1",
+     "origin": "argument_echo",
+     "part": "tempFile",
+     "produced_at": "dist/tools/kubectl-delete.js:163",
+     "scope": "user_local"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-delete.js:163#2",
+     "origin": "unknown",
+     "part": "err",
+     "produced_at": "dist/tools/kubectl-delete.js:163",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-delete.js:180#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-delete.js:180",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-delete.js:180#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-delete.js:180",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-delete.js:187#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-delete.js:187",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-delete.js:187#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-delete.js:187",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/tools/kubectl-delete.js:58-188",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "kubectl_describe": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/kubectl-describe.js:33-95",
+    "dist/tools/kubectl-describe.js:5-32"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/kubectl-describe.js:60",
+     "data": "command, args",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    }
+   ],
+   "rationale": "The `kubectl_describe` tool executes a `kubectl describe` command and returns the result. The result content is read from the Kubernetes API, scoped to the user's account, and controlled by the service. It makes a local call to execute the command. It is a READ operation.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "dist/tools/kubectl-describe.js:65-72",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-describe.js:50#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-describe.js:50",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-describe.js:53#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-describe.js:53",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-describe.js:56#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-describe.js:56",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-describe.js:65#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-describe.js:65",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-describe.js:76#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-describe.js:76",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-describe.js:81#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-describe.js:81",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-describe.js:81#1",
+     "origin": "argument_echo",
+     "part": "resourceType",
+     "produced_at": "dist/tools/kubectl-describe.js:81",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-describe.js:81#2",
+     "origin": "argument_echo",
+     "part": "name",
+     "produced_at": "dist/tools/kubectl-describe.js:81",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-describe.js:89#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-describe.js:89",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-describe.js:89#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-describe.js:89",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-describe.js:93#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-describe.js:93",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-describe.js:93#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-describe.js:93",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/tools/kubectl-describe.js:33-95",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "kubectl_generic": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "command"
+   ],
+   "evidence": [
+    "dist/tools/kubectl-generic.js:57-150",
+    "dist/tools/kubectl-generic.js:6-56"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/kubectl-generic.js:127",
+     "data": "kubectl ${command} with options",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    }
+   ],
+   "rationale": "The tool executes a generic kubectl command with user-specified arguments and flags. The result is the output of the command, which is read from the cluster.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "Failed to execute kubectl command: ${error.message}",
+     "produced_at": "dist/tools/kubectl-generic.js:142",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "${result}",
+     "produced_at": "dist/tools/kubectl-generic.js:136",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:74#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-generic.js:74",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:78#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-generic.js:78",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:82#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-generic.js:82",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:87#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-generic.js:87",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:90#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-generic.js:90",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:90#1",
+     "origin": "argument_echo",
+     "part": "input.namespace",
+     "produced_at": "dist/tools/kubectl-generic.js:90",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:94#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-generic.js:94",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:94#1",
+     "origin": "argument_echo",
+     "part": "input.outputFormat",
+     "produced_at": "dist/tools/kubectl-generic.js:94",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:101#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-generic.js:101",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:101#1",
+     "origin": "argument_echo",
+     "part": "key",
+     "produced_at": "dist/tools/kubectl-generic.js:101",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:105#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-generic.js:105",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:105#1",
+     "origin": "argument_echo",
+     "part": "key",
+     "produced_at": "dist/tools/kubectl-generic.js:105",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:105#2",
+     "origin": "argument_echo",
+     "part": "value",
+     "produced_at": "dist/tools/kubectl-generic.js:105",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:111#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-generic.js:111",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:115#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-generic.js:115",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:126#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-generic.js:126",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:126#1",
+     "origin": "argument_echo",
+     "part": "cmdArgs.join(\" \")",
+     "produced_at": "dist/tools/kubectl-generic.js:126",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:142#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-generic.js:142",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-generic.js:142#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-generic.js:142",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-generic.js:149#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-generic.js:149",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-generic.js:149#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-generic.js:149",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "kubectl_get": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/kubectl-get.js:52-228",
+    "dist/tools/kubectl-get.js:6-51"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/kubectl-get.js:129",
+     "data": "command, args",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    }
+   ],
+   "rationale": "The `kubectl_get` tool executes a `kubectl get` command and returns the result. The result content is read from the Kubernetes API, scoped to the user's account, and controlled by the service. It makes a local call to execute the command. It is a READ operation.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "dist/tools/kubectl-get.js:199-206",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:73#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-get.js:73",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:83#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-get.js:83",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:86#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-get.js:86",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:89#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-get.js:89",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:93#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-get.js:93",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:97#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-get.js:97",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:97#1",
+     "origin": "argument_echo",
+     "part": "fieldSelector",
+     "produced_at": "dist/tools/kubectl-get.js:97",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:101#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-get.js:101",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:101#1",
+     "origin": "argument_echo",
+     "part": "sortBy",
+     "produced_at": "dist/tools/kubectl-get.js:101",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:104#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-get.js:104",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:108#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-get.js:108",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:111#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-get.js:111",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:114#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-get.js:114",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:117#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-get.js:117",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:121#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-get.js:121",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:124#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-get.js:124",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:215#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-get.js:215",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:215#1",
+     "origin": "argument_echo",
+     "part": "resourceType",
+     "produced_at": "dist/tools/kubectl-get.js:215",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:215#2",
+     "origin": "argument_echo",
+     "part": "name ? `/${name}` : \"\"",
+     "produced_at": "dist/tools/kubectl-get.js:215",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:223#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-get.js:223",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-get.js:223#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-get.js:223",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-get.js:227#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-get.js:227",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-get.js:227#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-get.js:227",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/tools/kubectl-get.js:52-228",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "kubectl_logs": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/kubectl-logs.js:64-220",
+    "dist/tools/kubectl-logs.js:5-63"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/kubectl-logs.js:87",
+     "data": "command, args",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    }
+   ],
+   "rationale": "The `kubectl_logs` tool executes a `kubectl logs` command and returns the result. The result content is read from the Kubernetes API, scoped to the user's account, and controlled by the service. It makes a local call to execute the command. It is a READ operation.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "dist/tools/kubectl-logs.js:92",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:77#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-logs.js:77",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:83#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-logs.js:83",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:95#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-logs.js:95",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:95#1",
+     "origin": "argument_echo",
+     "part": "name",
+     "produced_at": "dist/tools/kubectl-logs.js:95",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:116#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-logs.js:116",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:116#1",
+     "origin": "argument_echo",
+     "part": "name",
+     "produced_at": "dist/tools/kubectl-logs.js:116",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:143#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-logs.js:143",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:143#1",
+     "origin": "argument_echo",
+     "part": "name",
+     "produced_at": "dist/tools/kubectl-logs.js:143",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:143#2",
+     "origin": "argument_echo",
+     "part": "namespace",
+     "produced_at": "dist/tools/kubectl-logs.js:143",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:153#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-logs.js:153",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:153#1",
+     "origin": "computed",
+     "part": "job",
+     "produced_at": "dist/tools/kubectl-logs.js:153",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:171#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-logs.js:171",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:171#1",
+     "origin": "argument_echo",
+     "part": "name",
+     "produced_at": "dist/tools/kubectl-logs.js:171",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:188#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-logs.js:188",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-logs.js:188#1",
+     "origin": "resource_read",
+     "part": "key",
+     "produced_at": "dist/tools/kubectl-logs.js:188",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-logs.js:188#2",
+     "origin": "resource_read",
+     "part": "value",
+     "produced_at": "dist/tools/kubectl-logs.js:188",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:198#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-logs.js:198",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:198#1",
+     "origin": "argument_echo",
+     "part": "resourceType",
+     "produced_at": "dist/tools/kubectl-logs.js:198",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:206#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-logs.js:206",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:206#1",
+     "origin": "argument_echo",
+     "part": "resourceType",
+     "produced_at": "dist/tools/kubectl-logs.js:206",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:206#2",
+     "origin": "argument_echo",
+     "part": "name",
+     "produced_at": "dist/tools/kubectl-logs.js:206",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:214#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-logs.js:214",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:214#1",
+     "origin": "argument_echo",
+     "part": "resourceType",
+     "produced_at": "dist/tools/kubectl-logs.js:214",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-logs.js:220#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-logs.js:220",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-logs.js:220#1",
+     "origin": "computed",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-logs.js:220",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/tools/kubectl-logs.js:64-220",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "kubectl_patch": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "resourceType",
+    "name"
+   ],
+   "evidence": [
+    "dist/tools/kubectl-patch.js:47-149",
+    "dist/tools/kubectl-patch.js:9-46"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/kubectl-patch.js:108",
+     "data": "kubectl patch command with args",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    }
+   ],
+   "rationale": "The `kubectl_patch` tool constructs a `kubectl patch` command using the provided input parameters and executes it using `execFileSyncSafe`. The result of the command is returned as text. The command is executed locally, and the result is read from the local execution of the command.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "text",
+     "produced_at": "dist/tools/kubectl-patch.js:126",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-patch.js:73#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-patch.js:73",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-patch.js:76#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-patch.js:76",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-patch.js:79#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-patch.js:79",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-patch.js:82#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-patch.js:82",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-patch.js:91#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-patch.js:91",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-patch.js:91#1",
+     "origin": "computed",
+     "part": "Date.now()",
+     "produced_at": "dist/tools/kubectl-patch.js:91",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-patch.js:93#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-patch.js:93",
+     "scope": "user_local"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/kubectl-patch.js:96#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-patch.js:96",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-patch.js:100#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-patch.js:100",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/kubectl-patch.js:104#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-patch.js:104",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-patch.js:119#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-patch.js:119",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-patch.js:119#1",
+     "origin": "computed",
+     "part": "tempFile",
+     "produced_at": "dist/tools/kubectl-patch.js:119",
+     "scope": "user_local"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-patch.js:119#2",
+     "origin": "unknown",
+     "part": "err",
+     "produced_at": "dist/tools/kubectl-patch.js:119",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-patch.js:138#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-patch.js:138",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-patch.js:138#1",
+     "origin": "computed",
+     "part": "tempFile",
+     "produced_at": "dist/tools/kubectl-patch.js:138",
+     "scope": "user_local"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-patch.js:138#2",
+     "origin": "unknown",
+     "part": "err",
+     "produced_at": "dist/tools/kubectl-patch.js:138",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-patch.js:141#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-patch.js:141",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-patch.js:141#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-patch.js:141",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-patch.js:148#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-patch.js:148",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-patch.js:148#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-patch.js:148",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "patchData",
+    "patchFile"
+   ]
+  },
+  "kubectl_reconnect": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/kubectl-reconnect.js:14-32",
+    "dist/tools/kubectl-reconnect.js:2-13"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The `kubectl_reconnect` tool refreshes the API clients by calling `refreshApiClients` on the `k8sManager`. It returns a success message as a literal string. There are no outbound calls or execution of supplied code.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "text",
+     "produced_at": "dist/tools/kubectl-reconnect.js:21",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-reconnect.js:30#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-reconnect.js:30",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/kubectl-reconnect.js:30#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-reconnect.js:30",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "kubectl_rollout": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "resourceType",
+    "name"
+   ],
+   "evidence": [
+    "dist/tools/kubectl-rollout.js:53-131",
+    "dist/tools/kubectl-rollout.js:5-52"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/kubectl-rollout.js:107",
+     "data": "kubectl rollout command with args",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    }
+   ],
+   "rationale": "The `kubectl_rollout` tool constructs a `kubectl rollout` command using the provided input parameters and executes it using `execFileSyncSafe`. The result of the command is returned as text. The command is executed locally, and the result is read from the local execution of the command.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "text",
+     "produced_at": "dist/tools/kubectl-rollout.js:116",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-rollout.js:62#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-rollout.js:62",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-rollout.js:62#1",
+     "origin": "argument_echo",
+     "part": "input.resourceType",
+     "produced_at": "dist/tools/kubectl-rollout.js:62",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-rollout.js:62#2",
+     "origin": "argument_echo",
+     "part": "input.name",
+     "produced_at": "dist/tools/kubectl-rollout.js:62",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-rollout.js:68#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-rollout.js:68",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-rollout.js:68#1",
+     "origin": "argument_echo",
+     "part": "input.revision",
+     "produced_at": "dist/tools/kubectl-rollout.js:68",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-rollout.js:72#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-rollout.js:72",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-rollout.js:72#1",
+     "origin": "argument_echo",
+     "part": "input.toRevision",
+     "produced_at": "dist/tools/kubectl-rollout.js:72",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-rollout.js:76#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-rollout.js:76",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-rollout.js:76#1",
+     "origin": "argument_echo",
+     "part": "input.timeout",
+     "produced_at": "dist/tools/kubectl-rollout.js:76",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-rollout.js:96#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-rollout.js:96",
+     "scope": "unknown"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-rollout.js:112#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-rollout.js:112",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-rollout.js:123#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-rollout.js:123",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-rollout.js:123#1",
+     "origin": "computed",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-rollout.js:123",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-rollout.js:130#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-rollout.js:130",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-rollout.js:130#1",
+     "origin": "computed",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-rollout.js:130",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "kubectl_scale": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/kubectl-scale.js:33-104",
+    "dist/tools/kubectl-scale.js:5-32"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/kubectl-scale.js:57",
+     "data": "command, args",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    }
+   ],
+   "rationale": "The `kubectl_scale` tool executes a `kubectl scale` command and returns a success message. The result content is computed and not directly read from any resource. It makes a local call to execute the command. It is a WRITE operation as it scales resources in the cluster.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "content",
+     "produced_at": "dist/tools/kubectl-scale.js:62-72",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-scale.js:48#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-scale.js:48",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-scale.js:48#1",
+     "origin": "argument_echo",
+     "part": "input.replicas",
+     "produced_at": "dist/tools/kubectl-scale.js:48",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-scale.js:49#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-scale.js:49",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-scale.js:49#1",
+     "origin": "argument_echo",
+     "part": "namespace",
+     "produced_at": "dist/tools/kubectl-scale.js:49",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-scale.js:68#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-scale.js:68",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-scale.js:68#1",
+     "origin": "argument_echo",
+     "part": "resourceType",
+     "produced_at": "dist/tools/kubectl-scale.js:68",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-scale.js:68#2",
+     "origin": "argument_echo",
+     "part": "input.name",
+     "produced_at": "dist/tools/kubectl-scale.js:68",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-scale.js:68#3",
+     "origin": "argument_echo",
+     "part": "input.replicas",
+     "produced_at": "dist/tools/kubectl-scale.js:68",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-scale.js:75#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-scale.js:75",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-scale.js:75#1",
+     "origin": "argument_echo",
+     "part": "resourceType",
+     "produced_at": "dist/tools/kubectl-scale.js:75",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-scale.js:75#2",
+     "origin": "computed",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-scale.js:75",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-scale.js:98#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-scale.js:98",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-scale.js:98#1",
+     "origin": "computed",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-scale.js:98",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/tools/kubectl-scale.js:33-104",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_api_resources": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/kubectl-operations.js:118-149",
+    "dist/tools/kubectl-operations.js:37-74"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/kubectl-operations.js:137",
+     "data": "kubectl api-resources with options",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    }
+   ],
+   "rationale": "The tool lists API resources available in the Kubernetes cluster using `kubectl api-resources`. The result is the output of this command, which is read from the cluster.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "${result}",
+     "produced_at": "dist/tools/kubectl-operations.js:142",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:123#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-operations.js:123",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:123#1",
+     "origin": "argument_echo",
+     "part": "params.apiGroup",
+     "produced_at": "dist/tools/kubectl-operations.js:123",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:126#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-operations.js:126",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:126#1",
+     "origin": "argument_echo",
+     "part": "params.namespaced",
+     "produced_at": "dist/tools/kubectl-operations.js:126",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:129#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-operations.js:129",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:129#1",
+     "origin": "argument_echo",
+     "part": "params.verbs.join(\",\")",
+     "produced_at": "dist/tools/kubectl-operations.js:129",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:132#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-operations.js:132",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:135#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/kubectl-operations.js:135",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/kubectl-operations.js:148#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/kubectl-operations.js:148",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/kubectl-operations.js:148#1",
+     "origin": "computed",
+     "part": "error.message",
+     "produced_at": "dist/tools/kubectl-operations.js:148",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "node_management": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "nodeName"
+   ],
+   "evidence": [
+    "dist/tools/node-management.js:126-299",
+    "dist/tools/node-management.js:22-78"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/node-management.js:181",
+     "data": "kubectl cordon ${nodeName}",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    },
+    {
+     "at": "dist/tools/node-management.js:216",
+     "data": "kubectl uncordon ${nodeName}",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    },
+    {
+     "at": "dist/tools/node-management.js:277",
+     "data": "kubectl drain ${nodeName} with options",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    }
+   ],
+   "rationale": "The tool manages Kubernetes nodes by executing commands like `kubectl cordon`, `kubectl uncordon`, and `kubectl drain`. The results are based on the success or failure of these commands, with messages echoing the node name and operation status. The tool does not send data to external destinations, only interacts with the local Kubernetes cluster.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "Node management operation failed: ${error.message}",
+     "produced_at": "dist/tools/node-management.js:154",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "Node '${nodeName}' is already cordoned (unschedulable)",
+     "produced_at": "dist/tools/node-management.js:176",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "Successfully cordoned node '${nodeName}'. The node is now unschedulable.",
+     "produced_at": "dist/tools/node-management.js:186",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "Node '${nodeName}' is already uncordoned (schedulable)",
+     "produced_at": "dist/tools/node-management.js:210",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "Successfully uncordoned node '${nodeName}'. The node is now schedulable.",
+     "produced_at": "dist/tools/node-management.js:221",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "Node '${nodeName}' is already cordoned (unschedulable). Drain operation may not be necessary.",
+     "produced_at": "dist/tools/node-management.js:246",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "Drain operation requires explicit confirmation. Set confirmDrain=true to proceed with draining node '${nodeName}'.",
+     "produced_at": "dist/tools/node-management.js:257",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "Dry run drain operation for node '${nodeName}':\n\n${drainOutput}\n\nTo perform the actual drain, set dryRun=false and confirmDrain=true.",
+     "produced_at": "dist/tools/node-management.js:283",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "Successfully drained node '${nodeName}'.\n\n${drainOutput}",
+     "produced_at": "dist/tools/node-management.js:292",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:146#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/node-management.js:146",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:146#1",
+     "origin": "argument_echo",
+     "part": "operation",
+     "produced_at": "dist/tools/node-management.js:146",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:154#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/node-management.js:154",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/node-management.js:154#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/node-management.js:154",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:175#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/node-management.js:175",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:175#1",
+     "origin": "argument_echo",
+     "part": "nodeName",
+     "produced_at": "dist/tools/node-management.js:175",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:186#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/node-management.js:186",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:186#1",
+     "origin": "argument_echo",
+     "part": "nodeName",
+     "produced_at": "dist/tools/node-management.js:186",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:192#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/node-management.js:192",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/node-management.js:192#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/node-management.js:192",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:210#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/node-management.js:210",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:210#1",
+     "origin": "argument_echo",
+     "part": "nodeName",
+     "produced_at": "dist/tools/node-management.js:210",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:221#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/node-management.js:221",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:221#1",
+     "origin": "argument_echo",
+     "part": "nodeName",
+     "produced_at": "dist/tools/node-management.js:221",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:227#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/node-management.js:227",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/node-management.js:227#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/node-management.js:227",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:246#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/node-management.js:246",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:246#1",
+     "origin": "argument_echo",
+     "part": "nodeName",
+     "produced_at": "dist/tools/node-management.js:246",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:257#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/node-management.js:257",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:257#1",
+     "origin": "argument_echo",
+     "part": "nodeName",
+     "produced_at": "dist/tools/node-management.js:257",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:283#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/node-management.js:283",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:283#1",
+     "origin": "argument_echo",
+     "part": "nodeName",
+     "produced_at": "dist/tools/node-management.js:283",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/node-management.js:283#2",
+     "origin": "computed",
+     "part": "drainOutput",
+     "produced_at": "dist/tools/node-management.js:283",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:292#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/node-management.js:292",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:292#1",
+     "origin": "argument_echo",
+     "part": "nodeName",
+     "produced_at": "dist/tools/node-management.js:292",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/node-management.js:292#2",
+     "origin": "computed",
+     "part": "drainOutput",
+     "produced_at": "dist/tools/node-management.js:292",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/node-management.js:298#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/node-management.js:298",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/node-management.js:298#1",
+     "origin": "computed",
+     "part": "error.message",
+     "produced_at": "dist/tools/node-management.js:298",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "ping": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/tools/ping.js:13-14",
+    "dist/tools/ping.js:1-12"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The tool performs a simple ping operation to verify connectivity. It does not produce any output or make any outbound calls.",
+   "result_contents": [],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "port_forward": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "resourceType",
+    "resourceName",
+    "localPort",
+    "targetPort"
+   ],
+   "evidence": [
+    "dist/tools/port_forward.js:62-107",
+    "dist/tools/port_forward.js:44-61"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/port_forward.js:12",
+     "data": "kubectl port-forward ${resourceType}/${resourceName} ${localPort}:${targetPort}",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "kubectl"
+    }
+   ],
+   "rationale": "The tool sets up a port-forwarding session using `kubectl port-forward`, which is a local operation. The result indicates success or failure of the operation, with no data sent to external destinations.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "{\"success\": result.success, \"message\": result.message}",
+     "produced_at": "dist/tools/port_forward.js:93",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/port_forward.js:65#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/port_forward.js:65",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/port_forward.js:67#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/port_forward.js:67",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/port_forward.js:67#1",
+     "origin": "argument_echo",
+     "part": "input.resourceType",
+     "produced_at": "dist/tools/port_forward.js:67",
+     "scope": "user_account"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/port_forward.js:67#2",
+     "origin": "argument_echo",
+     "part": "input.resourceName",
+     "produced_at": "dist/tools/port_forward.js:67",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/port_forward.js:68#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/port_forward.js:68",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/port_forward.js:68#1",
+     "origin": "argument_echo",
+     "part": "input.localPort",
+     "produced_at": "dist/tools/port_forward.js:68",
+     "scope": "user_account"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/port_forward.js:68#2",
+     "origin": "argument_echo",
+     "part": "input.targetPort",
+     "produced_at": "dist/tools/port_forward.js:68",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/port_forward.js:73#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/port_forward.js:73",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/port_forward.js:73#1",
+     "origin": "argument_echo",
+     "part": "input.resourceType",
+     "produced_at": "dist/tools/port_forward.js:73",
+     "scope": "user_account"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/port_forward.js:73#2",
+     "origin": "argument_echo",
+     "part": "input.resourceName",
+     "produced_at": "dist/tools/port_forward.js:73",
+     "scope": "user_account"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/port_forward.js:73#3",
+     "origin": "argument_echo",
+     "part": "input.localPort",
+     "produced_at": "dist/tools/port_forward.js:73",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/port_forward.js:80#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/port_forward.js:80",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/tools/port_forward.js:80#1",
+     "origin": "computed",
+     "part": "result.pid",
+     "produced_at": "dist/tools/port_forward.js:80",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/port_forward.js:106#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/port_forward.js:106",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/port_forward.js:106#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/port_forward.js:106",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "stop_port_forward": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "id"
+   ],
+   "evidence": [
+    "dist/tools/port_forward.js:123-145",
+    "dist/tools/port_forward.js:109-122"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The tool stops an existing port-forwarding session by interacting with the local process management. It does not send data to external destinations.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "{\"success\": true, \"message\": \"port-forward stopped successfully\"}",
+     "produced_at": "dist/tools/port_forward.js:135",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/port_forward.js:126#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/port_forward.js:126",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/port_forward.js:126#1",
+     "origin": "argument_echo",
+     "part": "input.id",
+     "produced_at": "dist/tools/port_forward.js:126",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/port_forward.js:144#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/port_forward.js:144",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/port_forward.js:144#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/port_forward.js:144",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "uninstall_helm_chart": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "name"
+   ],
+   "evidence": [
+    "dist/tools/helm-operations.js:432-465",
+    "dist/tools/helm-operations.js:119-137"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/helm-operations.js:435",
+     "data": "helm uninstall command with args",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "helm"
+    }
+   ],
+   "rationale": "The `uninstall_helm_chart` tool constructs a `helm uninstall` command using the provided input parameters and executes it using `executeCommand`. The result of the command is returned as text. The command is executed locally, and the result is read from the local execution of the command.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "text",
+     "produced_at": "dist/tools/helm-operations.js:445",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:447#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/helm-operations.js:447",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:447#1",
+     "origin": "argument_echo",
+     "part": "params.name",
+     "produced_at": "dist/tools/helm-operations.js:447",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:447#2",
+     "origin": "argument_echo",
+     "part": "params.namespace",
+     "produced_at": "dist/tools/helm-operations.js:447",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:460#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/helm-operations.js:460",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "dist/tools/helm-operations.js:460#1",
+     "origin": "unknown",
+     "part": "error.message",
+     "produced_at": "dist/tools/helm-operations.js:460",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "upgrade_helm_chart": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "name",
+    "chart"
+   ],
+   "evidence": [
+    "dist/tools/helm-operations.js:364-412",
+    "dist/tools/helm-operations.js:79-113"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/tools/helm-operations.js:392",
+     "data": "helm upgrade command with args",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "helm"
+    }
+   ],
+   "rationale": "The `upgrade_helm_chart` tool constructs a `helm upgrade` command using the provided input parameters and executes it using `executeCommand`. The result of the command is returned as text. The command is executed locally, and the result is read from the local execution of the command.",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "text",
+     "produced_at": "dist/tools/helm-operations.js:405",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/tools/helm-operations.js:383#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "dist/tools/helm-operations.js:383",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:388#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/helm-operations.js:388",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:388#1",
+     "origin": "computed",
+     "part": "Date.now()",
+     "produced_at": "dist/tools/helm-operations.js:388",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:391#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "dist/tools/helm-operations.js:391",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:407#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/tools/helm-operations.js:407",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:407#1",
+     "origin": "argument_echo",
+     "part": "params.name",
+     "produced_at": "dist/tools/helm-operations.js:407",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/tools/helm-operations.js:407#2",
+     "origin": "argument_echo",
+     "part": "params.namespace",
+     "produced_at": "dist/tools/helm-operations.js:407",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "values",
+    "valuesFile"
+   ]
+  }
+ },
+ "value_conditions": [
+  {
+   "default": "false",
+   "effect": "removes all tools except readonly ones",
+   "evidence": "dist/index.js:36",
+   "kind": "environment",
+   "syntax": "ALLOW_ONLY_READONLY_TOOLS=true"
+  },
+  {
+   "default": "false",
+   "effect": "removes destructive tools",
+   "evidence": "dist/index.js:38",
+   "kind": "environment",
+   "syntax": "ALLOW_ONLY_NON_DESTRUCTIVE_TOOLS=true"
+  },
+  {
+   "default": "false",
+   "effect": "Restricts available tools to read-only operations",
+   "evidence": "dist/index.js:36",
+   "kind": "environment variable",
+   "syntax": "ALLOW_ONLY_READONLY_TOOLS=true"
+  },
+  {
+   "default": "false",
+   "effect": "Disables destructive operations",
+   "evidence": "dist/index.js:38",
+   "kind": "environment variable",
+   "syntax": "ALLOW_ONLY_NON_DESTRUCTIVE_TOOLS=true"
+  },
+  {
+   "default": "false",
+   "effect": "Restricts available tools to read-only operations",
+   "evidence": "dist/index.js:36",
+   "kind": "environment variable",
+   "syntax": "ALLOW_ONLY_READONLY_TOOLS=true"
+  },
+  {
+   "default": "false",
+   "effect": "Disables destructive tools",
+   "evidence": "dist/index.js:38",
+   "kind": "environment variable",
+   "syntax": "ALLOW_ONLY_NON_DESTRUCTIVE_TOOLS=true"
+  }
+ ],
+ "version": "4.1.7"
+}

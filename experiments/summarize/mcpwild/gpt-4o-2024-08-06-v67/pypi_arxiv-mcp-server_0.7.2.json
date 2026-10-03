@@ -1,0 +1,3280 @@
+{
+ "kind": "pypi",
+ "notes": [],
+ "package": "arxiv-mcp-server",
+ "source": ".cache/sources/.views/pypi_arxiv-mcp-server_0.7.2_2a31a926a11f",
+ "tools": {
+  "check_alerts": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/alerts.py:314-429",
+    "tools/alerts.py:77-108"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/alerts.py:362",
+     "data": "query",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "ARXIV_API_URL",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The tool checks for new papers based on saved topic watches by querying the arXiv API. The result includes the status, number of checked topics, and alerts for new papers. The alerts are computed based on the API response and stored watch data. [unverified outbound: 'ARXIV_API_URL' resolves to no host or configuration]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/alerts.py:414",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "checked_topics",
+     "produced_at": "tools/alerts.py:415",
+     "scope": "user_local"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "alerts",
+     "produced_at": "tools/alerts.py:416",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerts.py:87#0",
+     "origin": "literal",
+     "part": "max_results, has_more=true and check_start advances so later calls return the next",
+     "produced_at": "tools/alerts.py:87",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerts.py:330#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/alerts.py:330",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerts.py:330#1",
+     "origin": "argument_echo",
+     "part": "selected_topic",
+     "produced_at": "tools/alerts.py:330",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerts.py:429#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/alerts.py:429",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "tools/alerts.py:429#1",
+     "origin": "unknown",
+     "part": "str(exc)",
+     "produced_at": "tools/alerts.py:429",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": true,
+   "value_args": [
+    "topic"
+   ]
+  },
+  "citation_graph": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "paper_id"
+   ],
+   "evidence": [
+    "tools/citation_graph.py:225-315",
+    "tools/citation_graph.py:47-77"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/citation_graph.py:249",
+     "data": "paper_url",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "SEMANTIC_SCHOLAR_API_URL",
+     "resolved": "literal:arxiv.org (configuration override: ARXIV_API_URL)"
+    },
+    {
+     "at": "tools/citation_graph.py:250",
+     "data": "citations_url",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "SEMANTIC_SCHOLAR_API_URL",
+     "resolved": "literal:arxiv.org (configuration override: ARXIV_API_URL)"
+    },
+    {
+     "at": "tools/citation_graph.py:251",
+     "data": "references_url",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "SEMANTIC_SCHOLAR_API_URL",
+     "resolved": "literal:arxiv.org (configuration override: ARXIV_API_URL)"
+    }
+   ],
+   "rationale": "The `citation_graph` tool retrieves citation and reference data for a given paper from the Semantic Scholar API. The result includes the status, paper metadata, citation count, reference count, and lists of citations and references. The data is read from the Semantic Scholar API response, which is public and controlled by an outside party. The tool makes outbound calls to the Semantic Scholar API to retrieve the data. [kind: data sent to a host written in the code; WRITE]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/citation_graph.py:276",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "paper",
+     "produced_at": "tools/citation_graph.py:277",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "citation_count",
+     "produced_at": "tools/citation_graph.py:278",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "reference_count",
+     "produced_at": "tools/citation_graph.py:279",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "citation_total",
+     "produced_at": "tools/citation_graph.py:280",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "reference_total",
+     "produced_at": "tools/citation_graph.py:281",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "max_citations",
+     "produced_at": "tools/citation_graph.py:282",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "citations",
+     "produced_at": "tools/citation_graph.py:283",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "references",
+     "produced_at": "tools/citation_graph.py:284",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:55#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/citation_graph.py:55",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:69#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/citation_graph.py:69",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:70#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/citation_graph.py:70",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/citation_graph.py:70#1",
+     "origin": "computed",
+     "part": "DEFAULT_MAX_CITATIONS",
+     "produced_at": "tools/citation_graph.py:70",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:232#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/citation_graph.py:232",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:234#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/citation_graph.py:234",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:242#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/citation_graph.py:242",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:242#1",
+     "origin": "computed",
+     "part": "bare_id",
+     "produced_at": "tools/citation_graph.py:242",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:243#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/citation_graph.py:243",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "tools/citation_graph.py:243#1",
+     "origin": "unknown",
+     "part": "SEMANTIC_SCHOLAR_API_URL",
+     "produced_at": "tools/citation_graph.py:243",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:243#2",
+     "origin": "computed",
+     "part": "s2_paper_identifier",
+     "produced_at": "tools/citation_graph.py:243",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:244#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/citation_graph.py:244",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:244#1",
+     "origin": "computed",
+     "part": "paper_url",
+     "produced_at": "tools/citation_graph.py:244",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:245#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/citation_graph.py:245",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:245#1",
+     "origin": "computed",
+     "part": "paper_url",
+     "produced_at": "tools/citation_graph.py:245",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:287#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/citation_graph.py:287",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:291#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/citation_graph.py:291",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:295#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/citation_graph.py:295",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:300#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/citation_graph.py:300",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:306#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/citation_graph.py:306",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:306#1",
+     "origin": "computed",
+     "part": "status",
+     "produced_at": "tools/citation_graph.py:306",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:307#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/citation_graph.py:307",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:310#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/citation_graph.py:310",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:310#1",
+     "origin": "computed",
+     "part": "detail",
+     "produced_at": "tools/citation_graph.py:310",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/citation_graph.py:315#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/citation_graph.py:315",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "tools/citation_graph.py:315#1",
+     "origin": "unknown",
+     "part": "str(exc)",
+     "produced_at": "tools/citation_graph.py:315",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "download_paper": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "paper_id"
+   ],
+   "evidence": [
+    "tools/download.py:934-1175",
+    "tools/download.py:777-787",
+    "tools/download.py:752-771",
+    "tools/download.py:688-744"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/download.py:785",
+     "data": "url",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "ARXIV_API_URL",
+     "resolved": "literal:arxiv.org (configuration override: ARXIV_API_URL)"
+    }
+   ],
+   "rationale": "The `download_paper` tool attempts to fetch the paper content from arXiv, first trying the HTML endpoint and then falling back to PDF if necessary. The result includes the status, message, paper ID, source, and content. The content is read from the user's local storage, and the tool does not execute any supplied code or deliver data to a chosen party. The tool makes an outbound call to the arXiv API to check if the paper exists. [dropped value_args not in the input schema: content]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/download.py:980",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "message",
+     "produced_at": "tools/download.py:977",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "paper_id",
+     "produced_at": "tools/download.py:978",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "source",
+     "produced_at": "tools/download.py:979",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "tools/download.py:984",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "content_warning",
+     "produced_at": "tools/download.py:986",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:692#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/download.py:692",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:696#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/download.py:696",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:720#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/download.py:720",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:727#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/download.py:727",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:758#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/download.py:758",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:758#1",
+     "origin": "argument_echo",
+     "part": "paper_id",
+     "produced_at": "tools/download.py:758",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:762#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/download.py:762",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:762#1",
+     "origin": "argument_echo",
+     "part": "paper_id",
+     "produced_at": "tools/download.py:762",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "id": "tools/download.py:763#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools/download.py:763",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:765#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/download.py:765",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/download.py:765#1",
+     "origin": "computed",
+     "part": "response.status_code",
+     "produced_at": "tools/download.py:765",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:765#2",
+     "origin": "argument_echo",
+     "part": "paper_id",
+     "produced_at": "tools/download.py:765",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:769#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/download.py:769",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:769#1",
+     "origin": "argument_echo",
+     "part": "paper_id",
+     "produced_at": "tools/download.py:769",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/download.py:769#2",
+     "origin": "computed",
+     "part": "exc",
+     "produced_at": "tools/download.py:769",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:783#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/download.py:783",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:783#1",
+     "origin": "literal",
+     "part": "ARXIV_API_URL",
+     "produced_at": "tools/download.py:783",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:783#2",
+     "origin": "argument_echo",
+     "part": "paper_id",
+     "produced_at": "tools/download.py:783",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:947#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/download.py:947",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:947#1",
+     "origin": "argument_echo",
+     "part": "display",
+     "produced_at": "tools/download.py:947",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:1005#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/download.py:1005",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:1005#1",
+     "origin": "computed",
+     "part": "stored_ver",
+     "produced_at": "tools/download.py:1005",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:1007#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/download.py:1007",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:1007#1",
+     "origin": "computed",
+     "part": "requested_version",
+     "produced_at": "tools/download.py:1007",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:1071#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/download.py:1071",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:1071#1",
+     "origin": "argument_echo",
+     "part": "paper_id",
+     "produced_at": "tools/download.py:1071",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:1090#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/download.py:1090",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:1090#1",
+     "origin": "argument_echo",
+     "part": "paper_id",
+     "produced_at": "tools/download.py:1090",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:1111#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/download.py:1111",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:1155#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/download.py:1155",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:1155#1",
+     "origin": "computed",
+     "part": "safe_id",
+     "produced_at": "tools/download.py:1155",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:1173#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/download.py:1173",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/download.py:1173#1",
+     "origin": "argument_echo",
+     "part": "\"status\": \"error\", \"message\": f\"Error: {message}\"",
+     "produced_at": "tools/download.py:1173",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "export_citations": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "paper_ids"
+   ],
+   "evidence": [
+    "tools/export_citations.py:219-330",
+    "tools/export_citations.py:189-216"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/export_citations.py:158",
+     "data": "ids",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "ARXIV_API_URL",
+     "resolved": "literal:github.com (configuration override: settings)"
+    }
+   ],
+   "rationale": "The tool fetches metadata from the arXiv API using the `_rate_limited_get` function, which sends a request to the `ARXIV_API_URL` with the provided paper IDs. The response is parsed to generate BibTeX entries. The result includes a status, format, BibTeX content, results, and count, all of which are computed based on the fetched metadata. [kind: data sent to a host written in the code; WRITE]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/export_citations.py:314",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "format",
+     "produced_at": "tools/export_citations.py:315",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "bibtex",
+     "produced_at": "tools/export_citations.py:316",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "results",
+     "produced_at": "tools/export_citations.py:317",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "count",
+     "produced_at": "tools/export_citations.py:318",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/export_citations.py:226#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/export_citations.py:226",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/export_citations.py:228#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/export_citations.py:228",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/export_citations.py:228#1",
+     "origin": "computed",
+     "part": "len(raw_ids)",
+     "produced_at": "tools/export_citations.py:228",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/export_citations.py:228#2",
+     "origin": "literal",
+     "part": "MAX_IDS",
+     "produced_at": "tools/export_citations.py:228",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/export_citations.py:296#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/export_citations.py:296",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/export_citations.py:324#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/export_citations.py:324",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/export_citations.py:327#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/export_citations.py:327",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/export_citations.py:329#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/export_citations.py:329",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/export_citations.py:329#1",
+     "origin": "argument_echo",
+     "part": "exc",
+     "produced_at": "tools/export_citations.py:329",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/export_citations.py:330#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/export_citations.py:330",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_abstract": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "paper_id"
+   ],
+   "evidence": [
+    "tools/get_abstract.py:41-168",
+    "tools/get_abstract.py:18-38"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/get_abstract.py:71",
+     "data": "url",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "ARXIV_API_URL",
+     "resolved": "literal:arxiv.org (configuration override: ARXIV_API_URL)"
+    }
+   ],
+   "rationale": "The `get_abstract` tool fetches the abstract and metadata of a paper from the arXiv API. The result includes the status, paper ID, title, authors, abstract, categories, published date, and PDF URL. The metadata is read from the arXiv API response, which is public and controlled by an outside party. The tool makes an outbound call to the arXiv API to retrieve the data. [kind: data sent to a host written in the code; WRITE]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/get_abstract.py:127",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "paper_id",
+     "produced_at": "tools/get_abstract.py:128",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "title",
+     "produced_at": "tools/get_abstract.py:129",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "authors",
+     "produced_at": "tools/get_abstract.py:130",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "content_warning",
+     "produced_at": "tools/get_abstract.py:131",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "abstract",
+     "produced_at": "tools/get_abstract.py:132",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "categories",
+     "produced_at": "tools/get_abstract.py:133",
+     "scope": "public"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "published",
+     "produced_at": "tools/get_abstract.py:134",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "pdf_url",
+     "produced_at": "tools/get_abstract.py:135",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/get_abstract.py:68#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/get_abstract.py:68",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "tools/get_abstract.py:68#1",
+     "origin": "unknown",
+     "part": "ARXIV_API_URL",
+     "produced_at": "tools/get_abstract.py:68",
+     "scope": "unknown"
+    },
+    {
+     "control": "none",
+     "id": "tools/get_abstract.py:68#2",
+     "origin": "argument_echo",
+     "part": "paper_id",
+     "produced_at": "tools/get_abstract.py:68",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/get_abstract.py:87#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/get_abstract.py:87",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/get_abstract.py:87#1",
+     "origin": "argument_echo",
+     "part": "paper_id",
+     "produced_at": "tools/get_abstract.py:87",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/get_abstract.py:120#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/get_abstract.py:120",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/get_abstract.py:120#1",
+     "origin": "argument_echo",
+     "part": "paper_id",
+     "produced_at": "tools/get_abstract.py:120",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/get_abstract.py:157#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/get_abstract.py:157",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/get_abstract.py:157#1",
+     "origin": "argument_echo",
+     "part": "paper_id",
+     "produced_at": "tools/get_abstract.py:157",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/get_abstract.py:163#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/get_abstract.py:163",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "tools/get_abstract.py:163#1",
+     "origin": "unknown",
+     "part": "e",
+     "produced_at": "tools/get_abstract.py:163",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_paper_latex": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "paper_id"
+   ],
+   "evidence": [
+    "tools/latex.py:345-378",
+    "tools/latex.py:273-286"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/latex.py:235",
+     "data": "paper_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "ARXIV_API_URL",
+     "resolved": "literal:export.arxiv.org"
+    }
+   ],
+   "rationale": "The tool downloads and processes LaTeX source files from arXiv, caches them locally, and returns the content. The result includes the status, paper ID, main file, source files count, and content. The content is read from the local cache. [kind: data sent to a host written in the code; WRITE]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/latex.py:354",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "paper_id",
+     "produced_at": "tools/latex.py:355",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "main_file",
+     "produced_at": "tools/latex.py:356",
+     "scope": "user_local"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "source_files",
+     "produced_at": "tools/latex.py:357",
+     "scope": "user_local"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "tools/latex.py:364",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:277#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:277",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:350#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:350",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/latex.py:365#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:365",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:371#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/latex.py:371",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/latex.py:371#1",
+     "origin": "computed",
+     "part": "status",
+     "produced_at": "tools/latex.py:371",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:373#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:373",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:375#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:375",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:378#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:378",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_paper_latex_section": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "paper_id",
+    "section_id"
+   ],
+   "evidence": [
+    "tools/latex.py:432-479",
+    "tools/latex.py:313-331"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/latex.py:235",
+     "data": "paper_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "ARXIV_API_URL",
+     "resolved": "literal:export.arxiv.org"
+    }
+   ],
+   "rationale": "The tool retrieves a specific section from the LaTeX source of a paper. It fetches the source from arXiv if not cached, parses it, and returns the section content. The result includes the status, paper ID, section details, and content, which are computed from the local cache. [kind: data sent to a host written in the code; WRITE]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/latex.py:456",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "paper_id",
+     "produced_at": "tools/latex.py:457",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "section",
+     "produced_at": "tools/latex.py:458",
+     "scope": "user_local"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "tools/latex.py:468",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:437#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:437",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:440#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:440",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:442#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/latex.py:442",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:442#1",
+     "origin": "computed",
+     "part": "MAX_SECTION_ID_CHARS",
+     "produced_at": "tools/latex.py:442",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:449#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:449",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:450#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/latex.py:450",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:450#1",
+     "origin": "argument_echo",
+     "part": "section_id!r",
+     "produced_at": "tools/latex.py:450",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/latex.py:469#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:469",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:471#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:471",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:472#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/latex.py:472",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:472#1",
+     "origin": "computed",
+     "part": "exc.response.status_code",
+     "produced_at": "tools/latex.py:472",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:476#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:476",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:479#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:479",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_paper_outline": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/paper_outline.py:825-864",
+    "tools/paper_outline.py:738-764"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool `get_paper_outline` processes a paper's markdown content to extract and return a structured outline of its sections. The result includes metadata about the paper and the sections found, all derived from the user's local storage. The `paper_id`, `arxiv_version`, and `versioned_id` are computed based on the user's stored data, indicating the user's control over these fields. The `sections` list is also derived from the user's local content, reflecting the user's control.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/paper_outline.py:842",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "paper_id",
+     "produced_at": "tools/paper_outline.py:843",
+     "scope": "user_local"
+    },
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "arxiv_version",
+     "produced_at": "tools/paper_outline.py:844",
+     "scope": "user_local"
+    },
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "versioned_id",
+     "produced_at": "tools/paper_outline.py:845",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "total_sections",
+     "produced_at": "tools/paper_outline.py:846",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "start",
+     "produced_at": "tools/paper_outline.py:847",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "returned_sections",
+     "produced_at": "tools/paper_outline.py:848",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "next_start",
+     "produced_at": "tools/paper_outline.py:849",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "is_truncated",
+     "produced_at": "tools/paper_outline.py:850",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "sections",
+     "produced_at": "tools/paper_outline.py:851",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "tools/paper_outline.py:758#0",
+     "origin": "literal",
+     "part": "Maximum headings to return (default",
+     "produced_at": "tools/paper_outline.py:758",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/paper_outline.py:758#1",
+     "origin": "computed",
+     "part": "DEFAULT_MAX_SECTIONS",
+     "produced_at": "tools/paper_outline.py:758",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/paper_outline.py:862#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/paper_outline.py:862",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/paper_outline.py:864#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/paper_outline.py:864",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "tools/paper_outline.py:825-864",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_paper_latex_sections": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "paper_id"
+   ],
+   "evidence": [
+    "tools/latex.py:381-429",
+    "tools/latex.py:288-311"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/latex.py:235",
+     "data": "paper_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "ARXIV_API_URL",
+     "resolved": "literal:export.arxiv.org"
+    }
+   ],
+   "rationale": "The tool lists sections from the LaTeX source of a paper. It fetches the source from arXiv if not cached, parses it, and returns the sections. The result includes the status, paper ID, main file, total sections, and the sections themselves, which are computed from the local cache. [kind: data sent to a host written in the code; WRITE]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/latex.py:406",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "paper_id",
+     "produced_at": "tools/latex.py:407",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "resource_read",
+     "part": "main_file",
+     "produced_at": "tools/latex.py:408",
+     "scope": "user_local"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "total_sections",
+     "produced_at": "tools/latex.py:409",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "start",
+     "produced_at": "tools/latex.py:410",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "returned_sections",
+     "produced_at": "tools/latex.py:411",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "next_start",
+     "produced_at": "tools/latex.py:412",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "is_truncated",
+     "produced_at": "tools/latex.py:413",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "sections",
+     "produced_at": "tools/latex.py:414",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:305#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/latex.py:305",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/latex.py:305#1",
+     "origin": "computed",
+     "part": "DEFAULT_MAX_SECTIONS",
+     "produced_at": "tools/latex.py:305",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:386#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:386",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/latex.py:391#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:391",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "tools/latex.py:419#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:419",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "tools/latex.py:421#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:421",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:422#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/latex.py:422",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/latex.py:422#1",
+     "origin": "computed",
+     "part": "exc.response.status_code",
+     "produced_at": "tools/latex.py:422",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/latex.py:426#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:426",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/latex.py:429#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/latex.py:429",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_papers": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/list_papers.py:315-346",
+    "tools/list_papers.py:28-53"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `list_papers` tool reads the list of papers stored locally and returns their metadata. The result includes the total number of papers and their metadata, which are read from the user's local storage. The tool does not make any outbound calls or execute supplied code.",
+   "result_contents": [
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "total_papers",
+     "produced_at": "tools/list_papers.py:337",
+     "scope": "user_local"
+    },
+    {
+     "control": "user",
+     "origin": "resource_read",
+     "part": "papers",
+     "produced_at": "tools/list_papers.py:338",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "tools/list_papers.py:35#0",
+     "origin": "literal",
+     "part": "Set compact=true to return arXiv IDs only.",
+     "produced_at": "tools/list_papers.py:35",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/list_papers.py:45#0",
+     "origin": "literal",
+     "part": "If true, return arXiv IDs only. Default is full local metadata",
+     "produced_at": "tools/list_papers.py:45",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/list_papers.py:346#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/list_papers.py:346",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "tools/list_papers.py:346#1",
+     "origin": "unknown",
+     "part": "str(e)",
+     "produced_at": "tools/list_papers.py:346",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_watches": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/alerts.py:432-445",
+    "tools/alerts.py:111-125"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool reads the list of saved topic watches from a local file and returns them. The result includes the status, count of watches, and the list of watches, which are controlled by the user.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/alerts.py:438",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "watch_count",
+     "produced_at": "tools/alerts.py:439",
+     "scope": "user_local"
+    },
+    {
+     "control": "user",
+     "origin": "resource_read",
+     "part": "watches",
+     "produced_at": "tools/alerts.py:440",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerts.py:442#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/alerts.py:442",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerts.py:445#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/alerts.py:445",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "tools/alerts.py:445#1",
+     "origin": "unknown",
+     "part": "str(exc)",
+     "produced_at": "tools/alerts.py:445",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_paper": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/read_paper.py:97-167",
+    "tools/read_paper.py:25-71"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `read_paper` tool retrieves the content of a paper stored locally. The result includes the status, paper ID, arXiv version, versioned ID, and content. The content is read from the user's local storage. The tool does not make any outbound calls or execute supplied code.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/read_paper.py:137",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "paper_id",
+     "produced_at": "tools/read_paper.py:138",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "arxiv_version",
+     "produced_at": "tools/read_paper.py:139",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "versioned_id",
+     "produced_at": "tools/read_paper.py:140",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "tools/read_paper.py:145",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "content_warning",
+     "produced_at": "tools/read_paper.py:146",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/read_paper.py:31#0",
+     "origin": "literal",
+     "part": "so one call cannot return an unbounded paper body. When is_truncated is true, call again",
+     "produced_at": "tools/read_paper.py:31",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/read_paper.py:56#0",
+     "origin": "literal",
+     "part": "Maximum raw paper characters to return from start;",
+     "produced_at": "tools/read_paper.py:56",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/read_paper.py:63#0",
+     "origin": "literal",
+     "part": "Set true to opt out of the bounded default and return the",
+     "produced_at": "tools/read_paper.py:63",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/read_paper.py:128#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/read_paper.py:128",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/read_paper.py:128#1",
+     "origin": "computed",
+     "part": "filesystem_arxiv_stem(resolved)",
+     "produced_at": "tools/read_paper.py:128",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "tools/read_paper.py:140#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/read_paper.py:140",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/read_paper.py:140#1",
+     "origin": "computed",
+     "part": "bare",
+     "produced_at": "tools/read_paper.py:140",
+     "scope": "user_local"
+    },
+    {
+     "control": "service",
+     "id": "tools/read_paper.py:140#2",
+     "origin": "computed",
+     "part": "version",
+     "produced_at": "tools/read_paper.py:140",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "tools/read_paper.py:163#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/read_paper.py:163",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/read_paper.py:163#1",
+     "origin": "computed",
+     "part": "str(e)",
+     "produced_at": "tools/read_paper.py:163",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_paper_section": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/paper_outline.py:867-906",
+    "tools/paper_outline.py:766-787"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `read_paper_section` tool reads a specific section of a paper stored locally. The result includes metadata about the paper and the section, as well as the section's content. The `paper_id`, `arxiv_version`, `versioned_id`, and `section` are computed based on the user's stored data, indicating the user's control over these fields. The `content` is read from the user's local storage, reflecting the user's control.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/paper_outline.py:892",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "paper_id",
+     "produced_at": "tools/paper_outline.py:893",
+     "scope": "user_local"
+    },
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "arxiv_version",
+     "produced_at": "tools/paper_outline.py:894",
+     "scope": "user_local"
+    },
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "versioned_id",
+     "produced_at": "tools/paper_outline.py:895",
+     "scope": "user_local"
+    },
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "section",
+     "produced_at": "tools/paper_outline.py:896",
+     "scope": "user_local"
+    },
+    {
+     "control": "user",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "tools/paper_outline.py:904",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "content_warning",
+     "produced_at": "tools/paper_outline.py:904",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "content_length",
+     "produced_at": "tools/content.py:88",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "start",
+     "produced_at": "tools/content.py:89",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "returned_chars",
+     "produced_at": "tools/content.py:90",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "next_start",
+     "produced_at": "tools/content.py:91",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "is_truncated",
+     "produced_at": "tools/content.py:92",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "next_retrieval",
+     "produced_at": "tools/content.py:95",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/paper_outline.py:878#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/paper_outline.py:878",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/paper_outline.py:880#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/paper_outline.py:880",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/paper_outline.py:880#1",
+     "origin": "computed",
+     "part": "MAX_SECTION_ID_CHARS",
+     "produced_at": "tools/paper_outline.py:880",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/paper_outline.py:886#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/paper_outline.py:886",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/paper_outline.py:887#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/paper_outline.py:887",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/paper_outline.py:887#1",
+     "origin": "argument_echo",
+     "part": "section_id!r",
+     "produced_at": "tools/paper_outline.py:887",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/paper_outline.py:905#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/paper_outline.py:905",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "tools/paper_outline.py:867-906",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "reindex": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/semantic_search.py:376-384",
+    "tools/semantic_search.py:81-98"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `reindex` tool rebuilds the local semantic index for downloaded papers. The result includes the status, number of indexed papers, failed papers, and total local papers. The tool does not make any outbound calls or execute supplied code.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/semantic_search.py:369",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "indexed",
+     "produced_at": "tools/semantic_search.py:370",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "failed",
+     "produced_at": "tools/semantic_search.py:371",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "total_local_papers",
+     "produced_at": "tools/semantic_search.py:373",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/semantic_search.py:381#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/semantic_search.py:381",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "tools/semantic_search.py:384#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/semantic_search.py:384",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/semantic_search.py:384#1",
+     "origin": "computed",
+     "part": "str(exc)",
+     "produced_at": "tools/semantic_search.py:384",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_paper_text": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/paper_outline.py:910-953",
+    "tools/paper_outline.py:789-822"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `search_paper_text` tool searches for passages in a locally stored paper that match a given query. The result includes metadata about the paper and the passages found. The `paper_id`, `arxiv_version`, and `versioned_id` are computed based on the user's stored data, indicating the user's control over these fields. The `passages` list is derived from the user's local content, reflecting the user's control.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/paper_outline.py:941",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "paper_id",
+     "produced_at": "tools/paper_outline.py:942",
+     "scope": "user_local"
+    },
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "arxiv_version",
+     "produced_at": "tools/paper_outline.py:943",
+     "scope": "user_local"
+    },
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "versioned_id",
+     "produced_at": "tools/paper_outline.py:944",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "query",
+     "produced_at": "tools/paper_outline.py:945",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "returned_passages",
+     "produced_at": "tools/paper_outline.py:946",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "max_passages",
+     "produced_at": "tools/paper_outline.py:947",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "passage_chars",
+     "produced_at": "tools/paper_outline.py:948",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "passages",
+     "produced_at": "tools/paper_outline.py:949",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "tools/paper_outline.py:810#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/paper_outline.py:810",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/paper_outline.py:810#1",
+     "origin": "computed",
+     "part": "DEFAULT_MAX_PASSAGES",
+     "produced_at": "tools/paper_outline.py:810",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/paper_outline.py:816#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/paper_outline.py:816",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/paper_outline.py:816#1",
+     "origin": "computed",
+     "part": "DEFAULT_PASSAGE_CHARS",
+     "produced_at": "tools/paper_outline.py:816",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "tools/paper_outline.py:916#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/paper_outline.py:916",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/paper_outline.py:921#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/paper_outline.py:921",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/paper_outline.py:923#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/paper_outline.py:923",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/paper_outline.py:923#1",
+     "origin": "computed",
+     "part": "MAX_QUERY_CHARS",
+     "produced_at": "tools/paper_outline.py:923",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/paper_outline.py:951#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/paper_outline.py:951",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "tools/paper_outline.py:953#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/paper_outline.py:953",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "tools/paper_outline.py:910-953",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_papers": {
+   "attacker_named_fields": [
+    "return"
+   ],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "query"
+   ],
+   "evidence": [
+    "tools/search.py:706-808",
+    "tools/search.py:333-371",
+    "tools/search.py:298-330",
+    "tools/search.py:589-663"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/search.py:130",
+     "data": "url",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "ARXIV_API_URL",
+     "resolved": "literal:arxiv.org (configuration override: ARXIV_API_URL)"
+    }
+   ],
+   "rationale": "The `search_papers` tool constructs a query URL using `build_arxiv_search_url` and makes an HTTP GET request to the arXiv API (`ARXIV_API_URL`) using `_rate_limited_get`. The response is parsed, and the papers are extracted and returned. The result includes the status, message, total results, and a list of papers. The papers' content is read from the arXiv API response, which is public and controlled by an outside party. The tool does not execute any supplied code or deliver data to a chosen party. [kind: data sent to a host written in the code; WRITE]",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/search.py:89",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "message",
+     "produced_at": "tools/search.py:89",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "http_status",
+     "produced_at": "tools/search.py:106",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "retry_after_seconds",
+     "produced_at": "tools/search.py:109",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "total_results",
+     "produced_at": "tools/search.py:487",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "has_more",
+     "produced_at": "tools/search.py:491",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "next_start",
+     "produced_at": "tools/search.py:493",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "abstract_mode",
+     "produced_at": "tools/search.py:480",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "papers",
+     "produced_at": "tools/search.py:481",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "content_warning",
+     "produced_at": "tools/search.py:485",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:315#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/search.py:315",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:315#1",
+     "origin": "argument_echo",
+     "part": "final_query",
+     "produced_at": "tools/search.py:315",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:325#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/search.py:325",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:325#1",
+     "origin": "computed",
+     "part": "start",
+     "produced_at": "tools/search.py:325",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:326#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/search.py:326",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:326#1",
+     "origin": "argument_echo",
+     "part": "max_results",
+     "produced_at": "tools/search.py:326",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:327#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/search.py:327",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:327#1",
+     "origin": "computed",
+     "part": "sort_map.get(sort_by, 'relevance')",
+     "produced_at": "tools/search.py:327",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:328#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/search.py:328",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:328#1",
+     "origin": "computed",
+     "part": "order",
+     "produced_at": "tools/search.py:328",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:330#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/search.py:330",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:330#1",
+     "origin": "literal",
+     "part": "ARXIV_API_URL",
+     "produced_at": "tools/search.py:330",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:330#2",
+     "origin": "argument_echo",
+     "part": "encoded_query",
+     "produced_at": "tools/search.py:330",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:330#3",
+     "origin": "computed",
+     "part": "base_params",
+     "produced_at": "tools/search.py:330",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:363#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/search.py:363",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/search.py:363#1",
+     "origin": "computed",
+     "part": "url",
+     "produced_at": "tools/search.py:363",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:604#0",
+     "origin": "literal",
+     "part": "with backoff; persistent rate limits return status=rate_limited.",
+     "produced_at": "tools/search.py:604",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:618#0",
+     "origin": "literal",
+     "part": "Maximum results to return (default: 5, max: 50).",
+     "produced_at": "tools/search.py:618",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:729#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/search.py:729",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:737#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/search.py:737",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:745#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/search.py:745",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:746#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/search.py:746",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:755#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/search.py:755",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:772#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/search.py:772",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:772#1",
+     "origin": "computed",
+     "part": "len(results)",
+     "produced_at": "tools/search.py:772",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/search.py:780#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "tools/search.py:780",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:785#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/search.py:785",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:786#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/search.py:786",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:792#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/search.py:792",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:792#1",
+     "origin": "argument_echo",
+     "part": "e",
+     "produced_at": "tools/search.py:792",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:795#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/search.py:795",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:795#1",
+     "origin": "computed",
+     "part": "status",
+     "produced_at": "tools/search.py:795",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:797#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/search.py:797",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:800#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/search.py:800",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:801#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/search.py:801",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:807#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/search.py:807",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:807#1",
+     "origin": "argument_echo",
+     "part": "e",
+     "produced_at": "tools/search.py:807",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/search.py:808#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "tools/search.py:808",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "semantic_search": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/semantic_search.py:387-453",
+    "tools/semantic_search.py:46-78"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `semantic_search` tool performs a semantic similarity search over papers that have been downloaded locally. The result includes the mode, query, total results, and a list of papers. The papers are read from the user's local storage. The tool does not make any outbound calls or execute supplied code.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "mode",
+     "produced_at": "tools/semantic_search.py:432",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "query",
+     "produced_at": "tools/semantic_search.py:433",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "total_results",
+     "produced_at": "tools/semantic_search.py:434",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "origin": "resource_read",
+     "part": "papers",
+     "produced_at": "tools/semantic_search.py:435",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "tools/semantic_search.py:53#0",
+     "origin": "literal",
+     "part": "IMPORTANT: only searches your local downloaded collection \u2014 will return empty results if no papers",
+     "produced_at": "tools/semantic_search.py:53",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/semantic_search.py:72#0",
+     "origin": "literal",
+     "part": "Maximum number of results to return (default: 10).",
+     "produced_at": "tools/semantic_search.py:72",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/semantic_search.py:392#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/semantic_search.py:392",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/semantic_search.py:392#1",
+     "origin": "computed",
+     "part": "dependency_error",
+     "produced_at": "tools/semantic_search.py:392",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/semantic_search.py:416#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/semantic_search.py:416",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "tools/semantic_search.py:416#1",
+     "origin": "argument_echo",
+     "part": "paper_id",
+     "produced_at": "tools/semantic_search.py:416",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "tools/semantic_search.py:444#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/semantic_search.py:444",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/semantic_search.py:444#1",
+     "origin": "resource_read",
+     "part": "paper.paper_id",
+     "produced_at": "tools/semantic_search.py:444",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "tools/semantic_search.py:453#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/semantic_search.py:453",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/semantic_search.py:453#1",
+     "origin": "computed",
+     "part": "str(exc)",
+     "produced_at": "tools/semantic_search.py:453",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "unwatch_topic": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/alerts.py:448-496",
+    "tools/alerts.py:127-152"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [
+    {
+     "at": "tools/alerts.py:479",
+     "data": "payload",
+     "destination_class": "local_file_or_process",
+     "host_or_config": ""
+    }
+   ],
+   "rationale": "The tool deletes a saved topic watch by removing it from a local file. The result includes a status, message, and the topic that was removed. The topic is echoed from the input argument.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/alerts.py:486",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "message",
+     "produced_at": "tools/alerts.py:487",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "topic",
+     "produced_at": "tools/alerts.py:488",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerts.py:472#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/alerts.py:472",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerts.py:472#1",
+     "origin": "argument_echo",
+     "part": "topic",
+     "produced_at": "tools/alerts.py:472",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerts.py:496#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "tools/alerts.py:496",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "tools/alerts.py:496#1",
+     "origin": "unknown",
+     "part": "str(exc)",
+     "produced_at": "tools/alerts.py:496",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "topic"
+   ]
+  },
+  "watch_topic": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "tools/alerts.py:248-308",
+    "tools/alerts.py:28-75"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "tools/alerts.py:294",
+     "data": "payload",
+     "destination_class": "local_file_or_process",
+     "host_or_config": ""
+    }
+   ],
+   "rationale": "The tool saves or updates a topic watch by writing to a local file. The result includes a status, message, and the saved topic details. The topic is controlled by the user, and the data is stored locally.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "status",
+     "produced_at": "tools/alerts.py:301",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "message",
+     "produced_at": "tools/alerts.py:302",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "topic",
+     "produced_at": "tools/alerts.py:303",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerts.py:68#0",
+     "origin": "literal",
+     "part": "Maximum papers to return per alert check (default: 10).",
+     "produced_at": "tools/alerts.py:68",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "tools/alerts.py:253#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "tools/alerts.py:253",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "tools/alerts.py:296#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "tools/alerts.py:296",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "topic",
+    "categories",
+    "max_results"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "0.7.2"
+}

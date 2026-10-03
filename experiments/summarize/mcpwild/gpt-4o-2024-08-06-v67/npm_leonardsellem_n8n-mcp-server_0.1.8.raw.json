@@ -1,0 +1,2172 @@
+{
+ "batch": {
+  "tools": {
+   "list_workflows": {
+    "result_contents": [
+     {
+      "part": "Found {formattedWorkflows.length} workflow(s)",
+      "produced_at": "build/tools/workflow/list.js:27",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "part": "id",
+      "produced_at": "build/tools/workflow/list.js:22",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "name",
+      "produced_at": "build/tools/workflow/list.js:23",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "active",
+      "produced_at": "build/tools/workflow/list.js:24",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "updatedAt",
+      "produced_at": "build/tools/workflow/list.js:25",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "none",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiService",
+      "at": "build/tools/workflow/list.js:19"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/workflow/list.js:10-30"
+    ],
+    "rationale": "The tool retrieves a list of workflows from the user's n8n account using `this.apiService.getWorkflows`. The result includes workflow IDs, names, active status, and update timestamps, which are read from the user's account. The number of workflows found is computed and returned as a literal string. The call to `this.apiService.getWorkflows` is an outbound call to the user's configured n8n service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "get_workflow": {
+    "result_contents": [
+     {
+      "part": "Retrieved workflow: {workflow.name}",
+      "produced_at": "build/tools/workflow/get.js:25",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "workflow",
+      "produced_at": "build/tools/workflow/get.js:25",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "workflowId",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiService",
+      "at": "build/tools/workflow/get.js:24"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/workflow/get.js:11-28"
+    ],
+    "rationale": "The tool retrieves a specific workflow by ID from the user's n8n account using `this.apiService.getWorkflow(workflowId)`. The result includes the workflow details and a message with the workflow name, which is controlled by the user. The call to `this.apiService.getWorkflow` is an outbound call to the user's configured n8n service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "create_workflow": {
+    "result_contents": [
+     {
+      "part": "Workflow created successfully",
+      "produced_at": "build/tools/workflow/create.js:50",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "id",
+      "produced_at": "build/tools/workflow/create.js:47",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "name",
+      "produced_at": "build/tools/workflow/create.js:48",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "active",
+      "produced_at": "build/tools/workflow/create.js:49",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "workflowData",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiService",
+      "at": "build/tools/workflow/create.js:45"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/workflow/create.js:11-52"
+    ],
+    "rationale": "The tool creates a new workflow in the user's n8n account using `this.apiService.createWorkflow(workflowData)`. The result includes the workflow ID, name, and active status. The name is controlled by the user, while the ID and active status are controlled by the service. The call to `this.apiService.createWorkflow` is an outbound call to the user's configured n8n service.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "name",
+     "nodes",
+     "connections",
+     "active",
+     "tags"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "update_workflow": {
+    "result_contents": [
+     {
+      "part": "Workflow updated successfully. {changesSummary}{warningsSummary}",
+      "produced_at": "build/tools/workflow/update.js:72",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "part": "id",
+      "produced_at": "build/tools/workflow/update.js:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "name",
+      "produced_at": "build/tools/workflow/update.js:70",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "active",
+      "produced_at": "build/tools/workflow/update.js:71",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "workflowData",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiService",
+      "at": "build/tools/workflow/update.js:47"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/workflow/update.js:11-74"
+    ],
+    "rationale": "The tool updates an existing workflow in the user's n8n account using `this.apiService.updateWorkflow(workflowId, workflowData)`. The result includes the workflow ID, name, and active status. The name is controlled by the user, while the ID and active status are controlled by the service. The call to `this.apiService.updateWorkflow` is an outbound call to the user's configured n8n service.",
+    "kind": "WRITE",
+    "destination_args": [
+     "workflowId"
+    ],
+    "value_args": [
+     "name",
+     "nodes",
+     "connections"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "delete_workflow": {
+    "result_contents": [
+     {
+      "part": "Workflow \"{workflowName}\" (ID: {workflowId}) has been successfully deleted",
+      "produced_at": "build/tools/workflow/delete.js:29",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "id",
+      "produced_at": "build/tools/workflow/delete.js:29",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "workflowId",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiService",
+      "at": "build/tools/workflow/delete.js:28"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/workflow/delete.js:11-30"
+    ],
+    "rationale": "The tool deletes a workflow from the user's n8n account using `this.apiService.deleteWorkflow(workflowId)`. The result includes a confirmation message with the workflow name and ID, both controlled by the user. The call to `this.apiService.deleteWorkflow` is an outbound call to the user's configured n8n service.",
+    "kind": "WRITE",
+    "destination_args": [
+     "workflowId"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "activate_workflow": {
+    "result_contents": [
+     {
+      "part": "Workflow \"{workflow.name}\" (ID: {workflowId}) has been successfully activated",
+      "produced_at": "build/tools/workflow/activate.js:30",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "id",
+      "produced_at": "build/tools/workflow/activate.js:27",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "name",
+      "produced_at": "build/tools/workflow/activate.js:28",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "active",
+      "produced_at": "build/tools/workflow/activate.js:29",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "workflowId",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiService",
+      "at": "build/tools/workflow/activate.js:25"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/workflow/activate.js:11-32"
+    ],
+    "rationale": "The tool activates a workflow in the user's n8n account using `this.apiService.activateWorkflow(workflowId)`. The result includes the workflow ID, name, and active status. The name is controlled by the user, while the ID and active status are controlled by the service. The call to `this.apiService.activateWorkflow` is an outbound call to the user's configured n8n service.",
+    "kind": "WRITE",
+    "destination_args": [
+     "workflowId"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "deactivate_workflow": {
+    "result_contents": [
+     {
+      "part": "Workflow \"{workflow.name}\" (ID: {workflowId}) has been successfully deactivated",
+      "produced_at": "build/tools/workflow/deactivate.js:30",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "id",
+      "produced_at": "build/tools/workflow/deactivate.js:27",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "name",
+      "produced_at": "build/tools/workflow/deactivate.js:28",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "active",
+      "produced_at": "build/tools/workflow/deactivate.js:29",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "workflowId",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiService",
+      "at": "build/tools/workflow/deactivate.js:25"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/workflow/deactivate.js:11-32"
+    ],
+    "rationale": "The tool deactivates a workflow in the user's n8n account using `this.apiService.deactivateWorkflow(workflowId)`. The result includes the workflow ID, name, and active status. The name is controlled by the user, while the ID and active status are controlled by the service. The call to `this.apiService.deactivateWorkflow` is an outbound call to the user's configured n8n service.",
+    "kind": "WRITE",
+    "destination_args": [
+     "workflowId"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "list_executions": {
+    "result_contents": [
+     {
+      "part": "Found {formattedExecutions.length} execution(s)",
+      "produced_at": "build/tools/execution/list.js:48",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "part": "executions",
+      "produced_at": "build/tools/execution/list.js:43",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "summary",
+      "produced_at": "build/tools/execution/list.js:44",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "total",
+      "produced_at": "build/tools/execution/list.js:45",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "part": "filtered",
+      "produced_at": "build/tools/execution/list.js:46",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "none",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiService",
+      "at": "build/tools/execution/list.js:20"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/execution/list.js:11-50"
+    ],
+    "rationale": "The tool retrieves a list of workflow executions from the user's n8n account using `this.apiService.getExecutions`. The result includes execution summaries and an optional summary of statistics. The number of executions found is computed and returned as a literal string. The call to `this.apiService.getExecutions` is an outbound call to the user's configured n8n service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "get_execution": {
+    "result_contents": [
+     {
+      "part": "formattedExecution",
+      "produced_at": "build/tools/execution/get.js:30",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "args.executionId",
+      "destination_class": "configured_own_service",
+      "host_or_config": "config.n8nApiUrl",
+      "at": "build/tools/execution/get.js:27"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/execution/get.js:20-31"
+    ],
+    "rationale": "The `get_execution` tool retrieves detailed information about a specific workflow execution using the `executionId` provided in the arguments. The execution details are fetched from the user's account on the n8n service (`resource_read`, `user_account`, `service`). The tool makes an outbound call to the configured n8n service using the `executionId` as a parameter (`configured_own_service`).",
+    "kind": "READ",
+    "destination_args": [
+     "executionId"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "delete_execution": {
+    "result_contents": [
+     {
+      "part": "{\"id\": executionId, \"deleted\": true}",
+      "produced_at": "build/tools/execution/delete.js:29",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "`Successfully deleted execution with ID: ${executionId}`",
+      "produced_at": "build/tools/execution/delete.js:29",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "executionId",
+      "destination_class": "configured_own_service",
+      "host_or_config": "config.n8nApiUrl",
+      "at": "build/tools/execution/delete.js:28"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/execution/delete.js:19-30"
+    ],
+    "rationale": "The `delete_execution` tool deletes a specific workflow execution using the `executionId` provided in the arguments. The tool makes an outbound call to the configured n8n service to perform the deletion (`configured_own_service`). The result includes an echoed `executionId` and a confirmation message, both of which are `argument_echo` and have `none` scope and control.",
+    "kind": "WRITE",
+    "destination_args": [
+     "executionId"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "run_webhook": {
+    "result_contents": [
+     {
+      "part": "{\"status\": response.status, \"statusText\": response.statusText, \"data\": response.data}",
+      "produced_at": "build/tools/execution/run.js:77-80",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "part": "`Webhook executed successfully`",
+      "produced_at": "build/tools/execution/run.js:81",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "params.data || {}",
+      "destination_class": "argument_named_destination",
+      "host_or_config": "",
+      "at": "build/tools/execution/run.js:75"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": true,
+     "argument": "workflowName",
+     "at": "build/tools/execution/run.js:75"
+    },
+    "evidence": [
+     "build/tools/execution/run.js:46-97"
+    ],
+    "rationale": "The `run_webhook` tool executes a workflow via a webhook using the `workflowName` provided in the arguments. It sends a POST request to a URL constructed from the `workflowName`, making it an `argument_named_destination`. The response from the webhook is included in the result, which is `resource_read` from a public scope and controlled by an `outside_party`. The tool delivers data to a chosen party based on the `workflowName`.",
+    "kind": "WRITE",
+    "destination_args": [
+     "workflowName"
+    ],
+    "value_args": [
+     "data"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   }
+  },
+  "value_conditions": [],
+  "notes": []
+ },
+ "methods": {},
+ "statement_calls": [
+  {
+   "subject": "handler lines build/tools/workflow/list.js:10-30",
+   "attempt": 0,
+   "ids": [
+    "build/tools/workflow/list.js:18#0",
+    "build/tools/workflow/list.js:27#0",
+    "build/tools/workflow/list.js:27#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/workflow/list.js:18#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/list.js:27#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/list.js:27#1\",\"part\":\"formattedWorkflows.length\",\"origin\":\"computed\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1452,
+    "output_tokens": 133,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/workflow/list.js:37-50",
+   "attempt": 0,
+   "ids": [
+    "build/tools/workflow/list.js:37#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/workflow/list.js:37#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1276,
+    "output_tokens": 47,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/workflow/get.js:11-28",
+   "attempt": 0,
+   "ids": [
+    "build/tools/workflow/get.js:19#0",
+    "build/tools/workflow/get.js:25#0",
+    "build/tools/workflow/get.js:25#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/workflow/get.js:19#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/get.js:25#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/get.js:25#1\",\"part\":\"workflow.name\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1415,
+    "output_tokens": 132,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/workflow/get.js:35-48",
+   "attempt": 0,
+   "ids": [
+    "build/tools/workflow/get.js:35#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/workflow/get.js:35#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1267,
+    "output_tokens": 47,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/workflow/create.js:11-52",
+   "attempt": 0,
+   "ids": [
+    "build/tools/workflow/create.js:19#0",
+    "build/tools/workflow/create.js:46#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/workflow/create.js:19#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/create.js:46#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1594,
+    "output_tokens": 87,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/workflow/create.js:60-95",
+   "attempt": 0,
+   "ids": [
+    "build/tools/workflow/create.js:60#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/workflow/create.js:60#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1429,
+    "output_tokens": 47,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/workflow/update.js:11-74",
+   "attempt": 0,
+   "ids": [
+    "build/tools/workflow/update.js:19#0",
+    "build/tools/workflow/update.js:51#0",
+    "build/tools/workflow/update.js:51#1",
+    "build/tools/workflow/update.js:51#2",
+    "build/tools/workflow/update.js:53#0",
+    "build/tools/workflow/update.js:55#0",
+    "build/tools/workflow/update.js:59#0",
+    "build/tools/workflow/update.js:61#0",
+    "build/tools/workflow/update.js:63#0",
+    "build/tools/workflow/update.js:63#1",
+    "build/tools/workflow/update.js:66#0",
+    "build/tools/workflow/update.js:66#1",
+    "build/tools/workflow/update.js:68#0",
+    "build/tools/workflow/update.js:72#0",
+    "build/tools/workflow/update.js:72#1",
+    "build/tools/workflow/update.js:72#2"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/workflow/update.js:19#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/update.js:51#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/update.js:51#1\",\"part\":\"currentWorkflow.name\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/update.js:51#2\",\"part\":\"name\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"build/tools/workflow/update.js:53#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/update.js:55#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/update.js:59#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/update.js:61#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/update.js:63#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/update.js:63#1\",\"part\":\"changesArray.join(', ')\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/update.js:66#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/update.js:66#1\",\"part\":\"warnings.join(', ')\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/update.js:68#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/update.js:72#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/update.js:72#1\",\"part\":\"changesSummary\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/update.js:72#2\",\"part\":\"warningsSummary\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2409,
+    "output_tokens": 668,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/workflow/update.js:82-121",
+   "attempt": 0,
+   "ids": [
+    "build/tools/workflow/update.js:82#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/workflow/update.js:82#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1484,
+    "output_tokens": 47,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/workflow/delete.js:11-30",
+   "attempt": 0,
+   "ids": [
+    "build/tools/workflow/delete.js:19#0",
+    "build/tools/workflow/delete.js:29#0",
+    "build/tools/workflow/delete.js:29#1",
+    "build/tools/workflow/delete.js:29#2"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/workflow/delete.js:19#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/delete.js:29#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/delete.js:29#1\",\"part\":\"workflowName\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/delete.js:29#2\",\"part\":\"workflowId\",\"origin\":\"argument_echo\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 1544,
+    "output_tokens": 174,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/workflow/delete.js:39-52",
+   "attempt": 0,
+   "ids": [
+    "build/tools/workflow/delete.js:39#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/workflow/delete.js:39#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1269,
+    "output_tokens": 47,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/workflow/activate.js:11-32",
+   "attempt": 0,
+   "ids": [
+    "build/tools/workflow/activate.js:19#0",
+    "build/tools/workflow/activate.js:26#0",
+    "build/tools/workflow/activate.js:30#0",
+    "build/tools/workflow/activate.js:30#1",
+    "build/tools/workflow/activate.js:30#2"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/workflow/activate.js:19#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/activate.js:26#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/activate.js:30#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/activate.js:30#1\",\"part\":\"workflow.name\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/activate.js:30#2\",\"part\":\"workflowId\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 1539,
+    "output_tokens": 219,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/workflow/activate.js:40-53",
+   "attempt": 0,
+   "ids": [
+    "build/tools/workflow/activate.js:40#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/workflow/activate.js:40#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1272,
+    "output_tokens": 48,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/workflow/deactivate.js:11-32",
+   "attempt": 0,
+   "ids": [
+    "build/tools/workflow/deactivate.js:19#0",
+    "build/tools/workflow/deactivate.js:26#0",
+    "build/tools/workflow/deactivate.js:30#0",
+    "build/tools/workflow/deactivate.js:30#1",
+    "build/tools/workflow/deactivate.js:30#2"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/workflow/deactivate.js:19#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/deactivate.js:26#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/deactivate.js:30#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/deactivate.js:30#1\",\"part\":\"workflow.name\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/workflow/deactivate.js:30#2\",\"part\":\"workflowId\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 1548,
+    "output_tokens": 219,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/workflow/deactivate.js:40-53",
+   "attempt": 0,
+   "ids": [
+    "build/tools/workflow/deactivate.js:40#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/workflow/deactivate.js:40#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1274,
+    "output_tokens": 48,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/execution/list.js:11-50",
+   "attempt": 0,
+   "ids": [
+    "build/tools/execution/list.js:19#0",
+    "build/tools/execution/list.js:48#0",
+    "build/tools/execution/list.js:48#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/execution/list.js:19#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/list.js:48#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/list.js:48#1\",\"part\":\"formattedExecutions.length\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1686,
+    "output_tokens": 132,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/execution/list.js:58-87",
+   "attempt": 0,
+   "ids": [
+    "build/tools/execution/list.js:58#0",
+    "build/tools/execution/list.js:74#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/execution/list.js:58#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/list.js:74#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1441,
+    "output_tokens": 87,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/execution/get.js:20-31",
+   "attempt": 0,
+   "ids": [
+    "build/tools/execution/get.js:21#0",
+    "build/tools/execution/get.js:30#0",
+    "build/tools/execution/get.js:30#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/execution/get.js:21#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/get.js:30#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/get.js:30#1\",\"part\":\"args.executionId\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 1395,
+    "output_tokens": 132,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/execution/get.js:40-53",
+   "attempt": 0,
+   "ids": [
+    "build/tools/execution/get.js:40#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/execution/get.js:40#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1269,
+    "output_tokens": 47,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/execution/delete.js:19-30",
+   "attempt": 0,
+   "ids": [
+    "build/tools/execution/delete.js:20#0",
+    "build/tools/execution/delete.js:29#0",
+    "build/tools/execution/delete.js:29#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/execution/delete.js:20#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/delete.js:29#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/delete.js:29#1\",\"part\":\"executionId\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 1409,
+    "output_tokens": 131,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/execution/delete.js:39-52",
+   "attempt": 0,
+   "ids": [
+    "build/tools/execution/delete.js:39#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/execution/delete.js:39#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1271,
+    "output_tokens": 47,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/execution/run.js:46-97",
+   "attempt": 0,
+   "ids": [
+    "build/tools/execution/run.js:47#0",
+    "build/tools/execution/run.js:61#0",
+    "build/tools/execution/run.js:61#1",
+    "build/tools/execution/run.js:77#0",
+    "build/tools/execution/run.js:86#0",
+    "build/tools/execution/run.js:86#1",
+    "build/tools/execution/run.js:88#0",
+    "build/tools/execution/run.js:88#1",
+    "build/tools/execution/run.js:88#2",
+    "build/tools/execution/run.js:90#0",
+    "build/tools/execution/run.js:90#1",
+    "build/tools/execution/run.js:90#2",
+    "build/tools/execution/run.js:93#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/execution/run.js:47#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/run.js:61#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/run.js:61#1\",\"part\":\"params.workflowName\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"build/tools/execution/run.js:77#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/run.js:86#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/run.js:86#1\",\"part\":\"error.message\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/run.js:88#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/run.js:88#1\",\"part\":\"error.response.status\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/run.js:88#2\",\"part\":\"error.response.statusText\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/run.js:90#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/run.js:90#1\",\"part\":\"errorMessage\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/run.js:90#2\",\"part\":\"JSON.stringify(error.response.data, null, 2)\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"build/tools/execution/run.js:93#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2303,
+    "output_tokens": 555,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines build/tools/execution/run.js:110-131",
+   "attempt": 0,
+   "ids": [
+    "build/tools/execution/run.js:110#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"build/tools/execution/run.js:110#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1345,
+    "output_tokens": 47,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  }
+ ],
+ "final": {
+  "tools": {
+   "list_workflows": {
+    "result_contents": [
+     {
+      "part": "Found {formattedWorkflows.length} workflow(s)",
+      "produced_at": "build/tools/workflow/list.js:27",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "part": "id",
+      "produced_at": "build/tools/workflow/list.js:22",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "name",
+      "produced_at": "build/tools/workflow/list.js:23",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "active",
+      "produced_at": "build/tools/workflow/list.js:24",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "updatedAt",
+      "produced_at": "build/tools/workflow/list.js:25",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "build/tools/workflow/list.js:27#0",
+      "part": "fixed text of the template",
+      "produced_at": "build/tools/workflow/list.js:27",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/list.js:27#1",
+      "part": "formattedWorkflows.length",
+      "produced_at": "build/tools/workflow/list.js:27",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "none",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiService",
+      "at": "build/tools/workflow/list.js:19"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/workflow/list.js:10-30",
+     "build/tools/workflow/list.js:37-50"
+    ],
+    "rationale": "The tool retrieves a list of workflows from the user's n8n account using `this.apiService.getWorkflows`. The result includes workflow IDs, names, active status, and update timestamps, which are read from the user's account. The number of workflows found is computed and returned as a literal string. The call to `this.apiService.getWorkflows` is an outbound call to the user's configured n8n service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "get_workflow": {
+    "result_contents": [
+     {
+      "part": "Retrieved workflow: {workflow.name}",
+      "produced_at": "build/tools/workflow/get.js:25",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "workflow",
+      "produced_at": "build/tools/workflow/get.js:25",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "build/tools/workflow/get.js:25#0",
+      "part": "fixed text of the template",
+      "produced_at": "build/tools/workflow/get.js:25",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/get.js:25#1",
+      "part": "workflow.name",
+      "produced_at": "build/tools/workflow/get.js:25",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "workflowId",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiService",
+      "at": "build/tools/workflow/get.js:24"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/workflow/get.js:11-28",
+     "build/tools/workflow/get.js:35-48"
+    ],
+    "rationale": "The tool retrieves a specific workflow by ID from the user's n8n account using `this.apiService.getWorkflow(workflowId)`. The result includes the workflow details and a message with the workflow name, which is controlled by the user. The call to `this.apiService.getWorkflow` is an outbound call to the user's configured n8n service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "create_workflow": {
+    "result_contents": [
+     {
+      "part": "Workflow created successfully",
+      "produced_at": "build/tools/workflow/create.js:50",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "id",
+      "produced_at": "build/tools/workflow/create.js:47",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "name",
+      "produced_at": "build/tools/workflow/create.js:48",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "active",
+      "produced_at": "build/tools/workflow/create.js:49",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "build/tools/workflow/create.js:46#0",
+      "part": "the statement",
+      "produced_at": "build/tools/workflow/create.js:46",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "workflowData",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiService",
+      "at": "build/tools/workflow/create.js:45"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/workflow/create.js:11-52",
+     "build/tools/workflow/create.js:60-95"
+    ],
+    "rationale": "The tool creates a new workflow in the user's n8n account using `this.apiService.createWorkflow(workflowData)`. The result includes the workflow ID, name, and active status. The name is controlled by the user, while the ID and active status are controlled by the service. The call to `this.apiService.createWorkflow` is an outbound call to the user's configured n8n service.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "name",
+     "nodes",
+     "connections",
+     "active",
+     "tags"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "update_workflow": {
+    "result_contents": [
+     {
+      "part": "Workflow updated successfully. {changesSummary}{warningsSummary}",
+      "produced_at": "build/tools/workflow/update.js:72",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "part": "id",
+      "produced_at": "build/tools/workflow/update.js:69",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "name",
+      "produced_at": "build/tools/workflow/update.js:70",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "active",
+      "produced_at": "build/tools/workflow/update.js:71",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "build/tools/workflow/update.js:51#0",
+      "part": "fixed text of the template",
+      "produced_at": "build/tools/workflow/update.js:51",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/update.js:51#1",
+      "part": "currentWorkflow.name",
+      "produced_at": "build/tools/workflow/update.js:51",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "build/tools/workflow/update.js:51#2",
+      "part": "name",
+      "produced_at": "build/tools/workflow/update.js:51",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/update.js:53#0",
+      "part": "the statement",
+      "produced_at": "build/tools/workflow/update.js:53",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/update.js:55#0",
+      "part": "the statement",
+      "produced_at": "build/tools/workflow/update.js:55",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/update.js:59#0",
+      "part": "the statement",
+      "produced_at": "build/tools/workflow/update.js:59",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/update.js:61#0",
+      "part": "the statement",
+      "produced_at": "build/tools/workflow/update.js:61",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/update.js:63#0",
+      "part": "fixed text of the template",
+      "produced_at": "build/tools/workflow/update.js:63",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/update.js:63#1",
+      "part": "changesArray.join(', ')",
+      "produced_at": "build/tools/workflow/update.js:63",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/update.js:66#0",
+      "part": "fixed text of the template",
+      "produced_at": "build/tools/workflow/update.js:66",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/update.js:66#1",
+      "part": "warnings.join(', ')",
+      "produced_at": "build/tools/workflow/update.js:66",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/update.js:72#0",
+      "part": "fixed text of the template",
+      "produced_at": "build/tools/workflow/update.js:72",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/update.js:72#1",
+      "part": "changesSummary",
+      "produced_at": "build/tools/workflow/update.js:72",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/update.js:72#2",
+      "part": "warningsSummary",
+      "produced_at": "build/tools/workflow/update.js:72",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "workflowData",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiService",
+      "at": "build/tools/workflow/update.js:47"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/workflow/update.js:11-74",
+     "build/tools/workflow/update.js:82-121"
+    ],
+    "rationale": "The tool updates an existing workflow in the user's n8n account using `this.apiService.updateWorkflow(workflowId, workflowData)`. The result includes the workflow ID, name, and active status. The name is controlled by the user, while the ID and active status are controlled by the service. The call to `this.apiService.updateWorkflow` is an outbound call to the user's configured n8n service.",
+    "kind": "WRITE",
+    "destination_args": [
+     "workflowId"
+    ],
+    "value_args": [
+     "name",
+     "nodes",
+     "connections"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "delete_workflow": {
+    "result_contents": [
+     {
+      "part": "Workflow \"{workflowName}\" (ID: {workflowId}) has been successfully deleted",
+      "produced_at": "build/tools/workflow/delete.js:29",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "id",
+      "produced_at": "build/tools/workflow/delete.js:29",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "build/tools/workflow/delete.js:29#0",
+      "part": "fixed text of the template",
+      "produced_at": "build/tools/workflow/delete.js:29",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/delete.js:29#1",
+      "part": "workflowName",
+      "produced_at": "build/tools/workflow/delete.js:29",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "build/tools/workflow/delete.js:29#2",
+      "part": "workflowId",
+      "produced_at": "build/tools/workflow/delete.js:29",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "workflowId",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiService",
+      "at": "build/tools/workflow/delete.js:28"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/workflow/delete.js:11-30",
+     "build/tools/workflow/delete.js:39-52"
+    ],
+    "rationale": "The tool deletes a workflow from the user's n8n account using `this.apiService.deleteWorkflow(workflowId)`. The result includes a confirmation message with the workflow name and ID, both controlled by the user. The call to `this.apiService.deleteWorkflow` is an outbound call to the user's configured n8n service.",
+    "kind": "WRITE",
+    "destination_args": [
+     "workflowId"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "activate_workflow": {
+    "result_contents": [
+     {
+      "part": "Workflow \"{workflow.name}\" (ID: {workflowId}) has been successfully activated",
+      "produced_at": "build/tools/workflow/activate.js:30",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "id",
+      "produced_at": "build/tools/workflow/activate.js:27",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "name",
+      "produced_at": "build/tools/workflow/activate.js:28",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "active",
+      "produced_at": "build/tools/workflow/activate.js:29",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "build/tools/workflow/activate.js:30#0",
+      "part": "fixed text of the template",
+      "produced_at": "build/tools/workflow/activate.js:30",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/activate.js:30#1",
+      "part": "workflow.name",
+      "produced_at": "build/tools/workflow/activate.js:30",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "build/tools/workflow/activate.js:30#2",
+      "part": "workflowId",
+      "produced_at": "build/tools/workflow/activate.js:30",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "workflowId",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiService",
+      "at": "build/tools/workflow/activate.js:25"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/workflow/activate.js:11-32",
+     "build/tools/workflow/activate.js:40-53"
+    ],
+    "rationale": "The tool activates a workflow in the user's n8n account using `this.apiService.activateWorkflow(workflowId)`. The result includes the workflow ID, name, and active status. The name is controlled by the user, while the ID and active status are controlled by the service. The call to `this.apiService.activateWorkflow` is an outbound call to the user's configured n8n service.",
+    "kind": "WRITE",
+    "destination_args": [
+     "workflowId"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "deactivate_workflow": {
+    "result_contents": [
+     {
+      "part": "Workflow \"{workflow.name}\" (ID: {workflowId}) has been successfully deactivated",
+      "produced_at": "build/tools/workflow/deactivate.js:30",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "id",
+      "produced_at": "build/tools/workflow/deactivate.js:27",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "name",
+      "produced_at": "build/tools/workflow/deactivate.js:28",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "part": "active",
+      "produced_at": "build/tools/workflow/deactivate.js:29",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "build/tools/workflow/deactivate.js:30#0",
+      "part": "fixed text of the template",
+      "produced_at": "build/tools/workflow/deactivate.js:30",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/workflow/deactivate.js:30#1",
+      "part": "workflow.name",
+      "produced_at": "build/tools/workflow/deactivate.js:30",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "build/tools/workflow/deactivate.js:30#2",
+      "part": "workflowId",
+      "produced_at": "build/tools/workflow/deactivate.js:30",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "workflowId",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiService",
+      "at": "build/tools/workflow/deactivate.js:25"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/workflow/deactivate.js:11-32",
+     "build/tools/workflow/deactivate.js:40-53"
+    ],
+    "rationale": "The tool deactivates a workflow in the user's n8n account using `this.apiService.deactivateWorkflow(workflowId)`. The result includes the workflow ID, name, and active status. The name is controlled by the user, while the ID and active status are controlled by the service. The call to `this.apiService.deactivateWorkflow` is an outbound call to the user's configured n8n service.",
+    "kind": "WRITE",
+    "destination_args": [
+     "workflowId"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_executions": {
+    "result_contents": [
+     {
+      "part": "Found {formattedExecutions.length} execution(s)",
+      "produced_at": "build/tools/execution/list.js:48",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "part": "executions",
+      "produced_at": "build/tools/execution/list.js:43",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "summary",
+      "produced_at": "build/tools/execution/list.js:44",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "part": "total",
+      "produced_at": "build/tools/execution/list.js:45",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "part": "filtered",
+      "produced_at": "build/tools/execution/list.js:46",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "build/tools/execution/list.js:48#0",
+      "part": "fixed text of the template",
+      "produced_at": "build/tools/execution/list.js:48",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/execution/list.js:48#1",
+      "part": "formattedExecutions.length",
+      "produced_at": "build/tools/execution/list.js:48",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/execution/list.js:74#0",
+      "part": "the statement",
+      "produced_at": "build/tools/execution/list.js:74",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "none",
+      "destination_class": "configured_own_service",
+      "host_or_config": "apiService",
+      "at": "build/tools/execution/list.js:20"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/execution/list.js:11-50",
+     "build/tools/execution/list.js:58-87"
+    ],
+    "rationale": "The tool retrieves a list of workflow executions from the user's n8n account using `this.apiService.getExecutions`. The result includes execution summaries and an optional summary of statistics. The number of executions found is computed and returned as a literal string. The call to `this.apiService.getExecutions` is an outbound call to the user's configured n8n service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "get_execution": {
+    "result_contents": [
+     {
+      "part": "formattedExecution",
+      "produced_at": "build/tools/execution/get.js:30",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "build/tools/execution/get.js:30#0",
+      "part": "fixed text of the template",
+      "produced_at": "build/tools/execution/get.js:30",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/execution/get.js:30#1",
+      "part": "args.executionId",
+      "produced_at": "build/tools/execution/get.js:30",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "args.executionId",
+      "destination_class": "configured_own_service",
+      "host_or_config": "config.n8nApiUrl",
+      "at": "build/tools/execution/get.js:27"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/execution/get.js:20-31",
+     "build/tools/execution/get.js:40-53"
+    ],
+    "rationale": "The `get_execution` tool retrieves detailed information about a specific workflow execution using the `executionId` provided in the arguments. The execution details are fetched from the user's account on the n8n service (`resource_read`, `user_account`, `service`). The tool makes an outbound call to the configured n8n service using the `executionId` as a parameter (`configured_own_service`).",
+    "kind": "READ",
+    "destination_args": [
+     "executionId"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "delete_execution": {
+    "result_contents": [
+     {
+      "part": "{\"id\": executionId, \"deleted\": true}",
+      "produced_at": "build/tools/execution/delete.js:29",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "`Successfully deleted execution with ID: ${executionId}`",
+      "produced_at": "build/tools/execution/delete.js:29",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/execution/delete.js:29#0",
+      "part": "fixed text of the template",
+      "produced_at": "build/tools/execution/delete.js:29",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/execution/delete.js:29#1",
+      "part": "executionId",
+      "produced_at": "build/tools/execution/delete.js:29",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "executionId",
+      "destination_class": "configured_own_service",
+      "host_or_config": "config.n8nApiUrl",
+      "at": "build/tools/execution/delete.js:28"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "build/tools/execution/delete.js:19-30",
+     "build/tools/execution/delete.js:39-52"
+    ],
+    "rationale": "The `delete_execution` tool deletes a specific workflow execution using the `executionId` provided in the arguments. The tool makes an outbound call to the configured n8n service to perform the deletion (`configured_own_service`). The result includes an echoed `executionId` and a confirmation message, both of which are `argument_echo` and have `none` scope and control.",
+    "kind": "WRITE",
+    "destination_args": [
+     "executionId"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "run_webhook": {
+    "result_contents": [
+     {
+      "part": "{\"status\": response.status, \"statusText\": response.statusText, \"data\": response.data}",
+      "produced_at": "build/tools/execution/run.js:77-80",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "part": "`Webhook executed successfully`",
+      "produced_at": "build/tools/execution/run.js:81",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/execution/run.js:61#0",
+      "part": "fixed text of the template",
+      "produced_at": "build/tools/execution/run.js:61",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/execution/run.js:61#1",
+      "part": "params.workflowName",
+      "produced_at": "build/tools/execution/run.js:61",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/execution/run.js:86#0",
+      "part": "fixed text of the template",
+      "produced_at": "build/tools/execution/run.js:86",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/execution/run.js:86#1",
+      "part": "error.message",
+      "produced_at": "build/tools/execution/run.js:86",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "build/tools/execution/run.js:88#0",
+      "part": "fixed text of the template",
+      "produced_at": "build/tools/execution/run.js:88",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/execution/run.js:88#1",
+      "part": "error.response.status",
+      "produced_at": "build/tools/execution/run.js:88",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "build/tools/execution/run.js:88#2",
+      "part": "error.response.statusText",
+      "produced_at": "build/tools/execution/run.js:88",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "build/tools/execution/run.js:90#0",
+      "part": "fixed text of the template",
+      "produced_at": "build/tools/execution/run.js:90",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "build/tools/execution/run.js:90#1",
+      "part": "errorMessage",
+      "produced_at": "build/tools/execution/run.js:90",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "build/tools/execution/run.js:90#2",
+      "part": "JSON.stringify(error.response.data, null, 2)",
+      "produced_at": "build/tools/execution/run.js:90",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "params.data || {}",
+      "destination_class": "argument_named_destination",
+      "host_or_config": "",
+      "at": "build/tools/execution/run.js:75"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": true,
+     "argument": "workflowName",
+     "at": "build/tools/execution/run.js:75"
+    },
+    "evidence": [
+     "build/tools/execution/run.js:46-97",
+     "build/tools/execution/run.js:110-131"
+    ],
+    "rationale": "The `run_webhook` tool executes a workflow via a webhook using the `workflowName` provided in the arguments. It sends a POST request to a URL constructed from the `workflowName`, making it an `argument_named_destination`. The response from the webhook is included in the result, which is `resource_read` from a public scope and controlled by an `outside_party`. The tool delivers data to a chosen party based on the `workflowName`.",
+    "kind": "WRITE",
+    "destination_args": [
+     "workflowName"
+    ],
+    "value_args": [
+     "data"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   }
+  },
+  "value_conditions": [],
+  "notes": []
+ },
+ "hashes": {
+  "rubric_sha": "191e69d289880d38",
+  "schema_sha": "0f8d7d93eb07c885",
+  "source_sha": "1c58156e20e131e1"
+ },
+ "run": {
+  "model": "gpt-4o-2024-08-06",
+  "temperature": 0.0,
+  "seed": 0,
+  "files": [
+   "build/tools/workflow/list.js",
+   "build/tools/workflow/get.js",
+   "build/tools/workflow/create.js",
+   "build/tools/workflow/update.js",
+   "build/tools/workflow/delete.js",
+   "build/tools/workflow/activate.js",
+   "build/tools/workflow/deactivate.js",
+   "build/tools/execution/list.js",
+   "build/tools/execution/get.js",
+   "build/tools/execution/delete.js",
+   "build/tools/execution/run.js",
+   "build/config/server.js",
+   "build/tools/workflow/handler.js",
+   "build/tools/execution/handler.js",
+   "README.md"
+  ]
+ }
+}

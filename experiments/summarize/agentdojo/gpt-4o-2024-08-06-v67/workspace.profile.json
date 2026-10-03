@@ -1,0 +1,1444 @@
+{
+ "kind": "python",
+ "notes": [],
+ "package": "agentdojo/workspace",
+ "source": "baselines/agentdojo/src/agentdojo",
+ "tools": {
+  "add_calendar_event_participants": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "participants"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:242-254",
+    "default_suites/v1/tools/calendar_client.py:242-246"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The function `add_calendar_event_participants` adds participants to an event and returns the updated `CalendarEvent` object. The result is a computed object stored in the user's account, and no outbound calls are made. [received records: CalendarEvent object taken as outside-party text] [destination_args completed: participants]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "computed",
+     "part": "CalendarEvent object",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:254",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "event_id"
+   ]
+  },
+  "append_to_file": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "file_id"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/cloud_drive_client.py:134-144",
+    "default_suites/v1/tools/cloud_drive_client.py:58-64"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `append_to_file` function appends content to a file in the cloud drive. It retrieves the file by ID, appends the content, updates the size and last modified timestamp, and returns the updated file. The result is a resource read from the user's account, controlled by the user. [received records: file taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "file",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:63",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/cloud_drive_client.py:58",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "content"
+   ]
+  },
+  "cancel_calendar_event": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "event_id",
+    "at": "default_suites/v1/tools/calendar_client.py:210",
+    "value": true
+   },
+   "destination_args": [
+    "event_id"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:200-211",
+    "default_suites/v1/tools/calendar_client.py:200-204"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "default_suites/v1/tools/calendar_client.py:210",
+     "data": "email to participants notifying cancellation",
+     "destination_class": "configured_own_service",
+     "host_or_config": "inbox",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The function `cancel_calendar_event` cancels an event and sends an email to the participants notifying them of the cancellation. The email is sent to a configured service with participants as the chosen party, and the result is a literal confirmation message.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "confirmation message",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:211",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/calendar_client.py:211#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:211",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/calendar_client.py:211#1",
+     "origin": "argument_echo",
+     "part": "event_id",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:211",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "create_calendar_event": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "participants",
+    "at": "default_suites/v1/tools/calendar_client.py:162-167",
+    "value": true
+   },
+   "destination_args": [
+    "participants"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:137-168",
+    "default_suites/v1/tools/calendar_client.py:137-146"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "default_suites/v1/tools/calendar_client.py:162-167",
+     "data": "email to participants with event details",
+     "destination_class": "configured_own_service",
+     "host_or_config": "inbox",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The function `create_calendar_event` creates a new `CalendarEvent` object and sends an email to the participants with the event details. The event is a computed object stored in the user's account, and the email is sent to a configured service with participants as the chosen party.",
+   "result_contents": [
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "CalendarEvent object",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:168",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/calendar_client.py:164#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:164",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/calendar_client.py:164#1",
+     "origin": "argument_echo",
+     "part": "title",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:164",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "title",
+    "start_time",
+    "end_time",
+    "description",
+    "location"
+   ]
+  },
+  "create_file": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/cloud_drive_client.py:80-90",
+    "default_suites/v1/tools/cloud_drive_client.py:11-68"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `create_file` function creates a new file in the cloud drive with the specified filename and content. It returns the newly created file. The result is computed and stored in the user's account, controlled by the user.",
+   "result_contents": [
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "new_file",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:44",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:21#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:21",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:21#1",
+     "origin": "computed",
+     "part": "duplicate_ids",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:21",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:31#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:31",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:31#1",
+     "origin": "argument_echo",
+     "part": "file_id",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:31",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:48#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:48",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:48#1",
+     "origin": "argument_echo",
+     "part": "file_id",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:48",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/cloud_drive_client.py:34",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "filename",
+    "content"
+   ]
+  },
+  "delete_email": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "email_id"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:214-220",
+    "default_suites/v1/tools/email_client.py:113-119"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The `delete_email` function removes an email from the inbox and moves it to the trash. It returns a confirmation message. There are no outbound calls or deliveries to external parties.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "Email deletion confirmation message",
+     "produced_at": "default_suites/v1/tools/email_client.py:220",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/email_client.py:115#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/email_client.py:115",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/email_client.py:115#1",
+     "origin": "argument_echo",
+     "part": "email_id",
+     "produced_at": "default_suites/v1/tools/email_client.py:115",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/email_client.py:220#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/email_client.py:220",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/email_client.py:220#1",
+     "origin": "argument_echo",
+     "part": "email_id",
+     "produced_at": "default_suites/v1/tools/email_client.py:220",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "delete_file": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "file_id"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/cloud_drive_client.py:93-99",
+    "default_suites/v1/tools/cloud_drive_client.py:11-68"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `delete_file` function deletes a file from the cloud drive by its ID and returns the deleted file. The result is a resource read from the user's account, controlled by the user. [received records: file taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "file",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:50",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:21#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:21",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:21#1",
+     "origin": "computed",
+     "part": "duplicate_ids",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:21",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:31#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:31",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:31#1",
+     "origin": "argument_echo",
+     "part": "file_id",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:31",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:48#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:48",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:48#1",
+     "origin": "argument_echo",
+     "part": "file_id",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:48",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/cloud_drive_client.py:46",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_current_day": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:191-197",
+    "default_suites/v1/tools/calendar_client.py:191-193"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [],
+   "outbound_calls": [],
+   "rationale": "The function `get_current_day` returns the current day in ISO format using `calendar.current_day.isoformat()`. This is a computed value with no private scope or control.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "computed",
+     "part": "current day in ISO format",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:197",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/calendar_client.py:197#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:197",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_day_calendar_events": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:128-134",
+    "default_suites/v1/tools/calendar_client.py:128-136"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The function `get_day_calendar_events` calls `calendar.get_by_day`, which returns a list of `CalendarEvent` objects for the specified day from the user's calendar. The result is a resource read from the user's account, controlled by the user. [received records: list of calendar events for the given day taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "list of calendar events for the given day",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:134",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_draft_emails": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:233-235",
+    "default_suites/v1/tools/email_client.py:233-237"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_draft_emails` function retrieves all draft emails from the inbox. It returns a list of these emails. There are no outbound calls or deliveries to external parties. [received records: List of draft emails taken as outside-party text] [received records: the statement taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "List of draft emails",
+     "produced_at": "default_suites/v1/tools/email_client.py:235",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "id": "default_suites/v1/tools/email_client.py:235#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/email_client.py:235",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_file_by_id": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/cloud_drive_client.py:102-107",
+    "default_suites/v1/tools/cloud_drive_client.py:11-68"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_file_by_id` function retrieves a file from the cloud drive by its ID and returns it. The result is a resource read from the user's account, controlled by the user. [received records: file taken as outside-party text] [received records: the statement taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "file",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:32",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:21#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:21",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:21#1",
+     "origin": "computed",
+     "part": "duplicate_ids",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:21",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:31#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:31",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:31#1",
+     "origin": "argument_echo",
+     "part": "file_id",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:31",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:48#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:48",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:48#1",
+     "origin": "argument_echo",
+     "part": "file_id",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:48",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:107#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:107",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/cloud_drive_client.py:29",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "file_id"
+   ]
+  },
+  "get_received_emails": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:228-230",
+    "default_suites/v1/tools/email_client.py:228-232"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_received_emails` function retrieves all received emails from the inbox. It returns a list of these emails. There are no outbound calls or deliveries to external parties. [received records: List of received emails taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "List of received emails",
+     "produced_at": "default_suites/v1/tools/email_client.py:230",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "id": "default_suites/v1/tools/email_client.py:230#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/email_client.py:230",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_sent_emails": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:223-225",
+    "default_suites/v1/tools/email_client.py:223-227"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_sent_emails` function retrieves all sent emails from the inbox. It returns a list of these emails. There are no outbound calls or deliveries to external parties. [received records: List of sent emails taken as outside-party text] [received records: the statement taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "List of sent emails",
+     "produced_at": "default_suites/v1/tools/email_client.py:225",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "id": "default_suites/v1/tools/email_client.py:225#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/email_client.py:225",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_unread_emails": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:148-151",
+    "default_suites/v1/tools/email_client.py:148-153"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_unread_emails` function retrieves unread emails from the inbox and marks them as read. It returns a list of these emails. There are no outbound calls or deliveries to external parties. [received records: List of unread emails taken as outside-party text] [received records: the statement taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "List of unread emails",
+     "produced_at": "default_suites/v1/tools/email_client.py:151",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "default_suites/v1/tools/email_client.py:151#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/email_client.py:151",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_files": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/cloud_drive_client.py:110-114",
+    "default_suites/v1/tools/cloud_drive_client.py:110-112"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `list_files` function retrieves all files in the cloud drive and returns them. The result is a resource read from the user's account, controlled by the user. [received records: files taken as outside-party text] [received records: the statement taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "files",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:114",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:114#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:114",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/cloud_drive_client.py:110",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "reschedule_calendar_event": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "event_id",
+    "at": "default_suites/v1/tools/calendar_client.py:233-238",
+    "value": true
+   },
+   "destination_args": [
+    "event_id"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:214-239",
+    "default_suites/v1/tools/calendar_client.py:214-220"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [
+    {
+     "at": "default_suites/v1/tools/calendar_client.py:233-238",
+     "data": "email to participants notifying rescheduling",
+     "destination_class": "configured_own_service",
+     "host_or_config": "inbox",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The function `reschedule_calendar_event` reschedules an event and sends an email to the participants notifying them of the rescheduling. The email is sent to a configured service with participants as the chosen party, and the result is a computed `CalendarEvent` object stored in the user's account. [received records: CalendarEvent object taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "computed",
+     "part": "CalendarEvent object",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:239",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "new_start_time",
+    "new_end_time"
+   ]
+  },
+  "search_calendar_events": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/calendar_client.py:171-188",
+    "default_suites/v1/tools/calendar_client.py:171-175"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The function `search_calendar_events` calls `calendar.search_events`, which returns a list of `CalendarEvent` objects from the user's calendar. The result is a resource read from the user's account, controlled by the user. [received records: list of calendar events matching the query taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "list of calendar events matching the query",
+     "produced_at": "default_suites/v1/tools/calendar_client.py:188",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_contacts_by_email": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:247-253",
+    "default_suites/v1/tools/email_client.py:247-254"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The function `search_contacts_by_email` calls `inbox.find_contacts_by_email`, which returns a list of `EmailContact` objects from the user's contact list. The result is a resource read from the user's account, controlled by the user. [received records: list of contacts that match the given email taken as outside-party text] [received records: the statement taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "list of contacts that match the given email",
+     "produced_at": "default_suites/v1/tools/email_client.py:253",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "id": "default_suites/v1/tools/email_client.py:253#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/email_client.py:253",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_contacts_by_name": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:238-244",
+    "default_suites/v1/tools/email_client.py:238-246"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `search_contacts_by_name` function searches for contacts in the inbox's contact list by name. It returns a list of matching contacts. There are no outbound calls or deliveries to external parties. [received records: List of contacts matching the query taken as outside-party text] [received records: the statement taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "List of contacts matching the query",
+     "produced_at": "default_suites/v1/tools/email_client.py:244",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "id": "default_suites/v1/tools/email_client.py:244#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/email_client.py:244",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "query"
+   ]
+  },
+  "search_emails": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:196-211",
+    "default_suites/v1/tools/email_client.py:104-112"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `search_emails` function searches for emails in the inbox that match the given query in the subject or body. It returns a list of matching emails. There are no outbound calls or deliveries to external parties. [received records: List of emails matching the query taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "List of emails matching the query",
+     "produced_at": "default_suites/v1/tools/email_client.py:211",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "query",
+    "sender"
+   ]
+  },
+  "search_files": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/cloud_drive_client.py:147-155",
+    "default_suites/v1/tools/cloud_drive_client.py:55-57"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `search_files` function searches for files in the cloud drive by content and returns a list of matching files. The result is a resource read from the user's account, controlled by the user. [received records: file taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "file",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:56",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:154#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:154",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/cloud_drive_client.py:154#1",
+     "origin": "argument_echo",
+     "part": "query",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:154",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/cloud_drive_client.py:55",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "query"
+   ]
+  },
+  "search_files_by_filename": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/cloud_drive_client.py:69-77",
+    "default_suites/v1/tools/cloud_drive_client.py:52-54"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `search_files_by_filename` function searches for files in the cloud drive by filename. It returns a list of files that match the query. The result is a resource read from the user's account, controlled by the user. [received records: file taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "file",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:53",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/cloud_drive_client.py:52",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "filename"
+   ]
+  },
+  "send_email": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "recipients",
+    "at": "default_suites/v1/tools/email_client.py:193",
+    "value": true
+   },
+   "destination_args": [
+    "recipients",
+    "bcc",
+    "cc"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/email_client.py:154-193",
+    "default_suites/v1/tools/email_client.py:73-81"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "outbound_calls": [
+    {
+     "at": "default_suites/v1/tools/email_client.py:193",
+     "data": "recipients, subject, body, parsed_attachments, cc, bcc",
+     "destination_class": "configured_own_service",
+     "host_or_config": "inbox",
+     "resolved": "unresolved"
+    }
+   ],
+   "rationale": "The `send_email` function constructs an `Email` object with the provided details and sends it using the `inbox.send_email` method. The email is sent to the recipients specified in the `recipients` argument, making it a WRITE operation with the destination determined by the `recipients` argument. [destination_args completed: bcc, cc]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "Email object",
+     "produced_at": "default_suites/v1/tools/email_client.py:193",
+     "scope": "user_account"
+    },
+    {
+     "control": "user",
+     "id": "default_suites/v1/tools/email_client.py:186#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/email_client.py:186",
+     "scope": "user_account"
+    },
+    {
+     "control": "user",
+     "id": "default_suites/v1/tools/email_client.py:190#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/email_client.py:190",
+     "scope": "user_account"
+    },
+    {
+     "control": "service",
+     "id": "default_suites/v1/tools/email_client.py:193#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/email_client.py:193",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "subject",
+    "body",
+    "attachments"
+   ]
+  },
+  "share_file": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "email",
+    "at": "default_suites/v1/tools/cloud_drive_client.py:117-131",
+    "value": true
+   },
+   "destination_args": [
+    "file_id",
+    "email"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/cloud_drive_client.py:117-131",
+    "default_suites/v1/tools/cloud_drive_client.py:117-122"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET",
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `share_file` function shares a file with a user by adding the user's email and permission to the file's shared_with dictionary. The result is a resource read from the user's account, controlled by the user. The function delivers the file to a chosen party, as specified by the email argument. [received records: file taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "file",
+     "produced_at": "default_suites/v1/tools/cloud_drive_client.py:131",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/cloud_drive_client.py:117",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "permission"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "v1.2"
+}

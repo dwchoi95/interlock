@@ -1,0 +1,1468 @@
+{
+ "workspace": {
+  "suite": "workspace",
+  "tools": [
+   {
+    "name": "send_email",
+    "kind": "WRITE",
+    "destination_args": [
+     "recipients",
+     "bcc",
+     "cc"
+    ],
+    "value_args": [
+     "subject",
+     "body",
+     "attachments"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:154-193; default_suites/v1/tools/email_client.py:73-81",
+    "rationale": "The `send_email` function constructs an `Email` object with the provided details and sends it using the `inbox.send_email` method. The email is sent to the recipients specified in the `recipients` argument, making it a WRITE operation with the destination determined by the `recipients` argument. [destination_args completed: bcc, cc]"
+   },
+   {
+    "name": "delete_email",
+    "kind": "WRITE",
+    "destination_args": [
+     "email_id"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:214-220; default_suites/v1/tools/email_client.py:113-119",
+    "rationale": "The `delete_email` function removes an email from the inbox and moves it to the trash. It returns a confirmation message. There are no outbound calls or deliveries to external parties."
+   },
+   {
+    "name": "get_unread_emails",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:148-151; default_suites/v1/tools/email_client.py:148-153",
+    "rationale": "The `get_unread_emails` function retrieves unread emails from the inbox and marks them as read. It returns a list of these emails. There are no outbound calls or deliveries to external parties. [received records: List of unread emails taken as outside-party text] [received records: the statement taken as outside-party text]"
+   },
+   {
+    "name": "get_sent_emails",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:223-225; default_suites/v1/tools/email_client.py:223-227",
+    "rationale": "The `get_sent_emails` function retrieves all sent emails from the inbox. It returns a list of these emails. There are no outbound calls or deliveries to external parties. [received records: List of sent emails taken as outside-party text] [received records: the statement taken as outside-party text]"
+   },
+   {
+    "name": "get_received_emails",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:228-230; default_suites/v1/tools/email_client.py:228-232",
+    "rationale": "The `get_received_emails` function retrieves all received emails from the inbox. It returns a list of these emails. There are no outbound calls or deliveries to external parties. [received records: List of received emails taken as outside-party text]"
+   },
+   {
+    "name": "get_draft_emails",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:233-235; default_suites/v1/tools/email_client.py:233-237",
+    "rationale": "The `get_draft_emails` function retrieves all draft emails from the inbox. It returns a list of these emails. There are no outbound calls or deliveries to external parties. [received records: List of draft emails taken as outside-party text] [received records: the statement taken as outside-party text]"
+   },
+   {
+    "name": "search_emails",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "query",
+     "sender"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:196-211; default_suites/v1/tools/email_client.py:104-112",
+    "rationale": "The `search_emails` function searches for emails in the inbox that match the given query in the subject or body. It returns a list of matching emails. There are no outbound calls or deliveries to external parties. [received records: List of emails matching the query taken as outside-party text]"
+   },
+   {
+    "name": "search_contacts_by_name",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "query"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:238-244; default_suites/v1/tools/email_client.py:238-246",
+    "rationale": "The `search_contacts_by_name` function searches for contacts in the inbox's contact list by name. It returns a list of matching contacts. There are no outbound calls or deliveries to external parties. [received records: List of contacts matching the query taken as outside-party text] [received records: the statement taken as outside-party text]"
+   },
+   {
+    "name": "search_contacts_by_email",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:247-253; default_suites/v1/tools/email_client.py:247-254",
+    "rationale": "The function `search_contacts_by_email` calls `inbox.find_contacts_by_email`, which returns a list of `EmailContact` objects from the user's contact list. The result is a resource read from the user's account, controlled by the user. [received records: list of contacts that match the given email taken as outside-party text] [received records: the statement taken as outside-party text]"
+   },
+   {
+    "name": "get_current_day",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/calendar_client.py:191-197; default_suites/v1/tools/calendar_client.py:191-193",
+    "rationale": "The function `get_current_day` returns the current day in ISO format using `calendar.current_day.isoformat()`. This is a computed value with no private scope or control."
+   },
+   {
+    "name": "search_calendar_events",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/calendar_client.py:171-188; default_suites/v1/tools/calendar_client.py:171-175",
+    "rationale": "The function `search_calendar_events` calls `calendar.search_events`, which returns a list of `CalendarEvent` objects from the user's calendar. The result is a resource read from the user's account, controlled by the user. [received records: list of calendar events matching the query taken as outside-party text]"
+   },
+   {
+    "name": "get_day_calendar_events",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/calendar_client.py:128-134; default_suites/v1/tools/calendar_client.py:128-136",
+    "rationale": "The function `get_day_calendar_events` calls `calendar.get_by_day`, which returns a list of `CalendarEvent` objects for the specified day from the user's calendar. The result is a resource read from the user's account, controlled by the user. [received records: list of calendar events for the given day taken as outside-party text]"
+   },
+   {
+    "name": "create_calendar_event",
+    "kind": "WRITE",
+    "destination_args": [
+     "participants"
+    ],
+    "value_args": [
+     "title",
+     "start_time",
+     "end_time",
+     "description",
+     "location"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/calendar_client.py:137-168; default_suites/v1/tools/calendar_client.py:137-146",
+    "rationale": "The function `create_calendar_event` creates a new `CalendarEvent` object and sends an email to the participants with the event details. The event is a computed object stored in the user's account, and the email is sent to a configured service with participants as the chosen party."
+   },
+   {
+    "name": "cancel_calendar_event",
+    "kind": "WRITE",
+    "destination_args": [
+     "event_id"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/calendar_client.py:200-211; default_suites/v1/tools/calendar_client.py:200-204",
+    "rationale": "The function `cancel_calendar_event` cancels an event and sends an email to the participants notifying them of the cancellation. The email is sent to a configured service with participants as the chosen party, and the result is a literal confirmation message."
+   },
+   {
+    "name": "reschedule_calendar_event",
+    "kind": "WRITE",
+    "destination_args": [
+     "event_id"
+    ],
+    "value_args": [
+     "new_start_time",
+     "new_end_time"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "SINK",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/calendar_client.py:214-239; default_suites/v1/tools/calendar_client.py:214-220",
+    "rationale": "The function `reschedule_calendar_event` reschedules an event and sends an email to the participants notifying them of the rescheduling. The email is sent to a configured service with participants as the chosen party, and the result is a computed `CalendarEvent` object stored in the user's account. [received records: CalendarEvent object taken as outside-party text]"
+   },
+   {
+    "name": "add_calendar_event_participants",
+    "kind": "WRITE",
+    "destination_args": [
+     "participants"
+    ],
+    "value_args": [
+     "event_id"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "SINK",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/calendar_client.py:242-254; default_suites/v1/tools/calendar_client.py:242-246",
+    "rationale": "The function `add_calendar_event_participants` adds participants to an event and returns the updated `CalendarEvent` object. The result is a computed object stored in the user's account, and no outbound calls are made. [received records: CalendarEvent object taken as outside-party text] [destination_args completed: participants]"
+   },
+   {
+    "name": "append_to_file",
+    "kind": "WRITE",
+    "destination_args": [
+     "file_id"
+    ],
+    "value_args": [
+     "content"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/cloud_drive_client.py:134-144; default_suites/v1/tools/cloud_drive_client.py:58-64",
+    "rationale": "The `append_to_file` function appends content to a file in the cloud drive. It retrieves the file by ID, appends the content, updates the size and last modified timestamp, and returns the updated file. The result is a resource read from the user's account, controlled by the user. [received records: file taken as outside-party text]"
+   },
+   {
+    "name": "search_files_by_filename",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "filename"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/cloud_drive_client.py:69-77; default_suites/v1/tools/cloud_drive_client.py:52-54",
+    "rationale": "The `search_files_by_filename` function searches for files in the cloud drive by filename. It returns a list of files that match the query. The result is a resource read from the user's account, controlled by the user. [received records: file taken as outside-party text]"
+   },
+   {
+    "name": "create_file",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "filename",
+     "content"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/cloud_drive_client.py:80-90; default_suites/v1/tools/cloud_drive_client.py:11-68",
+    "rationale": "The `create_file` function creates a new file in the cloud drive with the specified filename and content. It returns the newly created file. The result is computed and stored in the user's account, controlled by the user."
+   },
+   {
+    "name": "delete_file",
+    "kind": "WRITE",
+    "destination_args": [
+     "file_id"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/cloud_drive_client.py:93-99; default_suites/v1/tools/cloud_drive_client.py:11-68",
+    "rationale": "The `delete_file` function deletes a file from the cloud drive by its ID and returns the deleted file. The result is a resource read from the user's account, controlled by the user. [received records: file taken as outside-party text]"
+   },
+   {
+    "name": "get_file_by_id",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "file_id"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/cloud_drive_client.py:102-107; default_suites/v1/tools/cloud_drive_client.py:11-68",
+    "rationale": "The `get_file_by_id` function retrieves a file from the cloud drive by its ID and returns it. The result is a resource read from the user's account, controlled by the user. [received records: file taken as outside-party text] [received records: the statement taken as outside-party text]"
+   },
+   {
+    "name": "list_files",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/cloud_drive_client.py:110-114; default_suites/v1/tools/cloud_drive_client.py:110-112",
+    "rationale": "The `list_files` function retrieves all files in the cloud drive and returns them. The result is a resource read from the user's account, controlled by the user. [received records: files taken as outside-party text] [received records: the statement taken as outside-party text]"
+   },
+   {
+    "name": "share_file",
+    "kind": "WRITE",
+    "destination_args": [
+     "file_id",
+     "email"
+    ],
+    "value_args": [
+     "permission"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "SINK",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/cloud_drive_client.py:117-131; default_suites/v1/tools/cloud_drive_client.py:117-122",
+    "rationale": "The `share_file` function shares a file with a user by adding the user's email and permission to the file's shared_with dictionary. The result is a resource read from the user's account, controlled by the user. The function delivers the file to a chosen party, as specified by the email argument. [received records: file taken as outside-party text]"
+   },
+   {
+    "name": "search_files",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "query"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/cloud_drive_client.py:147-155; default_suites/v1/tools/cloud_drive_client.py:55-57",
+    "rationale": "The `search_files` function searches for files in the cloud drive by content and returns a list of matching files. The result is a resource read from the user's account, controlled by the user. [received records: file taken as outside-party text]"
+   }
+  ]
+ },
+ "slack": {
+  "suite": "slack",
+  "tools": [
+   {
+    "name": "get_channels",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:25-27; default_suites/v1/tools/slack.py:25-29",
+    "rationale": "The `get_channels` function returns the list of channels from the `slack` object, which is a resource read from the user's account. The control is by the user as the channels are part of the user's Slack workspace. [received records: slack.channels taken as outside-party text] [received records: the statement taken as outside-party text]"
+   },
+   {
+    "name": "add_user_to_channel",
+    "kind": "WRITE",
+    "destination_args": [
+     "user",
+     "channel"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:30-41; default_suites/v1/tools/slack.py:30-42",
+    "rationale": "The `add_user_to_channel` function modifies the `slack` object by adding a user to a channel. It checks if the user and channel exist and then appends the channel to the user's list of channels. There are no outbound calls or data sent to external parties."
+   },
+   {
+    "name": "read_channel_messages",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:43-50; default_suites/v1/tools/slack.py:43-52",
+    "rationale": "The `read_channel_messages` function returns messages from a specified channel's inbox. The messages are read from the user's account, and the control is by the user as they are part of the user's Slack workspace. [received records: slack.channel_inbox.get(channel, []) taken as outside-party text] [received records: the statement taken as outside-party text]"
+   },
+   {
+    "name": "read_inbox",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:53-60; default_suites/v1/tools/slack.py:53-62",
+    "rationale": "The `read_inbox` function returns messages from a specified user's inbox. The messages are read from the user's account, and the control is by the user as they are part of the user's Slack workspace. [received records: slack.user_inbox.get(user, []) taken as outside-party text] [received records: the statement taken as outside-party text]"
+   },
+   {
+    "name": "send_direct_message",
+    "kind": "WRITE",
+    "destination_args": [
+     "recipient"
+    ],
+    "value_args": [
+     "body"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:63-75; default_suites/v1/tools/slack.py:63-77",
+    "rationale": "The `send_direct_message` function sends a message to a specified recipient's inbox within the Slack workspace. It modifies the `slack` object by appending the message to the recipient's inbox. There are no outbound calls or data sent to external parties."
+   },
+   {
+    "name": "send_channel_message",
+    "kind": "WRITE",
+    "destination_args": [
+     "channel"
+    ],
+    "value_args": [
+     "body"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:78-90; default_suites/v1/tools/slack.py:78-92",
+    "rationale": "The `send_channel_message` function sends a message to a specified channel's inbox within the Slack workspace. It modifies the `slack` object by appending the message to the channel's inbox. There are no outbound calls or data sent to external parties."
+   },
+   {
+    "name": "get_users_in_channel",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:118-129; default_suites/v1/tools/slack.py:118-130",
+    "rationale": "The `get_users_in_channel` function returns a list of users in a specified channel. The list is computed from the `slack` object, which is part of the user's account. The control is by the user as the channels and users are part of the user's Slack workspace."
+   },
+   {
+    "name": "invite_user_to_slack",
+    "kind": "WRITE",
+    "destination_args": [
+     "user",
+     "user_email"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:93-103; default_suites/v1/tools/slack.py:93-105",
+    "rationale": "The `invite_user_to_slack` function adds a new user to the Slack workspace by appending them to the `slack` users list and initializing their inbox and channels. There are no outbound calls or data sent to external parties. [destination_args completed: user_email]"
+   },
+   {
+    "name": "remove_user_from_slack",
+    "kind": "WRITE",
+    "destination_args": [
+     "user"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/slack.py:106-116; default_suites/v1/tools/slack.py:106-117",
+    "rationale": "The `remove_user_from_slack` function removes a user from the Slack workspace by deleting them from the `users`, `user_inbox`, and `user_channels` lists. It does not send any data out of the system or execute any supplied code. [destination_args completed: user]"
+   },
+   {
+    "name": "get_webpage",
+    "kind": "READ",
+    "destination_args": [
+     "url"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/web.py:35-44; default_suites/v1/tools/web.py:35-46",
+    "rationale": "The `get_webpage` function retrieves the content of a webpage from the `web_content` dictionary. If the URL is not found, it returns '404 Not Found'. The content is controlled by outside parties as it is fetched from URLs."
+   },
+   {
+    "name": "post_webpage",
+    "kind": "WRITE",
+    "destination_args": [
+     "url"
+    ],
+    "value_args": [
+     "content"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/web.py:24-33; default_suites/v1/tools/web.py:24-34",
+    "rationale": "The `post_webpage` function stores the content of a webpage at a given URL in the `web_content` dictionary. It does not send data out of the system or execute any supplied code. [destination_args completed: url]"
+   }
+  ]
+ },
+ "travel": {
+  "suite": "travel",
+  "tools": [
+   {
+    "name": "get_user_information",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:104-116; default_suites/v1/tools/travel_booking_client.py:104-118",
+    "rationale": "The `get_user_information` function returns a dictionary with user information fields such as first name, last name, ID number, email, phone number, address, passport number, bank account number, and credit card number. These fields are read from the `User` object, which is annotated with `Depends(\"user\")`, indicating they are sourced from the user's account. [received records: First Name, Last Name, ID Number, Email, Phone Number, Address, Passport Number, Bank Account Number, Credit Card Number taken as outside-party text]"
+   },
+   {
+    "name": "get_all_hotels_in_city",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:122-128; default_suites/v1/tools/travel_booking_client.py:38-44",
+    "rationale": "The `get_all_hotels_in_city` function returns a string that lists hotel names in a given city. The hotel names are read from the `Hotels` object, which is annotated with `Depends(\"hotels\")`, indicating they are sourced from a public resource. The result includes a literal prefix 'Hotel Names: ' and the list of hotel names."
+   },
+   {
+    "name": "get_hotels_prices",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:131-139; default_suites/v1/tools/travel_booking_client.py:131-141",
+    "rationale": "The `get_hotels_prices` function returns a dictionary mapping hotel names to their price ranges. The hotel names and prices are read from the `Hotels` object, which is annotated with `Depends(\"hotels\")`, indicating they are sourced from a public resource. The price range is computed from the `price_min` and `price_max` fields of each hotel."
+   },
+   {
+    "name": "get_rating_reviews_for_hotels",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:149-160; default_suites/v1/tools/travel_booking_client.py:149-152",
+    "rationale": "The `get_rating_reviews_for_hotels` function returns a dictionary mapping hotel names to their ratings and reviews. The hotel names, ratings, and reviews are read from the `Hotels` object, which is annotated with `Depends(\"hotels\")`, indicating they are sourced from a public resource. The reviews are considered to be controlled by outside parties as they are user-generated content."
+   },
+   {
+    "name": "get_hotels_address",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:142-146; default_suites/v1/tools/travel_booking_client.py:142-148",
+    "rationale": "The `get_hotels_address` function returns a dictionary mapping hotel names to their addresses. The hotel names and addresses are read from the `Hotels` object, which is annotated with `Depends(\"hotels\")`, indicating they are sourced from a public resource."
+   },
+   {
+    "name": "get_all_restaurants_in_city",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:166-172; default_suites/v1/tools/travel_booking_client.py:166-174",
+    "rationale": "The `get_all_restaurants_in_city` function returns a string that lists restaurant names in a given city. The restaurant names are read from the `Restaurants` object, which is annotated with `Depends(\"restaurants\")`, indicating they are sourced from a public resource. The result includes a literal prefix 'Restaurant in {city}: ' and the list of restaurant names."
+   },
+   {
+    "name": "get_cuisine_type_for_restaurants",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:205-216; default_suites/v1/tools/travel_booking_client.py:205-208",
+    "rationale": "The `get_cuisine_type_for_restaurants` function returns a dictionary mapping restaurant names to their cuisine types. The restaurant names and cuisine types are read from the `Restaurants` object, which is annotated with `Depends(\"restaurants\")`, indicating they are sourced from a public resource."
+   },
+   {
+    "name": "get_restaurants_address",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:175-188; default_suites/v1/tools/travel_booking_client.py:175-178",
+    "rationale": "The `get_restaurants_address` function returns a dictionary mapping restaurant names to their addresses. The restaurant names and addresses are read from the `Restaurants` object, which is annotated with `Depends(\"restaurants\")`, indicating they are sourced from a public resource."
+   },
+   {
+    "name": "get_rating_reviews_for_restaurants",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:191-202; default_suites/v1/tools/travel_booking_client.py:191-194",
+    "rationale": "The tool `get_rating_reviews_for_restaurants` returns a dictionary with restaurant names, ratings, and reviews. The restaurant names, ratings, and reviews are read from the `Restaurants` model, which is public and controlled by outside parties."
+   },
+   {
+    "name": "get_dietary_restrictions_for_all_restaurants",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:219-231; default_suites/v1/tools/travel_booking_client.py:219-222",
+    "rationale": "The tool `get_dietary_restrictions_for_all_restaurants` returns a dictionary with restaurant names and their dietary restrictions. The restaurant names and dietary restrictions are read from the `Restaurants` model, which is public and controlled by outside parties."
+   },
+   {
+    "name": "get_contact_information_for_restaurants",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:234-245; default_suites/v1/tools/travel_booking_client.py:234-237",
+    "rationale": "The tool `get_contact_information_for_restaurants` returns a dictionary with restaurant names and their contact information. The restaurant names and contact information are read from the `Restaurants` model, which is public and controlled by outside parties."
+   },
+   {
+    "name": "get_price_for_restaurants",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:248-259; default_suites/v1/tools/travel_booking_client.py:248-251",
+    "rationale": "The tool `get_price_for_restaurants` returns a dictionary with restaurant names and their price per person. The restaurant names and prices are read from the `Restaurants` model, which is public and controlled by outside parties."
+   },
+   {
+    "name": "check_restaurant_opening_hours",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:262-273; default_suites/v1/tools/travel_booking_client.py:262-265",
+    "rationale": "The tool `check_restaurant_opening_hours` returns a dictionary with restaurant names and their operating hours. The restaurant names and operating hours are read from the `Restaurants` model, which is public and controlled by outside parties."
+   },
+   {
+    "name": "get_all_car_rental_companies_in_city",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:279-285; default_suites/v1/tools/travel_booking_client.py:279-287",
+    "rationale": "The tool `get_all_car_rental_companies_in_city` returns a string listing car rental companies in a city. The company names are computed from the `CarRental` model, which is public and controlled by outside parties."
+   },
+   {
+    "name": "get_car_types_available",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:288-296; default_suites/v1/tools/travel_booking_client.py:288-290",
+    "rationale": "The tool `get_car_types_available` returns a dictionary with car rental company names and their available car types. The company names and car types are read from the `CarRental` model, which is public and controlled by outside parties."
+   },
+   {
+    "name": "get_rating_reviews_for_car_rental",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [
+     "return"
+    ],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:299-309; default_suites/v1/tools/travel_booking_client.py:299-301",
+    "rationale": "The tool `get_rating_reviews_for_car_rental` returns a dictionary with car rental company names, ratings, and reviews. The company names, ratings, and reviews are read from the `CarRental` model, which is public and controlled by outside parties."
+   },
+   {
+    "name": "get_car_fuel_options",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:321-327; default_suites/v1/tools/travel_booking_client.py:321-323",
+    "rationale": "The tool `get_car_fuel_options` retrieves the fuel options for car rental companies. It reads the `company.name` and `company.fuel_options` from the `car_rental.company_list`. Both are public information controlled by outside parties."
+   },
+   {
+    "name": "get_car_rental_address",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:312-318; default_suites/v1/tools/travel_booking_client.py:312-314",
+    "rationale": "The tool `get_car_rental_address` retrieves the address of car rental companies. It reads the `company.name` and `company.address` from the `car_rental.company_list`. Both are public information controlled by outside parties."
+   },
+   {
+    "name": "get_car_price_per_day",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:330-336; default_suites/v1/tools/travel_booking_client.py:330-332",
+    "rationale": "The tool `get_car_price_per_day` retrieves the price per day for car rental companies. It reads the `company.name` and `company.price_per_day` from the `car_rental.company_list`. Both are public information controlled by outside parties."
+   },
+   {
+    "name": "create_calendar_event",
+    "kind": "WRITE",
+    "destination_args": [
+     "participants"
+    ],
+    "value_args": [
+     "title",
+     "start_time",
+     "end_time",
+     "description",
+     "location"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/calendar_client.py:137-168; default_suites/v1/tools/calendar_client.py:137-146",
+    "rationale": "The tool `create_calendar_event` creates a new calendar event and sends an email to the participants. The event is created using user-provided details, and the email is sent to the specified participants, making it a WRITE operation with a delivery to a chosen party."
+   },
+   {
+    "name": "search_calendar_events",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "query",
+     "date"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/calendar_client.py:171-188; default_suites/v1/tools/calendar_client.py:171-175",
+    "rationale": "The tool `search_calendar_events` searches for calendar events based on a query and an optional date. It returns a list of matching events, which are computed from the user's calendar data."
+   },
+   {
+    "name": "get_day_calendar_events",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "day"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/calendar_client.py:128-134; default_suites/v1/tools/calendar_client.py:128-136",
+    "rationale": "The tool `get_day_calendar_events` retrieves events for a specific day from the user's calendar. It reads the events for the given day, which are part of the user's account data. [received records: calendar.get_by_day(date.date()) taken as outside-party text]"
+   },
+   {
+    "name": "cancel_calendar_event",
+    "kind": "WRITE",
+    "destination_args": [
+     "event_id"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/calendar_client.py:200-211; default_suites/v1/tools/calendar_client.py:200-204",
+    "rationale": "The tool `cancel_calendar_event` cancels an event and notifies participants via email. It marks the event as canceled and sends a notification to the participants, making it a WRITE operation with a delivery to a chosen party."
+   },
+   {
+    "name": "reserve_hotel",
+    "kind": "WRITE",
+    "destination_args": [
+     "hotel"
+    ],
+    "value_args": [
+     "start_day",
+     "end_day"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:339-356; default_suites/v1/tools/travel_booking_client.py:339-345",
+    "rationale": "The tool `reserve_hotel` makes a reservation for a hotel using user-provided details. It updates the reservation object with the user's contact information and reservation details, but does not send data to an external party. [destination_args completed: hotel]"
+   },
+   {
+    "name": "reserve_car_rental",
+    "kind": "WRITE",
+    "destination_args": [
+     "company"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:382-400; default_suites/v1/tools/travel_booking_client.py:382-388",
+    "rationale": "The `reserve_car_rental` function creates a reservation for a car rental. It uses the user's phone number as contact information and sets the reservation details. The result is a success message indicating the reservation details. There are no outbound calls or code execution beyond setting the reservation details. [destination_args completed: company]"
+   },
+   {
+    "name": "reserve_restaurant",
+    "kind": "WRITE",
+    "destination_args": [
+     "restaurant"
+    ],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:359-379; default_suites/v1/tools/travel_booking_client.py:359-364",
+    "rationale": "The `reserve_restaurant` function creates a reservation for a restaurant. It uses the user's phone number as contact information and sets the reservation details. The result is a success message indicating the reservation details. There are no outbound calls or code execution beyond setting the reservation details. [destination_args completed: restaurant]"
+   },
+   {
+    "name": "get_flight_information",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/travel_booking_client.py:403-417; default_suites/v1/tools/travel_booking_client.py:403-407",
+    "rationale": "The `get_flight_information` function retrieves flight information based on the departure and arrival cities. It returns a list of flight details, which are read from the `flights` resource. The information is public and controlled by the service, as it is based on the flight data available in the system."
+   },
+   {
+    "name": "send_email",
+    "kind": "WRITE",
+    "destination_args": [
+     "recipients",
+     "bcc",
+     "cc"
+    ],
+    "value_args": [
+     "subject",
+     "body",
+     "attachments"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/email_client.py:154-193; default_suites/v1/tools/email_client.py:73-81",
+    "rationale": "The `send_email` function sends an email with the specified recipients, subject, body, and optional attachments, cc, and bcc. The email is sent using the `inbox.send_email` method, which is part of the configured own service. The recipients are chosen by the argument, making it a delivery to a chosen party. [destination_args completed: bcc, cc]"
+   }
+  ]
+ },
+ "banking": {
+  "suite": "banking",
+  "tools": [
+   {
+    "name": "get_iban",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/banking_client.py:50-52; default_suites/v1/tools/banking_client.py:50-54",
+    "rationale": "The `get_iban` function returns the IBAN of the user's bank account, which is read from the `account` object. This is a resource read with user account scope and user control."
+   },
+   {
+    "name": "send_money",
+    "kind": "WRITE",
+    "destination_args": [
+     "recipient"
+    ],
+    "value_args": [
+     "amount",
+     "subject",
+     "date"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/banking_client.py:55-79; default_suites/v1/tools/banking_client.py:55-57",
+    "rationale": "The `send_money` function creates a transaction and appends it to the user's transactions. It returns a message indicating the transaction was sent. No data is sent out of the system. [destination_args completed: recipient]"
+   },
+   {
+    "name": "schedule_transaction",
+    "kind": "WRITE",
+    "destination_args": [
+     "recipient"
+    ],
+    "value_args": [
+     "amount",
+     "subject",
+     "date",
+     "recurring"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/banking_client.py:82-112; default_suites/v1/tools/banking_client.py:82-89",
+    "rationale": "The `schedule_transaction` function schedules a transaction and appends it to the user's scheduled transactions. It returns a message indicating the transaction was scheduled. No data is sent out of the system. [destination_args completed: recipient]"
+   },
+   {
+    "name": "update_scheduled_transaction",
+    "kind": "WRITE",
+    "destination_args": [
+     "recipient"
+    ],
+    "value_args": [
+     "id",
+     "amount",
+     "subject",
+     "date",
+     "recurring"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/banking_client.py:115-151; default_suites/v1/tools/banking_client.py:115-123",
+    "rationale": "The `update_scheduled_transaction` function updates an existing scheduled transaction based on the provided ID and optional parameters. It returns a message indicating the transaction was updated. No data is sent out of the system. [destination_args completed: recipient]"
+   },
+   {
+    "name": "get_balance",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/banking_client.py:154-158; default_suites/v1/tools/banking_client.py:154-160",
+    "rationale": "The `get_balance` function returns the balance of the user's bank account, which is read from the `account` object. This is a resource read with user account scope and user control."
+   },
+   {
+    "name": "get_most_recent_transactions",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "n"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/banking_client.py:161-169; default_suites/v1/tools/banking_client.py:161-163",
+    "rationale": "The `get_most_recent_transactions` function returns the most recent transactions from the user's account. This is a resource read with user account scope and user control. [received records: account.transactions[-int(n):] taken as outside-party text] [received records: the statement taken as outside-party text]"
+   },
+   {
+    "name": "get_scheduled_transactions",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/banking_client.py:172-178; default_suites/v1/tools/banking_client.py:172-174",
+    "rationale": "The `get_scheduled_transactions` function returns the list of scheduled transactions from the user's account. This is a resource read with user account scope and user control. [received records: account.scheduled_transactions taken as outside-party text] [received records: the statement taken as outside-party text]"
+   },
+   {
+    "name": "read_file",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "file_path"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "structured_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/file_reader.py:12-18; default_suites/v1/tools/file_reader.py:12-19",
+    "rationale": "The `read_file` function reads the contents of a file from the local filesystem based on the provided file path. This is a resource read with user local scope and user control. [received records: filesystem.files.get(file_path, \"\") taken as outside-party text] [received records: the statement taken as outside-party text]"
+   },
+   {
+    "name": "get_user_info",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/user_account.py:20-31; default_suites/v1/tools/user_account.py:20-22",
+    "rationale": "The `get_user_info` function retrieves user information from the `UserAccount` model, which includes `first_name`, `last_name`, `street`, and `city`. These fields are read from the user's account and are controlled by the user."
+   },
+   {
+    "name": "update_password",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "password"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/user_account.py:34-43; default_suites/v1/tools/user_account.py:34-45",
+    "rationale": "The `update_password` function updates the user's password in the `UserAccount` model and returns a fixed message indicating success. There are no outbound calls or supplied code execution."
+   },
+   {
+    "name": "update_user_info",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "first_name",
+     "last_name",
+     "street",
+     "city"
+    ],
+    "injectable_output_fields": [],
+    "structured_output_fields": [],
+    "attacker_named_fields": [],
+    "labels": [
+     "SECRET"
+    ],
+    "undetermined": false,
+    "evidence": "default_suites/v1/tools/user_account.py:46-75; default_suites/v1/tools/user_account.py:46-52",
+    "rationale": "The `update_user_info` function updates the user's information in the `UserAccount` model and returns the updated fields. These fields are read from the user's account and are controlled by the user. There are no outbound calls or supplied code execution."
+   }
+  ]
+ }
+}

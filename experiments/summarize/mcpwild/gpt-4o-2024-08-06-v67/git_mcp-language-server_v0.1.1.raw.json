@@ -1,0 +1,1509 @@
+{
+ "batch": {
+  "tools": {
+   "definition": {
+    "result_contents": [
+     {
+      "part": "text",
+      "produced_at": "tools.go:119",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "symbolName",
+      "destination_class": "configured_own_service",
+      "host_or_config": "s.lspClient",
+      "at": "internal/tools/definition.go:13"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "tools.go:98-120",
+     "internal/tools/definition.go:12-103"
+    ],
+    "rationale": "The tool reads the definition of a symbol from the user's codebase using the LSP client. The result is the complete implementation code of the symbol, which is read from the user's account. The symbol name is sent to the LSP client to fetch the definition.",
+    "kind": "READ",
+    "destination_args": [
+     "symbolName"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "diagnostics": {
+    "result_contents": [
+     {
+      "part": "text",
+      "produced_at": "tools.go:185",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "filePath",
+      "destination_class": "configured_own_service",
+      "host_or_config": "s.lspClient",
+      "at": "internal/tools/diagnostics.go:40"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "tools.go:146-186",
+     "internal/tools/diagnostics.go:15-135"
+    ],
+    "rationale": "The tool retrieves diagnostic information for a specific file from the language server. The file path is sent to the LSP client to fetch diagnostics, and the result is diagnostic information read from the user's account. [received records: text taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [
+     "filePath"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "edit_file": {
+    "result_contents": [
+     {
+      "part": "response",
+      "produced_at": "tools.go:95",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "filePath, edits",
+      "destination_class": "configured_own_service",
+      "host_or_config": "s.lspClient",
+      "at": "internal/tools/edit.go:90"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "tools.go:14-96",
+     "internal/tools/edit.go:44-95"
+    ],
+    "rationale": "The tool applies text edits to a file specified by the user. The file path and edits are sent to the LSP client to apply the changes. The result is a confirmation message indicating the success of the operation.",
+    "kind": "WRITE",
+    "destination_args": [
+     "filePath"
+    ],
+    "value_args": [
+     "edits"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "hover": {
+    "result_contents": [
+     {
+      "part": "text",
+      "produced_at": "tools.go:302",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "filePath, line, column",
+      "destination_class": "configured_own_service",
+      "host_or_config": "s.lspClient",
+      "at": "internal/tools/hover.go:34"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "tools.go:253-303",
+     "internal/tools/hover.go:13-65"
+    ],
+    "rationale": "The tool retrieves hover information for a symbol at a specified position in a file. The file path, line, and column are sent to the LSP client to fetch hover information, which is read from the user's account.",
+    "kind": "READ",
+    "destination_args": [
+     "filePath"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "references": {
+    "result_contents": [
+     {
+      "part": "text",
+      "produced_at": "tools.go:143",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "symbolName",
+      "destination_class": "configured_own_service",
+      "host_or_config": "s.lspClient",
+      "at": "internal/tools/references.go:25"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "tools.go:122-144",
+     "internal/tools/references.go:15-150"
+    ],
+    "rationale": "The tool finds all usages and references of a symbol throughout the codebase. The symbol name is sent to the LSP client to fetch references, and the result is a list of locations where the symbol appears, read from the user's account. [received records: text taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [
+     "symbolName"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "rename_symbol": {
+    "result_contents": [
+     {
+      "part": "text",
+      "produced_at": "tools.go:363",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "filePath, line, column, newName",
+      "destination_class": "configured_own_service",
+      "host_or_config": "s.lspClient",
+      "at": "internal/tools/rename-symbol.go:43"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "tools.go:305-364",
+     "internal/tools/rename-symbol.go:15-126"
+    ],
+    "rationale": "The tool renames a symbol at a specified position and updates all references throughout the codebase. The file path, line, column, and new name are sent to the LSP client to perform the rename operation. The result is a summary of changes made.",
+    "kind": "WRITE",
+    "destination_args": [
+     "filePath"
+    ],
+    "value_args": [
+     "newName"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   }
+  },
+  "value_conditions": [],
+  "notes": []
+ },
+ "methods": {},
+ "statement_calls": [
+  {
+   "subject": "handler lines tools.go:11-160",
+   "attempt": 0,
+   "ids": [
+    "tools.go:48#0",
+    "tools.go:54#0",
+    "tools.go:60#0",
+    "tools.go:67#0",
+    "tools.go:72#0",
+    "tools.go:77#0",
+    "tools.go:89#0",
+    "tools.go:93#0",
+    "tools.go:95#0",
+    "tools.go:110#0",
+    "tools.go:113#0",
+    "tools.go:117#0",
+    "tools.go:119#0",
+    "tools.go:134#0",
+    "tools.go:137#0",
+    "tools.go:141#0",
+    "tools.go:143#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"tools.go:48#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:54#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:60#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:67#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:72#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:77#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:89#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"tools.go:93#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:95#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:110#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:113#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"tools.go:117#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:119#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:134#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:137#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"tools.go:141#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:143#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 3521,
+    "output_tokens": 621,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines tools.go:161-210",
+   "attempt": 0,
+   "ids": [
+    "tools.go:166#0",
+    "tools.go:179#0",
+    "tools.go:183#0",
+    "tools.go:185#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"tools.go:166#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"tools.go:179#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"tools.go:183#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:185#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2021,
+    "output_tokens": 154,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines tools.go:253-303",
+   "attempt": 0,
+   "ids": [
+    "tools.go:273#0",
+    "tools.go:284#0",
+    "tools.go:293#0",
+    "tools.go:296#0",
+    "tools.go:300#0",
+    "tools.go:302#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"tools.go:273#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:284#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:293#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:296#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"tools.go:300#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:302#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1986,
+    "output_tokens": 227,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines tools.go:305-364",
+   "attempt": 0,
+   "ids": [
+    "tools.go:329#0",
+    "tools.go:334#0",
+    "tools.go:345#0",
+    "tools.go:354#0",
+    "tools.go:357#0",
+    "tools.go:361#0",
+    "tools.go:363#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"tools.go:329#0\",\"part\":\"filePath must be a string\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:334#0\",\"part\":\"newName must be a string\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:345#0\",\"part\":\"line must be a number\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:354#0\",\"part\":\"column must be a number\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:357#0\",\"part\":\"Executing rename_symbol for file: %s line: %d column: %d newName: %s\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:357#0\",\"part\":\"filePath\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"tools.go:357#0\",\"part\":\"line\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"tools.go:357#0\",\"part\":\"column\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"tools.go:357#0\",\"part\":\"newName\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"tools.go:361#0\",\"part\":\"failed to rename symbol: %v\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:361#0\",\"part\":\"err\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"tools.go:363#0\",\"part\":\"text\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2139,
+    "output_tokens": 479,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines internal/tools/definition.go:12-103",
+   "attempt": 0,
+   "ids": [
+    "internal/tools/definition.go:17#0",
+    "internal/tools/definition.go:22#0",
+    "internal/tools/definition.go:35#0",
+    "internal/tools/definition.go:37#0",
+    "internal/tools/definition.go:64#0",
+    "internal/tools/definition.go:76#0",
+    "internal/tools/definition.go:77#0",
+    "internal/tools/definition.go:100#0",
+    "internal/tools/definition.go:103#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"internal/tools/definition.go:17#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/definition.go:22#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/definition.go:35#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/definition.go:37#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"internal/tools/definition.go:64#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"internal/tools/definition.go:76#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"internal/tools/definition.go:77#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"internal/tools/definition.go:100#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"internal/tools/definition.go:103#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2375,
+    "output_tokens": 362,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines internal/tools/diagnostics.go:15-135",
+   "attempt": 0,
+   "ids": [
+    "internal/tools/diagnostics.go:26#0",
+    "internal/tools/diagnostics.go:49#0",
+    "internal/tools/diagnostics.go:53#0",
+    "internal/tools/diagnostics.go:68#0",
+    "internal/tools/diagnostics.go:75#0",
+    "internal/tools/diagnostics.go:77#0",
+    "internal/tools/diagnostics.go:79#0",
+    "internal/tools/diagnostics.go:81#0",
+    "internal/tools/diagnostics.go:96#0",
+    "internal/tools/diagnostics.go:127#0",
+    "internal/tools/diagnostics.go:132#0",
+    "internal/tools/diagnostics.go:135#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"internal/tools/diagnostics.go:26#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/diagnostics.go:49#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"user_local\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"internal/tools/diagnostics.go:53#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"internal/tools/diagnostics.go:68#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/diagnostics.go:75#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/diagnostics.go:77#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/diagnostics.go:79#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/diagnostics.go:81#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/diagnostics.go:96#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"internal/tools/diagnostics.go:127#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/diagnostics.go:132#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/diagnostics.go:135#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2755,
+    "output_tokens": 498,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines internal/tools/hover.go:13-65",
+   "attempt": 0,
+   "ids": [
+    "internal/tools/hover.go:17#0",
+    "internal/tools/hover.go:36#0",
+    "internal/tools/hover.go:60#0",
+    "internal/tools/hover.go:65#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"internal/tools/hover.go:17#0\",\"part\":\"could not open file: %v\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/hover.go:36#0\",\"part\":\"failed to get hover information: %v\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/hover.go:60#0\",\"part\":\"No hover information available for this position on the following line:\\n\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/hover.go:60#0\",\"part\":\"%s\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/hover.go:65#0\",\"part\":\"not_output\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1818,
+    "output_tokens": 226,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines internal/tools/references.go:15-150",
+   "attempt": 0,
+   "ids": [
+    "internal/tools/references.go:29#0",
+    "internal/tools/references.go:34#0",
+    "internal/tools/references.go:77#0",
+    "internal/tools/references.go:100#0",
+    "internal/tools/references.go:137#0",
+    "internal/tools/references.go:141#0",
+    "internal/tools/references.go:147#0",
+    "internal/tools/references.go:150#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"internal/tools/references.go:29#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/references.go:34#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/references.go:77#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/references.go:100#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/references.go:137#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/references.go:141#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/references.go:147#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"internal/tools/references.go:150#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2837,
+    "output_tokens": 326,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines internal/tools/rename-symbol.go:15-126",
+   "attempt": 0,
+   "ids": [
+    "internal/tools/rename-symbol.go:20#0",
+    "internal/tools/rename-symbol.go:45#0",
+    "internal/tools/rename-symbol.go:66#0",
+    "internal/tools/rename-symbol.go:101#0",
+    "internal/tools/rename-symbol.go:107#0",
+    "internal/tools/rename-symbol.go:112#0",
+    "internal/tools/rename-symbol.go:117#0",
+    "internal/tools/rename-symbol.go:121#0",
+    "internal/tools/rename-symbol.go:125#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"internal/tools/rename-symbol.go:20#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/rename-symbol.go:45#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/rename-symbol.go:66#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/rename-symbol.go:101#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/rename-symbol.go:107#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/rename-symbol.go:112#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/rename-symbol.go:117#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/rename-symbol.go:121#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"internal/tools/rename-symbol.go:125#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2640,
+    "output_tokens": 375,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  }
+ ],
+ "final": {
+  "tools": {
+   "definition": {
+    "result_contents": [
+     {
+      "part": "text",
+      "produced_at": "tools.go:119",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "tools.go:110#0",
+      "part": "the statement",
+      "produced_at": "tools.go:110",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:113#0",
+      "part": "the statement",
+      "produced_at": "tools.go:113",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:117#0",
+      "part": "the statement",
+      "produced_at": "tools.go:117",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "tools.go:119#0",
+      "part": "the statement",
+      "produced_at": "tools.go:119",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "internal/tools/definition.go:17#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/definition.go:17",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "internal/tools/definition.go:22#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/definition.go:22",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "internal/tools/definition.go:35#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/definition.go:35",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "internal/tools/definition.go:37#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/definition.go:37",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "user"
+     },
+     {
+      "id": "internal/tools/definition.go:64#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/definition.go:64",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "user"
+     },
+     {
+      "id": "internal/tools/definition.go:76#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/definition.go:76",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "user"
+     },
+     {
+      "id": "internal/tools/definition.go:77#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/definition.go:77",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "user"
+     },
+     {
+      "id": "internal/tools/definition.go:100#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/definition.go:100",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "user"
+     },
+     {
+      "id": "internal/tools/definition.go:103#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/definition.go:103",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "symbolName",
+      "destination_class": "configured_own_service",
+      "host_or_config": "s.lspClient",
+      "at": "internal/tools/definition.go:13"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "tools.go:98-120",
+     "internal/tools/definition.go:12-103",
+     "tools.go:98-104"
+    ],
+    "rationale": "The tool reads the definition of a symbol from the user's codebase using the LSP client. The result is the complete implementation code of the symbol, which is read from the user's account. The symbol name is sent to the LSP client to fetch the definition.",
+    "kind": "READ",
+    "destination_args": [
+     "symbolName"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "diagnostics": {
+    "result_contents": [
+     {
+      "part": "text",
+      "produced_at": "tools.go:185",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "id": "tools.go:166#0",
+      "part": "the statement",
+      "produced_at": "tools.go:166",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:179#0",
+      "part": "the statement",
+      "produced_at": "tools.go:179",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "tools.go:183#0",
+      "part": "the statement",
+      "produced_at": "tools.go:183",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "tools.go:185#0",
+      "part": "the statement",
+      "produced_at": "tools.go:185",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "id": "internal/tools/diagnostics.go:49#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/diagnostics.go:49",
+      "origin": "literal",
+      "scope": "user_local",
+      "control": "none"
+     },
+     {
+      "id": "internal/tools/diagnostics.go:53#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/diagnostics.go:53",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "none"
+     },
+     {
+      "id": "internal/tools/diagnostics.go:68#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/diagnostics.go:68",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "internal/tools/diagnostics.go:75#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/diagnostics.go:75",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "outside_party"
+     },
+     {
+      "id": "internal/tools/diagnostics.go:77#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/diagnostics.go:77",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "outside_party"
+     },
+     {
+      "id": "internal/tools/diagnostics.go:79#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/diagnostics.go:79",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "internal/tools/diagnostics.go:81#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/diagnostics.go:81",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "outside_party"
+     },
+     {
+      "id": "internal/tools/diagnostics.go:96#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/diagnostics.go:96",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "none"
+     },
+     {
+      "id": "internal/tools/diagnostics.go:127#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/diagnostics.go:127",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "internal/tools/diagnostics.go:132#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/diagnostics.go:132",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "none"
+     },
+     {
+      "id": "internal/tools/diagnostics.go:135#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/diagnostics.go:135",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "filePath",
+      "destination_class": "configured_own_service",
+      "host_or_config": "s.lspClient",
+      "at": "internal/tools/diagnostics.go:40"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "tools.go:146-186",
+     "internal/tools/diagnostics.go:15-135",
+     "tools.go:146-160"
+    ],
+    "rationale": "The tool retrieves diagnostic information for a specific file from the language server. The file path is sent to the LSP client to fetch diagnostics, and the result is diagnostic information read from the user's account. [received records: text taken as outside-party text] [received records: the statement taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [
+     "filePath"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "edit_file": {
+    "result_contents": [
+     {
+      "part": "response",
+      "produced_at": "tools.go:95",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "tools.go:48#0",
+      "part": "the statement",
+      "produced_at": "tools.go:48",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:54#0",
+      "part": "the statement",
+      "produced_at": "tools.go:54",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:60#0",
+      "part": "the statement",
+      "produced_at": "tools.go:60",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:67#0",
+      "part": "the statement",
+      "produced_at": "tools.go:67",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:72#0",
+      "part": "the statement",
+      "produced_at": "tools.go:72",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:77#0",
+      "part": "the statement",
+      "produced_at": "tools.go:77",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:89#0",
+      "part": "the statement",
+      "produced_at": "tools.go:89",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:93#0",
+      "part": "the statement",
+      "produced_at": "tools.go:93",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "tools.go:95#0",
+      "part": "the statement",
+      "produced_at": "tools.go:95",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "tools.go:110#0",
+      "part": "the statement",
+      "produced_at": "tools.go:110",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:113#0",
+      "part": "the statement",
+      "produced_at": "tools.go:113",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:117#0",
+      "part": "the statement",
+      "produced_at": "tools.go:117",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "tools.go:119#0",
+      "part": "the statement",
+      "produced_at": "tools.go:119",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "tools.go:134#0",
+      "part": "the statement",
+      "produced_at": "tools.go:134",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:137#0",
+      "part": "the statement",
+      "produced_at": "tools.go:137",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:141#0",
+      "part": "the statement",
+      "produced_at": "tools.go:141",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "tools.go:143#0",
+      "part": "the statement",
+      "produced_at": "tools.go:143",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "tools.go:166#0",
+      "part": "the statement",
+      "produced_at": "tools.go:166",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:179#0",
+      "part": "the statement",
+      "produced_at": "tools.go:179",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "tools.go:183#0",
+      "part": "the statement",
+      "produced_at": "tools.go:183",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "tools.go:185#0",
+      "part": "the statement",
+      "produced_at": "tools.go:185",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "filePath, edits",
+      "destination_class": "configured_own_service",
+      "host_or_config": "s.lspClient",
+      "at": "internal/tools/edit.go:90"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "tools.go:14-96",
+     "internal/tools/edit.go:44-95",
+     "tools.go:11-210"
+    ],
+    "rationale": "The tool applies text edits to a file specified by the user. The file path and edits are sent to the LSP client to apply the changes. The result is a confirmation message indicating the success of the operation. [received records: the statement taken as outside-party text]",
+    "kind": "WRITE",
+    "destination_args": [
+     "filePath"
+    ],
+    "value_args": [
+     "edits"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "hover": {
+    "result_contents": [
+     {
+      "part": "text",
+      "produced_at": "tools.go:302",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "tools.go:273#0",
+      "part": "the statement",
+      "produced_at": "tools.go:273",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:284#0",
+      "part": "the statement",
+      "produced_at": "tools.go:284",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:293#0",
+      "part": "the statement",
+      "produced_at": "tools.go:293",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:296#0",
+      "part": "the statement",
+      "produced_at": "tools.go:296",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "tools.go:300#0",
+      "part": "the statement",
+      "produced_at": "tools.go:300",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:302#0",
+      "part": "the statement",
+      "produced_at": "tools.go:302",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "internal/tools/hover.go:17#0",
+      "part": "could not open file: %v",
+      "produced_at": "internal/tools/hover.go:17",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "internal/tools/hover.go:36#0",
+      "part": "failed to get hover information: %v",
+      "produced_at": "internal/tools/hover.go:36",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "internal/tools/hover.go:60#0",
+      "part": "No hover information available for this position on the following line:",
+      "produced_at": "internal/tools/hover.go:60",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "filePath, line, column",
+      "destination_class": "configured_own_service",
+      "host_or_config": "s.lspClient",
+      "at": "internal/tools/hover.go:34"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "tools.go:253-303",
+     "internal/tools/hover.go:13-65",
+     "tools.go:253-267"
+    ],
+    "rationale": "The tool retrieves hover information for a symbol at a specified position in a file. The file path, line, and column are sent to the LSP client to fetch hover information, which is read from the user's account.",
+    "kind": "READ",
+    "destination_args": [
+     "filePath"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "references": {
+    "result_contents": [
+     {
+      "part": "text",
+      "produced_at": "tools.go:143",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "id": "tools.go:134#0",
+      "part": "the statement",
+      "produced_at": "tools.go:134",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:137#0",
+      "part": "the statement",
+      "produced_at": "tools.go:137",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:141#0",
+      "part": "the statement",
+      "produced_at": "tools.go:141",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "tools.go:143#0",
+      "part": "the statement",
+      "produced_at": "tools.go:143",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "internal/tools/references.go:100#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/references.go:100",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "internal/tools/references.go:137#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/references.go:137",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "internal/tools/references.go:141#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/references.go:141",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "internal/tools/references.go:147#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/references.go:147",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "internal/tools/references.go:150#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/references.go:150",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "symbolName",
+      "destination_class": "configured_own_service",
+      "host_or_config": "s.lspClient",
+      "at": "internal/tools/references.go:25"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "tools.go:122-144",
+     "internal/tools/references.go:15-150",
+     "tools.go:122-128"
+    ],
+    "rationale": "The tool finds all usages and references of a symbol throughout the codebase. The symbol name is sent to the LSP client to fetch references, and the result is a list of locations where the symbol appears, read from the user's account. [received records: text taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [
+     "symbolName"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "rename_symbol": {
+    "result_contents": [
+     {
+      "part": "text",
+      "produced_at": "tools.go:363",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "tools.go:329#0",
+      "part": "filePath must be a string",
+      "produced_at": "tools.go:329",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:334#0",
+      "part": "newName must be a string",
+      "produced_at": "tools.go:334",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:345#0",
+      "part": "line must be a number",
+      "produced_at": "tools.go:345",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:354#0",
+      "part": "column must be a number",
+      "produced_at": "tools.go:354",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:357#0",
+      "part": "Executing rename_symbol for file: %s line: %d column: %d newName: %s",
+      "produced_at": "tools.go:357",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:361#0",
+      "part": "failed to rename symbol: %v",
+      "produced_at": "tools.go:361",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "tools.go:363#0",
+      "part": "text",
+      "produced_at": "tools.go:363",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "internal/tools/rename-symbol.go:20#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/rename-symbol.go:20",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "internal/tools/rename-symbol.go:45#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/rename-symbol.go:45",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "internal/tools/rename-symbol.go:112#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/rename-symbol.go:112",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party"
+     },
+     {
+      "id": "internal/tools/rename-symbol.go:117#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/rename-symbol.go:117",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "internal/tools/rename-symbol.go:121#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/rename-symbol.go:121",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "internal/tools/rename-symbol.go:125#0",
+      "part": "the statement",
+      "produced_at": "internal/tools/rename-symbol.go:125",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "filePath, line, column, newName",
+      "destination_class": "configured_own_service",
+      "host_or_config": "s.lspClient",
+      "at": "internal/tools/rename-symbol.go:43"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "tools.go:305-364",
+     "internal/tools/rename-symbol.go:15-126",
+     "tools.go:305-323"
+    ],
+    "rationale": "The tool renames a symbol at a specified position and updates all references throughout the codebase. The file path, line, column, and new name are sent to the LSP client to perform the rename operation. The result is a summary of changes made.",
+    "kind": "WRITE",
+    "destination_args": [
+     "filePath"
+    ],
+    "value_args": [
+     "newName"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   }
+  },
+  "value_conditions": [],
+  "notes": []
+ },
+ "hashes": {
+  "rubric_sha": "191e69d289880d38",
+  "schema_sha": "0f8d7d93eb07c885",
+  "source_sha": "1037d5a5ccc6fd9c"
+ },
+ "run": {
+  "model": "gpt-4o-2024-08-06",
+  "temperature": 0.0,
+  "seed": 0,
+  "files": [
+   "tools.go",
+   "README.md",
+   "internal/protocol/tsprotocol.go",
+   "cmd/generate/tables.go",
+   "internal/lsp/methods.go",
+   "integrationtests/snapshots/typescript/hover/no-hover-info.snap",
+   ".github/workflows/go.yml",
+   "cmd/generate/README.md",
+   "integrationtests/snapshots/go/references/not-found.snap",
+   "integrationtests/snapshots/clangd/hover/outside-file.snap",
+   "integrationtests/snapshots/python/hover/outside-file.snap",
+   "integrationtests/snapshots/typescript/hover/outside-file.snap",
+   "integrationtests/snapshots/python/hover/no-hover-info.snap",
+   "integrationtests/snapshots/go/hover/no-hover-info.snap",
+   "integrationtests/snapshots/rust/rename_symbol/not_found.snap",
+   "integrationtests/snapshots/go/hover/outside-file.snap",
+   "integrationtests/snapshots/rust/hover/no-hover-info.snap",
+   "integrationtests/snapshots/clangd/hover/no-hover-info-comment.snap",
+   "integrationtests/snapshots/rust/hover/outside-file.snap",
+   "integrationtests/workspaces/typescript/clean.ts",
+   "integrationtests/workspaces/rust/src/consumer.rs",
+   "integrationtests/workspaces/rust/src/another_consumer.rs",
+   "integrationtests/workspaces/typescript/main.ts",
+   "integrationtests/workspaces/typescript/helper.ts",
+   "integrationtests/snapshots/go/codelens/get.snap",
+   "integrationtests/snapshots/rust/references/helper-function.snap",
+   "integrationtests/snapshots/rust/references/shared-type.snap",
+   "integrationtests/workspaces/python/error_file.py",
+   "integrationtests/snapshots/rust/references/shared-constant.snap",
+   "integrationtests/snapshots/rust/references/shared-interface.snap",
+   "integrationtests/snapshots/rust/references/shared-struct.snap",
+   "internal/tools/hover.go",
+   "internal/lsp/protocol.go",
+   "internal/tools/definition.go",
+   "cmd/generate/generate.go",
+   "internal/lsp/server-request-handlers.go",
+   "internal/tools/rename-symbol.go",
+   "internal/tools/diagnostics.go",
+   "internal/tools/references.go",
+   "cmd/generate/typenames.go",
+   "internal/tools/lsp-utilities.go",
+   "internal/protocol/uri.go",
+   "internal/lsp/client.go"
+  ]
+ }
+}

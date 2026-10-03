@@ -1,0 +1,1925 @@
+{
+ "batch": {
+  "tools": {
+   "git_status": {
+    "result_contents": [
+     {
+      "part": "Repository status:\n{status}",
+      "produced_at": "server.py:502",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:111"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:498-503",
+     "server.py:111"
+    ],
+    "rationale": "The `git_status` tool reads the status of the repository using `repo.git.status()` and returns it as part of the response. The status is read from the local repository, making it `resource_read` with `user_local` scope and `service` control.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "git_diff_unstaged": {
+    "result_contents": [
+     {
+      "part": "Unstaged changes:\n{diff}",
+      "produced_at": "server.py:509",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:114"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:505-510",
+     "server.py:114"
+    ],
+    "rationale": "The `git_diff_unstaged` tool reads the unstaged changes in the repository using `repo.git.diff()` and returns them. The changes are read from the local repository, making it `resource_read` with `user_local` scope and `service` control.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "git_diff_staged": {
+    "result_contents": [
+     {
+      "part": "Staged changes:\n{diff}",
+      "produced_at": "server.py:516",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:117"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:512-517",
+     "server.py:117"
+    ],
+    "rationale": "The `git_diff_staged` tool reads the staged changes in the repository using `repo.git.diff()` with the `--cached` option and returns them. The changes are read from the local repository, making it `resource_read` with `user_local` scope and `service` control.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "git_diff": {
+    "result_contents": [
+     {
+      "part": "Diff with {arguments['target']}:\n{diff}",
+      "produced_at": "server.py:523",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:120"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:519-524",
+     "server.py:120-126"
+    ],
+    "rationale": "The `git_diff` tool reads the differences between the current state and a specified target in the repository using `repo.git.diff()`. The target is validated to prevent injection. The diff is read from the local repository, making it `resource_read` with `user_local` scope and `service` control.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "git_commit": {
+    "result_contents": [
+     {
+      "part": "Changes committed successfully with hash {commit.hexsha}",
+      "produced_at": "server.py:530",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:128"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:526-531",
+     "server.py:128-130"
+    ],
+    "rationale": "The `git_commit` tool commits changes to the repository and returns a success message with the commit hash. The commit hash is computed from the local repository state, making it `computed` with `user_local` scope and `service` control.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "message"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "git_add": {
+    "result_contents": [
+     {
+      "part": "Files staged successfully",
+      "produced_at": "server.py:537",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:132"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:533-538",
+     "server.py:132-153"
+    ],
+    "rationale": "The `git_add` tool stages files for commit in the repository. It returns a fixed success message. The operation affects the local repository, making it a `WRITE` operation, but the result is a fixed string, so it is `literal` with `none` scope and control.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "files"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "git_reset": {
+    "result_contents": [
+     {
+      "part": "All staged changes reset",
+      "produced_at": "server.py:544",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:155"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:540-545",
+     "server.py:155-157"
+    ],
+    "rationale": "The `git_reset` tool unstages all changes in the repository. It returns a fixed success message. The operation affects the local repository, making it a `WRITE` operation, but the result is a fixed string, so it is `literal` with `none` scope and control.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "git_log": {
+    "result_contents": [
+     {
+      "part": "Commit history:\n{log}",
+      "produced_at": "server.py:557",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:159"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:548-558",
+     "server.py:159-198"
+    ],
+    "rationale": "The `git_log` tool reads the commit history from the repository using `repo.git.log()` or `repo.iter_commits()`. The log is read from the local repository, making it `resource_read` with `user_local` scope and `service` control.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "git_create_branch": {
+    "result_contents": [
+     {
+      "part": "Created branch '{branch_name}' from '{base.name}'",
+      "produced_at": "server.py:212",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:200-212"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:560-569",
+     "server.py:200-212"
+    ],
+    "rationale": "The `git_create_branch` function creates a new branch in the local repository. It returns a success message indicating the branch creation, which is computed and controlled by the service. No outbound calls or code execution outside the local context is involved.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "branch_name",
+     "base_branch"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "git_checkout": {
+    "result_contents": [
+     {
+      "part": "Switched to branch '{branch_name}'",
+      "produced_at": "server.py:221",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:214-221"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:571-576",
+     "server.py:214-221"
+    ],
+    "rationale": "The `git_checkout` function switches branches in the local repository. It returns a success message indicating the branch switch, which is computed and controlled by the service. No outbound calls or code execution outside the local context is involved.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "branch_name"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "git_show": {
+    "result_contents": [
+     {
+      "part": "Commit: {commit.hexsha!r}\\nAuthor: {commit.author!r}\\nDate: {commit.authored_datetime!r}\\nMessage: {commit.message!r}\\n",
+      "produced_at": "server.py:232-235",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "part": "\\n--- {d.a_path}\\n+++ {d.b_path}\\n{d.diff.decode('utf-8')}",
+      "produced_at": "server.py:243-247",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:225-250"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:578-583",
+     "server.py:225-250"
+    ],
+    "rationale": "The `git_show` function retrieves and displays the contents of a commit. It reads commit details and diffs from the local repository, which are controlled by the service. No outbound calls or code execution outside the local context is involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "revision"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "git_branch": {
+    "result_contents": [
+     {
+      "part": "branch_info",
+      "produced_at": "server.py:305",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:273-305"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:585-595",
+     "server.py:273-305"
+    ],
+    "rationale": "The `git_branch` function lists branches in the local repository. It returns branch information, which is read from the local repository and controlled by the service. No outbound calls or code execution outside the local context is involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "branch_type",
+     "contains",
+     "not_contains"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   }
+  },
+  "value_conditions": [],
+  "notes": []
+ },
+ "methods": {},
+ "statement_calls": [
+  {
+   "subject": "handler lines server.py:111-251",
+   "attempt": 0,
+   "ids": [
+    "server.py:112#0",
+    "server.py:115#0",
+    "server.py:115#1",
+    "server.py:118#0",
+    "server.py:118#1",
+    "server.py:124#0",
+    "server.py:124#1",
+    "server.py:126#0",
+    "server.py:126#1",
+    "server.py:130#0",
+    "server.py:130#1",
+    "server.py:134#0",
+    "server.py:144#0",
+    "server.py:144#1",
+    "server.py:149#0",
+    "server.py:149#1",
+    "server.py:149#2",
+    "server.py:152#0",
+    "server.py:153#0",
+    "server.py:157#0",
+    "server.py:163#0",
+    "server.py:163#1",
+    "server.py:165#0",
+    "server.py:165#1",
+    "server.py:169#0",
+    "server.py:171#0",
+    "server.py:172#0",
+    "server.py:180#0",
+    "server.py:181#0",
+    "server.py:181#1",
+    "server.py:182#0",
+    "server.py:182#1",
+    "server.py:183#0",
+    "server.py:183#1",
+    "server.py:184#0",
+    "server.py:184#1",
+    "server.py:186#0",
+    "server.py:192#0",
+    "server.py:193#0",
+    "server.py:193#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"server.py:112#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:115#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:115#1\",\"part\":\"context_lines\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"server.py:118#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:118#1\",\"part\":\"context_lines\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"server.py:124#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:124#1\",\"part\":\"target\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"server.py:126#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:126#1\",\"part\":\"context_lines\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"server.py:130#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:130#1\",\"part\":\"commit.hexsha\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:134#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:144#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:144#1\",\"part\":\"f\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"server.py:149#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:149#1\",\"part\":\"f\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"server.py:149#2\",\"part\":\"repo_root\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:152#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:153#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:157#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:163#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:163#1\",\"part\":\"start_timestamp\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"server.py:165#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:165#1\",\"part\":\"end_timestamp\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"server.py:169#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:171#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:172#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:180#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:181#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:181#1\",\"part\":\"log_output[i]\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:182#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:182#1\",\"part\":\"log_output[i+1]\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:183#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:183#1\",\"part\":\"log_output[i+2]\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:184#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:184#1\",\"part\":\"log_output[i+3]\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:186#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:192#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:193#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:193#1\",\"part\":\"commit.hexsha!r\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 4114,
+    "output_tokens": 1533,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines server.py:111-251",
+   "attempt": 0,
+   "ids": [
+    "server.py:194#0",
+    "server.py:194#1",
+    "server.py:195#0",
+    "server.py:195#1",
+    "server.py:196#0",
+    "server.py:196#1",
+    "server.py:198#0",
+    "server.py:203#0",
+    "server.py:203#1",
+    "server.py:205#0",
+    "server.py:205#1",
+    "server.py:212#0",
+    "server.py:212#1",
+    "server.py:212#2",
+    "server.py:218#0",
+    "server.py:218#1",
+    "server.py:221#0",
+    "server.py:221#1",
+    "server.py:229#0",
+    "server.py:229#1",
+    "server.py:232#0",
+    "server.py:232#1",
+    "server.py:233#0",
+    "server.py:233#1",
+    "server.py:234#0",
+    "server.py:234#1",
+    "server.py:235#0",
+    "server.py:235#1",
+    "server.py:243#0",
+    "server.py:243#1",
+    "server.py:243#2",
+    "server.py:247#0",
+    "server.py:249#0",
+    "server.py:250#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"server.py:194#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:194#1\",\"part\":\"commit.author!r\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:195#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:195#1\",\"part\":\"commit.authored_datetime\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:196#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:196#1\",\"part\":\"commit.message!r\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:198#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:203#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:203#1\",\"part\":\"branch_name\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"server.py:205#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:205#1\",\"part\":\"base_branch\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"server.py:212#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:212#1\",\"part\":\"branch_name\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"server.py:212#2\",\"part\":\"base.name\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:218#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:218#1\",\"part\":\"branch_name\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"server.py:221#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:221#1\",\"part\":\"branch_name\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"server.py:229#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:229#1\",\"part\":\"revision\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"server.py:232#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:232#1\",\"part\":\"commit.hexsha!r\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:233#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:233#1\",\"part\":\"commit.author!r\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:234#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:234#1\",\"part\":\"commit.authored_datetime!r\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:235#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:235#1\",\"part\":\"commit.message!r\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:243#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:243#1\",\"part\":\"d.a_path\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:243#2\",\"part\":\"d.b_path\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:247#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:249#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:250#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2077,
+    "output_tokens": 1322,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1920
+   }
+  },
+  {
+   "subject": "handler lines server.py:273-307",
+   "attempt": 0,
+   "ids": [
+    "server.py:276#0",
+    "server.py:276#1",
+    "server.py:278#0",
+    "server.py:278#1",
+    "server.py:300#0",
+    "server.py:300#1",
+    "server.py:305#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"server.py:276#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:276#1\",\"part\":\"contains\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"server.py:278#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"server.py:278#1\",\"part\":\"not_contains\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"server.py:300#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:300#1\",\"part\":\"branch_type\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"server.py:305#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1720,
+    "output_tokens": 271,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines server.py:498-503",
+   "attempt": 0,
+   "ids": [
+    "server.py:500#0",
+    "server.py:502#0",
+    "server.py:502#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"server.py:500#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:502#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:502#1\",\"part\":\"status\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1279,
+    "output_tokens": 118,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines server.py:505-510",
+   "attempt": 0,
+   "ids": [
+    "server.py:507#0",
+    "server.py:509#0",
+    "server.py:509#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"server.py:507#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:509#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:509#1\",\"part\":\"diff\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1302,
+    "output_tokens": 118,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines server.py:512-517",
+   "attempt": 0,
+   "ids": [
+    "server.py:514#0",
+    "server.py:516#0",
+    "server.py:516#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"server.py:514#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:516#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:516#1\",\"part\":\"diff\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1297,
+    "output_tokens": 119,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines server.py:519-524",
+   "attempt": 0,
+   "ids": [
+    "server.py:521#0",
+    "server.py:523#0",
+    "server.py:523#1",
+    "server.py:523#2"
+   ],
+   "response": "{\"statements\":[{\"id\":\"server.py:521#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:523#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"server.py:523#1\",\"part\":\"arguments['target']\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"server.py:523#2\",\"part\":\"diff\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1342,
+    "output_tokens": 158,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines server.py:526-531",
+   "attempt": 0,
+   "ids": [
+    "server.py:528#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"server.py:528#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1221,
+    "output_tokens": 43,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines server.py:533-538",
+   "attempt": 0,
+   "ids": [
+    "server.py:535#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"server.py:535#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1220,
+    "output_tokens": 43,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines server.py:540-545",
+   "attempt": 0,
+   "ids": [
+    "server.py:542#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"server.py:542#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1217,
+    "output_tokens": 43,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines server.py:548-558",
+   "attempt": 0,
+   "ids": [
+    "server.py:555#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"server.py:555#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1265,
+    "output_tokens": 43,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines server.py:560-569",
+   "attempt": 0,
+   "ids": [
+    "server.py:566#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"server.py:566#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1243,
+    "output_tokens": 43,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines server.py:571-576",
+   "attempt": 0,
+   "ids": [
+    "server.py:573#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"server.py:573#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1223,
+    "output_tokens": 43,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines server.py:578-583",
+   "attempt": 0,
+   "ids": [
+    "server.py:580#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"server.py:580#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1221,
+    "output_tokens": 43,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines server.py:585-595",
+   "attempt": 0,
+   "ids": [
+    "server.py:592#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"server.py:592#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1259,
+    "output_tokens": 43,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  }
+ ],
+ "final": {
+  "tools": {
+   "git_status": {
+    "result_contents": [
+     {
+      "part": "Repository status:\n{status}",
+      "produced_at": "server.py:502",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:112#0",
+      "part": "the statement",
+      "produced_at": "server.py:112",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:502#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:502",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:502#1",
+      "part": "status",
+      "produced_at": "server.py:502",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:111"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:498-503",
+     "server.py:111",
+     "server.py:111-113"
+    ],
+    "rationale": "The `git_status` tool reads the status of the repository using `repo.git.status()` and returns it as part of the response. The status is read from the local repository, making it `resource_read` with `user_local` scope and `service` control.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "git_diff_unstaged": {
+    "result_contents": [
+     {
+      "part": "Unstaged changes:\n{diff}",
+      "produced_at": "server.py:509",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:115#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:115",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:115#1",
+      "part": "context_lines",
+      "produced_at": "server.py:115",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:509#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:509",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:509#1",
+      "part": "diff",
+      "produced_at": "server.py:509",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:114"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:505-510",
+     "server.py:114",
+     "server.py:114-116"
+    ],
+    "rationale": "The `git_diff_unstaged` tool reads the unstaged changes in the repository using `repo.git.diff()` and returns them. The changes are read from the local repository, making it `resource_read` with `user_local` scope and `service` control.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "git_diff_staged": {
+    "result_contents": [
+     {
+      "part": "Staged changes:\n{diff}",
+      "produced_at": "server.py:516",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:118#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:118",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:118#1",
+      "part": "context_lines",
+      "produced_at": "server.py:118",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:516#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:516",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:516#1",
+      "part": "diff",
+      "produced_at": "server.py:516",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:117"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:512-517",
+     "server.py:117",
+     "server.py:117-119"
+    ],
+    "rationale": "The `git_diff_staged` tool reads the staged changes in the repository using `repo.git.diff()` with the `--cached` option and returns them. The changes are read from the local repository, making it `resource_read` with `user_local` scope and `service` control.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "git_diff": {
+    "result_contents": [
+     {
+      "part": "Diff with {arguments['target']}:\n{diff}",
+      "produced_at": "server.py:523",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:124#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:124",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:124#1",
+      "part": "target",
+      "produced_at": "server.py:124",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:126#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:126",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:126#1",
+      "part": "context_lines",
+      "produced_at": "server.py:126",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:523#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:523",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:523#1",
+      "part": "arguments['target']",
+      "produced_at": "server.py:523",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:523#2",
+      "part": "diff",
+      "produced_at": "server.py:523",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:120"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:519-524",
+     "server.py:120-126",
+     "server.py:120-127"
+    ],
+    "rationale": "The `git_diff` tool reads the differences between the current state and a specified target in the repository using `repo.git.diff()`. The target is validated to prevent injection. The diff is read from the local repository, making it `resource_read` with `user_local` scope and `service` control.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "git_commit": {
+    "result_contents": [
+     {
+      "part": "Changes committed successfully with hash {commit.hexsha}",
+      "produced_at": "server.py:530",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:130#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:130",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:130#1",
+      "part": "commit.hexsha",
+      "produced_at": "server.py:130",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:128"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:526-531",
+     "server.py:128-130",
+     "server.py:128-131"
+    ],
+    "rationale": "The `git_commit` tool commits changes to the repository and returns a success message with the commit hash. The commit hash is computed from the local repository state, making it `computed` with `user_local` scope and `service` control.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "message"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "git_add": {
+    "result_contents": [
+     {
+      "part": "Files staged successfully",
+      "produced_at": "server.py:537",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:144#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:144",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:144#1",
+      "part": "f",
+      "produced_at": "server.py:144",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:149#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:149",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:149#1",
+      "part": "f",
+      "produced_at": "server.py:149",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:149#2",
+      "part": "repo_root",
+      "produced_at": "server.py:149",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:153#0",
+      "part": "the statement",
+      "produced_at": "server.py:153",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:132"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:533-538",
+     "server.py:132-153",
+     "server.py:132-154"
+    ],
+    "rationale": "The `git_add` tool stages files for commit in the repository. It returns a fixed success message. The operation affects the local repository, making it a `WRITE` operation, but the result is a fixed string, so it is `literal` with `none` scope and control.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "files"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "git_reset": {
+    "result_contents": [
+     {
+      "part": "All staged changes reset",
+      "produced_at": "server.py:544",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:157#0",
+      "part": "the statement",
+      "produced_at": "server.py:157",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:155"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:540-545",
+     "server.py:155-157",
+     "server.py:155-158"
+    ],
+    "rationale": "The `git_reset` tool unstages all changes in the repository. It returns a fixed success message. The operation affects the local repository, making it a `WRITE` operation, but the result is a fixed string, so it is `literal` with `none` scope and control.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "git_log": {
+    "result_contents": [
+     {
+      "part": "Commit history:\n{log}",
+      "produced_at": "server.py:557",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:163#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:163",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:163#1",
+      "part": "start_timestamp",
+      "produced_at": "server.py:163",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:165#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:165",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:165#1",
+      "part": "end_timestamp",
+      "produced_at": "server.py:165",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:181#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:181",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:181#1",
+      "part": "log_output[i]",
+      "produced_at": "server.py:181",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:182#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:182",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:182#1",
+      "part": "log_output[i+1]",
+      "produced_at": "server.py:182",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:183#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:183",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:183#1",
+      "part": "log_output[i+2]",
+      "produced_at": "server.py:183",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:184#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:184",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:184#1",
+      "part": "log_output[i+3]",
+      "produced_at": "server.py:184",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:186#0",
+      "part": "the statement",
+      "produced_at": "server.py:186",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:193#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:193",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:193#1",
+      "part": "commit.hexsha!r",
+      "produced_at": "server.py:193",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:194#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:194",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:194#1",
+      "part": "commit.author!r",
+      "produced_at": "server.py:194",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "server.py:195#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:195",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:195#1",
+      "part": "commit.authored_datetime",
+      "produced_at": "server.py:195",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "server.py:196#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:196",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:196#1",
+      "part": "commit.message!r",
+      "produced_at": "server.py:196",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:159"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:548-558",
+     "server.py:159-198",
+     "server.py:159-199"
+    ],
+    "rationale": "The `git_log` tool reads the commit history from the repository using `repo.git.log()` or `repo.iter_commits()`. The log is read from the local repository, making it `resource_read` with `user_local` scope and `service` control.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "git_create_branch": {
+    "result_contents": [
+     {
+      "part": "Created branch '{branch_name}' from '{base.name}'",
+      "produced_at": "server.py:212",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:203#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:203",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:203#1",
+      "part": "branch_name",
+      "produced_at": "server.py:203",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:205#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:205",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:205#1",
+      "part": "base_branch",
+      "produced_at": "server.py:205",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:212#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:212",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:212#1",
+      "part": "branch_name",
+      "produced_at": "server.py:212",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:212#2",
+      "part": "base.name",
+      "produced_at": "server.py:212",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:200-212"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:560-569",
+     "server.py:200-212",
+     "server.py:200-213"
+    ],
+    "rationale": "The `git_create_branch` function creates a new branch in the local repository. It returns a success message indicating the branch creation, which is computed and controlled by the service. No outbound calls or code execution outside the local context is involved.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "branch_name",
+     "base_branch"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "git_checkout": {
+    "result_contents": [
+     {
+      "part": "Switched to branch '{branch_name}'",
+      "produced_at": "server.py:221",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:218#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:218",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:218#1",
+      "part": "branch_name",
+      "produced_at": "server.py:218",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:221#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:221",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:221#1",
+      "part": "branch_name",
+      "produced_at": "server.py:221",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:214-221"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:571-576",
+     "server.py:214-221",
+     "server.py:214-224"
+    ],
+    "rationale": "The `git_checkout` function switches branches in the local repository. It returns a success message indicating the branch switch, which is computed and controlled by the service. No outbound calls or code execution outside the local context is involved.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "branch_name"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "git_show": {
+    "result_contents": [
+     {
+      "part": "Commit: {commit.hexsha!r}\\nAuthor: {commit.author!r}\\nDate: {commit.authored_datetime!r}\\nMessage: {commit.message!r}\\n",
+      "produced_at": "server.py:232-235",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "part": "\\n--- {d.a_path}\\n+++ {d.b_path}\\n{d.diff.decode('utf-8')}",
+      "produced_at": "server.py:243-247",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:229#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:229",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:229#1",
+      "part": "revision",
+      "produced_at": "server.py:229",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:232#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:232",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:232#1",
+      "part": "commit.hexsha!r",
+      "produced_at": "server.py:232",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "server.py:233#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:233",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:233#1",
+      "part": "commit.author!r",
+      "produced_at": "server.py:233",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "server.py:234#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:234",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:234#1",
+      "part": "commit.authored_datetime!r",
+      "produced_at": "server.py:234",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "server.py:235#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:235",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:235#1",
+      "part": "commit.message!r",
+      "produced_at": "server.py:235",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "server.py:243#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:243",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:243#1",
+      "part": "d.a_path",
+      "produced_at": "server.py:243",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "server.py:243#2",
+      "part": "d.b_path",
+      "produced_at": "server.py:243",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "server.py:247#0",
+      "part": "the statement",
+      "produced_at": "server.py:247",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "server.py:249#0",
+      "part": "the statement",
+      "produced_at": "server.py:249",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:225-250"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:578-583",
+     "server.py:225-250",
+     "server.py:225-251"
+    ],
+    "rationale": "The `git_show` function retrieves and displays the contents of a commit. It reads commit details and diffs from the local repository, which are controlled by the service. No outbound calls or code execution outside the local context is involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "revision"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "git_branch": {
+    "result_contents": [
+     {
+      "part": "branch_info",
+      "produced_at": "server.py:305",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "server.py:276#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:276",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:276#1",
+      "part": "contains",
+      "produced_at": "server.py:276",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:278#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:278",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:278#1",
+      "part": "not_contains",
+      "produced_at": "server.py:278",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:300#0",
+      "part": "fixed text of the template",
+      "produced_at": "server.py:300",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:300#1",
+      "part": "branch_type",
+      "produced_at": "server.py:300",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "server.py:305#0",
+      "part": "the statement",
+      "produced_at": "server.py:305",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "server.py:273-305"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "server.py:585-595",
+     "server.py:273-305",
+     "server.py:273-307"
+    ],
+    "rationale": "The `git_branch` function lists branches in the local repository. It returns branch information, which is read from the local repository and controlled by the service. No outbound calls or code execution outside the local context is involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "branch_type",
+     "contains",
+     "not_contains"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   }
+  },
+  "value_conditions": [],
+  "notes": []
+ },
+ "hashes": {
+  "rubric_sha": "191e69d289880d38",
+  "schema_sha": "0f8d7d93eb07c885",
+  "source_sha": "a8995c67f12eaac6"
+ },
+ "run": {
+  "model": "gpt-4o-2024-08-06",
+  "temperature": 0.0,
+  "seed": 0,
+  "files": [
+   "server.py"
+  ]
+ }
+}

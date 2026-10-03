@@ -1,0 +1,408 @@
+{
+ "batch": {
+  "tools": {
+   "qdrant-find": {
+    "result_contents": [
+     {
+      "part": "Results for the query '{query}'",
+      "produced_at": "mcp_server.py:161",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "<entry><content>{entry.content}</content><metadata>{entry_metadata}</metadata></entry>",
+      "produced_at": "mcp_server.py:164",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "query, collection_name, limit, query_filter",
+      "destination_class": "configured_own_service",
+      "host_or_config": "self.qdrant_connector",
+      "at": "mcp_server.py:152"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "mcp_server.py:127-165"
+    ],
+    "rationale": "The `qdrant-find` tool searches for entries in a Qdrant collection using a query and optional filters. The results include the echoed query and entries read from the user's account. The search is performed using the `self.qdrant_connector`, which is configured with the user's Qdrant settings.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "query"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "qdrant-store": {
+    "result_contents": [
+     {
+      "part": "Remembered: {information} in collection {collection_name}",
+      "produced_at": "mcp_server.py:124",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Remembered: {information}",
+      "produced_at": "mcp_server.py:125",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "entry, collection_name",
+      "destination_class": "configured_own_service",
+      "host_or_config": "self.qdrant_connector",
+      "at": "mcp_server.py:122"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "mcp_server.py:93-125"
+    ],
+    "rationale": "The `qdrant-store` tool stores information in a Qdrant collection. The result is a confirmation message echoing the stored information and collection name. The storage operation is performed using the `self.qdrant_connector`, which is configured with the user's Qdrant settings.",
+    "kind": "WRITE",
+    "destination_args": [
+     "collection_name"
+    ],
+    "value_args": [
+     "information",
+     "metadata"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   }
+  },
+  "value_conditions": [
+   {
+    "syntax": "self.qdrant_settings.read_only",
+    "kind": "flag",
+    "effect": "Disables qdrant-store tool",
+    "default": "false",
+    "evidence": "mcp_server.py:193-199"
+   }
+  ],
+  "notes": []
+ },
+ "methods": {},
+ "statement_calls": [
+  {
+   "subject": "handler lines mcp_server.py:93-125",
+   "attempt": 0,
+   "ids": [
+    "mcp_server.py:116#0",
+    "mcp_server.py:118#0",
+    "mcp_server.py:118#1",
+    "mcp_server.py:124#0",
+    "mcp_server.py:124#1",
+    "mcp_server.py:124#2",
+    "mcp_server.py:125#0",
+    "mcp_server.py:125#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"mcp_server.py:116#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"mcp_server.py:118#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"mcp_server.py:118#1\",\"part\":\"information\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"mcp_server.py:124#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"mcp_server.py:124#1\",\"part\":\"information\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"mcp_server.py:124#2\",\"part\":\"collection_name\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"mcp_server.py:125#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"mcp_server.py:125#1\",\"part\":\"information\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 1828,
+    "output_tokens": 321,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines mcp_server.py:127-165",
+   "attempt": 0,
+   "ids": [
+    "mcp_server.py:142#0",
+    "mcp_server.py:146#0",
+    "mcp_server.py:146#1",
+    "mcp_server.py:150#0",
+    "mcp_server.py:150#1",
+    "mcp_server.py:159#0",
+    "mcp_server.py:161#0",
+    "mcp_server.py:161#1",
+    "mcp_server.py:164#0",
+    "mcp_server.py:165#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"mcp_server.py:142#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"mcp_server.py:146#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"mcp_server.py:146#1\",\"part\":\"query_filter\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"mcp_server.py:150#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"mcp_server.py:150#1\",\"part\":\"query\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"mcp_server.py:159#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"mcp_server.py:161#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"mcp_server.py:161#1\",\"part\":\"query\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"mcp_server.py:164#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"mcp_server.py:165#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1845,
+    "output_tokens": 400,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  }
+ ],
+ "final": {
+  "tools": {
+   "qdrant-find": {
+    "result_contents": [
+     {
+      "part": "Results for the query '{query}'",
+      "produced_at": "mcp_server.py:161",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "<entry><content>{entry.content}</content><metadata>{entry_metadata}</metadata></entry>",
+      "produced_at": "mcp_server.py:164",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "mcp_server.py:146#0",
+      "part": "fixed text of the template",
+      "produced_at": "mcp_server.py:146",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "mcp_server.py:146#1",
+      "part": "query_filter",
+      "produced_at": "mcp_server.py:146",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "mcp_server.py:150#0",
+      "part": "fixed text of the template",
+      "produced_at": "mcp_server.py:150",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "mcp_server.py:150#1",
+      "part": "query",
+      "produced_at": "mcp_server.py:150",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "mcp_server.py:161#0",
+      "part": "fixed text of the template",
+      "produced_at": "mcp_server.py:161",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "mcp_server.py:161#1",
+      "part": "query",
+      "produced_at": "mcp_server.py:161",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "query, collection_name, limit, query_filter",
+      "destination_class": "configured_own_service",
+      "host_or_config": "self.qdrant_connector",
+      "at": "mcp_server.py:152"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "mcp_server.py:127-165",
+     "mcp_server.py:187-191"
+    ],
+    "rationale": "The `qdrant-find` tool searches for entries in a Qdrant collection using a query and optional filters. The results include the echoed query and entries read from the user's account. The search is performed using the `self.qdrant_connector`, which is configured with the user's Qdrant settings.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "query"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "qdrant-store": {
+    "result_contents": [
+     {
+      "part": "Remembered: {information} in collection {collection_name}",
+      "produced_at": "mcp_server.py:124",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Remembered: {information}",
+      "produced_at": "mcp_server.py:125",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "mcp_server.py:118#0",
+      "part": "fixed text of the template",
+      "produced_at": "mcp_server.py:118",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "mcp_server.py:118#1",
+      "part": "information",
+      "produced_at": "mcp_server.py:118",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "mcp_server.py:124#0",
+      "part": "fixed text of the template",
+      "produced_at": "mcp_server.py:124",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "mcp_server.py:124#1",
+      "part": "information",
+      "produced_at": "mcp_server.py:124",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "mcp_server.py:124#2",
+      "part": "collection_name",
+      "produced_at": "mcp_server.py:124",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "mcp_server.py:125#0",
+      "part": "fixed text of the template",
+      "produced_at": "mcp_server.py:125",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "mcp_server.py:125#1",
+      "part": "information",
+      "produced_at": "mcp_server.py:125",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "entry, collection_name",
+      "destination_class": "configured_own_service",
+      "host_or_config": "self.qdrant_connector",
+      "at": "mcp_server.py:122"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "mcp_server.py:93-125",
+     "mcp_server.py:195-199"
+    ],
+    "rationale": "The `qdrant-store` tool stores information in a Qdrant collection. The result is a confirmation message echoing the stored information and collection name. The storage operation is performed using the `self.qdrant_connector`, which is configured with the user's Qdrant settings.",
+    "kind": "WRITE",
+    "destination_args": [
+     "collection_name"
+    ],
+    "value_args": [
+     "information",
+     "metadata"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   }
+  },
+  "value_conditions": [
+   {
+    "syntax": "self.qdrant_settings.read_only",
+    "kind": "flag",
+    "effect": "Disables qdrant-store tool",
+    "default": "false",
+    "evidence": "mcp_server.py:193-199"
+   }
+  ],
+  "notes": []
+ },
+ "hashes": {
+  "rubric_sha": "191e69d289880d38",
+  "schema_sha": "0f8d7d93eb07c885",
+  "source_sha": "5b49ed78d24a0742"
+ },
+ "run": {
+  "model": "gpt-4o-2024-08-06",
+  "temperature": 0.0,
+  "seed": 0,
+  "files": [
+   "mcp_server.py"
+  ]
+ }
+}

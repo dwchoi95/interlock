@@ -1,0 +1,648 @@
+{
+ "kind": "python",
+ "notes": [],
+ "package": "agentdojo/slack",
+ "source": "baselines/agentdojo/src/agentdojo",
+ "tools": {
+  "add_user_to_channel": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "user",
+    "channel"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:30-41",
+    "default_suites/v1/tools/slack.py:30-42"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `add_user_to_channel` function modifies the `slack` object by adding a user to a channel. It checks if the user and channel exist and then appends the channel to the user's list of channels. There are no outbound calls or data sent to external parties.",
+   "result_contents": [
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/slack.py:37#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/slack.py:37",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/slack.py:37#1",
+     "origin": "argument_echo",
+     "part": "user",
+     "produced_at": "default_suites/v1/tools/slack.py:37",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/slack.py:39#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/slack.py:39",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/slack.py:39#1",
+     "origin": "argument_echo",
+     "part": "channel",
+     "produced_at": "default_suites/v1/tools/slack.py:39",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/slack.py:30-41",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_channels": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:25-27",
+    "default_suites/v1/tools/slack.py:25-29"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_channels` function returns the list of channels from the `slack` object, which is a resource read from the user's account. The control is by the user as the channels are part of the user's Slack workspace. [received records: slack.channels taken as outside-party text] [received records: the statement taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "slack.channels",
+     "produced_at": "default_suites/v1/tools/slack.py:27",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "default_suites/v1/tools/slack.py:27#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/slack.py:27",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/slack.py:25-27",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_users_in_channel": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:118-129",
+    "default_suites/v1/tools/slack.py:118-130"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [],
+   "kind": "READ",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_users_in_channel` function returns a list of users in a specified channel. The list is computed from the `slack` object, which is part of the user's account. The control is by the user as the channels and users are part of the user's Slack workspace.",
+   "result_contents": [
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "users",
+     "produced_at": "default_suites/v1/tools/slack.py:129",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/slack.py:124#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/slack.py:124",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/slack.py:124#1",
+     "origin": "argument_echo",
+     "part": "channel",
+     "produced_at": "default_suites/v1/tools/slack.py:124",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "default_suites/v1/tools/slack.py:129#0",
+     "origin": "computed",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/slack.py:129",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/slack.py:118-129",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "get_webpage": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/web.py:35-44",
+    "default_suites/v1/tools/web.py:35-46"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `get_webpage` function retrieves the content of a webpage from the `web_content` dictionary. If the URL is not found, it returns '404 Not Found'. The content is controlled by outside parties as it is fetched from URLs.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "404 Not Found",
+     "produced_at": "default_suites/v1/tools/web.py:43",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "origin": "resource_read",
+     "part": "Webpage content",
+     "produced_at": "default_suites/v1/tools/web.py:44",
+     "scope": "public"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/web.py:41#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/web.py:41",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/web.py:43#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/web.py:43",
+     "scope": "none"
+    },
+    {
+     "control": "unknown",
+     "id": "default_suites/v1/tools/web.py:44#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/web.py:44",
+     "scope": "unknown"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/web.py:35-44",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "invite_user_to_slack": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "user",
+    "user_email"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:93-103",
+    "default_suites/v1/tools/slack.py:93-105"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `invite_user_to_slack` function adds a new user to the Slack workspace by appending them to the `slack` users list and initializing their inbox and channels. There are no outbound calls or data sent to external parties. [destination_args completed: user_email]",
+   "result_contents": [
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/slack.py:100#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/slack.py:100",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/slack.py:100#1",
+     "origin": "argument_echo",
+     "part": "user",
+     "produced_at": "default_suites/v1/tools/slack.py:100",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/slack.py:93-103",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "post_webpage": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "url"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/web.py:24-33",
+    "default_suites/v1/tools/web.py:24-34"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `post_webpage` function stores the content of a webpage at a given URL in the `web_content` dictionary. It does not send data out of the system or execute any supplied code. [destination_args completed: url]",
+   "result_contents": [
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/web.py:31#0",
+     "origin": "argument_echo",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/web.py:31",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/web.py:24-33",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "content"
+   ]
+  },
+  "read_channel_messages": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:43-50",
+    "default_suites/v1/tools/slack.py:43-52"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `read_channel_messages` function returns messages from a specified channel's inbox. The messages are read from the user's account, and the control is by the user as they are part of the user's Slack workspace. [received records: slack.channel_inbox.get(channel, []) taken as outside-party text] [received records: the statement taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "slack.channel_inbox.get(channel, [])",
+     "produced_at": "default_suites/v1/tools/slack.py:50",
+     "scope": "user_account"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "default_suites/v1/tools/slack.py:50#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/slack.py:50",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/slack.py:43-50",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_inbox": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:53-60",
+    "default_suites/v1/tools/slack.py:53-62"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `read_inbox` function returns messages from a specified user's inbox. The messages are read from the user's account, and the control is by the user as they are part of the user's Slack workspace. [received records: slack.user_inbox.get(user, []) taken as outside-party text] [received records: the statement taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "slack.user_inbox.get(user, [])",
+     "produced_at": "default_suites/v1/tools/slack.py:60",
+     "scope": "user_account"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/slack.py:59#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/slack.py:59",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/slack.py:59#1",
+     "origin": "argument_echo",
+     "part": "user",
+     "produced_at": "default_suites/v1/tools/slack.py:59",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "default_suites/v1/tools/slack.py:60#0",
+     "origin": "resource_read",
+     "part": "the statement",
+     "produced_at": "default_suites/v1/tools/slack.py:60",
+     "scope": "user_account"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/slack.py:53-60",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "remove_user_from_slack": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "user"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:106-116",
+    "default_suites/v1/tools/slack.py:106-117"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `remove_user_from_slack` function removes a user from the Slack workspace by deleting them from the `users`, `user_inbox`, and `user_channels` lists. It does not send any data out of the system or execute any supplied code. [destination_args completed: user]",
+   "result_contents": [
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "User not found message",
+     "produced_at": "default_suites/v1/tools/slack.py:112",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "User removed message",
+     "produced_at": "default_suites/v1/tools/slack.py:113",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/slack.py:112#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/slack.py:112",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/slack.py:112#1",
+     "origin": "argument_echo",
+     "part": "user",
+     "produced_at": "default_suites/v1/tools/slack.py:112",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/slack.py:106-116",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "send_channel_message": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "channel"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:78-90",
+    "default_suites/v1/tools/slack.py:78-92"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `send_channel_message` function sends a message to a specified channel's inbox within the Slack workspace. It modifies the `slack` object by appending the message to the channel's inbox. There are no outbound calls or data sent to external parties.",
+   "result_contents": [
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/slack.py:86#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/slack.py:86",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/slack.py:86#1",
+     "origin": "argument_echo",
+     "part": "channel",
+     "produced_at": "default_suites/v1/tools/slack.py:86",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/slack.py:78-90",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "body"
+   ]
+  },
+  "send_direct_message": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "recipient"
+   ],
+   "evidence": [
+    "default_suites/v1/tools/slack.py:63-75",
+    "default_suites/v1/tools/slack.py:63-77"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SINK"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `send_direct_message` function sends a message to a specified recipient's inbox within the Slack workspace. It modifies the `slack` object by appending the message to the recipient's inbox. There are no outbound calls or data sent to external parties.",
+   "result_contents": [
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/slack.py:71#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "default_suites/v1/tools/slack.py:71",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "default_suites/v1/tools/slack.py:71#1",
+     "origin": "argument_echo",
+     "part": "recipient",
+     "produced_at": "default_suites/v1/tools/slack.py:71",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "default_suites/v1/tools/slack.py:63-75",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "body"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "v1.2"
+}

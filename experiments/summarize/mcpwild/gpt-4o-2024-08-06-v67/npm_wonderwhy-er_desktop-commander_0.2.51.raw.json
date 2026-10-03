@@ -1,0 +1,3417 @@
+{
+ "batch": {
+  "tools": {
+   "get_config": {
+    "result_contents": [
+     {
+      "part": "configuration JSON",
+      "produced_at": "dist/tools/config.js:10",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/server.js:1233-1244"
+    ],
+    "rationale": "The `get_config` tool retrieves the server configuration as JSON. The result is read from the configuration resource, which is user-specific, hence the scope is `user_account`. The control is `service` because the server composes the configuration JSON.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "set_config_value": {
+    "result_contents": [
+     {
+      "part": "success message",
+      "produced_at": "dist/server.js:1247",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "error message",
+      "produced_at": "dist/server.js:1252",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/server.js:1245-1256"
+    ],
+    "rationale": "The `set_config_value` tool sets a configuration value by key. The result is a success or error message, both of which are literals. There are no outbound calls or code execution involved.",
+    "kind": "WRITE",
+    "destination_args": [
+     "key"
+    ],
+    "value_args": [
+     "value"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "read_file": {
+    "result_contents": [
+     {
+      "part": "file content",
+      "produced_at": "dist/handlers/filesystem-handlers.js:173",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "part": "PDF metadata",
+      "produced_at": "dist/handlers/filesystem-handlers.js:100",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "part": "image data",
+      "produced_at": "dist/handlers/filesystem-handlers.js:152",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "file path and options",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "dist/tools/filesystem.js:496"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/handlers/filesystem-handlers.js:43-191"
+    ],
+    "rationale": "The `read_file` tool reads content from a file or URL. The content, PDF metadata, and image data are read from the user's local files, hence the scope is `user_local`. The control is `user` because the user owns the files. The tool makes an outbound call to read the file from the local filesystem. [received records: file content, PDF metadata, image data taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [
+     "path"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "read_multiple_files": {
+    "result_contents": [
+     {
+      "part": "file contents summary",
+      "produced_at": "dist/handlers/filesystem-handlers.js:217",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "part": "individual file content",
+      "produced_at": "dist/handlers/filesystem-handlers.js:248",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "file paths",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "dist/tools/filesystem.js:561"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/handlers/filesystem-handlers.js:194-253"
+    ],
+    "rationale": "The `read_multiple_files` tool reads contents from multiple files. The summary and individual file contents are read from the user's local files, hence the scope is `user_local`. The control is `user` because the user owns the files. The tool makes outbound calls to read each file from the local filesystem. [received records: file contents summary, individual file content taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [
+     "paths"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "write_file": {
+    "result_contents": [
+     {
+      "part": "success message",
+      "produced_at": "dist/handlers/filesystem-handlers.js:305",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "error message",
+      "produced_at": "dist/handlers/filesystem-handlers.js:311",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "file path and content",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "dist/tools/filesystem.js:542"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/handlers/filesystem-handlers.js:258-312"
+    ],
+    "rationale": "The `write_file` tool writes or appends content to a file. The result is a success or error message, both of which are literals. The tool makes an outbound call to write the file to the local filesystem.",
+    "kind": "WRITE",
+    "destination_args": [
+     "path"
+    ],
+    "value_args": [
+     "content"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "write_pdf": {
+    "result_contents": [
+     {
+      "part": "success message",
+      "produced_at": "dist/handlers/filesystem-handlers.js:433",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "error message",
+      "produced_at": "dist/handlers/filesystem-handlers.js:438",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "PDF path and content",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "dist/tools/filesystem.js:858"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/handlers/filesystem-handlers.js:427-439"
+    ],
+    "rationale": "The `write_pdf` tool creates or modifies a PDF file. The result is a success or error message, both of which are literals. The tool makes an outbound call to write the PDF to the local filesystem.",
+    "kind": "WRITE",
+    "destination_args": [
+     "path"
+    ],
+    "value_args": [
+     "content"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "create_directory": {
+    "result_contents": [
+     {
+      "part": "success message",
+      "produced_at": "dist/handlers/filesystem-handlers.js:322",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "error message",
+      "produced_at": "dist/handlers/filesystem-handlers.js:327",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "directory path",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "dist/tools/filesystem.js:602"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/handlers/filesystem-handlers.js:317-328"
+    ],
+    "rationale": "The `create_directory` tool creates a new directory. The result is a success or error message, both of which are literals. The tool makes an outbound call to create the directory on the local filesystem.",
+    "kind": "WRITE",
+    "destination_args": [
+     "path"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "list_directory": {
+    "result_contents": [
+     {
+      "part": "directory listing",
+      "produced_at": "dist/handlers/filesystem-handlers.js:342",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "directory path",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "dist/tools/filesystem.js:606"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/handlers/filesystem-handlers.js:333-355"
+    ],
+    "rationale": "The `list_directory` tool retrieves a listing of files and directories. The listing is read from the user's local filesystem, hence the scope is `user_local`. The control is `user` because the user owns the directories. The tool makes an outbound call to list the directory contents from the local filesystem. [received records: directory listing taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [
+     "path"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "move_file": {
+    "result_contents": [
+     {
+      "part": "Successfully moved ${parsed.source} to ${parsed.destination}",
+      "produced_at": "dist/handlers/filesystem-handlers.js:365",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/handlers/filesystem-handlers.js:360-366",
+     "dist/tools/filesystem.js:668-671"
+    ],
+    "rationale": "The `move_file` tool moves or renames files and directories. It uses `validatePath` to ensure paths are within allowed directories and then calls `fs.rename` to perform the move. The result is a success message indicating the source and destination paths.",
+    "kind": "WRITE",
+    "destination_args": [
+     "source",
+     "destination"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "start_search": {
+    "result_contents": [
+     {
+      "part": "allResults",
+      "produced_at": "dist/tools/filesystem.js:719",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/tools/filesystem.js:673-719"
+    ],
+    "rationale": "The `start_search` tool initiates a search for files or content within files. It uses `searchManager.startSearch` to perform the search and returns the results. The results are computed from the search operation and are scoped to the user's local files.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "path",
+     "pattern"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "get_more_search_results": {
+    "result_contents": [
+     {
+      "part": "results",
+      "produced_at": "dist/tools/filesystem.js:700",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/tools/filesystem.js:698-702"
+    ],
+    "rationale": "The `get_more_search_results` tool retrieves additional results from an ongoing search session. It uses `searchManager.readSearchResults` to fetch results based on the session ID. The results are computed and scoped to the user's local files.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "sessionId"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "stop_search": {
+    "result_contents": [
+     {
+      "part": "Search stopped",
+      "produced_at": "dist/tools/filesystem.js:710",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/tools/filesystem.js:709-710"
+    ],
+    "rationale": "The `stop_search` tool stops an active search session. It calls `searchManager.terminateSearch` to stop the search and returns a success message. The operation does not send data out or change state beyond stopping the search.",
+    "kind": "WRITE",
+    "destination_args": [
+     "sessionId"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "list_searches": {
+    "result_contents": [
+     {
+      "part": "searches",
+      "produced_at": "dist/tools/filesystem.js:688",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/tools/filesystem.js:688-690"
+    ],
+    "rationale": "The `list_searches` tool lists all active search sessions. It retrieves the list of searches from `searchManager` and returns it. The list is computed and scoped to the user's local searches.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "get_file_info": {
+    "result_contents": [
+     {
+      "part": "formattedText",
+      "produced_at": "dist/handlers/filesystem-handlers.js:409",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/handlers/filesystem-handlers.js:403-415",
+     "dist/tools/filesystem.js:779-848"
+    ],
+    "rationale": "The `get_file_info` tool retrieves metadata about a file or directory. It uses `getFileInfo` to gather details like size, creation time, and permissions. The result is formatted text with this information, scoped to the user's local files.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "path"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "edit_block": {
+    "result_contents": [
+     {
+      "part": "editResult",
+      "produced_at": "dist/ui/file-preview/src/markdown/controller.js:688",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/ui/file-preview/src/markdown/controller.js:681-689",
+     "dist/tools/filesystem.js:542-559"
+    ],
+    "rationale": "The `edit_block` tool applies edits to files. It uses `edit_block` to perform find/replace operations on text files or range updates on Excel files. The result is the outcome of the edit operation, scoped to the user's local files.",
+    "kind": "WRITE",
+    "destination_args": [
+     "file_path"
+    ],
+    "value_args": [
+     "old_string",
+     "new_string"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "start_process": {
+    "result_contents": [
+     {
+      "part": "processId",
+      "produced_at": "dist/tools/filesystem.js:814",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "host",
+     "at": "dist/tools/filesystem.js:902"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/tools/filesystem.js:791-814",
+     "dist/tools/filesystem.js:902"
+    ],
+    "rationale": "The `start_process` tool starts a new terminal process. It uses `execFileAsync` to execute the command and returns the process ID. The process runs on the host machine, and the result is scoped to the user's local environment.",
+    "kind": "WRITE",
+    "destination_args": [
+     "command"
+    ],
+    "value_args": [
+     "command"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "HOSTEXEC",
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "read_process_output": {
+    "result_contents": [
+     {
+      "part": "process output",
+      "produced_at": "dist/handlers/filesystem-handlers.js:54",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "evidence": [
+     "dist/server.js:1354"
+    ],
+    "rationale": "The `read_process_output` tool reads the output of a running process. The output is read from the user's local machine, making it a `resource_read` with `scope` as `user_local`. The control is `service` because the server reads the output. There are no outbound calls or code execution involved. [received records: process output taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "interact_with_process": {
+    "result_contents": [
+     {
+      "part": "execution result",
+      "produced_at": "dist/handlers/filesystem-handlers.js:54",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "host",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "evidence": [
+     "dist/server.js:1357"
+    ],
+    "rationale": "The `interact_with_process` tool sends input to a running process and receives the response. The interaction occurs on the user's local machine, making it a `resource_read` with `scope` as `user_local`. The control is `service` because the server manages the interaction. The tool executes code on the host machine, indicated by `runs_supplied_code` as `host`. There are no outbound calls or deliveries to chosen parties. [received records: execution result taken as outside-party text]",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "input"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "HOSTEXEC",
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "force_terminate": {
+    "result_contents": [
+     {
+      "part": "termination confirmation",
+      "produced_at": "dist/handlers/filesystem-handlers.js:54",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "evidence": [
+     "dist/server.js:1360"
+    ],
+    "rationale": "The `force_terminate` tool forcibly terminates a running process. The result is a confirmation message, which is a `literal` with `scope` as `none` and `control` as `service`. There are no outbound calls or code execution involved.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "list_sessions": {
+    "result_contents": [
+     {
+      "part": "session list",
+      "produced_at": "dist/handlers/filesystem-handlers.js:54",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "evidence": [
+     "dist/server.js:1363"
+    ],
+    "rationale": "The `list_sessions` tool lists all active terminal sessions. The session information is read from the user's local machine, making it a `resource_read` with `scope` as `user_local`. The control is `service` because the server retrieves the session list. There are no outbound calls or code execution involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "list_processes": {
+    "result_contents": [
+     {
+      "part": "process list",
+      "produced_at": "dist/handlers/filesystem-handlers.js:54",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "evidence": [
+     "dist/server.js:1367"
+    ],
+    "rationale": "The `list_processes` tool lists all running processes. The process information is read from the user's local machine, making it a `resource_read` with `scope` as `user_local`. The control is `service` because the server retrieves the process list. There are no outbound calls or code execution involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "kill_process": {
+    "result_contents": [
+     {
+      "part": "termination confirmation",
+      "produced_at": "dist/handlers/filesystem-handlers.js:54",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "evidence": [
+     "dist/server.js:1370"
+    ],
+    "rationale": "The `kill_process` tool terminates a running process by PID. The result is a confirmation message, which is a `literal` with `scope` as `none` and `control` as `service`. There are no outbound calls or code execution involved.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "get_usage_stats": {
+    "result_contents": [
+     {
+      "part": "usage statistics",
+      "produced_at": "dist/handlers/filesystem-handlers.js:54",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "evidence": [
+     "dist/server.js:1259"
+    ],
+    "rationale": "The `get_usage_stats` tool retrieves usage statistics for debugging and analysis. The statistics are computed by the service, making them `computed` with `scope` as `none` and `control` as `service`. There are no outbound calls or code execution involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "get_recent_tool_calls": {
+    "result_contents": [
+     {
+      "part": "recent tool calls",
+      "produced_at": "dist/handlers/filesystem-handlers.js:54",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "evidence": [
+     "dist/server.js:1315"
+    ],
+    "rationale": "The `get_recent_tool_calls` tool retrieves recent local tool call history. The history is read from the user's local machine, making it a `resource_read` with `scope` as `user_local`. The control is `service` because the server retrieves the history. There are no outbound calls or code execution involved. [received records: recent tool calls taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "give_feedback_to_desktop_commander": {
+    "result_contents": [],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "browser_page",
+     "at": "dist/server.js:1339"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/server.js:1337-1348"
+    ],
+    "rationale": "The tool `give_feedback_to_desktop_commander` opens a feedback form in the user's browser. The code at `dist/server.js:1339` calls `giveFeedbackToDesktopCommander`, which opens the form in a browser page. There are no result contents returned by this tool, and it does not deliver data to a chosen party, as it simply opens a form for the user to fill out manually.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "get_prompts": {
+    "result_contents": [
+     {
+      "part": "Error: Failed to retrieve prompts",
+      "produced_at": "dist/server.js:1308",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/server.js:1269-1312"
+    ],
+    "rationale": "The tool `get_prompts` retrieves onboarding prompts based on the provided `promptId`. If an error occurs, it returns a fixed error message as seen in `dist/server.js:1308`. There are no outbound calls or code execution involved in this tool, and it does not deliver data to a chosen party.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   }
+  },
+  "value_conditions": [
+   {
+    "syntax": "currentClient?.name === 'desktop-commander-app'",
+    "kind": "client_name",
+    "effect": "disable give_feedback_to_desktop_commander and get_prompts",
+    "default": "enabled",
+    "evidence": "dist/server.js:208-211"
+   }
+  ],
+  "notes": []
+ },
+ "methods": {},
+ "statement_calls": [
+  {
+   "subject": "handler lines dist/server.js:224-273",
+   "attempt": 0,
+   "ids": [
+    "dist/server.js:238#0",
+    "dist/server.js:238#1",
+    "dist/server.js:265#0",
+    "dist/server.js:265#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/server.js:238#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:238#1\",\"part\":\"CMD_PREFIX_DESCRIPTION\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:265#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:265#1\",\"part\":\"CMD_PREFIX_DESCRIPTION\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1925,
+    "output_tokens": 162,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/server.js:863-1012",
+   "attempt": 0,
+   "ids": [
+    "dist/server.js:897#0",
+    "dist/server.js:897#1",
+    "dist/server.js:962#0",
+    "dist/server.js:962#1",
+    "dist/server.js:976#0",
+    "dist/server.js:976#1",
+    "dist/server.js:1000#0",
+    "dist/server.js:1000#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/server.js:897#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:897#1\",\"part\":\"CMD_PREFIX_DESCRIPTION\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:962#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:962#1\",\"part\":\"CMD_PREFIX_DESCRIPTION\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:976#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:976#1\",\"part\":\"CMD_PREFIX_DESCRIPTION\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1000#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1000#1\",\"part\":\"CMD_PREFIX_DESCRIPTION\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 3214,
+    "output_tokens": 320,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/server.js:1013-1146",
+   "attempt": 0,
+   "ids": [
+    "dist/server.js:1014#0",
+    "dist/server.js:1014#1",
+    "dist/server.js:1028#0",
+    "dist/server.js:1028#1",
+    "dist/server.js:1044#0",
+    "dist/server.js:1044#1",
+    "dist/server.js:1067#0",
+    "dist/server.js:1067#1",
+    "dist/server.js:1108#0",
+    "dist/server.js:1108#1",
+    "dist/server.js:1140#0",
+    "dist/server.js:1140#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/server.js:1014#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1014#1\",\"part\":\"CMD_PREFIX_DESCRIPTION\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1028#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1028#1\",\"part\":\"CMD_PREFIX_DESCRIPTION\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1044#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1044#1\",\"part\":\"CMD_PREFIX_DESCRIPTION\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1067#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1067#1\",\"part\":\"CMD_PREFIX_DESCRIPTION\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1108#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1108#1\",\"part\":\"CMD_PREFIX_DESCRIPTION\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1140#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1140#1\",\"part\":\"CMD_PREFIX_DESCRIPTION\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 3146,
+    "output_tokens": 486,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/server.js:1233-1256",
+   "attempt": 0,
+   "ids": [
+    "dist/server.js:1238#0",
+    "dist/server.js:1238#1",
+    "dist/server.js:1250#0",
+    "dist/server.js:1250#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/server.js:1238#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1238#1\",\"part\":\"error\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1250#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1250#1\",\"part\":\"error\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1714,
+    "output_tokens": 162,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/server.js:1269-1312",
+   "attempt": 0,
+   "ids": [
+    "dist/server.js:1306#0",
+    "dist/server.js:1306#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/server.js:1306#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1306#1\",\"part\":\"error\",\"origin\":\"unknown\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1920,
+    "output_tokens": 84,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/server.js:1337-1348",
+   "attempt": 0,
+   "ids": [
+    "dist/server.js:1342#0",
+    "dist/server.js:1342#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/server.js:1342#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/server.js:1342#1\",\"part\":\"error\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1532,
+    "output_tokens": 84,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/handlers/filesystem-handlers.js:43-191",
+   "attempt": 0,
+   "ids": [
+    "dist/handlers/filesystem-handlers.js:52#0",
+    "dist/handlers/filesystem-handlers.js:59#0",
+    "dist/handlers/filesystem-handlers.js:82#0",
+    "dist/handlers/filesystem-handlers.js:82#1",
+    "dist/handlers/filesystem-handlers.js:83#0",
+    "dist/handlers/filesystem-handlers.js:83#1",
+    "dist/handlers/filesystem-handlers.js:92#0",
+    "dist/handlers/filesystem-handlers.js:92#1",
+    "dist/handlers/filesystem-handlers.js:92#2",
+    "dist/handlers/filesystem-handlers.js:95#0",
+    "dist/handlers/filesystem-handlers.js:99#0",
+    "dist/handlers/filesystem-handlers.js:99#1",
+    "dist/handlers/filesystem-handlers.js:99#2",
+    "dist/handlers/filesystem-handlers.js:99#3",
+    "dist/handlers/filesystem-handlers.js:99#4",
+    "dist/handlers/filesystem-handlers.js:121#0",
+    "dist/handlers/filesystem-handlers.js:121#1",
+    "dist/handlers/filesystem-handlers.js:121#2",
+    "dist/handlers/filesystem-handlers.js:136#0",
+    "dist/handlers/filesystem-handlers.js:144#0",
+    "dist/handlers/filesystem-handlers.js:172#0",
+    "dist/handlers/filesystem-handlers.js:191#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/handlers/filesystem-handlers.js:52#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:59#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:82#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:82#1\",\"part\":\"meta?.author\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:83#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:83#1\",\"part\":\"meta?.title\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:92#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:92#1\",\"part\":\"p.pageNumber\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:92#2\",\"part\":\"p.text\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:95#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:99#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:99#1\",\"part\":\"parsed.path\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers/filesystem-handlers.js:99#2\",\"part\":\"author\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:99#3\",\"part\":\"title\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:99#4\",\"part\":\"meta?.totalPages\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:121#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:121#1\",\"part\":\"parsed.path\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers/filesystem-handlers.js:121#2\",\"part\":\"fileResult.mimeType\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:136#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:144#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:172#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:191#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 3883,
+    "output_tokens": 978,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/handlers/filesystem-handlers.js:194-253",
+   "attempt": 0,
+   "ids": [
+    "dist/handlers/filesystem-handlers.js:202#0",
+    "dist/handlers/filesystem-handlers.js:202#1",
+    "dist/handlers/filesystem-handlers.js:202#2",
+    "dist/handlers/filesystem-handlers.js:205#0",
+    "dist/handlers/filesystem-handlers.js:205#1",
+    "dist/handlers/filesystem-handlers.js:205#2",
+    "dist/handlers/filesystem-handlers.js:208#0",
+    "dist/handlers/filesystem-handlers.js:208#1",
+    "dist/handlers/filesystem-handlers.js:208#2",
+    "dist/handlers/filesystem-handlers.js:208#3",
+    "dist/handlers/filesystem-handlers.js:211#0",
+    "dist/handlers/filesystem-handlers.js:211#1",
+    "dist/handlers/filesystem-handlers.js:217#0",
+    "dist/handlers/filesystem-handlers.js:224#0",
+    "dist/handlers/filesystem-handlers.js:230#0",
+    "dist/handlers/filesystem-handlers.js:238#0",
+    "dist/handlers/filesystem-handlers.js:246#0",
+    "dist/handlers/filesystem-handlers.js:248#0",
+    "dist/handlers/filesystem-handlers.js:248#1",
+    "dist/handlers/filesystem-handlers.js:248#2",
+    "dist/handlers/filesystem-handlers.js:253#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/handlers/filesystem-handlers.js:202#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:202#1\",\"part\":\"result.path\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:202#2\",\"part\":\"result.error\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:205#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:205#1\",\"part\":\"result.path\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:205#2\",\"part\":\"result.payload?.pages?.length\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:208#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:208#1\",\"part\":\"result.path\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:208#2\",\"part\":\"result.mimeType\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:208#3\",\"part\":\"result.isImage ? '(image)' : '(text)'\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:211#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:211#1\",\"part\":\"result.path\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:217#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:224#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:230#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:238#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:246#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:248#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:248#1\",\"part\":\"result.path\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:248#2\",\"part\":\"result.content\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:253#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2668,
+    "output_tokens": 941,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/handlers/filesystem-handlers.js:258-312",
+   "attempt": 0,
+   "ids": [
+    "dist/handlers/filesystem-handlers.js:277#0",
+    "dist/handlers/filesystem-handlers.js:277#1",
+    "dist/handlers/filesystem-handlers.js:278#0",
+    "dist/handlers/filesystem-handlers.js:278#1",
+    "dist/handlers/filesystem-handlers.js:292#0",
+    "dist/handlers/filesystem-handlers.js:292#1",
+    "dist/handlers/filesystem-handlers.js:302#0",
+    "dist/handlers/filesystem-handlers.js:305#0",
+    "dist/handlers/filesystem-handlers.js:305#1",
+    "dist/handlers/filesystem-handlers.js:305#2",
+    "dist/handlers/filesystem-handlers.js:305#3",
+    "dist/handlers/filesystem-handlers.js:305#4",
+    "dist/handlers/filesystem-handlers.js:311#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/handlers/filesystem-handlers.js:277#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:277#1\",\"part\":\"parsed.path\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"dist/handlers/filesystem-handlers.js:278#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:278#1\",\"part\":\"existing.size\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:292#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:292#1\",\"part\":\"lineCount\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:302#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:305#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:305#1\",\"part\":\"modeMessage\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:305#2\",\"part\":\"parsed.path\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers/filesystem-handlers.js:305#3\",\"part\":\"lineCount\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:305#4\",\"part\":\"errorMessage\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:311#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2539,
+    "output_tokens": 574,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/handlers/filesystem-handlers.js:317-328",
+   "attempt": 0,
+   "ids": [
+    "dist/handlers/filesystem-handlers.js:321#0",
+    "dist/handlers/filesystem-handlers.js:322#0",
+    "dist/handlers/filesystem-handlers.js:322#1",
+    "dist/handlers/filesystem-handlers.js:327#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/handlers/filesystem-handlers.js:321#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:322#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:322#1\",\"part\":\"parsed.path\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers/filesystem-handlers.js:327#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1559,
+    "output_tokens": 181,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/handlers/filesystem-handlers.js:333-355",
+   "attempt": 0,
+   "ids": [
+    "dist/handlers/filesystem-handlers.js:341#0",
+    "dist/handlers/filesystem-handlers.js:354#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/handlers/filesystem-handlers.js:341#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:354#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1577,
+    "output_tokens": 92,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/handlers/filesystem-handlers.js:360-366",
+   "attempt": 0,
+   "ids": [
+    "dist/handlers/filesystem-handlers.js:364#0",
+    "dist/handlers/filesystem-handlers.js:365#0",
+    "dist/handlers/filesystem-handlers.js:365#1",
+    "dist/handlers/filesystem-handlers.js:365#2"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/handlers/filesystem-handlers.js:364#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:365#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:365#1\",\"part\":\"parsed.source\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers/filesystem-handlers.js:365#2\",\"part\":\"parsed.destination\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 1548,
+    "output_tokens": 182,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/handlers/filesystem-handlers.js:403-415",
+   "attempt": 0,
+   "ids": [
+    "dist/handlers/filesystem-handlers.js:409#0",
+    "dist/handlers/filesystem-handlers.js:409#1",
+    "dist/handlers/filesystem-handlers.js:409#2",
+    "dist/handlers/filesystem-handlers.js:411#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/handlers/filesystem-handlers.js:409#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:409#1\",\"part\":\"key\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:409#2\",\"part\":\"formatValue(value)\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:411#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1580,
+    "output_tokens": 181,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/handlers/filesystem-handlers.js:427-439",
+   "attempt": 0,
+   "ids": [
+    "dist/handlers/filesystem-handlers.js:432#0",
+    "dist/handlers/filesystem-handlers.js:433#0",
+    "dist/handlers/filesystem-handlers.js:433#1",
+    "dist/handlers/filesystem-handlers.js:433#2",
+    "dist/handlers/filesystem-handlers.js:438#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/handlers/filesystem-handlers.js:432#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:433#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers/filesystem-handlers.js:433#1\",\"part\":\"targetPath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers/filesystem-handlers.js:433#2\",\"part\":\"parsed.outputPath ? `\\\\nOriginal file: ${parsed.path}` : ''\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"dist/handlers/filesystem-handlers.js:438#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1711,
+    "output_tokens": 239,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/tools/filesystem.js:542-559",
+   "attempt": 0,
+   "ids": [
+    "dist/tools/filesystem.js:559#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/tools/filesystem.js:559#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1554,
+    "output_tokens": 46,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/tools/filesystem.js:673-719",
+   "attempt": 0,
+   "ids": [
+    "dist/tools/filesystem.js:694#0",
+    "dist/tools/filesystem.js:704#0",
+    "dist/tools/filesystem.js:719#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/tools/filesystem.js:694#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/tools/filesystem.js:704#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/tools/filesystem.js:719#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1878,
+    "output_tokens": 132,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/tools/filesystem.js:779-848",
+   "attempt": 0,
+   "ids": [
+    "dist/tools/filesystem.js:848#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/tools/filesystem.js:848#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2052,
+    "output_tokens": 46,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  }
+ ],
+ "final": {
+  "tools": {
+   "get_config": {
+    "result_contents": [
+     {
+      "part": "configuration JSON",
+      "produced_at": "dist/tools/config.js:10",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "dist/server.js:238#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/server.js:238",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:238#1",
+      "part": "CMD_PREFIX_DESCRIPTION",
+      "produced_at": "dist/server.js:238",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "dist/server.js:1238#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/server.js:1238",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:1238#1",
+      "part": "error",
+      "produced_at": "dist/server.js:1238",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/server.js:1233-1244",
+     "dist/server.js:224-245"
+    ],
+    "rationale": "The `get_config` tool retrieves the server configuration as JSON. The result is read from the configuration resource, which is user-specific, hence the scope is `user_account`. The control is `service` because the server composes the configuration JSON.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "set_config_value": {
+    "result_contents": [
+     {
+      "part": "success message",
+      "produced_at": "dist/server.js:1247",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "error message",
+      "produced_at": "dist/server.js:1252",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:265#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/server.js:265",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:265#1",
+      "part": "CMD_PREFIX_DESCRIPTION",
+      "produced_at": "dist/server.js:265",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "dist/server.js:1250#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/server.js:1250",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:1250#1",
+      "part": "error",
+      "produced_at": "dist/server.js:1250",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/server.js:1245-1256",
+     "dist/server.js:246-273"
+    ],
+    "rationale": "The `set_config_value` tool sets a configuration value by key. The result is a success or error message, both of which are literals. There are no outbound calls or code execution involved.",
+    "kind": "WRITE",
+    "destination_args": [
+     "key"
+    ],
+    "value_args": [
+     "value"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "read_file": {
+    "result_contents": [
+     {
+      "part": "file content",
+      "produced_at": "dist/handlers/filesystem-handlers.js:173",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "part": "PDF metadata",
+      "produced_at": "dist/handlers/filesystem-handlers.js:100",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "part": "image data",
+      "produced_at": "dist/handlers/filesystem-handlers.js:152",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:52#0",
+      "part": "the statement",
+      "produced_at": "dist/handlers/filesystem-handlers.js:52",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:59#0",
+      "part": "the statement",
+      "produced_at": "dist/handlers/filesystem-handlers.js:59",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:82#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:82",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:82#1",
+      "part": "meta?.author",
+      "produced_at": "dist/handlers/filesystem-handlers.js:82",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:83#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:83",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:83#1",
+      "part": "meta?.title",
+      "produced_at": "dist/handlers/filesystem-handlers.js:83",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:92#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:92",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:92#1",
+      "part": "p.pageNumber",
+      "produced_at": "dist/handlers/filesystem-handlers.js:92",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:92#2",
+      "part": "p.text",
+      "produced_at": "dist/handlers/filesystem-handlers.js:92",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:99#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:99",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:99#1",
+      "part": "parsed.path",
+      "produced_at": "dist/handlers/filesystem-handlers.js:99",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:99#2",
+      "part": "author",
+      "produced_at": "dist/handlers/filesystem-handlers.js:99",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:99#3",
+      "part": "title",
+      "produced_at": "dist/handlers/filesystem-handlers.js:99",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:99#4",
+      "part": "meta?.totalPages",
+      "produced_at": "dist/handlers/filesystem-handlers.js:99",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:121#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:121",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:121#1",
+      "part": "parsed.path",
+      "produced_at": "dist/handlers/filesystem-handlers.js:121",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:121#2",
+      "part": "fileResult.mimeType",
+      "produced_at": "dist/handlers/filesystem-handlers.js:121",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "file path and options",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "dist/tools/filesystem.js:496"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/handlers/filesystem-handlers.js:43-191"
+    ],
+    "rationale": "The `read_file` tool reads content from a file or URL. The content, PDF metadata, and image data are read from the user's local files, hence the scope is `user_local`. The control is `user` because the user owns the files. The tool makes an outbound call to read the file from the local filesystem. [received records: file content, PDF metadata, image data taken as outside-party text] [received records: fileResult.mimeType taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [
+     "path"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "read_multiple_files": {
+    "result_contents": [
+     {
+      "part": "file contents summary",
+      "produced_at": "dist/handlers/filesystem-handlers.js:217",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "part": "individual file content",
+      "produced_at": "dist/handlers/filesystem-handlers.js:248",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:202#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:202",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:202#1",
+      "part": "result.path",
+      "produced_at": "dist/handlers/filesystem-handlers.js:202",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:202#2",
+      "part": "result.error",
+      "produced_at": "dist/handlers/filesystem-handlers.js:202",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:205#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:205",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:205#1",
+      "part": "result.path",
+      "produced_at": "dist/handlers/filesystem-handlers.js:205",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:205#2",
+      "part": "result.payload?.pages?.length",
+      "produced_at": "dist/handlers/filesystem-handlers.js:205",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:208#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:208",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:208#1",
+      "part": "result.path",
+      "produced_at": "dist/handlers/filesystem-handlers.js:208",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:208#2",
+      "part": "result.mimeType",
+      "produced_at": "dist/handlers/filesystem-handlers.js:208",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:208#3",
+      "part": "result.isImage ? '(image)' : '(text)'",
+      "produced_at": "dist/handlers/filesystem-handlers.js:208",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:211#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:211",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:211#1",
+      "part": "result.path",
+      "produced_at": "dist/handlers/filesystem-handlers.js:211",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:217#0",
+      "part": "the statement",
+      "produced_at": "dist/handlers/filesystem-handlers.js:217",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:224#0",
+      "part": "the statement",
+      "produced_at": "dist/handlers/filesystem-handlers.js:224",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:230#0",
+      "part": "the statement",
+      "produced_at": "dist/handlers/filesystem-handlers.js:230",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:238#0",
+      "part": "the statement",
+      "produced_at": "dist/handlers/filesystem-handlers.js:238",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:246#0",
+      "part": "the statement",
+      "produced_at": "dist/handlers/filesystem-handlers.js:246",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:248#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:248",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:248#1",
+      "part": "result.path",
+      "produced_at": "dist/handlers/filesystem-handlers.js:248",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:248#2",
+      "part": "result.content",
+      "produced_at": "dist/handlers/filesystem-handlers.js:248",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "file paths",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "dist/tools/filesystem.js:561"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/handlers/filesystem-handlers.js:194-253"
+    ],
+    "rationale": "The `read_multiple_files` tool reads contents from multiple files. The summary and individual file contents are read from the user's local files, hence the scope is `user_local`. The control is `user` because the user owns the files. The tool makes outbound calls to read each file from the local filesystem. [received records: file contents summary, individual file content taken as outside-party text] [received records: result.path, result.path, result.path, result.path, the statement, the statement, the statement, the statement, result.p taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [
+     "paths"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "write_file": {
+    "result_contents": [
+     {
+      "part": "success message",
+      "produced_at": "dist/handlers/filesystem-handlers.js:305",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "error message",
+      "produced_at": "dist/handlers/filesystem-handlers.js:311",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:277#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:277",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:277#1",
+      "part": "parsed.path",
+      "produced_at": "dist/handlers/filesystem-handlers.js:277",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:278#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:278",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:278#1",
+      "part": "existing.size",
+      "produced_at": "dist/handlers/filesystem-handlers.js:278",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:292#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:292",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:292#1",
+      "part": "lineCount",
+      "produced_at": "dist/handlers/filesystem-handlers.js:292",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:305#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:305",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:305#1",
+      "part": "modeMessage",
+      "produced_at": "dist/handlers/filesystem-handlers.js:305",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:305#2",
+      "part": "parsed.path",
+      "produced_at": "dist/handlers/filesystem-handlers.js:305",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:305#3",
+      "part": "lineCount",
+      "produced_at": "dist/handlers/filesystem-handlers.js:305",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:305#4",
+      "part": "errorMessage",
+      "produced_at": "dist/handlers/filesystem-handlers.js:305",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "file path and content",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "dist/tools/filesystem.js:542"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/handlers/filesystem-handlers.js:258-312"
+    ],
+    "rationale": "The `write_file` tool writes or appends content to a file. The result is a success or error message, both of which are literals. The tool makes an outbound call to write the file to the local filesystem. [received records: existing.size taken as outside-party text]",
+    "kind": "WRITE",
+    "destination_args": [
+     "path"
+    ],
+    "value_args": [
+     "content"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "write_pdf": {
+    "result_contents": [
+     {
+      "part": "success message",
+      "produced_at": "dist/handlers/filesystem-handlers.js:433",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "error message",
+      "produced_at": "dist/handlers/filesystem-handlers.js:438",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:433#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:433",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:433#1",
+      "part": "targetPath",
+      "produced_at": "dist/handlers/filesystem-handlers.js:433",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:433#2",
+      "part": "parsed.outputPath ? `\\nOriginal file: ${parsed.path}` : ''",
+      "produced_at": "dist/handlers/filesystem-handlers.js:433",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "PDF path and content",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "dist/tools/filesystem.js:858"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/handlers/filesystem-handlers.js:427-439"
+    ],
+    "rationale": "The `write_pdf` tool creates or modifies a PDF file. The result is a success or error message, both of which are literals. The tool makes an outbound call to write the PDF to the local filesystem.",
+    "kind": "WRITE",
+    "destination_args": [
+     "path"
+    ],
+    "value_args": [
+     "content"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "create_directory": {
+    "result_contents": [
+     {
+      "part": "success message",
+      "produced_at": "dist/handlers/filesystem-handlers.js:322",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "error message",
+      "produced_at": "dist/handlers/filesystem-handlers.js:327",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:322#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:322",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:322#1",
+      "part": "parsed.path",
+      "produced_at": "dist/handlers/filesystem-handlers.js:322",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "directory path",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "dist/tools/filesystem.js:602"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/handlers/filesystem-handlers.js:317-328"
+    ],
+    "rationale": "The `create_directory` tool creates a new directory. The result is a success or error message, both of which are literals. The tool makes an outbound call to create the directory on the local filesystem.",
+    "kind": "WRITE",
+    "destination_args": [
+     "path"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_directory": {
+    "result_contents": [
+     {
+      "part": "directory listing",
+      "produced_at": "dist/handlers/filesystem-handlers.js:342",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:341#0",
+      "part": "the statement",
+      "produced_at": "dist/handlers/filesystem-handlers.js:341",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:354#0",
+      "part": "the statement",
+      "produced_at": "dist/handlers/filesystem-handlers.js:354",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "directory path",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "dist/tools/filesystem.js:606"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/handlers/filesystem-handlers.js:333-355"
+    ],
+    "rationale": "The `list_directory` tool retrieves a listing of files and directories. The listing is read from the user's local filesystem, hence the scope is `user_local`. The control is `user` because the user owns the directories. The tool makes an outbound call to list the directory contents from the local filesystem. [received records: directory listing taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [
+     "path"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "move_file": {
+    "result_contents": [
+     {
+      "part": "Successfully moved ${parsed.source} to ${parsed.destination}",
+      "produced_at": "dist/handlers/filesystem-handlers.js:365",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:365#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:365",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:365#1",
+      "part": "parsed.source",
+      "produced_at": "dist/handlers/filesystem-handlers.js:365",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:365#2",
+      "part": "parsed.destination",
+      "produced_at": "dist/handlers/filesystem-handlers.js:365",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/handlers/filesystem-handlers.js:360-366",
+     "dist/tools/filesystem.js:668-671"
+    ],
+    "rationale": "The `move_file` tool moves or renames files and directories. It uses `validatePath` to ensure paths are within allowed directories and then calls `fs.rename` to perform the move. The result is a success message indicating the source and destination paths.",
+    "kind": "WRITE",
+    "destination_args": [
+     "source",
+     "destination"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "start_search": {
+    "result_contents": [
+     {
+      "part": "allResults",
+      "produced_at": "dist/tools/filesystem.js:719",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/tools/filesystem.js:694#0",
+      "part": "the statement",
+      "produced_at": "dist/tools/filesystem.js:694",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party"
+     },
+     {
+      "id": "dist/tools/filesystem.js:704#0",
+      "part": "the statement",
+      "produced_at": "dist/tools/filesystem.js:704",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party"
+     },
+     {
+      "id": "dist/tools/filesystem.js:719#0",
+      "part": "the statement",
+      "produced_at": "dist/tools/filesystem.js:719",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "outside_party"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/tools/filesystem.js:673-719"
+    ],
+    "rationale": "The `start_search` tool initiates a search for files or content within files. It uses `searchManager.startSearch` to perform the search and returns the results. The results are computed from the search operation and are scoped to the user's local files.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "path",
+     "pattern"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "get_more_search_results": {
+    "result_contents": [
+     {
+      "part": "results",
+      "produced_at": "dist/tools/filesystem.js:700",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/tools/filesystem.js:698-702"
+    ],
+    "rationale": "The `get_more_search_results` tool retrieves additional results from an ongoing search session. It uses `searchManager.readSearchResults` to fetch results based on the session ID. The results are computed and scoped to the user's local files.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "sessionId"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "stop_search": {
+    "result_contents": [
+     {
+      "part": "Search stopped",
+      "produced_at": "dist/tools/filesystem.js:710",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/tools/filesystem.js:709-710"
+    ],
+    "rationale": "The `stop_search` tool stops an active search session. It calls `searchManager.terminateSearch` to stop the search and returns a success message. The operation does not send data out or change state beyond stopping the search.",
+    "kind": "WRITE",
+    "destination_args": [
+     "sessionId"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_searches": {
+    "result_contents": [
+     {
+      "part": "searches",
+      "produced_at": "dist/tools/filesystem.js:688",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/tools/filesystem.js:688-690"
+    ],
+    "rationale": "The `list_searches` tool lists all active search sessions. It retrieves the list of searches from `searchManager` and returns it. The list is computed and scoped to the user's local searches.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "get_file_info": {
+    "result_contents": [
+     {
+      "part": "formattedText",
+      "produced_at": "dist/handlers/filesystem-handlers.js:409",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:409#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers/filesystem-handlers.js:409",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:409#1",
+      "part": "key",
+      "produced_at": "dist/handlers/filesystem-handlers.js:409",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers/filesystem-handlers.js:409#2",
+      "part": "formatValue(value)",
+      "produced_at": "dist/handlers/filesystem-handlers.js:409",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/tools/filesystem.js:848#0",
+      "part": "the statement",
+      "produced_at": "dist/tools/filesystem.js:848",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/handlers/filesystem-handlers.js:403-415",
+     "dist/tools/filesystem.js:779-848"
+    ],
+    "rationale": "The `get_file_info` tool retrieves metadata about a file or directory. It uses `getFileInfo` to gather details like size, creation time, and permissions. The result is formatted text with this information, scoped to the user's local files.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "path"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "edit_block": {
+    "result_contents": [
+     {
+      "part": "editResult",
+      "produced_at": "dist/ui/file-preview/src/markdown/controller.js:688",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/ui/file-preview/src/markdown/controller.js:681-689",
+     "dist/tools/filesystem.js:542-559",
+     "dist/ui/file-preview/src/markdown/controller.js:680-690"
+    ],
+    "rationale": "The `edit_block` tool applies edits to files. It uses `edit_block` to perform find/replace operations on text files or range updates on Excel files. The result is the outcome of the edit operation, scoped to the user's local files.",
+    "kind": "WRITE",
+    "destination_args": [
+     "file_path"
+    ],
+    "value_args": [
+     "old_string",
+     "new_string"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "start_process": {
+    "result_contents": [
+     {
+      "part": "processId",
+      "produced_at": "dist/tools/filesystem.js:814",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "host",
+     "at": "dist/tools/filesystem.js:902"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/tools/filesystem.js:791-814",
+     "dist/tools/filesystem.js:902"
+    ],
+    "rationale": "The `start_process` tool starts a new terminal process. It uses `execFileAsync` to execute the command and returns the process ID. The process runs on the host machine, and the result is scoped to the user's local environment.",
+    "kind": "WRITE",
+    "destination_args": [
+     "command"
+    ],
+    "value_args": [
+     "command"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "HOSTEXEC",
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "read_process_output": {
+    "result_contents": [
+     {
+      "part": "process output",
+      "produced_at": "dist/handlers/filesystem-handlers.js:54",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "id": "dist/server.js:897#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/server.js:897",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:897#1",
+      "part": "CMD_PREFIX_DESCRIPTION",
+      "produced_at": "dist/server.js:897",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "evidence": [
+     "dist/server.js:1354",
+     "dist/server.js:863-903"
+    ],
+    "rationale": "The `read_process_output` tool reads the output of a running process. The output is read from the user's local machine, making it a `resource_read` with `scope` as `user_local`. The control is `service` because the server reads the output. There are no outbound calls or code execution involved. [received records: process output taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "interact_with_process": {
+    "result_contents": [
+     {
+      "part": "execution result",
+      "produced_at": "dist/handlers/filesystem-handlers.js:54",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "id": "dist/server.js:962#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/server.js:962",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:962#1",
+      "part": "CMD_PREFIX_DESCRIPTION",
+      "produced_at": "dist/server.js:962",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "host",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "evidence": [
+     "dist/server.js:1357",
+     "dist/server.js:904-970"
+    ],
+    "rationale": "The `interact_with_process` tool sends input to a running process and receives the response. The interaction occurs on the user's local machine, making it a `resource_read` with `scope` as `user_local`. The control is `service` because the server manages the interaction. The tool executes code on the host machine, indicated by `runs_supplied_code` as `host`. There are no outbound calls or deliveries to chosen parties. [received records: execution result taken as outside-party text]",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "input"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "HOSTEXEC",
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "force_terminate": {
+    "result_contents": [
+     {
+      "part": "termination confirmation",
+      "produced_at": "dist/handlers/filesystem-handlers.js:54",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "dist/server.js:976#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/server.js:976",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:976#1",
+      "part": "CMD_PREFIX_DESCRIPTION",
+      "produced_at": "dist/server.js:976",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "evidence": [
+     "dist/server.js:1360",
+     "dist/server.js:971-984"
+    ],
+    "rationale": "The `force_terminate` tool forcibly terminates a running process. The result is a confirmation message, which is a `literal` with `scope` as `none` and `control` as `service`. There are no outbound calls or code execution involved.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_sessions": {
+    "result_contents": [
+     {
+      "part": "session list",
+      "produced_at": "dist/handlers/filesystem-handlers.js:54",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/server.js:1000#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/server.js:1000",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:1000#1",
+      "part": "CMD_PREFIX_DESCRIPTION",
+      "produced_at": "dist/server.js:1000",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "evidence": [
+     "dist/server.js:1363",
+     "dist/server.js:985-1006"
+    ],
+    "rationale": "The `list_sessions` tool lists all active terminal sessions. The session information is read from the user's local machine, making it a `resource_read` with `scope` as `user_local`. The control is `service` because the server retrieves the session list. There are no outbound calls or code execution involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "list_processes": {
+    "result_contents": [
+     {
+      "part": "process list",
+      "produced_at": "dist/handlers/filesystem-handlers.js:54",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/server.js:1014#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/server.js:1014",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:1014#1",
+      "part": "CMD_PREFIX_DESCRIPTION",
+      "produced_at": "dist/server.js:1014",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "evidence": [
+     "dist/server.js:1367",
+     "dist/server.js:1007-1020"
+    ],
+    "rationale": "The `list_processes` tool lists all running processes. The process information is read from the user's local machine, making it a `resource_read` with `scope` as `user_local`. The control is `service` because the server retrieves the process list. There are no outbound calls or code execution involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "kill_process": {
+    "result_contents": [
+     {
+      "part": "termination confirmation",
+      "produced_at": "dist/handlers/filesystem-handlers.js:54",
+      "origin": "literal",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "dist/server.js:1028#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/server.js:1028",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:1028#1",
+      "part": "CMD_PREFIX_DESCRIPTION",
+      "produced_at": "dist/server.js:1028",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "evidence": [
+     "dist/server.js:1370",
+     "dist/server.js:1021-1036"
+    ],
+    "rationale": "The `kill_process` tool terminates a running process by PID. The result is a confirmation message, which is a `literal` with `scope` as `none` and `control` as `service`. There are no outbound calls or code execution involved.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "get_usage_stats": {
+    "result_contents": [
+     {
+      "part": "usage statistics",
+      "produced_at": "dist/handlers/filesystem-handlers.js:54",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "dist/server.js:1044#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/server.js:1044",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:1044#1",
+      "part": "CMD_PREFIX_DESCRIPTION",
+      "produced_at": "dist/server.js:1044",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "evidence": [
+     "dist/server.js:1259",
+     "dist/server.js:1037-1050"
+    ],
+    "rationale": "The `get_usage_stats` tool retrieves usage statistics for debugging and analysis. The statistics are computed by the service, making them `computed` with `scope` as `none` and `control` as `service`. There are no outbound calls or code execution involved.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "get_recent_tool_calls": {
+    "result_contents": [
+     {
+      "part": "recent tool calls",
+      "produced_at": "dist/handlers/filesystem-handlers.js:54",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "id": "dist/server.js:1067#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/server.js:1067",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:1067#1",
+      "part": "CMD_PREFIX_DESCRIPTION",
+      "produced_at": "dist/server.js:1067",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": "dist/handlers/filesystem-handlers.js:54"
+    },
+    "evidence": [
+     "dist/server.js:1315",
+     "dist/server.js:1051-1073"
+    ],
+    "rationale": "The `get_recent_tool_calls` tool retrieves recent local tool call history. The history is read from the user's local machine, making it a `resource_read` with `scope` as `user_local`. The control is `service` because the server retrieves the history. There are no outbound calls or code execution involved. [received records: recent tool calls taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "give_feedback_to_desktop_commander": {
+    "result_contents": [
+     {
+      "id": "dist/server.js:1108#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/server.js:1108",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:1108#1",
+      "part": "CMD_PREFIX_DESCRIPTION",
+      "produced_at": "dist/server.js:1108",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "dist/server.js:1342#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/server.js:1342",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:1342#1",
+      "part": "error",
+      "produced_at": "dist/server.js:1342",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "browser_page",
+     "at": "dist/server.js:1339"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/server.js:1337-1348",
+     "dist/server.js:1074-1115"
+    ],
+    "rationale": "The tool `give_feedback_to_desktop_commander` opens a feedback form in the user's browser. The code at `dist/server.js:1339` calls `giveFeedbackToDesktopCommander`, which opens the form in a browser page. There are no result contents returned by this tool, and it does not deliver data to a chosen party, as it simply opens a form for the user to fill out manually.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "get_prompts": {
+    "result_contents": [
+     {
+      "part": "Error: Failed to retrieve prompts",
+      "produced_at": "dist/server.js:1308",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:1140#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/server.js:1140",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:1140#1",
+      "part": "CMD_PREFIX_DESCRIPTION",
+      "produced_at": "dist/server.js:1140",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "dist/server.js:1306#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/server.js:1306",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/server.js:1306#1",
+      "part": "error",
+      "produced_at": "dist/server.js:1306",
+      "origin": "unknown",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/server.js:1269-1312",
+     "dist/server.js:1116-1146"
+    ],
+    "rationale": "The tool `get_prompts` retrieves onboarding prompts based on the provided `promptId`. If an error occurs, it returns a fixed error message as seen in `dist/server.js:1308`. There are no outbound calls or code execution involved in this tool, and it does not deliver data to a chosen party.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   }
+  },
+  "value_conditions": [
+   {
+    "syntax": "currentClient?.name === 'desktop-commander-app'",
+    "kind": "client_name",
+    "effect": "disable give_feedback_to_desktop_commander and get_prompts",
+    "default": "enabled",
+    "evidence": "dist/server.js:208-211"
+   }
+  ],
+  "notes": []
+ },
+ "hashes": {
+  "rubric_sha": "191e69d289880d38",
+  "schema_sha": "0f8d7d93eb07c885",
+  "source_sha": "28b70ee83a677229"
+ },
+ "run": {
+  "model": "gpt-4o-2024-08-06",
+  "temperature": 0.0,
+  "seed": 0,
+  "files": [
+   "dist/ui/config-editor/config-editor-runtime.js",
+   "dist/ui/file-preview/src/panel-actions.js",
+   "dist/server.js",
+   "dist/tools/filesystem.js",
+   "dist/ui/file-preview/src/markdown/controller.js",
+   "dist/tools/schemas.js",
+   "README.md",
+   "dist/utils/usageTracker.js",
+   "dist/handlers/filesystem-handlers.js"
+  ]
+ }
+}

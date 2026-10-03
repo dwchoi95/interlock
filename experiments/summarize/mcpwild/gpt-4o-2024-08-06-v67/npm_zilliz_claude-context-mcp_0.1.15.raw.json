@@ -1,0 +1,2655 @@
+{
+ "batch": {
+  "tools": {
+   "index_codebase": {
+    "result_contents": [
+     {
+      "part": "Error: Invalid splitter type '${requestedSplitter}'. Must be 'ast' or 'langchain'.",
+      "produced_at": "dist/handlers.js:313",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Path '${absolutePath}' does not exist. Original input: '${codebasePath}'",
+      "produced_at": "dist/handlers.js:332",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Path '${absolutePath}' is not a directory",
+      "produced_at": "dist/handlers.js:342",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Codebase '${absolutePath}' is already being indexed in the background. Please wait for completion.",
+      "produced_at": "dist/handlers.js:358",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Codebase '${absolutePath}' is already indexed. Use force=true to re-index.",
+      "produced_at": "dist/handlers.js:393",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error validating collection creation: ${validationError.message || validationError}",
+      "produced_at": "dist/handlers.js:430",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "service"
+     },
+     {
+      "part": "Started background indexing for codebase '${absolutePath}' using ${splitterType.toUpperCase()} splitter.${pathInfo}${extensionInfo}${ignoreInfo}\\n\\nIndexing is running in the background. You can search the codebase while indexing is in progress, but results may be incomplete until indexing completes.",
+      "produced_at": "dist/handlers.js:474",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "part": "Error starting indexing: ${error.message || error}",
+      "produced_at": "dist/handlers.js:485",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "codebasePath, forceReindex, splitterType, customIgnorePatterns, customFileExtensions, indexOptions, controller.signal",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "local",
+      "at": "dist/handlers.js:453"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers.js:453"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/index.js:202-203",
+     "dist/handlers.js:299-488"
+    ],
+    "rationale": "The `index_codebase` tool handles indexing a codebase directory. It validates the path and splitter type, checks if the codebase is already indexed or being indexed, and starts background indexing if valid. Errors are returned for invalid paths, non-directory paths, and invalid splitter types. The tool does not send data to external destinations, only interacts with local files and processes.",
+    "kind": "WRITE",
+    "destination_args": [
+     "path"
+    ],
+    "value_args": [
+     "path",
+     "force",
+     "splitter",
+     "customExtensions",
+     "ignorePatterns"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "search_code": {
+    "result_contents": [
+     {
+      "part": "Error: Path '${absolutePath}' does not exist. Original input: '${codebasePath}'",
+      "produced_at": "dist/handlers.js:580",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Path '${absolutePath}' is not a directory",
+      "produced_at": "dist/handlers.js:591",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Codebase '${absolutePath}' is not indexed. Please index it first using the index_codebase tool.",
+      "produced_at": "dist/handlers.js:626",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Invalid file extensions in extensionFilter: ${JSON.stringify(invalid)}. Use proper extensions like '.ts', '.py'.",
+      "produced_at": "dist/handlers.js:664",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Index data for '${searchCodebasePath}' has been lost (collection not found in Milvus). Please re-index using index_codebase with force=true.",
+      "produced_at": "dist/handlers.js:681",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "No results found for query: \"${query}\" in codebase '${searchCodebasePath}'",
+      "produced_at": "dist/handlers.js:686",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Found ${searchResults.length} results for query: \"${query}\" in codebase '${searchCodebasePath}'${indexingStatusMessage}\\n\\n${formattedResults}",
+      "produced_at": "dist/handlers.js:710",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "part": "Error searching code: ${errorMessage} Please check if the codebase has been indexed first.",
+      "produced_at": "dist/handlers.js:742",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "searchCodebasePath, query, Math.min(resultLimit, 50), 0.3, filterExpr",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "local",
+      "at": "dist/handlers.js:672"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers.js:672"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/index.js:204-205",
+     "dist/handlers.js:567-745"
+    ],
+    "rationale": "The `search_code` tool searches an indexed codebase using a natural language query. It validates the path and checks if the codebase is indexed. Errors are returned for invalid paths, non-directory paths, and unindexed codebases. The tool performs a local search and does not send data to external destinations. [received records: Error searching code: ${errorMessage} Please check if the codebase has been indexed first. taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "path",
+     "query",
+     "limit",
+     "extensionFilter"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "clear_index": {
+    "result_contents": [
+     {
+      "part": "No codebases are currently indexed or being indexed.",
+      "produced_at": "dist/handlers.js:754",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Path '${absolutePath}' does not exist. Original input: '${codebasePath}'",
+      "produced_at": "dist/handlers.js:766",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Path '${absolutePath}' is not a directory",
+      "produced_at": "dist/handlers.js:777",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Codebase '${absolutePath}' is not indexed or being indexed.",
+      "produced_at": "dist/handlers.js:789",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Successfully cleared codebase '${absolutePath}'",
+      "produced_at": "dist/handlers.js:843",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error clearing index: ${errorMessage}",
+      "produced_at": "dist/handlers.js:864",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "absolutePath",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "local",
+      "at": "dist/handlers.js:814"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers.js:814"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/index.js:206-207",
+     "dist/handlers.js:748-867"
+    ],
+    "rationale": "The `clear_index` tool clears the search index for a specified codebase. It validates the path and checks if the codebase is indexed or being indexed. Errors are returned for invalid paths, non-directory paths, and unindexed codebases. The tool interacts with local files and processes, not external destinations.",
+    "kind": "WRITE",
+    "destination_args": [
+     "path"
+    ],
+    "value_args": [
+     "path"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "get_indexing_status": {
+    "result_contents": [
+     {
+      "part": "Error: Path '${absolutePath}' does not exist. Original input: '${codebasePath}'",
+      "produced_at": "dist/handlers.js:880",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Path '${absolutePath}' is not a directory",
+      "produced_at": "dist/handlers.js:891",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "\u2705 Codebase '${statusCodebasePath}' is fully indexed and ready for search.\\n\ud83d\udcca Statistics: ${indexedInfo.indexedFiles} files, ${indexedInfo.totalChunks} chunks\\n\ud83d\udcc5 Status: ${indexedInfo.indexStatus}\\n\ud83d\udd50 Last updated: ${new Date(indexedInfo.lastUpdated).toLocaleString()}",
+      "produced_at": "dist/handlers.js:906",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "part": "\ud83d\udd04 Codebase '${statusCodebasePath}' is currently being indexed. Progress: ${progressPercentage.toFixed(1)}%\\n\ud83d\udd50 Last updated: ${new Date(indexingInfo.lastUpdated).toLocaleString()}",
+      "produced_at": "dist/handlers.js:919",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "part": "\u274c Codebase '${statusCodebasePath}' indexing failed.\\n\ud83d\udea8 Error: ${failedInfo.errorMessage}\\n\ud83d\udcca Failed at: ${failedInfo.lastAttemptedPercentage.toFixed(1)}% progress\\n\ud83d\udd50 Failed at: ${new Date(failedInfo.lastUpdated).toLocaleString()}\\n\ud83d\udca1 You can retry indexing by running the index_codebase command again.",
+      "produced_at": "dist/handlers.js:936",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "part": "\u274c Codebase '${absolutePath}' is not indexed. Please use the index_codebase tool to index it first.",
+      "produced_at": "dist/handlers.js:950",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error getting indexing status: ${error.message || error}",
+      "produced_at": "dist/handlers.js:970",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/index.js:208-209",
+     "dist/handlers.js:870-973"
+    ],
+    "rationale": "The `get_indexing_status` tool retrieves the current indexing status of a codebase. It validates the path and checks the indexing status, returning detailed information about the indexing progress or errors. The tool does not send data to external destinations.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "path"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   }
+  },
+  "value_conditions": [],
+  "notes": []
+ },
+ "methods": {},
+ "statement_calls": [
+  {
+   "subject": "handler lines dist/index.js:94-194",
+   "attempt": 0,
+   "ids": [
+    "dist/index.js:151#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/index.js:151#0\",\"part\":\"Maximum number of results to return\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2216,
+    "output_tokens": 47,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/index.js:202-209",
+   "attempt": 0,
+   "ids": [
+    "dist/index.js:203#0",
+    "dist/index.js:205#0",
+    "dist/index.js:207#0",
+    "dist/index.js:209#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/index.js:203#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/index.js:205#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/index.js:207#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/index.js:209#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1515,
+    "output_tokens": 158,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/handlers.js:299-448",
+   "attempt": 0,
+   "ids": [
+    "dist/handlers.js:310#0",
+    "dist/handlers.js:313#0",
+    "dist/handlers.js:313#1",
+    "dist/handlers.js:328#0",
+    "dist/handlers.js:331#0",
+    "dist/handlers.js:331#1",
+    "dist/handlers.js:331#2",
+    "dist/handlers.js:339#0",
+    "dist/handlers.js:342#0",
+    "dist/handlers.js:342#1",
+    "dist/handlers.js:350#0",
+    "dist/handlers.js:350#1",
+    "dist/handlers.js:355#0",
+    "dist/handlers.js:358#0",
+    "dist/handlers.js:358#1",
+    "dist/handlers.js:374#0",
+    "dist/handlers.js:374#1",
+    "dist/handlers.js:374#2",
+    "dist/handlers.js:379#0",
+    "dist/handlers.js:379#1",
+    "dist/handlers.js:383#0",
+    "dist/handlers.js:383#1",
+    "dist/handlers.js:390#0",
+    "dist/handlers.js:393#0",
+    "dist/handlers.js:393#1",
+    "dist/handlers.js:403#0",
+    "dist/handlers.js:403#1",
+    "dist/handlers.js:412#0",
+    "dist/handlers.js:412#1",
+    "dist/handlers.js:414#0",
+    "dist/handlers.js:427#0",
+    "dist/handlers.js:430#0",
+    "dist/handlers.js:430#1",
+    "dist/handlers.js:436#0",
+    "dist/handlers.js:436#1",
+    "dist/handlers.js:436#2",
+    "dist/handlers.js:442#0",
+    "dist/handlers.js:442#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/handlers.js:310#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:313#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:313#1\",\"part\":\"requestedSplitter\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:328#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:331#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:331#1\",\"part\":\"absolutePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:331#2\",\"part\":\"codebasePath\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:339#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:342#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:342#1\",\"part\":\"absolutePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:350#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:350#1\",\"part\":\"absolutePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:355#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:358#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:358#1\",\"part\":\"absolutePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:374#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:374#1\",\"part\":\"absolutePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:374#2\",\"part\":\"stats.totalChunks\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:379#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:379#1\",\"part\":\"absolutePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:383#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:383#1\",\"part\":\"absolutePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:390#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:393#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:393#1\",\"part\":\"absolutePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:403#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:403#1\",\"part\":\"absolutePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:412#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:412#1\",\"part\":\"absolutePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:414#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:427#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:430#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:430#1\",\"part\":\"validationError.message || validationError\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:436#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:436#1\",\"part\":\"customFileExtensions.length\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:436#2\",\"part\":\"customFileExtensions.join(', ')\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:442#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:442#1\",\"part\":\"failedInfo?.errorMessage || 'Unknown error'\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 4504,
+    "output_tokens": 1533,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/handlers.js:449-488",
+   "attempt": 0,
+   "ids": [
+    "dist/handlers.js:463#0",
+    "dist/handlers.js:463#1",
+    "dist/handlers.js:463#2",
+    "dist/handlers.js:466#0",
+    "dist/handlers.js:466#1",
+    "dist/handlers.js:466#2",
+    "dist/handlers.js:469#0",
+    "dist/handlers.js:469#1",
+    "dist/handlers.js:469#2",
+    "dist/handlers.js:471#0",
+    "dist/handlers.js:474#0",
+    "dist/handlers.js:474#1",
+    "dist/handlers.js:474#2",
+    "dist/handlers.js:474#3",
+    "dist/handlers.js:474#4",
+    "dist/handlers.js:474#5",
+    "dist/handlers.js:482#0",
+    "dist/handlers.js:485#0",
+    "dist/handlers.js:485#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/handlers.js:463#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:463#1\",\"part\":\"codebasePath\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:463#2\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:466#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:466#1\",\"part\":\"customFileExtensions.length\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:466#2\",\"part\":\"customFileExtensions.join(', ')\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:469#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:469#1\",\"part\":\"customIgnorePatterns.length\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:469#2\",\"part\":\"customIgnorePatterns.join(', ')\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:471#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:474#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:474#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:474#2\",\"part\":\"splitterType.toUpperCase()\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:474#3\",\"part\":\"pathInfo\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:474#4\",\"part\":\"extensionInfo\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:474#5\",\"part\":\"ignoreInfo\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:482#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:485#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:485#1\",\"part\":\"error.message || error\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2734,
+    "output_tokens": 771,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/handlers.js:567-716",
+   "attempt": 0,
+   "ids": [
+    "dist/handlers.js:577#0",
+    "dist/handlers.js:580#0",
+    "dist/handlers.js:580#1",
+    "dist/handlers.js:580#2",
+    "dist/handlers.js:588#0",
+    "dist/handlers.js:591#0",
+    "dist/handlers.js:591#1",
+    "dist/handlers.js:615#0",
+    "dist/handlers.js:615#1",
+    "dist/handlers.js:615#2",
+    "dist/handlers.js:623#0",
+    "dist/handlers.js:626#0",
+    "dist/handlers.js:626#1",
+    "dist/handlers.js:633#0",
+    "dist/handlers.js:636#0",
+    "dist/handlers.js:636#1",
+    "dist/handlers.js:647#0",
+    "dist/handlers.js:647#1",
+    "dist/handlers.js:648#0",
+    "dist/handlers.js:648#1",
+    "dist/handlers.js:649#0",
+    "dist/handlers.js:649#1",
+    "dist/handlers.js:652#0",
+    "dist/handlers.js:652#1",
+    "dist/handlers.js:653#0",
+    "dist/handlers.js:653#1",
+    "dist/handlers.js:663#0",
+    "dist/handlers.js:664#0",
+    "dist/handlers.js:664#1",
+    "dist/handlers.js:668#0",
+    "dist/handlers.js:668#1",
+    "dist/handlers.js:669#0",
+    "dist/handlers.js:669#1",
+    "dist/handlers.js:673#0",
+    "dist/handlers.js:673#1",
+    "dist/handlers.js:673#2",
+    "dist/handlers.js:680#0",
+    "dist/handlers.js:681#0",
+    "dist/handlers.js:681#1",
+    "dist/handlers.js:686#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/handlers.js:577#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:580#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:580#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:580#2\",\"part\":\"codebasePath\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:588#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:591#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:591#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:615#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:615#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:615#2\",\"part\":\"stats.totalChunks\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:623#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:626#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:626#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:633#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:636#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:636#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:647#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:647#1\",\"part\":\"searchCodebasePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:648#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:648#1\",\"part\":\"query\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:649#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:649#1\",\"part\":\"isIndexing ? 'In Progress' : 'Completed'\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:652#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:652#1\",\"part\":\"embeddingProvider.getProvider()\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:653#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:653#1\",\"part\":\"embeddingProvider.getProvider()\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:663#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:664#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:664#1\",\"part\":\"JSON.stringify(invalid)\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:668#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:668#1\",\"part\":\"e\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:669#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:669#1\",\"part\":\"quoted\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:673#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:673#1\",\"part\":\"searchResults.length\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:673#2\",\"part\":\"embeddingProvider.getProvider()\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:680#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:681#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:681#1\",\"part\":\"searchCodebasePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:686#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 4968,
+    "output_tokens": 1622,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/handlers.js:567-716",
+   "attempt": 0,
+   "ids": [
+    "dist/handlers.js:686#1",
+    "dist/handlers.js:686#2",
+    "dist/handlers.js:688#0",
+    "dist/handlers.js:688#1",
+    "dist/handlers.js:688#2",
+    "dist/handlers.js:691#0",
+    "dist/handlers.js:693#0",
+    "dist/handlers.js:702#0",
+    "dist/handlers.js:702#1",
+    "dist/handlers.js:702#2",
+    "dist/handlers.js:702#3",
+    "dist/handlers.js:705#0",
+    "dist/handlers.js:705#1",
+    "dist/handlers.js:705#2",
+    "dist/handlers.js:705#3",
+    "dist/handlers.js:706#0",
+    "dist/handlers.js:706#1",
+    "dist/handlers.js:707#0",
+    "dist/handlers.js:707#1",
+    "dist/handlers.js:708#0",
+    "dist/handlers.js:708#1",
+    "dist/handlers.js:708#2",
+    "dist/handlers.js:710#0",
+    "dist/handlers.js:710#1",
+    "dist/handlers.js:710#2",
+    "dist/handlers.js:710#3",
+    "dist/handlers.js:710#4",
+    "dist/handlers.js:712#0",
+    "dist/handlers.js:712#1",
+    "dist/handlers.js:712#2",
+    "dist/handlers.js:714#0",
+    "dist/handlers.js:714#1",
+    "dist/handlers.js:716#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/handlers.js:686#1\",\"part\":\"query\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:686#2\",\"part\":\"searchCodebasePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:688#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:688#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:688#2\",\"part\":\"searchCodebasePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:691#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:693#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:702#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:702#1\",\"part\":\"result.relativePath\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:702#2\",\"part\":\"result.startLine\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:702#3\",\"part\":\"result.endLine\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:705#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:705#1\",\"part\":\"index + 1\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:705#2\",\"part\":\"result.language\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:705#3\",\"part\":\"codebaseInfo\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:706#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:706#1\",\"part\":\"location\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:707#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:707#1\",\"part\":\"index + 1\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:708#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:708#1\",\"part\":\"result.language\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:708#2\",\"part\":\"context\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:710#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:710#1\",\"part\":\"searchResults.length\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:710#2\",\"part\":\"query\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:710#3\",\"part\":\"searchCodebasePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:710#4\",\"part\":\"indexingStatusMessage\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:712#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:712#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:712#2\",\"part\":\"searchCodebasePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:714#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:714#1\",\"part\":\"formattedResults\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:716#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1779,
+    "output_tokens": 1328,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 2944
+   }
+  },
+  {
+   "subject": "handler lines dist/handlers.js:717-745",
+   "attempt": 0,
+   "ids": [
+    "dist/handlers.js:718#0",
+    "dist/handlers.js:732#0",
+    "dist/handlers.js:739#0",
+    "dist/handlers.js:742#0",
+    "dist/handlers.js:742#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/handlers.js:718#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:732#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:739#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:742#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:742#1\",\"part\":\"errorMessage\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1724,
+    "output_tokens": 203,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/handlers.js:748-867",
+   "attempt": 0,
+   "ids": [
+    "dist/handlers.js:751#0",
+    "dist/handlers.js:763#0",
+    "dist/handlers.js:766#0",
+    "dist/handlers.js:766#1",
+    "dist/handlers.js:766#2",
+    "dist/handlers.js:774#0",
+    "dist/handlers.js:777#0",
+    "dist/handlers.js:777#1",
+    "dist/handlers.js:786#0",
+    "dist/handlers.js:789#0",
+    "dist/handlers.js:789#1",
+    "dist/handlers.js:794#0",
+    "dist/handlers.js:794#1",
+    "dist/handlers.js:801#0",
+    "dist/handlers.js:801#1",
+    "dist/handlers.js:809#0",
+    "dist/handlers.js:809#1",
+    "dist/handlers.js:815#0",
+    "dist/handlers.js:815#1",
+    "dist/handlers.js:818#0",
+    "dist/handlers.js:818#1",
+    "dist/handlers.js:818#2",
+    "dist/handlers.js:819#0",
+    "dist/handlers.js:819#1",
+    "dist/handlers.js:820#0",
+    "dist/handlers.js:834#0",
+    "dist/handlers.js:834#1",
+    "dist/handlers.js:838#0",
+    "dist/handlers.js:838#1",
+    "dist/handlers.js:838#2",
+    "dist/handlers.js:840#0",
+    "dist/handlers.js:854#0",
+    "dist/handlers.js:861#0",
+    "dist/handlers.js:864#0",
+    "dist/handlers.js:864#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/handlers.js:751#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:763#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:766#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:766#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:766#2\",\"part\":\"codebasePath\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:774#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:777#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:777#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:786#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:789#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:789#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:794#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:794#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:801#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:801#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:809#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:809#1\",\"part\":\"waitError?.message || waitError\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:815#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:815#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:818#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:818#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:818#2\",\"part\":\"error.message\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:819#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:819#1\",\"part\":\"errorMsg\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:820#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:834#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:834#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:838#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:838#1\",\"part\":\"remainingIndexed\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:838#2\",\"part\":\"remainingIndexing\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:840#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:854#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:861#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:864#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:864#1\",\"part\":\"errorMessage\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 3745,
+    "output_tokens": 1404,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/handlers.js:870-973",
+   "attempt": 0,
+   "ids": [
+    "dist/handlers.js:877#0",
+    "dist/handlers.js:880#0",
+    "dist/handlers.js:880#1",
+    "dist/handlers.js:880#2",
+    "dist/handlers.js:888#0",
+    "dist/handlers.js:891#0",
+    "dist/handlers.js:891#1",
+    "dist/handlers.js:906#0",
+    "dist/handlers.js:906#1",
+    "dist/handlers.js:907#0",
+    "dist/handlers.js:907#1",
+    "dist/handlers.js:907#2",
+    "dist/handlers.js:908#0",
+    "dist/handlers.js:908#1",
+    "dist/handlers.js:909#0",
+    "dist/handlers.js:909#1",
+    "dist/handlers.js:912#0",
+    "dist/handlers.js:912#1",
+    "dist/handlers.js:919#0",
+    "dist/handlers.js:919#1",
+    "dist/handlers.js:919#2",
+    "dist/handlers.js:922#0",
+    "dist/handlers.js:925#0",
+    "dist/handlers.js:927#0",
+    "dist/handlers.js:927#1",
+    "dist/handlers.js:930#0",
+    "dist/handlers.js:930#1",
+    "dist/handlers.js:936#0",
+    "dist/handlers.js:936#1",
+    "dist/handlers.js:937#0",
+    "dist/handlers.js:937#1",
+    "dist/handlers.js:939#0",
+    "dist/handlers.js:939#1",
+    "dist/handlers.js:941#0",
+    "dist/handlers.js:941#1",
+    "dist/handlers.js:942#0",
+    "dist/handlers.js:945#0",
+    "dist/handlers.js:945#1",
+    "dist/handlers.js:950#0",
+    "dist/handlers.js:950#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/handlers.js:877#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:880#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:880#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:880#2\",\"part\":\"codebasePath\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:888#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:891#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:891#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:906#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:906#1\",\"part\":\"statusCodebasePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:907#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:907#1\",\"part\":\"indexedInfo.indexedFiles\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:907#2\",\"part\":\"indexedInfo.totalChunks\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:908#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:908#1\",\"part\":\"indexedInfo.indexStatus\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:909#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:909#1\",\"part\":\"new Date(indexedInfo.lastUpdated).toLocaleString()\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:912#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:912#1\",\"part\":\"statusCodebasePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:919#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:919#1\",\"part\":\"statusCodebasePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:919#2\",\"part\":\"progressPercentage.toFixed(1)\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:922#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:925#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:927#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:927#1\",\"part\":\"new Date(indexingInfo.lastUpdated).toLocaleString()\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:930#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:930#1\",\"part\":\"statusCodebasePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:936#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:936#1\",\"part\":\"statusCodebasePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:937#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:937#1\",\"part\":\"failedInfo.errorMessage\",\"origin\":\"resource_read\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:939#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:939#1\",\"part\":\"failedInfo.lastAttemptedPercentage.toFixed(1)\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:941#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:941#1\",\"part\":\"new Date(failedInfo.lastUpdated).toLocaleString()\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:942#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:945#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:945#1\",\"part\":\"statusCodebasePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:950#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:950#1\",\"part\":\"absolutePath\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 4258,
+    "output_tokens": 1668,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines dist/handlers.js:870-973",
+   "attempt": 0,
+   "ids": [
+    "dist/handlers.js:954#0",
+    "dist/handlers.js:954#1",
+    "dist/handlers.js:954#2",
+    "dist/handlers.js:957#0",
+    "dist/handlers.js:957#1",
+    "dist/handlers.js:957#2",
+    "dist/handlers.js:959#0",
+    "dist/handlers.js:967#0",
+    "dist/handlers.js:970#0",
+    "dist/handlers.js:970#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"dist/handlers.js:954#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:954#1\",\"part\":\"codebasePath\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"dist/handlers.js:954#2\",\"part\":\"absolutePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:957#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:957#1\",\"part\":\"absolutePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:957#2\",\"part\":\"statusCodebasePath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:959#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:967#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:970#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"dist/handlers.js:970#1\",\"part\":\"error.message || error\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 971,
+    "output_tokens": 406,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1920
+   }
+  }
+ ],
+ "final": {
+  "tools": {
+   "index_codebase": {
+    "result_contents": [
+     {
+      "part": "Error: Invalid splitter type '${requestedSplitter}'. Must be 'ast' or 'langchain'.",
+      "produced_at": "dist/handlers.js:313",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Path '${absolutePath}' does not exist. Original input: '${codebasePath}'",
+      "produced_at": "dist/handlers.js:332",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Path '${absolutePath}' is not a directory",
+      "produced_at": "dist/handlers.js:342",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Codebase '${absolutePath}' is already being indexed in the background. Please wait for completion.",
+      "produced_at": "dist/handlers.js:358",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Codebase '${absolutePath}' is already indexed. Use force=true to re-index.",
+      "produced_at": "dist/handlers.js:393",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error validating collection creation: ${validationError.message || validationError}",
+      "produced_at": "dist/handlers.js:430",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "service"
+     },
+     {
+      "part": "Started background indexing for codebase '${absolutePath}' using ${splitterType.toUpperCase()} splitter.${pathInfo}${extensionInfo}${ignoreInfo}\\n\\nIndexing is running in the background. You can search the codebase while indexing is in progress, but results may be incomplete until indexing completes.",
+      "produced_at": "dist/handlers.js:474",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "part": "Error starting indexing: ${error.message || error}",
+      "produced_at": "dist/handlers.js:485",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:313#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:313",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:313#1",
+      "part": "requestedSplitter",
+      "produced_at": "dist/handlers.js:313",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:331#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:331",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:331#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:331",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:331#2",
+      "part": "codebasePath",
+      "produced_at": "dist/handlers.js:331",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:342#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:342",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:342#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:342",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:350#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:350",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:350#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:350",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:358#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:358",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:358#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:358",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:374#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:374",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:374#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:374",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:374#2",
+      "part": "stats.totalChunks",
+      "produced_at": "dist/handlers.js:374",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:379#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:379",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:379#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:379",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:383#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:383",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:383#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:383",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:393#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:393",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:393#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:393",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:403#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:403",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:403#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:403",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:412#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:412",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:412#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:412",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:430#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:430",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:430#1",
+      "part": "validationError.message || validationError",
+      "produced_at": "dist/handlers.js:430",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "dist/handlers.js:436#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:436",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:436#1",
+      "part": "customFileExtensions.length",
+      "produced_at": "dist/handlers.js:436",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:436#2",
+      "part": "customFileExtensions.join(', ')",
+      "produced_at": "dist/handlers.js:436",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:442#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:442",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:442#1",
+      "part": "failedInfo?.errorMessage || 'Unknown error'",
+      "produced_at": "dist/handlers.js:442",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "dist/handlers.js:463#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:463",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:463#1",
+      "part": "codebasePath",
+      "produced_at": "dist/handlers.js:463",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:463#2",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:463",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:466#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:466",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:466#1",
+      "part": "customFileExtensions.length",
+      "produced_at": "dist/handlers.js:466",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:466#2",
+      "part": "customFileExtensions.join(', ')",
+      "produced_at": "dist/handlers.js:466",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:469#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:469",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:469#1",
+      "part": "customIgnorePatterns.length",
+      "produced_at": "dist/handlers.js:469",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:469#2",
+      "part": "customIgnorePatterns.join(', ')",
+      "produced_at": "dist/handlers.js:469",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:474#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:474",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:474#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:474",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:474#2",
+      "part": "splitterType.toUpperCase()",
+      "produced_at": "dist/handlers.js:474",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:474#3",
+      "part": "pathInfo",
+      "produced_at": "dist/handlers.js:474",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:474#4",
+      "part": "extensionInfo",
+      "produced_at": "dist/handlers.js:474",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:474#5",
+      "part": "ignoreInfo",
+      "produced_at": "dist/handlers.js:474",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:485#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:485",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:485#1",
+      "part": "error.message || error",
+      "produced_at": "dist/handlers.js:485",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "codebasePath, forceReindex, splitterType, customIgnorePatterns, customFileExtensions, indexOptions, controller.signal",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "local",
+      "at": "dist/handlers.js:453"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers.js:453"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/index.js:202-203",
+     "dist/handlers.js:299-488",
+     "dist/index.js:94-134"
+    ],
+    "rationale": "The `index_codebase` tool handles indexing a codebase directory. It validates the path and splitter type, checks if the codebase is already indexed or being indexed, and starts background indexing if valid. Errors are returned for invalid paths, non-directory paths, and invalid splitter types. The tool does not send data to external destinations, only interacts with local files and processes.",
+    "kind": "WRITE",
+    "destination_args": [
+     "path"
+    ],
+    "value_args": [
+     "path",
+     "force",
+     "splitter",
+     "customExtensions",
+     "ignorePatterns"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "search_code": {
+    "result_contents": [
+     {
+      "part": "Error: Path '${absolutePath}' does not exist. Original input: '${codebasePath}'",
+      "produced_at": "dist/handlers.js:580",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Path '${absolutePath}' is not a directory",
+      "produced_at": "dist/handlers.js:591",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Codebase '${absolutePath}' is not indexed. Please index it first using the index_codebase tool.",
+      "produced_at": "dist/handlers.js:626",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Invalid file extensions in extensionFilter: ${JSON.stringify(invalid)}. Use proper extensions like '.ts', '.py'.",
+      "produced_at": "dist/handlers.js:664",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Index data for '${searchCodebasePath}' has been lost (collection not found in Milvus). Please re-index using index_codebase with force=true.",
+      "produced_at": "dist/handlers.js:681",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "No results found for query: \"${query}\" in codebase '${searchCodebasePath}'",
+      "produced_at": "dist/handlers.js:686",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Found ${searchResults.length} results for query: \"${query}\" in codebase '${searchCodebasePath}'${indexingStatusMessage}\\n\\n${formattedResults}",
+      "produced_at": "dist/handlers.js:710",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "part": "Error searching code: ${errorMessage} Please check if the codebase has been indexed first.",
+      "produced_at": "dist/handlers.js:742",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "id": "dist/index.js:151#0",
+      "part": "Maximum number of results to return",
+      "produced_at": "dist/index.js:151",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:580#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:580",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:580#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:580",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:580#2",
+      "part": "codebasePath",
+      "produced_at": "dist/handlers.js:580",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:591#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:591",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:591#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:591",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:615#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:615",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:615#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:615",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:615#2",
+      "part": "stats.totalChunks",
+      "produced_at": "dist/handlers.js:615",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:626#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:626",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:626#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:626",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:636#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:636",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:636#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:636",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:647#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:647",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:647#1",
+      "part": "searchCodebasePath",
+      "produced_at": "dist/handlers.js:647",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:648#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:648",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:648#1",
+      "part": "query",
+      "produced_at": "dist/handlers.js:648",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:649#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:649",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:649#1",
+      "part": "isIndexing ? 'In Progress' : 'Completed'",
+      "produced_at": "dist/handlers.js:649",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:652#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:652",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:652#1",
+      "part": "embeddingProvider.getProvider()",
+      "produced_at": "dist/handlers.js:652",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:653#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:653",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:653#1",
+      "part": "embeddingProvider.getProvider()",
+      "produced_at": "dist/handlers.js:653",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:664#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:664",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:664#1",
+      "part": "JSON.stringify(invalid)",
+      "produced_at": "dist/handlers.js:664",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:668#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:668",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:668#1",
+      "part": "e",
+      "produced_at": "dist/handlers.js:668",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:669#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:669",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:669#1",
+      "part": "quoted",
+      "produced_at": "dist/handlers.js:669",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:673#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:673",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:673#1",
+      "part": "searchResults.length",
+      "produced_at": "dist/handlers.js:673",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:673#2",
+      "part": "embeddingProvider.getProvider()",
+      "produced_at": "dist/handlers.js:673",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:681#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:681",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:681#1",
+      "part": "searchCodebasePath",
+      "produced_at": "dist/handlers.js:681",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:686#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:686",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:686#1",
+      "part": "query",
+      "produced_at": "dist/handlers.js:686",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:686#2",
+      "part": "searchCodebasePath",
+      "produced_at": "dist/handlers.js:686",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:688#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:688",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:688#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:688",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:688#2",
+      "part": "searchCodebasePath",
+      "produced_at": "dist/handlers.js:688",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:691#0",
+      "part": "the statement",
+      "produced_at": "dist/handlers.js:691",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:702#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:702",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:702#1",
+      "part": "result.relativePath",
+      "produced_at": "dist/handlers.js:702",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers.js:702#2",
+      "part": "result.startLine",
+      "produced_at": "dist/handlers.js:702",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers.js:702#3",
+      "part": "result.endLine",
+      "produced_at": "dist/handlers.js:702",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers.js:705#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:705",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:705#1",
+      "part": "index + 1",
+      "produced_at": "dist/handlers.js:705",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:705#2",
+      "part": "result.language",
+      "produced_at": "dist/handlers.js:705",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers.js:705#3",
+      "part": "codebaseInfo",
+      "produced_at": "dist/handlers.js:705",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:706#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:706",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:706#1",
+      "part": "location",
+      "produced_at": "dist/handlers.js:706",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:707#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:707",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:707#1",
+      "part": "index + 1",
+      "produced_at": "dist/handlers.js:707",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:708#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:708",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:708#1",
+      "part": "result.language",
+      "produced_at": "dist/handlers.js:708",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers.js:708#2",
+      "part": "context",
+      "produced_at": "dist/handlers.js:708",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party",
+      "control_before_rule": "user"
+     },
+     {
+      "id": "dist/handlers.js:710#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:710",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:710#1",
+      "part": "searchResults.length",
+      "produced_at": "dist/handlers.js:710",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:710#2",
+      "part": "query",
+      "produced_at": "dist/handlers.js:710",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:710#3",
+      "part": "searchCodebasePath",
+      "produced_at": "dist/handlers.js:710",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:710#4",
+      "part": "indexingStatusMessage",
+      "produced_at": "dist/handlers.js:710",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:712#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:712",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:712#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:712",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:712#2",
+      "part": "searchCodebasePath",
+      "produced_at": "dist/handlers.js:712",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:714#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:714",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:714#1",
+      "part": "formattedResults",
+      "produced_at": "dist/handlers.js:714",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:716#0",
+      "part": "the statement",
+      "produced_at": "dist/handlers.js:716",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:742#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:742",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:742#1",
+      "part": "errorMessage",
+      "produced_at": "dist/handlers.js:742",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "searchCodebasePath, query, Math.min(resultLimit, 50), 0.3, filterExpr",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "local",
+      "at": "dist/handlers.js:672"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers.js:672"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/index.js:204-205",
+     "dist/handlers.js:567-745",
+     "dist/index.js:135-166"
+    ],
+    "rationale": "The `search_code` tool searches an indexed codebase using a natural language query. It validates the path and checks if the codebase is indexed. Errors are returned for invalid paths, non-directory paths, and unindexed codebases. The tool performs a local search and does not send data to external destinations. [received records: Error searching code: ${errorMessage} Please check if the codebase has been indexed first. taken as outside-party text] [received records: result.relativePath, result.startLine, result.endLine, result.language, result.language, context taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "path",
+     "query",
+     "limit",
+     "extensionFilter"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "clear_index": {
+    "result_contents": [
+     {
+      "part": "No codebases are currently indexed or being indexed.",
+      "produced_at": "dist/handlers.js:754",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Path '${absolutePath}' does not exist. Original input: '${codebasePath}'",
+      "produced_at": "dist/handlers.js:766",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Path '${absolutePath}' is not a directory",
+      "produced_at": "dist/handlers.js:777",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Codebase '${absolutePath}' is not indexed or being indexed.",
+      "produced_at": "dist/handlers.js:789",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Successfully cleared codebase '${absolutePath}'",
+      "produced_at": "dist/handlers.js:843",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error clearing index: ${errorMessage}",
+      "produced_at": "dist/handlers.js:864",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:766#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:766",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:766#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:766",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:766#2",
+      "part": "codebasePath",
+      "produced_at": "dist/handlers.js:766",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:777#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:777",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:777#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:777",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:789#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:789",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:789#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:789",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:794#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:794",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:794#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:794",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:801#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:801",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:801#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:801",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:809#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:809",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:809#1",
+      "part": "waitError?.message || waitError",
+      "produced_at": "dist/handlers.js:809",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "dist/handlers.js:815#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:815",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:815#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:815",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:818#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:818",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:818#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:818",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:818#2",
+      "part": "error.message",
+      "produced_at": "dist/handlers.js:818",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "dist/handlers.js:819#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:819",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:819#1",
+      "part": "errorMsg",
+      "produced_at": "dist/handlers.js:819",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "dist/handlers.js:834#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:834",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:834#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:834",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:838#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:838",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:838#1",
+      "part": "remainingIndexed",
+      "produced_at": "dist/handlers.js:838",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:838#2",
+      "part": "remainingIndexing",
+      "produced_at": "dist/handlers.js:838",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:864#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:864",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:864#1",
+      "part": "errorMessage",
+      "produced_at": "dist/handlers.js:864",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "absolutePath",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "local",
+      "at": "dist/handlers.js:814"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "dist/handlers.js:814"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/index.js:206-207",
+     "dist/handlers.js:748-867",
+     "dist/index.js:167-180"
+    ],
+    "rationale": "The `clear_index` tool clears the search index for a specified codebase. It validates the path and checks if the codebase is indexed or being indexed. Errors are returned for invalid paths, non-directory paths, and unindexed codebases. The tool interacts with local files and processes, not external destinations.",
+    "kind": "WRITE",
+    "destination_args": [
+     "path"
+    ],
+    "value_args": [
+     "path"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "get_indexing_status": {
+    "result_contents": [
+     {
+      "part": "Error: Path '${absolutePath}' does not exist. Original input: '${codebasePath}'",
+      "produced_at": "dist/handlers.js:880",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error: Path '${absolutePath}' is not a directory",
+      "produced_at": "dist/handlers.js:891",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "\u2705 Codebase '${statusCodebasePath}' is fully indexed and ready for search.\\n\ud83d\udcca Statistics: ${indexedInfo.indexedFiles} files, ${indexedInfo.totalChunks} chunks\\n\ud83d\udcc5 Status: ${indexedInfo.indexStatus}\\n\ud83d\udd50 Last updated: ${new Date(indexedInfo.lastUpdated).toLocaleString()}",
+      "produced_at": "dist/handlers.js:906",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "part": "\ud83d\udd04 Codebase '${statusCodebasePath}' is currently being indexed. Progress: ${progressPercentage.toFixed(1)}%\\n\ud83d\udd50 Last updated: ${new Date(indexingInfo.lastUpdated).toLocaleString()}",
+      "produced_at": "dist/handlers.js:919",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "part": "\u274c Codebase '${statusCodebasePath}' indexing failed.\\n\ud83d\udea8 Error: ${failedInfo.errorMessage}\\n\ud83d\udcca Failed at: ${failedInfo.lastAttemptedPercentage.toFixed(1)}% progress\\n\ud83d\udd50 Failed at: ${new Date(failedInfo.lastUpdated).toLocaleString()}\\n\ud83d\udca1 You can retry indexing by running the index_codebase command again.",
+      "produced_at": "dist/handlers.js:936",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "part": "\u274c Codebase '${absolutePath}' is not indexed. Please use the index_codebase tool to index it first.",
+      "produced_at": "dist/handlers.js:950",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Error getting indexing status: ${error.message || error}",
+      "produced_at": "dist/handlers.js:970",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:880#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:880",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:880#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:880",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:880#2",
+      "part": "codebasePath",
+      "produced_at": "dist/handlers.js:880",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:891#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:891",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:891#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:891",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:906#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:906",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:906#1",
+      "part": "statusCodebasePath",
+      "produced_at": "dist/handlers.js:906",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:907#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:907",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:907#1",
+      "part": "indexedInfo.indexedFiles",
+      "produced_at": "dist/handlers.js:907",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:907#2",
+      "part": "indexedInfo.totalChunks",
+      "produced_at": "dist/handlers.js:907",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:908#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:908",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:908#1",
+      "part": "indexedInfo.indexStatus",
+      "produced_at": "dist/handlers.js:908",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:909#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:909",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:909#1",
+      "part": "new Date(indexedInfo.lastUpdated).toLocaleString()",
+      "produced_at": "dist/handlers.js:909",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:912#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:912",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:912#1",
+      "part": "statusCodebasePath",
+      "produced_at": "dist/handlers.js:912",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:919#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:919",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:919#1",
+      "part": "statusCodebasePath",
+      "produced_at": "dist/handlers.js:919",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:919#2",
+      "part": "progressPercentage.toFixed(1)",
+      "produced_at": "dist/handlers.js:919",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:922#0",
+      "part": "the statement",
+      "produced_at": "dist/handlers.js:922",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:925#0",
+      "part": "the statement",
+      "produced_at": "dist/handlers.js:925",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:927#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:927",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:927#1",
+      "part": "new Date(indexingInfo.lastUpdated).toLocaleString()",
+      "produced_at": "dist/handlers.js:927",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:930#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:930",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:930#1",
+      "part": "statusCodebasePath",
+      "produced_at": "dist/handlers.js:930",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:936#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:936",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:936#1",
+      "part": "statusCodebasePath",
+      "produced_at": "dist/handlers.js:936",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:937#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:937",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:937#1",
+      "part": "failedInfo.errorMessage",
+      "produced_at": "dist/handlers.js:937",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:939#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:939",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:939#1",
+      "part": "failedInfo.lastAttemptedPercentage.toFixed(1)",
+      "produced_at": "dist/handlers.js:939",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:941#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:941",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:941#1",
+      "part": "new Date(failedInfo.lastUpdated).toLocaleString()",
+      "produced_at": "dist/handlers.js:941",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "dist/handlers.js:942#0",
+      "part": "the statement",
+      "produced_at": "dist/handlers.js:942",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:945#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:945",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:945#1",
+      "part": "statusCodebasePath",
+      "produced_at": "dist/handlers.js:945",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:950#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:950",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:950#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:950",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:954#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:954",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:954#1",
+      "part": "codebasePath",
+      "produced_at": "dist/handlers.js:954",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:954#2",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:954",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:957#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:957",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:957#1",
+      "part": "absolutePath",
+      "produced_at": "dist/handlers.js:957",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:957#2",
+      "part": "statusCodebasePath",
+      "produced_at": "dist/handlers.js:957",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "dist/handlers.js:970#0",
+      "part": "fixed text of the template",
+      "produced_at": "dist/handlers.js:970",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "dist/handlers.js:970#1",
+      "part": "error.message || error",
+      "produced_at": "dist/handlers.js:970",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "dist/index.js:208-209",
+     "dist/handlers.js:870-973",
+     "dist/index.js:181-194"
+    ],
+    "rationale": "The `get_indexing_status` tool retrieves the current indexing status of a codebase. It validates the path and checks the indexing status, returning detailed information about the indexing progress or errors. The tool does not send data to external destinations.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "path"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   }
+  },
+  "value_conditions": [],
+  "notes": []
+ },
+ "hashes": {
+  "rubric_sha": "191e69d289880d38",
+  "schema_sha": "0f8d7d93eb07c885",
+  "source_sha": "c916dbc0b452ce13"
+ },
+ "run": {
+  "model": "gpt-4o-2024-08-06",
+  "temperature": 0.0,
+  "seed": 0,
+  "files": [
+   "dist/index.js",
+   "README.md",
+   "dist/handlers.js",
+   "dist/snapshot.js"
+  ]
+ }
+}

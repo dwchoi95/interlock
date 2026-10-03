@@ -1,0 +1,3797 @@
+{
+ "batch": {
+  "tools": {
+   "mobile_list_available_devices": {
+    "result_contents": [
+     {
+      "part": "devices",
+      "produced_at": "lib/server.js:322",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:248-323"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:248-323"
+    ],
+    "rationale": "The tool lists available devices by calling `mobilecli.getDevices` and `androidManager.getConnectedDevicesWithDetails`, which return device information. The result is a JSON string of these devices, computed from the user's local machine state.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "mobile_login_to_cloud_provider": {
+    "result_contents": [
+     {
+      "part": "Authentication to mobilenext.ai started, please open {url} and enter the code: {code}",
+      "produced_at": "lib/server.js:356",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:324-382"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:324-382"
+    ],
+    "rationale": "The tool starts a login process with `mobilecli.spawnRemoteLogin`, which outputs a URL and code for the user to authenticate. The result is a message instructing the user to open a URL and enter a code, which is computed from the process output.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_list_remote_devices": {
+    "result_contents": [
+     {
+      "part": "result",
+      "produced_at": "lib/server.js:390",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:384-390"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:384-390"
+    ],
+    "rationale": "The tool calls `mobilecli.remoteListDevices` to fetch a list of remote devices available for reservation. The result is the response from this call, which is public information about available devices.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_allocate_remote_device": {
+    "result_contents": [
+     {
+      "part": "result",
+      "produced_at": "lib/server.js:406",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:392-406"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:392-406"
+    ],
+    "rationale": "The tool reserves a remote device by calling `mobilecli.remoteAllocate`. The result is the response from this call, which includes information about the allocated device.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_release_remote_device": {
+    "result_contents": [
+     {
+      "part": "result",
+      "produced_at": "lib/server.js:415",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:408-415"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:408-415"
+    ],
+    "rationale": "The tool releases a previously allocated remote device by calling `mobilecli.remoteRelease`. The result is the response from this call, which confirms the release of the device.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_list_apps": {
+    "result_contents": [
+     {
+      "part": "Found these apps on device: {appList}",
+      "produced_at": "lib/server.js:422",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:417-423"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:417-423"
+    ],
+    "rationale": "The tool lists installed apps on a device by calling `robot.listApps`. The result is a string listing the apps, computed from the device's state.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "mobile_get_foreground_app": {
+    "result_contents": [
+     {
+      "part": "Foreground app: {appName} ({packageName})",
+      "produced_at": "lib/server.js:432",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:424-432"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:424-432"
+    ],
+    "rationale": "The tool retrieves the app currently in the foreground by calling `robot.getForegroundApp`. The result is a string with the app's name and package, computed from the device's state.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "mobile_launch_app": {
+    "result_contents": [
+     {
+      "part": "Launched app {packageName}",
+      "produced_at": "lib/server.js:441",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:434-441"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:434-441"
+    ],
+    "rationale": "The tool launches an app on a device by calling `robot.launchApp`. The result is a confirmation message echoing the package name of the launched app.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_terminate_app": {
+    "result_contents": [
+     {
+      "part": "Terminated app ${packageName}",
+      "produced_at": "lib/server.js:449",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:448"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:443-449"
+    ],
+    "rationale": "The tool `mobile_terminate_app` uses `getRobotFromDevice` to get a robot instance and calls `terminateApp` with the `packageName` argument. The result is a string confirming the termination of the app, echoing the `packageName`. There are no outbound calls or code execution beyond the robot's method.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "packageName"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_install_app": {
+    "result_contents": [
+     {
+      "part": "Installed app from ${path}",
+      "produced_at": "lib/server.js:461",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:460"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:451-461"
+    ],
+    "rationale": "The tool `mobile_install_app` validates the file extension and existence of the app file at `path`, then uses `getRobotFromDevice` to get a robot instance and calls `installApp`. The result is a string confirming the installation, echoing the `path`. There are no outbound calls or code execution beyond the robot's method.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "path"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_uninstall_app": {
+    "result_contents": [
+     {
+      "part": "Uninstalled app ${bundle_id}",
+      "produced_at": "lib/server.js:469",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:468"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:463-469"
+    ],
+    "rationale": "The tool `mobile_uninstall_app` uses `getRobotFromDevice` to get a robot instance and calls `uninstallApp` with the `bundle_id` argument. The result is a string confirming the uninstallation, echoing the `bundle_id`. There are no outbound calls or code execution beyond the robot's method.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "bundle_id"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_get_screen_size": {
+    "result_contents": [
+     {
+      "part": "Screen size is ${screenSize.width}x${screenSize.height} pixels",
+      "produced_at": "lib/server.js:476",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:475"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:471-476"
+    ],
+    "rationale": "The tool `mobile_get_screen_size` uses `getRobotFromDevice` to get a robot instance and calls `getScreenSize`. The result is a string with the screen size, which is computed from the device's local state. There are no outbound calls or code execution beyond the robot's method.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "mobile_click_on_screen_at_coordinates": {
+    "result_contents": [
+     {
+      "part": "Clicked on element ${ref}",
+      "produced_at": "lib/server.js:490",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Clicked on screen at coordinates: ${x}, ${y}",
+      "produced_at": "lib/server.js:496",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:489"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:478-496"
+    ],
+    "rationale": "The tool `mobile_click_on_screen_at_coordinates` uses `getRobotFromDevice` to get a robot instance and calls either `tapByRef` or `tap` based on the presence of `ref`. The result is a string confirming the click, echoing either `ref` or `x, y`. There are no outbound calls or code execution beyond the robot's method.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "ref",
+     "x",
+     "y"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_double_tap_on_screen": {
+    "result_contents": [
+     {
+      "part": "Double-tapped on screen at coordinates: ${x}, ${y}",
+      "produced_at": "lib/server.js:505",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:504"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:498-505"
+    ],
+    "rationale": "The tool `mobile_double_tap_on_screen` uses `getRobotFromDevice` to get a robot instance and calls `doubleTap` with `x` and `y` coordinates. The result is a string confirming the double-tap, echoing `x` and `y`. There are no outbound calls or code execution beyond the robot's method.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "x",
+     "y"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_long_press_on_screen_at_coordinates": {
+    "result_contents": [
+     {
+      "part": "Long pressed on screen at coordinates: ${x}, ${y} for ${pressDuration}ms",
+      "produced_at": "lib/server.js:516",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:515"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:507-516"
+    ],
+    "rationale": "The tool `mobile_long_press_on_screen_at_coordinates` uses `getRobotFromDevice` to get a robot instance and calls `longPress` with `x`, `y`, and `duration`. The result is a string confirming the long press, computed from the arguments. There are no outbound calls or code execution beyond the robot's method.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "x",
+     "y",
+     "duration"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_list_elements_on_screen": {
+    "result_contents": [
+     {
+      "part": "formatted elements",
+      "produced_at": "lib/server.js:524",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:523"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:518-524"
+    ],
+    "rationale": "The tool `mobile_list_elements_on_screen` uses `getRobotFromDevice` to get a robot instance and calls `getElementsOnScreen`. The result is formatted using `formatElements`, which reads the elements from the device's local state. There are no outbound calls or code execution beyond the robot's method.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "mobile_press_button": {
+    "result_contents": [
+     {
+      "part": "Pressed the button: ",
+      "produced_at": "lib/server.js:532",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:531"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:526-533"
+    ],
+    "rationale": "The tool `mobile_press_button` uses the `robot.pressButton` method to press a button on the device. The result content is a confirmation message that echoes the `button` argument, indicating which button was pressed. There are no outbound calls or code execution beyond the device interaction.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "button"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_open_url": {
+    "result_contents": [
+     {
+      "part": "Opened URL: ",
+      "produced_at": "lib/server.js:544",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:543"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:534-545"
+    ],
+    "rationale": "The tool `mobile_open_url` uses the `robot.openUrl` method to open a URL in the device's browser. The result content is a confirmation message that echoes the `url` argument, indicating which URL was opened. There are no outbound calls or code execution beyond the device interaction.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "url"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_swipe_on_screen": {
+    "result_contents": [
+     {
+      "part": "Swiped ",
+      "produced_at": "lib/server.js:558",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": " from coordinates: ",
+      "produced_at": "lib/server.js:558",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:556"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:546-564"
+    ],
+    "rationale": "The tool `mobile_swipe_on_screen` uses the `robot.swipeFromCoordinate` method to perform a swipe action on the device. The result content includes a confirmation message that echoes the `direction`, `x`, and `y` arguments, indicating the swipe direction and starting coordinates. There are no outbound calls or code execution beyond the device interaction.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "direction",
+     "x",
+     "y",
+     "distance"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_type_keys": {
+    "result_contents": [
+     {
+      "part": "Typed text: ",
+      "produced_at": "lib/server.js:576",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:572"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:566-577"
+    ],
+    "rationale": "The tool `mobile_type_keys` uses the `robot.sendKeys` method to type text into the focused element on the device. The result content is a confirmation message that echoes the `text` argument, indicating what text was typed. There are no outbound calls or code execution beyond the device interaction.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "text"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_save_screenshot": {
+    "result_contents": [
+     {
+      "part": "Screenshot saved to: ",
+      "produced_at": "lib/server.js:595",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "screenshot",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "lib/server.js:594"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:588"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:578-596"
+    ],
+    "rationale": "The tool `mobile_save_screenshot` saves a screenshot to a file on the local system. The result content is a confirmation message that echoes the `saveTo` argument, indicating where the screenshot was saved. The screenshot data is written to a local file, which is an outbound call to the local file system.",
+    "kind": "WRITE",
+    "destination_args": [
+     "saveTo"
+    ],
+    "value_args": [
+     "saveTo"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_take_screenshot": {
+    "result_contents": [
+     {
+      "part": "mapping",
+      "produced_at": "lib/server.js:653",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "part": "screenshot64",
+      "produced_at": "lib/server.js:655",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:624"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:597-664"
+    ],
+    "rationale": "The tool `mobile_take_screenshot` captures a screenshot and returns it as base64-encoded data along with a mapping description. The result content includes the mapping and the screenshot data, both computed by the service. There are no outbound calls or code execution beyond the device interaction.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_set_orientation": {
+    "result_contents": [
+     {
+      "part": "Changed device orientation to ",
+      "produced_at": "lib/server.js:672",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:671"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:666-673"
+    ],
+    "rationale": "The tool `mobile_set_orientation` uses the `robot.setOrientation` method to change the device's screen orientation. The result content is a confirmation message that echoes the `orientation` argument, indicating the new orientation. There are no outbound calls or code execution beyond the device interaction.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "orientation"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_set_location": {
+    "result_contents": [
+     {
+      "part": "Set device location to ",
+      "produced_at": "lib/server.js:691",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:690"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:674-692"
+    ],
+    "rationale": "The tool `mobile_set_location` uses the `robot.setLocation` method to override the device's GPS location. The result content is a confirmation message that echoes the `latitude` and `longitude` arguments, indicating the new location. There are no outbound calls or code execution beyond the device interaction.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "latitude",
+     "longitude"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_clipboard": {
+    "result_contents": [
+     {
+      "part": "Clipboard updated",
+      "produced_at": "lib/server.js:705",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "clipboard content",
+      "produced_at": "lib/server.js:702",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:704"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:693-705"
+    ],
+    "rationale": "The tool reads or writes the clipboard content on the device. If `text` is provided, it sets the clipboard and returns a fixed message 'Clipboard updated'. If `text` is omitted, it reads the clipboard content, which is considered user_local and controlled by outside_party.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "text"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "mobile_get_device_logs": {
+    "result_contents": [
+     {
+      "part": "logs content",
+      "produced_at": "lib/server.js:723",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party"
+     },
+     {
+      "part": "Saved log entries to file",
+      "produced_at": "lib/server.js:727",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "logs",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "lib/server.js:725"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:707-727"
+    ],
+    "rationale": "The tool collects logs from the device. If `saveTo` is provided, it writes logs to a file and returns a message indicating the file path. Otherwise, it returns the logs directly. Logs are considered user_local and controlled by outside_party.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "saveTo"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "mobile_get_orientation": {
+    "result_contents": [
+     {
+      "part": "Current device orientation is",
+      "produced_at": "lib/server.js:734",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:729-734"
+    ],
+    "rationale": "The tool retrieves the current screen orientation of the device, which is a computed value based on the device's state, thus user_local and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "mobile_start_screen_recording": {
+    "result_contents": [
+     {
+      "part": "Screen recording started. Output will be saved to",
+      "produced_at": "lib/server.js:765",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "screen recording command",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "lib/server.js:754"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "host",
+     "at": "lib/server.js:754"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:736-765"
+    ],
+    "rationale": "The tool starts a screen recording on the device. It runs a command on the host to initiate the recording and returns a message indicating where the recording will be saved. The command execution is considered HOSTEXEC.",
+    "kind": "WRITE",
+    "destination_args": [
+     "output"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "HOSTEXEC"
+    ],
+    "injectable_output_fields": []
+   },
+   "mobile_stop_screen_recording": {
+    "result_contents": [
+     {
+      "part": "Recording stopped. File:",
+      "produced_at": "lib/server.js:793",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:767-793"
+    ],
+    "rationale": "The tool stops an active screen recording and returns a message with the file path, size, and duration. It does not send data out or execute code.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "mobile_list_crashes": {
+    "result_contents": [
+     {
+      "part": "crash reports",
+      "produced_at": "lib/server.js:800",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:795-800"
+    ],
+    "rationale": "The tool lists crash reports available on the device. The reports are considered user_local and controlled by outside_party.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "mobile_get_crash": {
+    "result_contents": [
+     {
+      "part": "crash report content",
+      "produced_at": "lib/server.js:808",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:802-808"
+    ],
+    "rationale": "The tool retrieves the full content of a crash report by its ID. The content is considered user_local and controlled by outside_party.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "mobile_batch_commands": {
+    "result_contents": [
+     {
+      "part": "batch command results",
+      "produced_at": "lib/server.js:849",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:810-849"
+    ],
+    "rationale": "The tool runs multiple tools in sequence and returns the results of each step. It does not send data out or execute code beyond the tools it calls.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "steps"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   }
+  },
+  "value_conditions": [
+   {
+    "syntax": "MOBILEMCP_DISABLE_TELEMETRY",
+    "kind": "environment variable",
+    "effect": "Disables telemetry",
+    "default": "enabled",
+    "evidence": "lib/server.js:129-130, lib/server.js:508-511"
+   },
+   {
+    "syntax": "process.env.MOBILEMCP_DISABLE_TELEMETRY",
+    "kind": "environment variable",
+    "effect": "Disables telemetry",
+    "default": "enabled",
+    "evidence": "lib/server.js:129-130"
+   },
+   {
+    "syntax": "process.env.MOBILEMCP_ALLOW_UNSAFE_URLS",
+    "kind": "environment variable",
+    "effect": "Allows opening non-standard URL schemes",
+    "default": "disabled",
+    "evidence": "lib/server.js:538-540"
+   },
+   {
+    "syntax": "process.env.MOBILEMCP_LEGACY_ROBOT",
+    "kind": "environment variable",
+    "effect": "Uses legacy robot mode",
+    "default": "disabled",
+    "evidence": "lib/server.js:208-209"
+   },
+   {
+    "syntax": "MOBILEMCP_ALLOW_UNSAFE_URLS=1",
+    "kind": "environment",
+    "effect": "Allows opening non-standard URL schemes in `mobile_open_url`.",
+    "default": "Only http:// and https:// URLs are allowed.",
+    "evidence": "lib/server.js:538-540"
+   },
+   {
+    "syntax": "MOBILEMCP_DISABLE_TELEMETRY=1",
+    "kind": "environment variable",
+    "effect": "Disables telemetry",
+    "default": "enabled",
+    "evidence": "lib/server.js:129"
+   }
+  ],
+  "notes": []
+ },
+ "methods": {},
+ "statement_calls": [
+  {
+   "subject": "handler lines lib/server.js:248-397",
+   "attempt": 0,
+   "ids": [
+    "lib/server.js:261#0",
+    "lib/server.js:276#0",
+    "lib/server.js:303#0",
+    "lib/server.js:318#0",
+    "lib/server.js:322#0",
+    "lib/server.js:330#0",
+    "lib/server.js:337#0",
+    "lib/server.js:345#0",
+    "lib/server.js:345#1",
+    "lib/server.js:349#0",
+    "lib/server.js:356#0",
+    "lib/server.js:356#1",
+    "lib/server.js:356#2",
+    "lib/server.js:359#0",
+    "lib/server.js:359#1",
+    "lib/server.js:364#0",
+    "lib/server.js:371#0",
+    "lib/server.js:371#1",
+    "lib/server.js:379#0",
+    "lib/server.js:379#1",
+    "lib/server.js:379#2",
+    "lib/server.js:390#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/server.js:261#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:276#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:303#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:318#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:322#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:330#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:337#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:345#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:345#1\",\"part\":\"output.trim() || \\\"(none)\\\"\",\"origin\":\"computed\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:349#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:356#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:356#1\",\"part\":\"urlMatch[1]\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:356#2\",\"part\":\"codeMatch[1]\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"outside_party\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:359#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:359#1\",\"part\":\"output.trim()\",\"origin\":\"computed\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:364#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:371#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:371#1\",\"part\":\"err.message\",\"origin\":\"computed\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:379#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:379#1\",\"part\":\"code\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:379#2\",\"part\":\"output.trim() || \\\"(none)\\\"\",\"origin\":\"computed\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:390#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 4267,
+    "output_tokens": 868,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/server.js:398-547",
+   "attempt": 0,
+   "ids": [
+    "lib/server.js:406#0",
+    "lib/server.js:409#0",
+    "lib/server.js:415#0",
+    "lib/server.js:422#0",
+    "lib/server.js:422#1",
+    "lib/server.js:432#0",
+    "lib/server.js:432#1",
+    "lib/server.js:432#2",
+    "lib/server.js:441#0",
+    "lib/server.js:441#1",
+    "lib/server.js:449#0",
+    "lib/server.js:449#1",
+    "lib/server.js:457#0",
+    "lib/server.js:457#1",
+    "lib/server.js:461#0",
+    "lib/server.js:461#1",
+    "lib/server.js:469#0",
+    "lib/server.js:469#1",
+    "lib/server.js:476#0",
+    "lib/server.js:476#1",
+    "lib/server.js:476#2",
+    "lib/server.js:490#0",
+    "lib/server.js:490#1",
+    "lib/server.js:496#0",
+    "lib/server.js:496#1",
+    "lib/server.js:496#2",
+    "lib/server.js:505#0",
+    "lib/server.js:505#1",
+    "lib/server.js:505#2",
+    "lib/server.js:516#0",
+    "lib/server.js:516#1",
+    "lib/server.js:516#2",
+    "lib/server.js:516#3",
+    "lib/server.js:524#0",
+    "lib/server.js:532#0",
+    "lib/server.js:532#1",
+    "lib/server.js:544#0",
+    "lib/server.js:544#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/server.js:406#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:409#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:415#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:422#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:422#1\",\"part\":\"result.map(app => `${app.appName} (${app.packageName})`).join(\\\", \\\")\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:432#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:432#1\",\"part\":\"app.appName\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:432#2\",\"part\":\"app.packageName\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:441#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:441#1\",\"part\":\"packageName\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/server.js:449#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:449#1\",\"part\":\"packageName\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/server.js:457#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:457#1\",\"part\":\"path\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/server.js:461#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:461#1\",\"part\":\"path\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/server.js:469#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:469#1\",\"part\":\"bundle_id\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/server.js:476#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:476#1\",\"part\":\"screenSize.width\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:476#2\",\"part\":\"screenSize.height\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:490#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:490#1\",\"part\":\"ref\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/server.js:496#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/server.js:496#1\",\"part\":\"x\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/server.js:496#2\",\"part\":\"y\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/server.js:505#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:505#1\",\"part\":\"x\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/server.js:505#2\",\"part\":\"y\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/server.js:516#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:516#1\",\"part\":\"x\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/server.js:516#2\",\"part\":\"y\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/server.js:516#3\",\"part\":\"pressDuration\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:524#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:532#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:532#1\",\"part\":\"button\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/server.js:544#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:544#1\",\"part\":\"url\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 6058,
+    "output_tokens": 1494,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/server.js:548-697",
+   "attempt": 0,
+   "ids": [
+    "lib/server.js:557#0",
+    "lib/server.js:557#1",
+    "lib/server.js:558#0",
+    "lib/server.js:558#1",
+    "lib/server.js:558#2",
+    "lib/server.js:558#3",
+    "lib/server.js:558#4",
+    "lib/server.js:563#0",
+    "lib/server.js:563#1",
+    "lib/server.js:576#0",
+    "lib/server.js:576#1",
+    "lib/server.js:595#0",
+    "lib/server.js:595#1",
+    "lib/server.js:602#0",
+    "lib/server.js:602#1",
+    "lib/server.js:645#0",
+    "lib/server.js:645#1",
+    "lib/server.js:645#2",
+    "lib/server.js:645#3",
+    "lib/server.js:653#0",
+    "lib/server.js:655#0",
+    "lib/server.js:656#0",
+    "lib/server.js:659#0",
+    "lib/server.js:659#1",
+    "lib/server.js:659#2",
+    "lib/server.js:660#0",
+    "lib/server.js:661#0",
+    "lib/server.js:661#1",
+    "lib/server.js:672#0",
+    "lib/server.js:672#1",
+    "lib/server.js:685#0",
+    "lib/server.js:691#0",
+    "lib/server.js:691#1",
+    "lib/server.js:691#2"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/server.js:557#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:557#1\",\"part\":\"distance\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/server.js:558#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:558#1\",\"part\":\"direction\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/server.js:558#2\",\"part\":\"distanceText\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/server.js:558#3\",\"part\":\"x\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/server.js:558#4\",\"part\":\"y\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/server.js:563#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:563#1\",\"part\":\"direction\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/server.js:576#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:576#1\",\"part\":\"text\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/server.js:595#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:595#1\",\"part\":\"saveTo\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/server.js:602#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:602#1\",\"part\":\"DEFAULT_SCREENSHOT_MAX_SIZE\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:645#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:645#1\",\"part\":\"screenshot.length\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:645#2\",\"part\":\"screenshotSize.width\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:645#3\",\"part\":\"screenshotSize.height\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:653#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:655#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:656#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:659#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:659#1\",\"part\":\"err.message\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:659#2\",\"part\":\"err.stack\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:660#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:661#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:661#1\",\"part\":\"err.message\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:672#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:672#1\",\"part\":\"orientation\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/server.js:685#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:691#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:691#1\",\"part\":\"latitude\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/server.js:691#2\",\"part\":\"longitude\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 5152,
+    "output_tokens": 1309,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/server.js:698-847",
+   "attempt": 0,
+   "ids": [
+    "lib/server.js:702#0",
+    "lib/server.js:705#0",
+    "lib/server.js:723#0",
+    "lib/server.js:727#0",
+    "lib/server.js:727#1",
+    "lib/server.js:727#2",
+    "lib/server.js:734#0",
+    "lib/server.js:734#1",
+    "lib/server.js:747#0",
+    "lib/server.js:747#1",
+    "lib/server.js:749#0",
+    "lib/server.js:749#1",
+    "lib/server.js:752#0",
+    "lib/server.js:765#0",
+    "lib/server.js:765#1",
+    "lib/server.js:772#0",
+    "lib/server.js:772#1",
+    "lib/server.js:789#0",
+    "lib/server.js:789#1",
+    "lib/server.js:789#2",
+    "lib/server.js:793#0",
+    "lib/server.js:793#1",
+    "lib/server.js:793#2",
+    "lib/server.js:793#3",
+    "lib/server.js:800#0",
+    "lib/server.js:808#0",
+    "lib/server.js:832#0",
+    "lib/server.js:832#1",
+    "lib/server.js:832#2",
+    "lib/server.js:837#0",
+    "lib/server.js:837#1",
+    "lib/server.js:837#2",
+    "lib/server.js:837#3",
+    "lib/server.js:840#0",
+    "lib/server.js:840#1",
+    "lib/server.js:840#2",
+    "lib/server.js:840#3",
+    "lib/server.js:847#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/server.js:702#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:705#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:723#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:727#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:727#1\",\"part\":\"lineCount\",\"origin\":\"computed\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:727#2\",\"part\":\"saveTo\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/server.js:734#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:734#1\",\"part\":\"orientation\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:747#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:747#1\",\"part\":\"device\",\"origin\":\"argument_echo\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/server.js:749#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/server.js:749#1\",\"part\":\"Date.now()\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/server.js:752#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/server.js:765#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:765#1\",\"part\":\"outputPath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/server.js:772#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:772#1\",\"part\":\"device\",\"origin\":\"argument_echo\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/server.js:789#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:789#1\",\"part\":\"durationSeconds\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:789#2\",\"part\":\"outputPath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:793#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:793#1\",\"part\":\"outputPath\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:793#2\",\"part\":\"fileSizeMB\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:793#3\",\"part\":\"durationSeconds\",\"origin\":\"computed\",\"scope\":\"user_local\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:800#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:808#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:832#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:832#1\",\"part\":\"i + 1\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:832#2\",\"part\":\"step.name\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/server.js:837#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:837#1\",\"part\":\"i + 1\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:837#2\",\"part\":\"step.name\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/server.js:837#3\",\"part\":\"output\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:840#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:840#1\",\"part\":\"i + 1\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:840#2\",\"part\":\"step.name\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/server.js:840#3\",\"part\":\"error.message\",\"origin\":\"resource_read\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/server.js:847#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":true,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 5465,
+    "output_tokens": 1480,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/server.js:848-850",
+   "attempt": 0,
+   "ids": [
+    "lib/server.js:849#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/server.js:849#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1355,
+    "output_tokens": 43,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  }
+ ],
+ "final": {
+  "tools": {
+   "mobile_list_available_devices": {
+    "result_contents": [
+     {
+      "part": "devices",
+      "produced_at": "lib/server.js:322",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:322#0",
+      "part": "the statement",
+      "produced_at": "lib/server.js:322",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:248-323"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:248-323"
+    ],
+    "rationale": "The tool lists available devices by calling `mobilecli.getDevices` and `androidManager.getConnectedDevicesWithDetails`, which return device information. The result is a JSON string of these devices, computed from the user's local machine state.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_login_to_cloud_provider": {
+    "result_contents": [
+     {
+      "part": "Authentication to mobilenext.ai started, please open {url} and enter the code: {code}",
+      "produced_at": "lib/server.js:356",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:345#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:345",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:345#1",
+      "part": "output.trim() || \"(none)\"",
+      "produced_at": "lib/server.js:345",
+      "origin": "computed",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "lib/server.js:356#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:356",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:356#1",
+      "part": "urlMatch[1]",
+      "produced_at": "lib/server.js:356",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "lib/server.js:356#2",
+      "part": "codeMatch[1]",
+      "produced_at": "lib/server.js:356",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "outside_party"
+     },
+     {
+      "id": "lib/server.js:359#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:359",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:359#1",
+      "part": "output.trim()",
+      "produced_at": "lib/server.js:359",
+      "origin": "computed",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "lib/server.js:371#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:371",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:371#1",
+      "part": "err.message",
+      "produced_at": "lib/server.js:371",
+      "origin": "computed",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "lib/server.js:379#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:379",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:379#1",
+      "part": "code",
+      "produced_at": "lib/server.js:379",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:379#2",
+      "part": "output.trim() || \"(none)\"",
+      "produced_at": "lib/server.js:379",
+      "origin": "computed",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:324-382"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:324-382",
+     "lib/server.js:324-383"
+    ],
+    "rationale": "The tool starts a login process with `mobilecli.spawnRemoteLogin`, which outputs a URL and code for the user to authenticate. The result is a message instructing the user to open a URL and enter a code, which is computed from the process output.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "mobile_list_remote_devices": {
+    "result_contents": [
+     {
+      "part": "result",
+      "produced_at": "lib/server.js:390",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:384-390"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:384-390",
+     "lib/server.js:384-391"
+    ],
+    "rationale": "The tool calls `mobilecli.remoteListDevices` to fetch a list of remote devices available for reservation. The result is the response from this call, which is public information about available devices.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_allocate_remote_device": {
+    "result_contents": [
+     {
+      "part": "result",
+      "produced_at": "lib/server.js:406",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:392-406"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:392-406",
+     "lib/server.js:392-407"
+    ],
+    "rationale": "The tool reserves a remote device by calling `mobilecli.remoteAllocate`. The result is the response from this call, which includes information about the allocated device.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_release_remote_device": {
+    "result_contents": [
+     {
+      "part": "result",
+      "produced_at": "lib/server.js:415",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:409#0",
+      "part": "the statement",
+      "produced_at": "lib/server.js:409",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:408-415"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:408-415",
+     "lib/server.js:408-416"
+    ],
+    "rationale": "The tool releases a previously allocated remote device by calling `mobilecli.remoteRelease`. The result is the response from this call, which confirms the release of the device.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_list_apps": {
+    "result_contents": [
+     {
+      "part": "Found these apps on device: {appList}",
+      "produced_at": "lib/server.js:422",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:422#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:422",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:422#1",
+      "part": "result.map(app => `${app.appName} (${app.packageName})`).join(\", \")",
+      "produced_at": "lib/server.js:422",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:417-423"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:417-423"
+    ],
+    "rationale": "The tool lists installed apps on a device by calling `robot.listApps`. The result is a string listing the apps, computed from the device's state.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_get_foreground_app": {
+    "result_contents": [
+     {
+      "part": "Foreground app: {appName} ({packageName})",
+      "produced_at": "lib/server.js:432",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:432#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:432",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:432#1",
+      "part": "app.appName",
+      "produced_at": "lib/server.js:432",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:432#2",
+      "part": "app.packageName",
+      "produced_at": "lib/server.js:432",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:424-432"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:424-432",
+     "lib/server.js:424-433"
+    ],
+    "rationale": "The tool retrieves the app currently in the foreground by calling `robot.getForegroundApp`. The result is a string with the app's name and package, computed from the device's state.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_launch_app": {
+    "result_contents": [
+     {
+      "part": "Launched app {packageName}",
+      "produced_at": "lib/server.js:441",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:441#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:441",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:441#1",
+      "part": "packageName",
+      "produced_at": "lib/server.js:441",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:434-441"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:434-441",
+     "lib/server.js:434-442"
+    ],
+    "rationale": "The tool launches an app on a device by calling `robot.launchApp`. The result is a confirmation message echoing the package name of the launched app.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_terminate_app": {
+    "result_contents": [
+     {
+      "part": "Terminated app ${packageName}",
+      "produced_at": "lib/server.js:449",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:449#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:449",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:449#1",
+      "part": "packageName",
+      "produced_at": "lib/server.js:449",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:448"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:443-449",
+     "lib/server.js:443-450"
+    ],
+    "rationale": "The tool `mobile_terminate_app` uses `getRobotFromDevice` to get a robot instance and calls `terminateApp` with the `packageName` argument. The result is a string confirming the termination of the app, echoing the `packageName`. There are no outbound calls or code execution beyond the robot's method.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "packageName"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_install_app": {
+    "result_contents": [
+     {
+      "part": "Installed app from ${path}",
+      "produced_at": "lib/server.js:461",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:457#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:457",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:457#1",
+      "part": "path",
+      "produced_at": "lib/server.js:457",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "lib/server.js:461#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:461",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:461#1",
+      "part": "path",
+      "produced_at": "lib/server.js:461",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:460"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:451-461",
+     "lib/server.js:451-462"
+    ],
+    "rationale": "The tool `mobile_install_app` validates the file extension and existence of the app file at `path`, then uses `getRobotFromDevice` to get a robot instance and calls `installApp`. The result is a string confirming the installation, echoing the `path`. There are no outbound calls or code execution beyond the robot's method.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "path"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_uninstall_app": {
+    "result_contents": [
+     {
+      "part": "Uninstalled app ${bundle_id}",
+      "produced_at": "lib/server.js:469",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:469#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:469",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:469#1",
+      "part": "bundle_id",
+      "produced_at": "lib/server.js:469",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:468"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:463-469",
+     "lib/server.js:463-470"
+    ],
+    "rationale": "The tool `mobile_uninstall_app` uses `getRobotFromDevice` to get a robot instance and calls `uninstallApp` with the `bundle_id` argument. The result is a string confirming the uninstallation, echoing the `bundle_id`. There are no outbound calls or code execution beyond the robot's method.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "bundle_id"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_get_screen_size": {
+    "result_contents": [
+     {
+      "part": "Screen size is ${screenSize.width}x${screenSize.height} pixels",
+      "produced_at": "lib/server.js:476",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:476#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:476",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:476#1",
+      "part": "screenSize.width",
+      "produced_at": "lib/server.js:476",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:476#2",
+      "part": "screenSize.height",
+      "produced_at": "lib/server.js:476",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:475"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:471-476",
+     "lib/server.js:471-477"
+    ],
+    "rationale": "The tool `mobile_get_screen_size` uses `getRobotFromDevice` to get a robot instance and calls `getScreenSize`. The result is a string with the screen size, which is computed from the device's local state. There are no outbound calls or code execution beyond the robot's method.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_click_on_screen_at_coordinates": {
+    "result_contents": [
+     {
+      "part": "Clicked on element ${ref}",
+      "produced_at": "lib/server.js:490",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Clicked on screen at coordinates: ${x}, ${y}",
+      "produced_at": "lib/server.js:496",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:490#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:490",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:490#1",
+      "part": "ref",
+      "produced_at": "lib/server.js:490",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:496#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:496",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:496#1",
+      "part": "x",
+      "produced_at": "lib/server.js:496",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:496#2",
+      "part": "y",
+      "produced_at": "lib/server.js:496",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:489"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:478-496",
+     "lib/server.js:478-497"
+    ],
+    "rationale": "The tool `mobile_click_on_screen_at_coordinates` uses `getRobotFromDevice` to get a robot instance and calls either `tapByRef` or `tap` based on the presence of `ref`. The result is a string confirming the click, echoing either `ref` or `x, y`. There are no outbound calls or code execution beyond the robot's method.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "ref",
+     "x",
+     "y"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_double_tap_on_screen": {
+    "result_contents": [
+     {
+      "part": "Double-tapped on screen at coordinates: ${x}, ${y}",
+      "produced_at": "lib/server.js:505",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:505#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:505",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:505#1",
+      "part": "x",
+      "produced_at": "lib/server.js:505",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:505#2",
+      "part": "y",
+      "produced_at": "lib/server.js:505",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:504"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:498-505",
+     "lib/server.js:498-506"
+    ],
+    "rationale": "The tool `mobile_double_tap_on_screen` uses `getRobotFromDevice` to get a robot instance and calls `doubleTap` with `x` and `y` coordinates. The result is a string confirming the double-tap, echoing `x` and `y`. There are no outbound calls or code execution beyond the robot's method.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "x",
+     "y"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_long_press_on_screen_at_coordinates": {
+    "result_contents": [
+     {
+      "part": "Long pressed on screen at coordinates: ${x}, ${y} for ${pressDuration}ms",
+      "produced_at": "lib/server.js:516",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:516#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:516",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:516#1",
+      "part": "x",
+      "produced_at": "lib/server.js:516",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:516#2",
+      "part": "y",
+      "produced_at": "lib/server.js:516",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:516#3",
+      "part": "pressDuration",
+      "produced_at": "lib/server.js:516",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:515"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:507-516",
+     "lib/server.js:507-517"
+    ],
+    "rationale": "The tool `mobile_long_press_on_screen_at_coordinates` uses `getRobotFromDevice` to get a robot instance and calls `longPress` with `x`, `y`, and `duration`. The result is a string confirming the long press, computed from the arguments. There are no outbound calls or code execution beyond the robot's method.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "x",
+     "y",
+     "duration"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_list_elements_on_screen": {
+    "result_contents": [
+     {
+      "part": "formatted elements",
+      "produced_at": "lib/server.js:524",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:523"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:518-524",
+     "lib/server.js:518-525"
+    ],
+    "rationale": "The tool `mobile_list_elements_on_screen` uses `getRobotFromDevice` to get a robot instance and calls `getElementsOnScreen`. The result is formatted using `formatElements`, which reads the elements from the device's local state. There are no outbound calls or code execution beyond the robot's method.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_press_button": {
+    "result_contents": [
+     {
+      "part": "Pressed the button: ",
+      "produced_at": "lib/server.js:532",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:532#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:532",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:532#1",
+      "part": "button",
+      "produced_at": "lib/server.js:532",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:531"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:526-533"
+    ],
+    "rationale": "The tool `mobile_press_button` uses the `robot.pressButton` method to press a button on the device. The result content is a confirmation message that echoes the `button` argument, indicating which button was pressed. There are no outbound calls or code execution beyond the device interaction.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "button"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_open_url": {
+    "result_contents": [
+     {
+      "part": "Opened URL: ",
+      "produced_at": "lib/server.js:544",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:544#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:544",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:544#1",
+      "part": "url",
+      "produced_at": "lib/server.js:544",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:543"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:534-545"
+    ],
+    "rationale": "The tool `mobile_open_url` uses the `robot.openUrl` method to open a URL in the device's browser. The result content is a confirmation message that echoes the `url` argument, indicating which URL was opened. There are no outbound calls or code execution beyond the device interaction. [destination_args completed: url]",
+    "kind": "WRITE",
+    "destination_args": [
+     "url"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_swipe_on_screen": {
+    "result_contents": [
+     {
+      "part": "Swiped ",
+      "produced_at": "lib/server.js:558",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": " from coordinates: ",
+      "produced_at": "lib/server.js:558",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:557#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:557",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:557#1",
+      "part": "distance",
+      "produced_at": "lib/server.js:557",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:558#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:558",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:558#1",
+      "part": "direction",
+      "produced_at": "lib/server.js:558",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:558#2",
+      "part": "distanceText",
+      "produced_at": "lib/server.js:558",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:558#3",
+      "part": "x",
+      "produced_at": "lib/server.js:558",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:558#4",
+      "part": "y",
+      "produced_at": "lib/server.js:558",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:563#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:563",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:563#1",
+      "part": "direction",
+      "produced_at": "lib/server.js:563",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:556"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:546-564",
+     "lib/server.js:546-565"
+    ],
+    "rationale": "The tool `mobile_swipe_on_screen` uses the `robot.swipeFromCoordinate` method to perform a swipe action on the device. The result content includes a confirmation message that echoes the `direction`, `x`, and `y` arguments, indicating the swipe direction and starting coordinates. There are no outbound calls or code execution beyond the device interaction.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "direction",
+     "x",
+     "y",
+     "distance"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_type_keys": {
+    "result_contents": [
+     {
+      "part": "Typed text: ",
+      "produced_at": "lib/server.js:576",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:576#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:576",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:576#1",
+      "part": "text",
+      "produced_at": "lib/server.js:576",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:572"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:566-577"
+    ],
+    "rationale": "The tool `mobile_type_keys` uses the `robot.sendKeys` method to type text into the focused element on the device. The result content is a confirmation message that echoes the `text` argument, indicating what text was typed. There are no outbound calls or code execution beyond the device interaction.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "text"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_save_screenshot": {
+    "result_contents": [
+     {
+      "part": "Screenshot saved to: ",
+      "produced_at": "lib/server.js:595",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:595#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:595",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:595#1",
+      "part": "saveTo",
+      "produced_at": "lib/server.js:595",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "screenshot",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "lib/server.js:594"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:588"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:578-596"
+    ],
+    "rationale": "The tool `mobile_save_screenshot` saves a screenshot to a file on the local system. The result content is a confirmation message that echoes the `saveTo` argument, indicating where the screenshot was saved. The screenshot data is written to a local file, which is an outbound call to the local file system.",
+    "kind": "WRITE",
+    "destination_args": [
+     "saveTo"
+    ],
+    "value_args": [
+     "saveTo"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_take_screenshot": {
+    "result_contents": [
+     {
+      "part": "mapping",
+      "produced_at": "lib/server.js:653",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "part": "screenshot64",
+      "produced_at": "lib/server.js:655",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:602#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:602",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:602#1",
+      "part": "DEFAULT_SCREENSHOT_MAX_SIZE",
+      "produced_at": "lib/server.js:602",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:645#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:645",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:645#1",
+      "part": "screenshot.length",
+      "produced_at": "lib/server.js:645",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:645#2",
+      "part": "screenshotSize.width",
+      "produced_at": "lib/server.js:645",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:645#3",
+      "part": "screenshotSize.height",
+      "produced_at": "lib/server.js:645",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:653#0",
+      "part": "the statement",
+      "produced_at": "lib/server.js:653",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:655#0",
+      "part": "the statement",
+      "produced_at": "lib/server.js:655",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:656#0",
+      "part": "the statement",
+      "produced_at": "lib/server.js:656",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:659#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:659",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:659#1",
+      "part": "err.message",
+      "produced_at": "lib/server.js:659",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "lib/server.js:659#2",
+      "part": "err.stack",
+      "produced_at": "lib/server.js:659",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "lib/server.js:661#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:661",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:661#1",
+      "part": "err.message",
+      "produced_at": "lib/server.js:661",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:624"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:597-664",
+     "lib/server.js:597-665"
+    ],
+    "rationale": "The tool `mobile_take_screenshot` captures a screenshot and returns it as base64-encoded data along with a mapping description. The result content includes the mapping and the screenshot data, both computed by the service. There are no outbound calls or code execution beyond the device interaction.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_set_orientation": {
+    "result_contents": [
+     {
+      "part": "Changed device orientation to ",
+      "produced_at": "lib/server.js:672",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:672#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:672",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:672#1",
+      "part": "orientation",
+      "produced_at": "lib/server.js:672",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:671"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:666-673"
+    ],
+    "rationale": "The tool `mobile_set_orientation` uses the `robot.setOrientation` method to change the device's screen orientation. The result content is a confirmation message that echoes the `orientation` argument, indicating the new orientation. There are no outbound calls or code execution beyond the device interaction.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "orientation"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_set_location": {
+    "result_contents": [
+     {
+      "part": "Set device location to ",
+      "produced_at": "lib/server.js:691",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:685#0",
+      "part": "the statement",
+      "produced_at": "lib/server.js:685",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:691#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:691",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:691#1",
+      "part": "latitude",
+      "produced_at": "lib/server.js:691",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:691#2",
+      "part": "longitude",
+      "produced_at": "lib/server.js:691",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:690"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:674-692"
+    ],
+    "rationale": "The tool `mobile_set_location` uses the `robot.setLocation` method to override the device's GPS location. The result content is a confirmation message that echoes the `latitude` and `longitude` arguments, indicating the new location. There are no outbound calls or code execution beyond the device interaction.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "latitude",
+     "longitude"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_clipboard": {
+    "result_contents": [
+     {
+      "part": "Clipboard updated",
+      "produced_at": "lib/server.js:705",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "clipboard content",
+      "produced_at": "lib/server.js:702",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party"
+     },
+     {
+      "id": "lib/server.js:705#0",
+      "part": "the statement",
+      "produced_at": "lib/server.js:705",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/server.js:704"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:693-705",
+     "lib/server.js:693-706"
+    ],
+    "rationale": "The tool reads or writes the clipboard content on the device. If `text` is provided, it sets the clipboard and returns a fixed message 'Clipboard updated'. If `text` is omitted, it reads the clipboard content, which is considered user_local and controlled by outside_party.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "text"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "mobile_get_device_logs": {
+    "result_contents": [
+     {
+      "part": "logs content",
+      "produced_at": "lib/server.js:723",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party"
+     },
+     {
+      "part": "Saved log entries to file",
+      "produced_at": "lib/server.js:727",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:723#0",
+      "part": "the statement",
+      "produced_at": "lib/server.js:723",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "id": "lib/server.js:727#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:727",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:727#1",
+      "part": "lineCount",
+      "produced_at": "lib/server.js:727",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:727#2",
+      "part": "saveTo",
+      "produced_at": "lib/server.js:727",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "logs",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "lib/server.js:725"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:707-727",
+     "lib/server.js:707-728"
+    ],
+    "rationale": "The tool collects logs from the device. If `saveTo` is provided, it writes logs to a file and returns a message indicating the file path. Otherwise, it returns the logs directly. Logs are considered user_local and controlled by outside_party. [received records: the statement taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "saveTo"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "mobile_get_orientation": {
+    "result_contents": [
+     {
+      "part": "Current device orientation is",
+      "produced_at": "lib/server.js:734",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:734#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:734",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:734#1",
+      "part": "orientation",
+      "produced_at": "lib/server.js:734",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:729-734",
+     "lib/server.js:729-735"
+    ],
+    "rationale": "The tool retrieves the current screen orientation of the device, which is a computed value based on the device's state, thus user_local and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_start_screen_recording": {
+    "result_contents": [
+     {
+      "part": "Screen recording started. Output will be saved to",
+      "produced_at": "lib/server.js:765",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:747#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:747",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:747#1",
+      "part": "device",
+      "produced_at": "lib/server.js:747",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "lib/server.js:749#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:749",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:749#1",
+      "part": "Date.now()",
+      "produced_at": "lib/server.js:749",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:765#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:765",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:765#1",
+      "part": "outputPath",
+      "produced_at": "lib/server.js:765",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "screen recording command",
+      "destination_class": "local_file_or_process",
+      "host_or_config": "",
+      "at": "lib/server.js:754"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "host",
+     "at": "lib/server.js:754"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:736-765",
+     "lib/server.js:736-766"
+    ],
+    "rationale": "The tool starts a screen recording on the device. It runs a command on the host to initiate the recording and returns a message indicating where the recording will be saved. The command execution is considered HOSTEXEC.",
+    "kind": "WRITE",
+    "destination_args": [
+     "output"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "HOSTEXEC",
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_stop_screen_recording": {
+    "result_contents": [
+     {
+      "part": "Recording stopped. File:",
+      "produced_at": "lib/server.js:793",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:772#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:772",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:772#1",
+      "part": "device",
+      "produced_at": "lib/server.js:772",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "lib/server.js:789#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:789",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:789#1",
+      "part": "durationSeconds",
+      "produced_at": "lib/server.js:789",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:789#2",
+      "part": "outputPath",
+      "produced_at": "lib/server.js:789",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:793#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:793",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:793#1",
+      "part": "outputPath",
+      "produced_at": "lib/server.js:793",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:793#2",
+      "part": "fileSizeMB",
+      "produced_at": "lib/server.js:793",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:793#3",
+      "part": "durationSeconds",
+      "produced_at": "lib/server.js:793",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:767-793",
+     "lib/server.js:767-794"
+    ],
+    "rationale": "The tool stops an active screen recording and returns a message with the file path, size, and duration. It does not send data out or execute code.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "mobile_list_crashes": {
+    "result_contents": [
+     {
+      "part": "crash reports",
+      "produced_at": "lib/server.js:800",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party"
+     },
+     {
+      "id": "lib/server.js:800#0",
+      "part": "the statement",
+      "produced_at": "lib/server.js:800",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:795-800",
+     "lib/server.js:795-801"
+    ],
+    "rationale": "The tool lists crash reports available on the device. The reports are considered user_local and controlled by outside_party.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "mobile_get_crash": {
+    "result_contents": [
+     {
+      "part": "crash report content",
+      "produced_at": "lib/server.js:808",
+      "origin": "resource_read",
+      "scope": "user_local",
+      "control": "outside_party"
+     },
+     {
+      "id": "lib/server.js:808#0",
+      "part": "the statement",
+      "produced_at": "lib/server.js:808",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:802-808",
+     "lib/server.js:802-809"
+    ],
+    "rationale": "The tool retrieves the full content of a crash report by its ID. The content is considered user_local and controlled by outside_party.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "mobile_batch_commands": {
+    "result_contents": [
+     {
+      "part": "batch command results",
+      "produced_at": "lib/server.js:849",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:832#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:832",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:832#1",
+      "part": "i + 1",
+      "produced_at": "lib/server.js:832",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:832#2",
+      "part": "step.name",
+      "produced_at": "lib/server.js:832",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "user"
+     },
+     {
+      "id": "lib/server.js:837#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:837",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:837#1",
+      "part": "i + 1",
+      "produced_at": "lib/server.js:837",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:837#2",
+      "part": "step.name",
+      "produced_at": "lib/server.js:837",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "user"
+     },
+     {
+      "id": "lib/server.js:837#3",
+      "part": "output",
+      "produced_at": "lib/server.js:837",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:840#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/server.js:840",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:840#1",
+      "part": "i + 1",
+      "produced_at": "lib/server.js:840",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/server.js:840#2",
+      "part": "step.name",
+      "produced_at": "lib/server.js:840",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "user"
+     },
+     {
+      "id": "lib/server.js:840#3",
+      "part": "error.message",
+      "produced_at": "lib/server.js:840",
+      "origin": "resource_read",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:847#0",
+      "part": "the statement",
+      "produced_at": "lib/server.js:847",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "lib/server.js:849#0",
+      "part": "the statement",
+      "produced_at": "lib/server.js:849",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/server.js:810-849",
+     "lib/server.js:810-850"
+    ],
+    "rationale": "The tool runs multiple tools in sequence and returns the results of each step. It does not send data out or execute code beyond the tools it calls.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "steps"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   }
+  },
+  "value_conditions": [
+   {
+    "syntax": "MOBILEMCP_DISABLE_TELEMETRY",
+    "kind": "environment variable",
+    "effect": "Disables telemetry",
+    "default": "enabled",
+    "evidence": "lib/server.js:129-130, lib/server.js:508-511"
+   },
+   {
+    "syntax": "process.env.MOBILEMCP_DISABLE_TELEMETRY",
+    "kind": "environment variable",
+    "effect": "Disables telemetry",
+    "default": "enabled",
+    "evidence": "lib/server.js:129-130"
+   },
+   {
+    "syntax": "process.env.MOBILEMCP_ALLOW_UNSAFE_URLS",
+    "kind": "environment variable",
+    "effect": "Allows opening non-standard URL schemes",
+    "default": "disabled",
+    "evidence": "lib/server.js:538-540"
+   },
+   {
+    "syntax": "process.env.MOBILEMCP_LEGACY_ROBOT",
+    "kind": "environment variable",
+    "effect": "Uses legacy robot mode",
+    "default": "disabled",
+    "evidence": "lib/server.js:208-209"
+   },
+   {
+    "syntax": "MOBILEMCP_ALLOW_UNSAFE_URLS=1",
+    "kind": "environment",
+    "effect": "Allows opening non-standard URL schemes in `mobile_open_url`.",
+    "default": "Only http:// and https:// URLs are allowed.",
+    "evidence": "lib/server.js:538-540"
+   },
+   {
+    "syntax": "MOBILEMCP_DISABLE_TELEMETRY=1",
+    "kind": "environment variable",
+    "effect": "Disables telemetry",
+    "default": "enabled",
+    "evidence": "lib/server.js:129"
+   }
+  ],
+  "notes": []
+ },
+ "hashes": {
+  "rubric_sha": "191e69d289880d38",
+  "schema_sha": "0f8d7d93eb07c885",
+  "source_sha": "ebaed5d5c7352298"
+ },
+ "run": {
+  "model": "gpt-4o-2024-08-06",
+  "temperature": 0.0,
+  "seed": 0,
+  "files": [
+   "lib/server.js",
+   "README.zh-CN.md",
+   "README.ja.md",
+   "README.md"
+  ]
+ }
+}

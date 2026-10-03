@@ -1,0 +1,790 @@
+{
+ "tools": {
+  "channels_list": {
+   "result_contents": [
+    {
+     "part": "channels",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "call"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "call"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `channels_list` returns a list of channels from the user's workspace, which is a resource read from the user's account. The control is by the service as it composes the list based on the user's workspace data. [received records: channels taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "channels_me": {
+   "result_contents": [
+    {
+     "part": "channels",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "call"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "call"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `channels_me` returns a list of channels the user is a member of, which is a resource read from the user's account. The control is by the service as it composes the list based on the user's membership data. [received records: channels taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "conversations_history": {
+   "result_contents": [
+    {
+     "part": "messages",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "call"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "call"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `conversations_history` returns messages from a specified channel, which are resource reads from the user's account. The control is by outside parties as the messages are authored by various users.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "conversations_join": {
+   "result_contents": [
+    {
+     "part": "status",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "channel_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "slack",
+     "at": "call"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "call"
+   },
+   "delivers_to_chosen_party": {
+    "value": true,
+    "argument": "channel_id",
+    "at": "call"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `conversations_join` allows the user to join a public channel, which involves sending a request to Slack's service with the channel ID. This is a WRITE operation as it changes the user's state in the workspace.",
+   "kind": "WRITE",
+   "destination_args": [
+    "channel_id"
+   ],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "conversations_leave": {
+   "result_contents": [
+    {
+     "part": "status",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "channel_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "slack",
+     "at": "call"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "call"
+   },
+   "delivers_to_chosen_party": {
+    "value": true,
+    "argument": "channel_id",
+    "at": "call"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `conversations_leave` allows the user to leave a channel, which involves sending a request to Slack's service with the channel ID. This is a WRITE operation as it changes the user's state in the workspace.",
+   "kind": "WRITE",
+   "destination_args": [
+    "channel_id"
+   ],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "conversations_mark": {
+   "result_contents": [
+    {
+     "part": "status",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "channel_id, ts",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "slack",
+     "at": "call"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "call"
+   },
+   "delivers_to_chosen_party": {
+    "value": true,
+    "argument": "channel_id",
+    "at": "call"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `conversations_mark` marks messages as read in a channel, which involves sending a request to Slack's service with the channel ID and optional timestamp. This is a WRITE operation as it changes the user's read state in the workspace.",
+   "kind": "WRITE",
+   "destination_args": [
+    "channel_id"
+   ],
+   "value_args": [
+    "ts"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "conversations_replies": {
+   "result_contents": [
+    {
+     "part": "thread_messages",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "call"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "call"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `conversations_replies` returns a thread of messages from a conversation, which are resource reads from the user's account. The control is by outside parties as the messages are authored by various users.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "conversations_search_messages": {
+   "result_contents": [
+    {
+     "part": "search_results",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "call"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "call"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `conversations_search_messages` searches messages in channels or DMs, which are resource reads from the user's account. The control is by outside parties as the messages are authored by various users.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [
+    "return"
+   ],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "conversations_unreads": {
+   "result_contents": [
+    {
+     "part": "unread messages",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool fetches unread messages from Slack channels, which are part of the user's account data.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "saved_clear_completed": {
+   "result_contents": [
+    {
+     "part": "confirmation of cleared items",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool clears completed saved items from the user's 'Save for Later' panel, which is a write operation on the user's account.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "saved_list": {
+   "result_contents": [
+    {
+     "part": "saved items",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "user"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists saved items from the user's 'Save for Later' panel, which are part of the user's account data. [received records: saved items taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "saved_update": {
+   "result_contents": [
+    {
+     "part": "confirmation of update",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool updates a saved item in the user's 'Save for Later' panel, which is a write operation on the user's account.",
+   "kind": "WRITE",
+   "destination_args": [
+    "item_id"
+   ],
+   "value_args": [
+    "date_due",
+    "mark",
+    "ts"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "usergroups_create": {
+   "result_contents": [
+    {
+     "part": "new user group ID",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool creates a new user group in the Slack workspace, which is a write operation on the user's account.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "channels",
+    "description",
+    "handle",
+    "name"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "usergroups_list": {
+   "result_contents": [
+    {
+     "part": "user groups list",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists all user groups in the Slack workspace, which are part of the user's account data. [received records: user groups list taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "usergroups_me": {
+   "result_contents": [
+    {
+     "part": "user group membership status",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages the user's membership in user groups, which is a write operation on the user's account.",
+   "kind": "WRITE",
+   "destination_args": [
+    "usergroup_id"
+   ],
+   "value_args": [
+    "action"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "usergroups_update": {
+   "result_contents": [
+    {
+     "part": "confirmation of update",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool updates a user group's metadata, which is a write operation on the user's account.",
+   "kind": "WRITE",
+   "destination_args": [
+    "usergroup_id"
+   ],
+   "value_args": [
+    "channels",
+    "description",
+    "handle",
+    "name"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "usergroups_users_update": {
+   "result_contents": [
+    {
+     "part": "confirmation message or status",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "usergroup_id, users",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "slack",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `usergroups_users_update` replaces all members of a user group with a new list, which is a WRITE operation. The destination is the Slack service, as indicated by the need to provide a `usergroup_id` and `users`. The result is a confirmation message or status, which is computed by the service.",
+   "kind": "WRITE",
+   "destination_args": [
+    "usergroup_id"
+   ],
+   "value_args": [
+    "users"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "users_search": {
+   "result_contents": [
+    {
+     "part": "user details",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    },
+    {
+     "part": "DM channel ID",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `users_search` searches for users by various identifiers and returns user details and DM channel ID if available. This is a READ operation as it retrieves information from the user's account on Slack. The result contents are user details and DM channel ID, both controlled by the service. [received records: user details, DM channel ID taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [
+    "query"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "notes": [],
+ "usage": {
+  "input_tokens": 6261,
+  "output_tokens": 2970,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 5760
+ }
+}

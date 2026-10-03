@@ -1,0 +1,2055 @@
+{
+ "batch": {
+  "tools": {
+   "channels_list": {
+    "result_contents": [
+     {
+      "part": "CSV with channel details",
+      "produced_at": "pkg/handler/conversations.go:421",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "pkg/handler/conversations.go:421"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:394-421",
+     "pkg/handler/conversations.go:421"
+    ],
+    "rationale": "The `channels_list` tool fetches a list of channels from the user's Slack workspace. The result is a CSV with channel details, which is read from the user's account. The control over the content is by the service, as it composes the CSV from the workspace data. [received records: CSV with channel details taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "channels_me": {
+    "result_contents": [
+     {
+      "part": "CSV with user's channel membership details",
+      "produced_at": "pkg/handler/conversations.go:421",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "pkg/handler/conversations.go:421"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:423-438",
+     "pkg/handler/conversations.go:421"
+    ],
+    "rationale": "The `channels_me` tool fetches a list of channels the user is a member of. The result is a CSV with channel membership details, which is read from the user's account. The control over the content is by the service, as it composes the CSV from the workspace data. [received records: CSV with user's channel membership details taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "conversations_history": {
+    "result_contents": [
+     {
+      "part": "CSV with conversation history",
+      "produced_at": "pkg/handler/conversations.go:563",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "pkg/handler/conversations.go:563"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:129-150",
+     "pkg/handler/conversations.go:563"
+    ],
+    "rationale": "The `conversations_history` tool retrieves the message history of a specified channel. The result is a CSV with conversation history, which is read from the user's account. The control over the content is by the service, as it composes the CSV from the workspace data. [received records: CSV with conversation history taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "conversations_join": {
+    "result_contents": [
+     {
+      "part": "Confirmation message",
+      "produced_at": "pkg/handler/conversations.go:1436",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Join a channel",
+      "destination_class": "configured_own_service",
+      "host_or_config": "provider.ServerTransport()",
+      "at": "pkg/handler/conversations.go:1429"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "pkg/handler/conversations.go:1436"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:380-390",
+     "pkg/handler/conversations.go:1436"
+    ],
+    "rationale": "The `conversations_join` tool allows the user to join a public channel. The result is a confirmation message, and the action is performed on the user's configured service. The control over the confirmation message is none, as it is a fixed string.",
+    "kind": "WRITE",
+    "destination_args": [
+     "channel_id"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "conversations_leave": {
+    "result_contents": [
+     {
+      "part": "Confirmation message",
+      "produced_at": "pkg/handler/conversations.go:1413",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Leave a channel",
+      "destination_class": "configured_own_service",
+      "host_or_config": "provider.ServerTransport()",
+      "at": "pkg/handler/conversations.go:1401"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "pkg/handler/conversations.go:1413"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:368-378",
+     "pkg/handler/conversations.go:1413"
+    ],
+    "rationale": "The `conversations_leave` tool allows the user to leave a channel. The result is a confirmation message, and the action is performed on the user's configured service. The control over the confirmation message is none, as it is a fixed string.",
+    "kind": "WRITE",
+    "destination_args": [
+     "channel_id"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "conversations_mark": {
+    "result_contents": [
+     {
+      "part": "Confirmation message",
+      "produced_at": "pkg/handler/conversations.go:1385",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Mark a channel as read",
+      "destination_class": "configured_own_service",
+      "host_or_config": "provider.ServerTransport()",
+      "at": "pkg/handler/conversations.go:1375"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "pkg/handler/conversations.go:1385"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:353-366",
+     "pkg/handler/conversations.go:1385"
+    ],
+    "rationale": "The `conversations_mark` tool marks a channel or DM as read. The result is a confirmation message, and the action is performed on the user's configured service. The control over the confirmation message is none, as it is a fixed string.",
+    "kind": "WRITE",
+    "destination_args": [
+     "channel_id"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": false,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "conversations_replies": {
+    "result_contents": [
+     {
+      "part": "CSV with thread replies",
+      "produced_at": "pkg/handler/conversations.go:601",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "pkg/handler/conversations.go:601"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:152-177",
+     "pkg/handler/conversations.go:601"
+    ],
+    "rationale": "The `conversations_replies` tool retrieves a thread of messages posted to a conversation. The result is a CSV with thread replies, which is read from the user's account. The control over the content is by the service, as it composes the CSV from the workspace data. [received records: CSV with thread replies taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "conversations_search_messages": {
+    "result_contents": [
+     {
+      "part": "CSV with search results",
+      "produced_at": "pkg/handler/conversations.go:638",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "pkg/handler/conversations.go:638"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:254-300",
+     "pkg/handler/conversations.go:638"
+    ],
+    "rationale": "The `conversations_search_messages` tool searches messages in a conversation using filters. The result is a CSV with search results, which is read from the user's account. The control over the content is by the service, as it composes the CSV from the workspace data. [received records: CSV with search results taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   },
+   "conversations_unreads": {
+    "result_contents": [
+     {
+      "part": "CSV with unread messages or channel summary",
+      "produced_at": "pkg/handler/conversations.go:927",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "unread messages or channel summary",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:910"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:320-350",
+     "pkg/handler/conversations.go:657-927"
+    ],
+    "rationale": "The tool fetches unread messages across channels using Slack's API. It returns a CSV with either the unread messages or a summary of channels with unreads. The data is fetched from the user's Slack account, making the scope user_account. The control is service as the server processes the data.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "saved_clear_completed": {
+    "result_contents": [
+     {
+      "part": "Confirmation message",
+      "produced_at": "pkg/handler/conversations.go:590",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Clear completed saved items",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:590"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:585-590"
+    ],
+    "rationale": "The tool clears all completed saved items from the 'Save for Later' panel. It sends a request to the user's Slack account to perform this action. The result is a confirmation message indicating the operation's success.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "saved_list": {
+    "result_contents": [
+     {
+      "part": "CSV with saved items",
+      "produced_at": "pkg/handler/conversations.go:561",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "List saved items",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:561"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:540-561"
+    ],
+    "rationale": "The tool lists saved items from the user's 'Save for Later' panel. It fetches this data from the user's Slack account and returns it as a CSV. The scope is user_account as it involves the user's saved items.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "saved_update": {
+    "result_contents": [
+     {
+      "part": "Confirmation message",
+      "produced_at": "pkg/handler/conversations.go:582",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Update saved item",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:582"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:563-582"
+    ],
+    "rationale": "The tool updates a saved item by marking it as completed or setting a due date. It sends a request to the user's Slack account to perform this update. The result is a confirmation message indicating the operation's success.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "usergroups_create": {
+    "result_contents": [
+     {
+      "part": "JSON with created group details",
+      "produced_at": "pkg/handler/conversations.go:494",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Create user group",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:494"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:476-494"
+    ],
+    "rationale": "The tool creates a new user group in the Slack workspace. It sends a request to the user's Slack account to create the group and returns the details of the created group as JSON. The scope is user_account as it involves the user's workspace.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "usergroups_list": {
+    "result_contents": [
+     {
+      "part": "CSV with user groups",
+      "produced_at": "pkg/handler/conversations.go:459",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "List user groups",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:459"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:442-459"
+    ],
+    "rationale": "The tool lists all user groups in the Slack workspace. It fetches this data from the user's Slack account and returns it as a CSV. The scope is user_account as it involves the user's workspace.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "usergroups_me": {
+    "result_contents": [
+     {
+      "part": "CSV or JSON with user group membership details",
+      "produced_at": "pkg/handler/conversations.go:473",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Manage user group membership",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:473"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:462-473"
+    ],
+    "rationale": "The tool manages the user's membership in user groups. It sends a request to the user's Slack account to perform actions like listing, joining, or leaving groups. The result is either a CSV or JSON with the membership details.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "usergroups_update": {
+    "result_contents": [
+     {
+      "part": "JSON with updated group details",
+      "produced_at": "pkg/handler/conversations.go:518",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Update user group metadata",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:518"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:497-518"
+    ],
+    "rationale": "The tool updates a user group's metadata in the Slack workspace. It sends a request to the user's Slack account to update the group and returns the updated details as JSON. The scope is user_account as it involves the user's workspace.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "usergroups_users_update": {
+    "result_contents": [
+     {
+      "part": "{\"usergroup_id\":\"%s\",\"users\":\"%s\"}",
+      "produced_at": "pkg/handler/conversations.go:534",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "usergroup_id, users",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:534"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:521-535",
+     "pkg/handler/conversations.go:521-534"
+    ],
+    "rationale": "The `usergroups_users_update` tool updates the members of a user group by replacing the current list with a new one. The tool requires `usergroup_id` and `users` as inputs, which are echoed back in the result. The update is performed by calling the Slack API with these parameters, which is a configured service call. There is no code execution or delivery to a chosen party.",
+    "kind": "WRITE",
+    "destination_args": [
+     "usergroup_id",
+     "users"
+    ],
+    "value_args": [
+     "usergroup_id",
+     "users"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": []
+   },
+   "users_search": {
+    "result_contents": [
+     {
+      "part": "CSV with fields: UserID, UserName, RealName, DisplayName, Email, Title, DMChannelID",
+      "produced_at": "pkg/handler/conversations.go:421",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "query, limit",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:378"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:302-316",
+     "pkg/handler/conversations.go:359-421"
+    ],
+    "rationale": "The `users_search` tool searches for users based on a query and returns a CSV with user details. The search is performed by calling the Slack API with the query and limit parameters, which is a configured service call. The result is a CSV of user details, which is read from the user's account. There is no code execution or delivery to a chosen party. [received records: CSV with fields: UserID, UserName, RealName, DisplayName, Email, Title, DMChannelID taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "query",
+     "limit"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ]
+   }
+  },
+  "value_conditions": [
+   {
+    "syntax": "SLACK_MCP_MARK_TOOL",
+    "kind": "environment variable",
+    "effect": "Enables the conversations_mark tool when set to 'true' or '1'.",
+    "default": "false",
+    "evidence": "pkg/handler/conversations.go:1953-1967"
+   },
+   {
+    "syntax": "!provider.IsBotToken()",
+    "kind": "flag",
+    "effect": "conversations_unreads tool is not available with bot tokens",
+    "default": "tool is available",
+    "evidence": "pkg/server/server.go:320-350"
+   },
+   {
+    "syntax": "!provider.IsBotToken() && !provider.IsOAuth()",
+    "kind": "flag",
+    "effect": "saved_list, saved_update, and saved_clear_completed tools are not available with bot or OAuth tokens",
+    "default": "tools are available",
+    "evidence": "pkg/server/server.go:540-591"
+   },
+   {
+    "syntax": "SLACK_MCP_ENABLED_TOOLS",
+    "kind": "environment variable",
+    "effect": "Determines which tools are registered by default.",
+    "default": "nil",
+    "evidence": "docs/03-configuration-and-usage.md:290"
+   }
+  ],
+  "notes": []
+ },
+ "methods": {},
+ "statement_calls": [
+  {
+   "subject": "handler lines pkg/server/server.go:254-300",
+   "attempt": 0,
+   "ids": [
+    "pkg/server/server.go:259#0",
+    "pkg/server/server.go:294#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"pkg/server/server.go:259#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"pkg/server/server.go:294#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2282,
+    "output_tokens": 82,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines pkg/server/server.go:302-316",
+   "attempt": 0,
+   "ids": [
+    "pkg/server/server.go:313#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"pkg/server/server.go:313#0\",\"part\":\"Maximum number of results to return (1-100). Default is 10.\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1509,
+    "output_tokens": 57,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines pkg/server/server.go:394-421",
+   "attempt": 0,
+   "ids": [
+    "pkg/server/server.go:408#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"pkg/server/server.go:408#0\",\"part\":\"The maximum number of items to return. Must be an integer between 1 and 1000 (maximum 999).\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1751,
+    "output_tokens": 66,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines pkg/server/server.go:423-438",
+   "attempt": 0,
+   "ids": [
+    "pkg/server/server.go:433#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"pkg/server/server.go:433#0\",\"part\":\"Maximum number of items to return (1-999).\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1500,
+    "output_tokens": 53,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines pkg/server/server.go:540-561",
+   "attempt": 0,
+   "ids": [
+    "pkg/server/server.go:550#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"pkg/server/server.go:550#0\",\"part\":\"Maximum number of items to return. Auto-paginates. Default is 50.\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1601,
+    "output_tokens": 58,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines pkg/handler/conversations.go:359-421",
+   "attempt": 0,
+   "ids": [
+    "pkg/handler/conversations.go:364#0",
+    "pkg/handler/conversations.go:370#0",
+    "pkg/handler/conversations.go:381#0",
+    "pkg/handler/conversations.go:412#0",
+    "pkg/handler/conversations.go:418#0",
+    "pkg/handler/conversations.go:421#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"pkg/handler/conversations.go:364#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"pkg/handler/conversations.go:370#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"pkg/handler/conversations.go:381#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"pkg/handler/conversations.go:412#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"pkg/handler/conversations.go:418#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"pkg/handler/conversations.go:421#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 2034,
+    "output_tokens": 251,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines pkg/handler/conversations.go:521-534",
+   "attempt": 0,
+   "ids": [
+    "pkg/handler/conversations.go:522#0",
+    "pkg/handler/conversations.go:532#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"pkg/handler/conversations.go:522#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"pkg/handler/conversations.go:532#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1442,
+    "output_tokens": 88,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines pkg/handler/conversations.go:563-563",
+   "attempt": 0,
+   "ids": [
+    "pkg/handler/conversations.go:563#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"pkg/handler/conversations.go:563#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1267,
+    "output_tokens": 47,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines pkg/handler/conversations.go:601-601",
+   "attempt": 0,
+   "ids": [
+    "pkg/handler/conversations.go:601#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"pkg/handler/conversations.go:601#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1267,
+    "output_tokens": 47,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines pkg/handler/conversations.go:638-638",
+   "attempt": 0,
+   "ids": [
+    "pkg/handler/conversations.go:638#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"pkg/handler/conversations.go:638#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1267,
+    "output_tokens": 47,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines pkg/handler/conversations.go:657-806",
+   "attempt": 0,
+   "ids": [
+    "pkg/handler/conversations.go:681#0",
+    "pkg/handler/conversations.go:687#0",
+    "pkg/handler/conversations.go:693#0",
+    "pkg/handler/conversations.go:696#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"pkg/handler/conversations.go:681#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"pkg/handler/conversations.go:687#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"pkg/handler/conversations.go:693#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"pkg/handler/conversations.go:696#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2935,
+    "output_tokens": 168,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines pkg/handler/conversations.go:807-927",
+   "attempt": 0,
+   "ids": [
+    "pkg/handler/conversations.go:895#0",
+    "pkg/handler/conversations.go:927#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"pkg/handler/conversations.go:895#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"pkg/handler/conversations.go:927#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2568,
+    "output_tokens": 86,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines pkg/handler/conversations.go:1385-1385",
+   "attempt": 0,
+   "ids": [
+    "pkg/handler/conversations.go:1385#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"pkg/handler/conversations.go:1385#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1311,
+    "output_tokens": 47,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines pkg/handler/conversations.go:1413-1413",
+   "attempt": 0,
+   "ids": [
+    "pkg/handler/conversations.go:1413#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"pkg/handler/conversations.go:1413#0\",\"part\":\"Successfully left \",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"pkg/handler/conversations.go:1413#0\",\"part\":\"%s\",\"origin\":\"argument_echo\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 1297,
+    "output_tokens": 90,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines pkg/handler/conversations.go:1436-1436",
+   "attempt": 0,
+   "ids": [
+    "pkg/handler/conversations.go:1436#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"pkg/handler/conversations.go:1436#0\",\"part\":\"the statement\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 1297,
+    "output_tokens": 48,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  }
+ ],
+ "final": {
+  "tools": {
+   "channels_list": {
+    "result_contents": [
+     {
+      "part": "CSV with channel details",
+      "produced_at": "pkg/handler/conversations.go:421",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "id": "pkg/server/server.go:408#0",
+      "part": "The maximum number of items to return. Must be an integer between 1 and 1000 (maximum 999).",
+      "produced_at": "pkg/server/server.go:408",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "pkg/handler/conversations.go:421#0",
+      "part": "the statement",
+      "produced_at": "pkg/handler/conversations.go:421",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "pkg/handler/conversations.go:421"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:394-421",
+     "pkg/handler/conversations.go:421"
+    ],
+    "rationale": "The `channels_list` tool fetches a list of channels from the user's Slack workspace. The result is a CSV with channel details, which is read from the user's account. The control over the content is by the service, as it composes the CSV from the workspace data. [received records: CSV with channel details taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "channels_me": {
+    "result_contents": [
+     {
+      "part": "CSV with user's channel membership details",
+      "produced_at": "pkg/handler/conversations.go:421",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "id": "pkg/server/server.go:433#0",
+      "part": "Maximum number of items to return (1-999).",
+      "produced_at": "pkg/server/server.go:433",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "pkg/handler/conversations.go:421#0",
+      "part": "the statement",
+      "produced_at": "pkg/handler/conversations.go:421",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "pkg/handler/conversations.go:421"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:423-438",
+     "pkg/handler/conversations.go:421"
+    ],
+    "rationale": "The `channels_me` tool fetches a list of channels the user is a member of. The result is a CSV with channel membership details, which is read from the user's account. The control over the content is by the service, as it composes the CSV from the workspace data. [received records: CSV with user's channel membership details taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "conversations_history": {
+    "result_contents": [
+     {
+      "part": "CSV with conversation history",
+      "produced_at": "pkg/handler/conversations.go:563",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "pkg/handler/conversations.go:563"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:129-150",
+     "pkg/handler/conversations.go:563"
+    ],
+    "rationale": "The `conversations_history` tool retrieves the message history of a specified channel. The result is a CSV with conversation history, which is read from the user's account. The control over the content is by the service, as it composes the CSV from the workspace data. [received records: CSV with conversation history taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "conversations_join": {
+    "result_contents": [
+     {
+      "part": "Confirmation message",
+      "produced_at": "pkg/handler/conversations.go:1436",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "pkg/handler/conversations.go:1436#0",
+      "part": "the statement",
+      "produced_at": "pkg/handler/conversations.go:1436",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Join a channel",
+      "destination_class": "configured_own_service",
+      "host_or_config": "provider.ServerTransport()",
+      "at": "pkg/handler/conversations.go:1429"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "pkg/handler/conversations.go:1436"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:380-390",
+     "pkg/handler/conversations.go:1436"
+    ],
+    "rationale": "The `conversations_join` tool allows the user to join a public channel. The result is a confirmation message, and the action is performed on the user's configured service. The control over the confirmation message is none, as it is a fixed string.",
+    "kind": "WRITE",
+    "destination_args": [
+     "channel_id"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "conversations_leave": {
+    "result_contents": [
+     {
+      "part": "Confirmation message",
+      "produced_at": "pkg/handler/conversations.go:1413",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "pkg/handler/conversations.go:1413#0",
+      "part": "Successfully left",
+      "produced_at": "pkg/handler/conversations.go:1413",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Leave a channel",
+      "destination_class": "configured_own_service",
+      "host_or_config": "provider.ServerTransport()",
+      "at": "pkg/handler/conversations.go:1401"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "pkg/handler/conversations.go:1413"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:368-378",
+     "pkg/handler/conversations.go:1413"
+    ],
+    "rationale": "The `conversations_leave` tool allows the user to leave a channel. The result is a confirmation message, and the action is performed on the user's configured service. The control over the confirmation message is none, as it is a fixed string.",
+    "kind": "WRITE",
+    "destination_args": [
+     "channel_id"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "conversations_mark": {
+    "result_contents": [
+     {
+      "part": "Confirmation message",
+      "produced_at": "pkg/handler/conversations.go:1385",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "pkg/handler/conversations.go:1385#0",
+      "part": "the statement",
+      "produced_at": "pkg/handler/conversations.go:1385",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Mark a channel as read",
+      "destination_class": "configured_own_service",
+      "host_or_config": "provider.ServerTransport()",
+      "at": "pkg/handler/conversations.go:1375"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "pkg/handler/conversations.go:1385"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:353-366",
+     "pkg/handler/conversations.go:1385"
+    ],
+    "rationale": "The `conversations_mark` tool marks a channel or DM as read. The result is a confirmation message, and the action is performed on the user's configured service. The control over the confirmation message is none, as it is a fixed string.",
+    "kind": "WRITE",
+    "destination_args": [
+     "channel_id"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": false,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "conversations_replies": {
+    "result_contents": [
+     {
+      "part": "CSV with thread replies",
+      "produced_at": "pkg/handler/conversations.go:601",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "pkg/handler/conversations.go:601"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:152-177",
+     "pkg/handler/conversations.go:601"
+    ],
+    "rationale": "The `conversations_replies` tool retrieves a thread of messages posted to a conversation. The result is a CSV with thread replies, which is read from the user's account. The control over the content is by the service, as it composes the CSV from the workspace data. [received records: CSV with thread replies taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "conversations_search_messages": {
+    "result_contents": [
+     {
+      "part": "CSV with search results",
+      "produced_at": "pkg/handler/conversations.go:638",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "id": "pkg/server/server.go:259#0",
+      "part": "the statement",
+      "produced_at": "pkg/server/server.go:259",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "pkg/server/server.go:294#0",
+      "part": "the statement",
+      "produced_at": "pkg/server/server.go:294",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "pkg/handler/conversations.go:638"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:254-300",
+     "pkg/handler/conversations.go:638"
+    ],
+    "rationale": "The `conversations_search_messages` tool searches messages in a conversation using filters. The result is a CSV with search results, which is read from the user's account. The control over the content is by the service, as it composes the CSV from the workspace data. [received records: CSV with search results taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   },
+   "conversations_unreads": {
+    "result_contents": [
+     {
+      "part": "CSV with unread messages or channel summary",
+      "produced_at": "pkg/handler/conversations.go:927",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "pkg/handler/conversations.go:681#0",
+      "part": "the statement",
+      "produced_at": "pkg/handler/conversations.go:681",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "pkg/handler/conversations.go:693#0",
+      "part": "the statement",
+      "produced_at": "pkg/handler/conversations.go:693",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "pkg/handler/conversations.go:895#0",
+      "part": "the statement",
+      "produced_at": "pkg/handler/conversations.go:895",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "pkg/handler/conversations.go:927#0",
+      "part": "the statement",
+      "produced_at": "pkg/handler/conversations.go:927",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "unread messages or channel summary",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:910"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:320-350",
+     "pkg/handler/conversations.go:657-927"
+    ],
+    "rationale": "The tool fetches unread messages across channels using Slack's API. It returns a CSV with either the unread messages or a summary of channels with unreads. The data is fetched from the user's Slack account, making the scope user_account. The control is service as the server processes the data.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "saved_clear_completed": {
+    "result_contents": [
+     {
+      "part": "Confirmation message",
+      "produced_at": "pkg/handler/conversations.go:590",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Clear completed saved items",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:590"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:585-590"
+    ],
+    "rationale": "The tool clears all completed saved items from the 'Save for Later' panel. It sends a request to the user's Slack account to perform this action. The result is a confirmation message indicating the operation's success.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "saved_list": {
+    "result_contents": [
+     {
+      "part": "CSV with saved items",
+      "produced_at": "pkg/handler/conversations.go:561",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "pkg/server/server.go:550#0",
+      "part": "Maximum number of items to return. Auto-paginates. Default is 50.",
+      "produced_at": "pkg/server/server.go:550",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "List saved items",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:561"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:540-561"
+    ],
+    "rationale": "The tool lists saved items from the user's 'Save for Later' panel. It fetches this data from the user's Slack account and returns it as a CSV. The scope is user_account as it involves the user's saved items.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "saved_update": {
+    "result_contents": [
+     {
+      "part": "Confirmation message",
+      "produced_at": "pkg/handler/conversations.go:582",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Update saved item",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:582"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:563-582"
+    ],
+    "rationale": "The tool updates a saved item by marking it as completed or setting a due date. It sends a request to the user's Slack account to perform this update. The result is a confirmation message indicating the operation's success.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "usergroups_create": {
+    "result_contents": [
+     {
+      "part": "JSON with created group details",
+      "produced_at": "pkg/handler/conversations.go:494",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Create user group",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:494"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:476-494"
+    ],
+    "rationale": "The tool creates a new user group in the Slack workspace. It sends a request to the user's Slack account to create the group and returns the details of the created group as JSON. The scope is user_account as it involves the user's workspace. [destination_args completed: channels]",
+    "kind": "WRITE",
+    "destination_args": [
+     "channels"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "usergroups_list": {
+    "result_contents": [
+     {
+      "part": "CSV with user groups",
+      "produced_at": "pkg/handler/conversations.go:459",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "List user groups",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:459"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:442-459"
+    ],
+    "rationale": "The tool lists all user groups in the Slack workspace. It fetches this data from the user's Slack account and returns it as a CSV. The scope is user_account as it involves the user's workspace.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "usergroups_me": {
+    "result_contents": [
+     {
+      "part": "CSV or JSON with user group membership details",
+      "produced_at": "pkg/handler/conversations.go:473",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Manage user group membership",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:473"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:462-473"
+    ],
+    "rationale": "The tool manages the user's membership in user groups. It sends a request to the user's Slack account to perform actions like listing, joining, or leaving groups. The result is either a CSV or JSON with the membership details.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "usergroups_update": {
+    "result_contents": [
+     {
+      "part": "JSON with updated group details",
+      "produced_at": "pkg/handler/conversations.go:518",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "Update user group metadata",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:518"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:497-518"
+    ],
+    "rationale": "The tool updates a user group's metadata in the Slack workspace. It sends a request to the user's Slack account to update the group and returns the updated details as JSON. The scope is user_account as it involves the user's workspace. [destination_args completed: channels]",
+    "kind": "WRITE",
+    "destination_args": [
+     "channels"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "usergroups_users_update": {
+    "result_contents": [
+     {
+      "part": "{\"usergroup_id\":\"%s\",\"users\":\"%s\"}",
+      "produced_at": "pkg/handler/conversations.go:534",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "usergroup_id, users",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:534"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:521-535",
+     "pkg/handler/conversations.go:521-534"
+    ],
+    "rationale": "The `usergroups_users_update` tool updates the members of a user group by replacing the current list with a new one. The tool requires `usergroup_id` and `users` as inputs, which are echoed back in the result. The update is performed by calling the Slack API with these parameters, which is a configured service call. There is no code execution or delivery to a chosen party.",
+    "kind": "WRITE",
+    "destination_args": [
+     "usergroup_id",
+     "users"
+    ],
+    "value_args": [
+     "usergroup_id",
+     "users"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "users_search": {
+    "result_contents": [
+     {
+      "part": "CSV with fields: UserID, UserName, RealName, DisplayName, Email, Title, DMChannelID",
+      "produced_at": "pkg/handler/conversations.go:421",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "outside_party",
+      "control_before_rule": "service"
+     },
+     {
+      "id": "pkg/server/server.go:313#0",
+      "part": "Maximum number of results to return (1-100). Default is 10.",
+      "produced_at": "pkg/server/server.go:313",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "pkg/handler/conversations.go:412#0",
+      "part": "the statement",
+      "produced_at": "pkg/handler/conversations.go:412",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "pkg/handler/conversations.go:421#0",
+      "part": "the statement",
+      "produced_at": "pkg/handler/conversations.go:421",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "query, limit",
+      "destination_class": "configured_own_service",
+      "host_or_config": "ch.apiProvider.Slack()",
+      "at": "pkg/handler/conversations.go:378"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "pkg/server/server.go:302-316",
+     "pkg/handler/conversations.go:359-421"
+    ],
+    "rationale": "The `users_search` tool searches for users based on a query and returns a CSV with user details. The search is performed by calling the Slack API with the query and limit parameters, which is a configured service call. The result is a CSV of user details, which is read from the user's account. There is no code execution or delivery to a chosen party. [received records: CSV with fields: UserID, UserName, RealName, DisplayName, Email, Title, DMChannelID taken as outside-party text]",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "query",
+     "limit"
+    ],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "UNTRUSTED"
+    ],
+    "injectable_output_fields": [
+     "return"
+    ],
+    "coverage_gaps": []
+   }
+  },
+  "value_conditions": [
+   {
+    "syntax": "SLACK_MCP_MARK_TOOL",
+    "kind": "environment variable",
+    "effect": "Enables the conversations_mark tool when set to 'true' or '1'.",
+    "default": "false",
+    "evidence": "pkg/handler/conversations.go:1953-1967"
+   },
+   {
+    "syntax": "!provider.IsBotToken()",
+    "kind": "flag",
+    "effect": "conversations_unreads tool is not available with bot tokens",
+    "default": "tool is available",
+    "evidence": "pkg/server/server.go:320-350"
+   },
+   {
+    "syntax": "!provider.IsBotToken() && !provider.IsOAuth()",
+    "kind": "flag",
+    "effect": "saved_list, saved_update, and saved_clear_completed tools are not available with bot or OAuth tokens",
+    "default": "tools are available",
+    "evidence": "pkg/server/server.go:540-591"
+   },
+   {
+    "syntax": "SLACK_MCP_ENABLED_TOOLS",
+    "kind": "environment variable",
+    "effect": "Determines which tools are registered by default.",
+    "default": "nil",
+    "evidence": "docs/03-configuration-and-usage.md:290"
+   }
+  ],
+  "notes": []
+ },
+ "hashes": {
+  "rubric_sha": "191e69d289880d38",
+  "schema_sha": "0f8d7d93eb07c885",
+  "source_sha": "c703b78cfa36d57c"
+ },
+ "run": {
+  "model": "gpt-4o-2024-08-06",
+  "temperature": 0.0,
+  "seed": 0,
+  "files": [
+   "pkg/server/server.go",
+   "docs/03-configuration-and-usage.md",
+   "README.md",
+   "pkg/handler/conversations.go",
+   "docs/01-authentication-setup.md"
+  ]
+ }
+}

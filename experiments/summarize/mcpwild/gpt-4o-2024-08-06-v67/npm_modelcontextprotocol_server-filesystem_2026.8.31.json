@@ -1,0 +1,938 @@
+{
+ "kind": "npm",
+ "notes": [],
+ "package": "@modelcontextprotocol/server-filesystem",
+ "source": ".cache/sources/.views/npm_modelcontextprotocol_server-filesystem_2026.8.31_01d646830c09",
+ "tools": {
+  "create_directory": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "path"
+   ],
+   "evidence": [
+    "dist/index.js:334-352",
+    "dist/index.js:334-353"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/index.js:347",
+     "data": "args.path",
+     "destination_class": "local_file_or_process",
+     "host_or_config": ""
+    }
+   ],
+   "rationale": "The `create_directory` tool creates a directory specified by the user. The directory is created on the user's local file system, hence `local_file_or_process`. The result is a success message, which is a literal string.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "content",
+     "produced_at": "dist/index.js:350",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:348#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/index.js:348",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/index.js:348#1",
+     "origin": "argument_echo",
+     "part": "args.path",
+     "produced_at": "dist/index.js:348",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/index.js:345-352",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "directory_tree": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:438-488",
+    "dist/index.js:438-489"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool recursively reads directory entries and builds a JSON structure representing the directory tree. All operations are local and within allowed directories. [received records: JSON structure of directory tree taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "JSON structure of directory tree",
+     "produced_at": "dist/index.js:483",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:465#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/index.js:465",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/index.js:465#1",
+     "origin": "argument_echo",
+     "part": "pattern",
+     "produced_at": "dist/index.js:465",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:466#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/index.js:466",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/index.js:466#1",
+     "origin": "argument_echo",
+     "part": "pattern",
+     "produced_at": "dist/index.js:466",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/index.js:450-488",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "edit_file": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "path"
+   ],
+   "evidence": [
+    "dist/index.js:311-332",
+    "dist/index.js:311-333"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/index.js:328",
+     "data": "args.edits",
+     "destination_class": "local_file_or_process",
+     "host_or_config": ""
+    }
+   ],
+   "rationale": "The `edit_file` tool applies edits to a file specified by the user. The edits are applied to the user's local file system, hence `local_file_or_process`. The result is a diff of the changes, which is computed from the file content.",
+   "result_contents": [
+    {
+     "control": "user",
+     "origin": "computed",
+     "part": "content",
+     "produced_at": "dist/index.js:330",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/index.js:326-332",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "edits"
+   ]
+  },
+  "get_file_info": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:536-556",
+    "dist/index.js:536-557"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool retrieves metadata about a file or directory within allowed directories. All operations are local. [received records: File metadata (size, creation time, etc.) taken as outside-party text] [received records: key, value taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "File metadata (size, creation time, etc.)",
+     "produced_at": "dist/index.js:550-552",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:551#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/index.js:551",
+     "scope": "none"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "dist/index.js:551#1",
+     "origin": "resource_read",
+     "part": "key",
+     "produced_at": "dist/index.js:551",
+     "scope": "user_local"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "id": "dist/index.js:551#2",
+     "origin": "resource_read",
+     "part": "value",
+     "produced_at": "dist/index.js:551",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/index.js:547-556",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_allowed_directories": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:558-572",
+    "dist/index.js:558-573"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool returns the list of directories the server is allowed to access, which is stored in the server's state. [received records: List of allowed directories taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "List of allowed directories",
+     "produced_at": "dist/index.js:568",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:568#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/index.js:568",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/index.js:568#1",
+     "origin": "resource_read",
+     "part": "allowedDirectories.join('\\n')",
+     "produced_at": "dist/index.js:568",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/index.js:567-572",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_directory": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:354-374",
+    "dist/index.js:354-375"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `list_directory` tool lists the contents of a directory specified by the user. The listing is read from the user's local file system, hence `resource_read` and `user_local`. The control is `user` because the user specifies the directory path. [received records: content taken as outside-party text] [received records: entry.name taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "dist/index.js:372",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:369#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/index.js:369",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/index.js:369#1",
+     "origin": "computed",
+     "part": "entry.isDirectory() ? \"[DIR]\" : \"[FILE]\"",
+     "produced_at": "dist/index.js:369",
+     "scope": "user_local"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "id": "dist/index.js:369#2",
+     "origin": "resource_read",
+     "part": "entry.name",
+     "produced_at": "dist/index.js:369",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/index.js:365-374",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "list_directory_with_sizes": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:376-436",
+    "dist/index.js:376-437"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool reads directory entries and their sizes, formats them with prefixes, and computes a summary of total files, directories, and combined size. All operations are local and within allowed directories. [received records: [DIR] or [FILE] prefix with entry name, entry size taken as outside-party text] [received records: entry.name.padEnd(30) taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "[DIR] or [FILE] prefix with entry name",
+     "produced_at": "dist/index.js:421",
+     "scope": "user_local"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "entry size",
+     "produced_at": "dist/index.js:421",
+     "scope": "user_local"
+    },
+    {
+     "control": "service",
+     "origin": "computed",
+     "part": "total files, directories, and combined size summary",
+     "produced_at": "dist/index.js:426-429",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:421#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/index.js:421",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/index.js:421#1",
+     "origin": "computed",
+     "part": "entry.isDirectory ? \"[DIR]\" : \"[FILE]\"",
+     "produced_at": "dist/index.js:421",
+     "scope": "user_local"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "id": "dist/index.js:421#2",
+     "origin": "resource_read",
+     "part": "entry.name.padEnd(30)",
+     "produced_at": "dist/index.js:421",
+     "scope": "user_local"
+    },
+    {
+     "control": "service",
+     "id": "dist/index.js:421#3",
+     "origin": "computed",
+     "part": "entry.isDirectory ? \"\" : formatSize(entry.size).padStart(10)",
+     "produced_at": "dist/index.js:421",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:428#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/index.js:428",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/index.js:428#1",
+     "origin": "computed",
+     "part": "totalFiles",
+     "produced_at": "dist/index.js:428",
+     "scope": "user_local"
+    },
+    {
+     "control": "service",
+     "id": "dist/index.js:428#2",
+     "origin": "computed",
+     "part": "totalDirs",
+     "produced_at": "dist/index.js:428",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:429#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/index.js:429",
+     "scope": "none"
+    },
+    {
+     "control": "service",
+     "id": "dist/index.js:429#1",
+     "origin": "computed",
+     "part": "formatSize(totalSize)",
+     "produced_at": "dist/index.js:429",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/index.js:388-436",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "move_file": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "source",
+    "destination"
+   ],
+   "evidence": [
+    "dist/index.js:490-511",
+    "dist/index.js:490-512"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/index.js:505",
+     "data": "Move file from source to destination",
+     "destination_class": "local_file_or_process",
+     "host_or_config": ""
+    }
+   ],
+   "rationale": "The tool moves a file from a source to a destination path, both within allowed directories. It echoes the paths in a success message.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "argument_echo",
+     "part": "Success message with source and destination paths",
+     "produced_at": "dist/index.js:506",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:506#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/index.js:506",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/index.js:506#1",
+     "origin": "argument_echo",
+     "part": "args.source",
+     "produced_at": "dist/index.js:506",
+     "scope": "user_local"
+    },
+    {
+     "control": "user",
+     "id": "dist/index.js:506#2",
+     "origin": "argument_echo",
+     "part": "args.destination",
+     "produced_at": "dist/index.js:506",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/index.js:502-511",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_file": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:173-179"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `read_file` tool uses the `readTextFileHandler` which reads the file content using `readFileContent` and returns it. The content is read from the user's local file system, hence `resource_read` and `user_local`. The control is `user` because the user specifies the file path. [received records: content taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "dist/index.js:169",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/index.js:153-171",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_media_file": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:197-258"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `read_media_file` tool reads a file and returns it as a base64-encoded content block. The content is read from the user's local file system, hence `resource_read` and `user_local`. The control is `user` because the user specifies the file path. [received records: content taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "dist/index.js:255",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:199#0",
+     "origin": "literal",
+     "part": "the statement",
+     "produced_at": "dist/index.js:199",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/index.js:224-257",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_multiple_files": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:259-290"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `read_multiple_files` tool reads the contents of multiple files and returns them. The content is read from the user's local file system, hence `resource_read` and `user_local`. The control is `user` because the user specifies the file paths. [received records: content taken as outside-party text] [received records: content taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "dist/index.js:287",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:278#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/index.js:278",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/index.js:278#1",
+     "origin": "argument_echo",
+     "part": "filePath",
+     "produced_at": "dist/index.js:278",
+     "scope": "user_local"
+    },
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "id": "dist/index.js:278#2",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "dist/index.js:278",
+     "scope": "user_local"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:282#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/index.js:282",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/index.js:282#1",
+     "origin": "argument_echo",
+     "part": "filePath",
+     "produced_at": "dist/index.js:282",
+     "scope": "user_local"
+    },
+    {
+     "control": "service",
+     "id": "dist/index.js:282#2",
+     "origin": "computed",
+     "part": "errorMessage",
+     "produced_at": "dist/index.js:282",
+     "scope": "none"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/index.js:273-289",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "read_text_file": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:180-196"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The `read_text_file` tool uses the `readTextFileHandler` which reads the file content using `readFileContent` and returns it. The content is read from the user's local file system, hence `resource_read` and `user_local`. The control is `user` because the user specifies the file path. [received records: content taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "user",
+     "origin": "resource_read",
+     "part": "content",
+     "produced_at": "dist/index.js:169",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/index.js:153-171",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "search_files": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [],
+   "evidence": [
+    "dist/index.js:513-534",
+    "dist/index.js:513-535"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ],
+   "kind": "READ",
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "outbound_calls": [],
+   "rationale": "The tool searches for files matching a pattern within allowed directories and returns their full paths. All operations are local. [received records: Full paths to matching items taken as outside-party text]",
+   "result_contents": [
+    {
+     "control": "outside_party",
+     "control_before_rule": "service",
+     "origin": "resource_read",
+     "part": "Full paths to matching items",
+     "produced_at": "dist/index.js:530",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/index.js:527-534",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": []
+  },
+  "write_file": {
+   "attacker_named_fields": [],
+   "coverage_gaps": [],
+   "default_enabled": true,
+   "delivers_to_chosen_party": {
+    "argument": "",
+    "at": "",
+    "value": false
+   },
+   "destination_args": [
+    "path"
+   ],
+   "evidence": [
+    "dist/index.js:291-310"
+   ],
+   "identifier_output_fields": [],
+   "injectable_output_fields": [],
+   "kind": "WRITE",
+   "labels": [
+    "SECRET"
+   ],
+   "outbound_calls": [
+    {
+     "at": "dist/index.js:304",
+     "data": "args.content",
+     "destination_class": "local_file_or_process",
+     "host_or_config": ""
+    }
+   ],
+   "rationale": "The `write_file` tool writes content to a file specified by the user. The content is written to the user's local file system, hence `local_file_or_process`. The result is a success message, which is a literal string.",
+   "result_contents": [
+    {
+     "control": "none",
+     "origin": "literal",
+     "part": "content",
+     "produced_at": "dist/index.js:307",
+     "scope": "none"
+    },
+    {
+     "control": "none",
+     "id": "dist/index.js:305#0",
+     "origin": "literal",
+     "part": "fixed text of the template",
+     "produced_at": "dist/index.js:305",
+     "scope": "none"
+    },
+    {
+     "control": "user",
+     "id": "dist/index.js:305#1",
+     "origin": "argument_echo",
+     "part": "args.path",
+     "produced_at": "dist/index.js:305",
+     "scope": "user_local"
+    }
+   ],
+   "runs_supplied_code": {
+    "at": "dist/index.js:302-309",
+    "where": "none"
+   },
+   "undetermined": false,
+   "value_args": [
+    "content"
+   ]
+  }
+ },
+ "value_conditions": [],
+ "version": "2026.8.31"
+}

@@ -1,0 +1,5365 @@
+{
+ "tools": {
+  "start_google_auth": {
+   "result_contents": [],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool is used to manually initiate Google OAuth authentication flow. It does not produce any result contents or make outbound calls as per the description.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "search_gmail_messages": {
+   "result_contents": [
+    {
+     "part": "Message IDs and Thread IDs",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "Gmail web interface links",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches messages in a user's Gmail account and returns Message IDs, Thread IDs, and Gmail web interface links. These are computed results based on the user's account data.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "get_gmail_message_content": {
+   "result_contents": [
+    {
+     "part": "message content",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves the full content of a specific Gmail message, which includes subject, sender, recipients, and body. This content is read from the user's account and controlled by outside parties.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "get_gmail_messages_content_batch": {
+   "result_contents": [
+    {
+     "part": "messages content",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves the content of multiple Gmail messages in a batch request. The content is read from the user's account and controlled by outside parties.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "get_gmail_attachment_content": {
+   "result_contents": [
+    {
+     "part": "local file path or download URL",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool downloads an email attachment and saves it to local disk, returning a local file path or a temporary download URL. This is a computed result based on the operation performed.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "send_gmail_message": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "email content",
+     "destination_class": "configured_own_service",
+     "host_or_config": "Gmail API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": true,
+    "argument": "to",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool sends an email using the user's Gmail account, which involves sending email content to the Gmail API. The recipient is specified by the 'to' argument.",
+   "kind": "WRITE",
+   "destination_args": [
+    "to",
+    "cc",
+    "bcc"
+   ],
+   "value_args": [
+    "subject",
+    "body",
+    "attachments"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "draft_gmail_message": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "draft email content",
+     "destination_class": "configured_own_service",
+     "host_or_config": "Gmail API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool creates a draft email in the user's Gmail account, which involves sending draft email content to the Gmail API.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "subject",
+    "body",
+    "attachments"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "get_gmail_thread_content": {
+   "result_contents": [
+    {
+     "part": "thread content",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves the complete content of a Gmail conversation thread, including all messages. This content is read from the user's account and controlled by outside parties.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "get_gmail_threads_content_batch": {
+   "result_contents": [
+    {
+     "part": "thread content",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves the content of Gmail threads, which is read from the user's account. The content is controlled by outside parties as it includes emails from various senders.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "list_gmail_labels": {
+   "result_contents": [
+    {
+     "part": "label list",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "user"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists labels from the user's Gmail account, which are controlled by the user.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "manage_gmail_label": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "label management action",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Gmail API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages Gmail labels by creating, updating, or deleting them, which involves sending actions to the Gmail API.",
+   "kind": "WRITE",
+   "destination_args": [
+    "action",
+    "label_id"
+   ],
+   "value_args": [
+    "name",
+    "label_list_visibility",
+    "message_list_visibility",
+    "background_color",
+    "text_color"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_gmail_filters": {
+   "result_contents": [
+    {
+     "part": "filter list",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "user"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists Gmail filters from the user's account, which are controlled by the user.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "manage_gmail_filter": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "filter management action",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Gmail API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages Gmail filters by creating or deleting them, which involves sending actions to the Gmail API.",
+   "kind": "WRITE",
+   "destination_args": [
+    "action",
+    "filter_id"
+   ],
+   "value_args": [
+    "criteria",
+    "filter_action"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "modify_gmail_message_labels": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "label modification action",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Gmail API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool modifies labels on a Gmail message, which involves sending modification actions to the Gmail API.",
+   "kind": "WRITE",
+   "destination_args": [
+    "message_id"
+   ],
+   "value_args": [
+    "add_label_ids",
+    "remove_label_ids"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "batch_modify_gmail_message_labels": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "batch label modification action",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Gmail API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool modifies labels on multiple Gmail messages in a batch, which involves sending batch modification actions to the Gmail API.",
+   "kind": "WRITE",
+   "destination_args": [
+    "message_ids"
+   ],
+   "value_args": [
+    "add_label_ids",
+    "remove_label_ids"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "search_drive_files": {
+   "result_contents": [
+    {
+     "part": "file search results",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "user"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches for files in the user's Google Drive, returning results controlled by the user. [received records: file search results taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "get_drive_file_content": {
+   "result_contents": [
+    {
+     "part": "file content",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves the content of a specific Google Drive file by ID, supporting files in shared drives. The content is read from the user's account, and the control is outside_party as the file content can be controlled by others.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "get_drive_file_download_url": {
+   "result_contents": [
+    {
+     "part": "local file path or temporary download URL",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "none",
+     "control": "none"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "file content",
+     "destination_class": "local_file_or_process",
+     "host_or_config": "local disk",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool downloads a Google Drive file and saves it to local disk or returns a temporary download URL. The local file path or URL is computed and does not reveal user-specific information.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "list_drive_items": {
+   "result_contents": [
+    {
+     "part": "list of files/folders or shared drive containers",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists files/folders or shared drive containers, supporting shared drives. The list is read from the user's account, and the control is outside_party as the items can be controlled by others.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "create_drive_folder": {
+   "result_contents": [
+    {
+     "part": "new folder ID",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "new folder creation",
+     "destination_class": "configured_own_service",
+     "host_or_config": "Google Drive",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool creates a new folder in Google Drive, supporting creation within shared drives. The new folder ID is computed and controlled by the service.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "folder_name"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "create_drive_file": {
+   "result_contents": [
+    {
+     "part": "new file ID",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "new file creation",
+     "destination_class": "configured_own_service",
+     "host_or_config": "Google Drive",
+     "at": "description"
+    },
+    {
+     "data": "file content",
+     "destination_class": "argument_named_destination",
+     "host_or_config": "fileUrl",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool creates a new file in Google Drive, supporting creation within shared drives. The new file ID is computed and controlled by the service. If a fileUrl is provided, the content is fetched from that URL. [received records: new file ID taken as outside-party text]",
+   "kind": "WRITE",
+   "destination_args": [
+    "fileUrl"
+   ],
+   "value_args": [
+    "file_name",
+    "content",
+    "base64_content"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "import_to_google_doc": {
+   "result_contents": [
+    {
+     "part": "new Google Doc ID",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "file content",
+     "destination_class": "argument_named_destination",
+     "host_or_config": "file_url",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool imports a file into Google Docs format with automatic conversion. The new Google Doc ID is computed and controlled by the service. If a file_url is provided, the content is fetched from that URL.",
+   "kind": "WRITE",
+   "destination_args": [
+    "file_url"
+   ],
+   "value_args": [
+    "file_name",
+    "content",
+    "base64_content"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "import_to_google_slides": {
+   "result_contents": [
+    {
+     "part": "new Google Slides ID",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "presentation content",
+     "destination_class": "argument_named_destination",
+     "host_or_config": "file_url",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool imports a presentation into Google Slides format with automatic conversion. The new Google Slides ID is computed and controlled by the service. If a file_url is provided, the content is fetched from that URL.",
+   "kind": "WRITE",
+   "destination_args": [
+    "file_url"
+   ],
+   "value_args": [
+    "file_name",
+    "base64_content"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "import_to_google_sheets": {
+   "result_contents": [
+    {
+     "part": "new Google Sheets ID",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "spreadsheet content",
+     "destination_class": "argument_named_destination",
+     "host_or_config": "file_url",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool imports a spreadsheet into Google Sheets format with automatic conversion. The new Google Sheets ID is computed and controlled by the service. If a file_url is provided, the content is fetched from that URL.",
+   "kind": "WRITE",
+   "destination_args": [
+    "file_url"
+   ],
+   "value_args": [
+    "file_name",
+    "content",
+    "base64_content"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "get_drive_file_permissions": {
+   "result_contents": [
+    {
+     "part": "detailed metadata about a Google Drive file including sharing permissions, parent folder IDs, ownership, and lifecycle timestamps",
+     "produced_at": "description",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `gets detailed metadata about a Google Drive file including sharing permissions, parent folder IDs, ownership, and lifecycle timestamps`, which implies reading data from the user's Google Drive account. [received records: detailed metadata about a Google Drive file including sharing permissions, parent folder IDs, ownership, and lifecycle t taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "check_drive_file_public_access": {
+   "result_contents": [
+    {
+     "part": "whether the file has public link sharing enabled",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `checks if it has public link sharing enabled`, which implies computing a boolean value based on the file's sharing settings in the user's Google Drive account. [received records: whether the file has public link sharing enabled taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "update_drive_file": {
+   "result_contents": [
+    {
+     "part": "confirmation or status of the update operation",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `updates metadata, properties, and/or content of a Google Drive file`, which implies modifying the user's Google Drive account state.",
+   "kind": "WRITE",
+   "destination_args": [
+    "file_id"
+   ],
+   "value_args": [
+    "name",
+    "description",
+    "mime_type",
+    "add_parents",
+    "remove_parents",
+    "starred",
+    "trashed",
+    "writers_can_share",
+    "copy_requires_writer_permission",
+    "properties",
+    "content",
+    "file_path",
+    "file_url",
+    "source_format",
+    "mode"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "get_drive_shareable_link": {
+   "result_contents": [
+    {
+     "part": "the shareable link for a Google Drive file or folder",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `gets the shareable link for a Google Drive file or folder`, which implies computing a link based on the file's sharing settings in the user's Google Drive account. [received records: the shareable link for a Google Drive file or folder taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "manage_drive_access": {
+   "result_contents": [
+    {
+     "part": "confirmation or status of the access management operation",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `supports granting, batch-granting, updating, revoking permissions, and transferring file ownership`, which implies modifying the user's Google Drive account state.",
+   "kind": "WRITE",
+   "destination_args": [
+    "file_id",
+    "action"
+   ],
+   "value_args": [
+    "share_with",
+    "role",
+    "share_type",
+    "permission_id",
+    "recipients",
+    "send_notification",
+    "email_message",
+    "expiration_time",
+    "allow_file_discovery",
+    "new_owner_email",
+    "move_to_new_owners_root"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "copy_drive_file": {
+   "result_contents": [
+    {
+     "part": "confirmation or status of the copy operation",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `creates a copy of an existing Google Drive file`, which implies modifying the user's Google Drive account state by adding a new file.",
+   "kind": "WRITE",
+   "destination_args": [
+    "file_id"
+   ],
+   "value_args": [
+    "new_name",
+    "parent_folder_id"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "set_drive_file_permissions": {
+   "result_contents": [
+    {
+     "part": "confirmation or status of the permission setting operation",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `sets file-level sharing settings and controls link sharing for a Google Drive file or folder`, which implies modifying the user's Google Drive account state.",
+   "kind": "WRITE",
+   "destination_args": [
+    "file_id"
+   ],
+   "value_args": [
+    "link_sharing",
+    "writers_can_share",
+    "copy_requires_writer_permission"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_calendars": {
+   "result_contents": [
+    {
+     "part": "list of calendars accessible to the authenticated user",
+     "produced_at": "description",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `retrieves a list of calendars accessible to the authenticated user`, which implies reading data from the user's Google Calendar account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "get_events": {
+   "result_contents": [
+    {
+     "part": "event details",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves events from a specified Google Calendar, which is part of the user's account. [received records: event details taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "manage_event": {
+   "result_contents": [
+    {
+     "part": "confirmation or status",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "event details",
+     "destination_class": "configured_own_service",
+     "host_or_config": "Google Calendar API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": true,
+    "argument": "attendees",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages calendar events, which involves creating, updating, deleting, or RSVP actions on Google Calendar, sending updates to attendees.",
+   "kind": "WRITE",
+   "destination_args": [
+    "attendees"
+   ],
+   "value_args": [
+    "summary",
+    "start_time",
+    "end_time",
+    "description",
+    "location",
+    "attendees",
+    "attachments",
+    "conference_data",
+    "conference_provider",
+    "conference_uri",
+    "conference_passcode",
+    "conference_id",
+    "reminders",
+    "use_default_reminders",
+    "transparency",
+    "visibility",
+    "color_id",
+    "recurrence",
+    "guests_can_modify",
+    "guests_can_invite_others",
+    "guests_can_see_other_guests",
+    "response",
+    "rsvp_comment",
+    "send_updates",
+    "start_timezone",
+    "end_timezone"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "manage_out_of_office": {
+   "result_contents": [
+    {
+     "part": "confirmation or status",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "out of office event details",
+     "destination_class": "configured_own_service",
+     "host_or_config": "Google Calendar API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": true,
+    "argument": "user_google_email",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages Out of Office events on Google Calendar, which involves creating, updating, deleting, or listing these events.",
+   "kind": "WRITE",
+   "destination_args": [
+    "user_google_email"
+   ],
+   "value_args": [
+    "start_time",
+    "end_time",
+    "summary",
+    "auto_decline_mode",
+    "decline_message",
+    "recurrence",
+    "timezone"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "manage_focus_time": {
+   "result_contents": [
+    {
+     "part": "confirmation or status",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "focus time event details",
+     "destination_class": "configured_own_service",
+     "host_or_config": "Google Calendar API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": true,
+    "argument": "user_google_email",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages Focus Time events on Google Calendar, which involves creating, updating, deleting, or listing these events.",
+   "kind": "WRITE",
+   "destination_args": [
+    "user_google_email"
+   ],
+   "value_args": [
+    "start_time",
+    "end_time",
+    "summary",
+    "description",
+    "auto_decline_mode",
+    "decline_message",
+    "chat_status",
+    "recurrence",
+    "timezone"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "query_freebusy": {
+   "result_contents": [
+    {
+     "part": "free/busy information",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns free/busy information for a set of calendars, which is part of the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "create_calendar": {
+   "result_contents": [
+    {
+     "part": "new calendar details",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "new calendar details",
+     "destination_class": "configured_own_service",
+     "host_or_config": "Google Calendar API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool creates a new secondary Google Calendar, which involves writing to the user's account.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "summary",
+    "description",
+    "timezone"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "search_docs": {
+   "result_contents": [
+    {
+     "part": "list of Google Docs",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches for Google Docs by name using the Drive API, which is part of the user's account. [received records: list of Google Docs taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "get_doc_content": {
+   "result_contents": [
+    {
+     "part": "document content",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves content of a Google Doc or a Drive file, which is part of the user's account. [received records: document content taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "list_docs_in_folder": {
+   "result_contents": [
+    {
+     "part": "A formatted list of Google Docs in the specified folder.",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `lists Google Docs within a specific Drive folder` and returns `a formatted list of Google Docs in the specified folder`. This implies reading from the user's Google Drive account. [received records: A formatted list of Google Docs in the specified folder. taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "create_doc": {
+   "result_contents": [
+    {
+     "part": "ID of the newly created document",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `creates a new Google Doc` and returns the ID of the newly created document. This involves writing to the user's Google Drive account. [received records: ID of the newly created document taken as outside-party text]",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "title",
+    "content"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "modify_doc_text": {
+   "result_contents": [
+    {
+     "part": "Confirmation of text modification",
+     "produced_at": "return",
+     "origin": "literal",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `modifies text in a Google Doc` by inserting or replacing text and/or applying formatting. This involves writing to the user's Google Doc.",
+   "kind": "WRITE",
+   "destination_args": [
+    "document_id"
+   ],
+   "value_args": [
+    "text"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "find_and_replace_doc": {
+   "result_contents": [
+    {
+     "part": "Confirmation of find and replace operation",
+     "produced_at": "return",
+     "origin": "literal",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `finds and replaces text throughout a Google Doc`, which involves writing to the user's Google Doc.",
+   "kind": "WRITE",
+   "destination_args": [
+    "document_id"
+   ],
+   "value_args": [
+    "find_text",
+    "replace_text"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "insert_doc_elements": {
+   "result_contents": [
+    {
+     "part": "Confirmation of element insertion",
+     "produced_at": "return",
+     "origin": "literal",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `inserts structural elements like tables, lists, or page breaks into a Google Doc`, which involves writing to the user's Google Doc.",
+   "kind": "WRITE",
+   "destination_args": [
+    "document_id"
+   ],
+   "value_args": [
+    "element_type",
+    "text"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "insert_doc_image": {
+   "result_contents": [
+    {
+     "part": "Confirmation of image insertion",
+     "produced_at": "return",
+     "origin": "literal",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `inserts an image into a Google Doc from Drive or a URL`, which involves writing to the user's Google Doc.",
+   "kind": "WRITE",
+   "destination_args": [
+    "document_id"
+   ],
+   "value_args": [
+    "image_source"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "update_doc_headers_footers": {
+   "result_contents": [
+    {
+     "part": "Confirmation of header/footer update",
+     "produced_at": "return",
+     "origin": "literal",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `creates or updates header/footer text in a Google Doc`, which involves writing to the user's Google Doc.",
+   "kind": "WRITE",
+   "destination_args": [
+    "document_id"
+   ],
+   "value_args": [
+    "content"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "batch_update_doc": {
+   "result_contents": [
+    {
+     "part": "Confirmation of batch update",
+     "produced_at": "return",
+     "origin": "literal",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool `executes multiple low-level document operations in a single atomic batch update`, which involves writing to the user's Google Doc.",
+   "kind": "WRITE",
+   "destination_args": [
+    "document_id"
+   ],
+   "value_args": [
+    "operations"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "inspect_doc_structure": {
+   "result_contents": [
+    {
+     "part": "total_elements",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "total_length",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "tables",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "table_details",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "headers / footers",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "tabs",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "empty_paragraphs",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "empty_paragraph_ranges",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "empty_paragraph_ranges_truncated",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "last_paragraph",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool provides detailed information about the structure of a Google document, including elements, tables, headers, footers, and paragraph statistics. It computes these details from the user's document, making the scope user_account and control service.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "debug_docs_runtime_info": {
+   "result_contents": [
+    {
+     "part": "runtime/source information",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool returns runtime and source information for diagnosing the MCP server instance. This information is computed and does not involve user-specific data, making the scope none and control service.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "create_table_with_data": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "table_data",
+     "destination_class": "configured_own_service",
+     "host_or_config": "Google Docs API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool creates a table in a Google document using data provided by the user. It requires the index from inspect_doc_structure and sends the table data to the Google Docs API, making it a WRITE operation with the destination configured_own_service.",
+   "kind": "WRITE",
+   "destination_args": [
+    "document_id"
+   ],
+   "value_args": [
+    "table_data"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "debug_table_structure": {
+   "result_contents": [
+    {
+     "part": "table dimensions",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "cell positions",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "current content",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "insertion indices",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "table boundaries",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool provides detailed information about the structure of tables in a Google document, including dimensions, cell positions, and content. It computes these details from the user's document, making the scope user_account and control service.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "export_doc_to_pdf": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "document_id, pdf_filename, folder_id",
+     "destination_class": "configured_own_service",
+     "host_or_config": "Google Drive API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool exports a Google Doc to PDF format and saves it to Google Drive. It sends the document ID and optional filename and folder ID to the Google Drive API, making it a WRITE operation with the destination configured_own_service.",
+   "kind": "WRITE",
+   "destination_args": [
+    "document_id",
+    "folder_id"
+   ],
+   "value_args": [
+    "pdf_filename"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "update_paragraph_style": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "document_id, start_index, end_index, formatting options",
+     "destination_class": "configured_own_service",
+     "host_or_config": "Google Docs API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool applies paragraph-level formatting to a range in a Google Doc. It sends the document ID, indices, and formatting options to the Google Docs API, making it a WRITE operation with the destination configured_own_service.",
+   "kind": "WRITE",
+   "destination_args": [
+    "document_id"
+   ],
+   "value_args": [
+    "start_index",
+    "end_index"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "get_doc_as_markdown": {
+   "result_contents": [
+    {
+     "part": "Markdown content",
+     "produced_at": "description",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads a Google Doc and returns it as Markdown, preserving formatting and optionally including comments. The content is computed from the user's document, making the scope user_account and control service.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "manage_doc_tab": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "document_id, action, tab_id, title, index, parent_tab_id, markdown_text",
+     "destination_class": "configured_own_service",
+     "host_or_config": "Google Docs API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages document tabs by creating, renaming, deleting, or populating them from Markdown. It sends the document ID and action details to the Google Docs API, making it a WRITE operation with the destination configured_own_service.",
+   "kind": "WRITE",
+   "destination_args": [
+    "document_id",
+    "tab_id"
+   ],
+   "value_args": [
+    "action",
+    "title",
+    "markdown_text"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "list_document_comments": {
+   "result_contents": [
+    {
+     "part": "comments",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists comments from a Google Document, which are read from the user's account. The comments are controlled by outside parties as they can be written by anyone with access to the document.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "manage_document_comment": {
+   "result_contents": [
+    {
+     "part": "status",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, document_id, action, comment_content, comment_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Drive API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages comments on a Google Document by creating, replying, or resolving comments. It sends data to the Google Drive API, which is a literal host in the code.",
+   "kind": "WRITE",
+   "destination_args": [
+    "document_id"
+   ],
+   "value_args": [
+    "comment_content"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_spreadsheets": {
+   "result_contents": [
+    {
+     "part": "spreadsheets",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists spreadsheets from Google Drive that the user has access to, which are read from the user's account. The control is by the service as it lists the user's own spreadsheets. [received records: spreadsheets taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "get_spreadsheet_info": {
+   "result_contents": [
+    {
+     "part": "spreadsheet_info",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool gets information about a specific spreadsheet, which is read from the user's account. The control is by the service as it retrieves the user's own spreadsheet information.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "read_sheet_values": {
+   "result_contents": [
+    {
+     "part": "sheet_values",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads values from a specific range in a Google Sheet, which are read from the user's account. The control is by the service as it retrieves the user's own sheet values.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "modify_sheet_values": {
+   "result_contents": [
+    {
+     "part": "status",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, spreadsheet_id, range_name, values",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Sheets API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool modifies values in a specific range of a Google Sheet by writing, updating, or clearing values. It sends data to the Google Sheets API, which is a literal host in the code.",
+   "kind": "WRITE",
+   "destination_args": [
+    "spreadsheet_id"
+   ],
+   "value_args": [
+    "values"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "insert_smart_chips": {
+   "result_contents": [
+    {
+     "part": "status",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, spreadsheet_id, range_name, chips",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Sheets API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool inserts Google Workspace Smart Chips into a Google Sheet cell or range. It sends data to the Google Sheets API, which is a literal host in the code.",
+   "kind": "WRITE",
+   "destination_args": [
+    "spreadsheet_id"
+   ],
+   "value_args": [
+    "chips"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "format_sheet_range": {
+   "result_contents": [
+    {
+     "part": "status",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, spreadsheet_id, range_name, background_color, text_color, number_format_type, number_format_pattern, wrap_strategy, horizontal_alignment, vertical_alignment, bold, italic, font_size",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Sheets API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool applies formatting to a range in a Google Sheet. It sends data to the Google Sheets API, which is a literal host in the code.",
+   "kind": "WRITE",
+   "destination_args": [
+    "spreadsheet_id"
+   ],
+   "value_args": [
+    "background_color",
+    "text_color",
+    "number_format_type",
+    "number_format_pattern",
+    "wrap_strategy",
+    "horizontal_alignment",
+    "vertical_alignment",
+    "bold",
+    "italic",
+    "font_size"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "manage_conditional_formatting": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, spreadsheet_id, action, range_name, condition_type, condition_values, background_color, text_color, rule_index, gradient_points, sheet_name",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Sheets API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages conditional formatting rules on a Google Sheet, which involves sending data to the Google Sheets API to perform actions like adding, updating, or deleting rules.",
+   "kind": "WRITE",
+   "destination_args": [
+    "user_google_email",
+    "spreadsheet_id"
+   ],
+   "value_args": [
+    "action",
+    "range_name",
+    "condition_type",
+    "condition_values",
+    "background_color",
+    "text_color",
+    "rule_index",
+    "gradient_points",
+    "sheet_name"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "create_spreadsheet": {
+   "result_contents": [
+    {
+     "part": "spreadsheet_id",
+     "produced_at": "return",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, title, sheet_names, folder_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Sheets API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool creates a new Google Spreadsheet, which involves sending data to the Google Sheets API. The result includes a computed spreadsheet ID, which is a new identifier for the created spreadsheet.",
+   "kind": "WRITE",
+   "destination_args": [
+    "user_google_email"
+   ],
+   "value_args": [
+    "title",
+    "sheet_names",
+    "folder_id"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "create_sheet": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, spreadsheet_id, sheet_name, source_sheet_name, insert_sheet_index",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Sheets API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool creates or duplicates a sheet within a Google Spreadsheet, which involves sending data to the Google Sheets API.",
+   "kind": "WRITE",
+   "destination_args": [
+    "user_google_email",
+    "spreadsheet_id"
+   ],
+   "value_args": [
+    "sheet_name",
+    "source_sheet_name",
+    "insert_sheet_index"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_sheet_tables": {
+   "result_contents": [
+    {
+     "part": "tables",
+     "produced_at": "return",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, spreadsheet_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Sheets API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists all structured tables in a spreadsheet, which involves reading data from the Google Sheets API. The result includes details about the tables, which are read from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "append_table_rows": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, spreadsheet_id, table_id, values",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Sheets API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool appends rows to a structured table in a Google Sheet, which involves sending data to the Google Sheets API.",
+   "kind": "WRITE",
+   "destination_args": [
+    "user_google_email",
+    "spreadsheet_id",
+    "table_id"
+   ],
+   "value_args": [
+    "values"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "manage_sheet_tab": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, spreadsheet_id, sheet_name, action, new_name, new_index",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Sheets API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages the lifecycle of an existing sheet tab, which involves sending data to the Google Sheets API to perform actions like renaming, deleting, hiding, unhiding, or reordering tabs.",
+   "kind": "WRITE",
+   "destination_args": [
+    "user_google_email",
+    "spreadsheet_id",
+    "sheet_name"
+   ],
+   "value_args": [
+    "action",
+    "new_name",
+    "new_index"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "resize_sheet_dimensions": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, spreadsheet_id, sheet_name, column_sizes, row_sizes, auto_resize_columns, auto_resize_rows, frozen_row_count, frozen_column_count, hide_columns, unhide_columns, hide_rows, unhide_rows, insert_rows, insert_rows_at, insert_columns, insert_columns_at, delete_rows, delete_row_range, delete_columns",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Sheets API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages sheet-level dimension properties, which involves sending data to the Google Sheets API to perform actions like resizing, freezing, hiding, or inserting rows and columns.",
+   "kind": "WRITE",
+   "destination_args": [
+    "user_google_email",
+    "spreadsheet_id"
+   ],
+   "value_args": [
+    "sheet_name",
+    "column_sizes",
+    "row_sizes",
+    "auto_resize_columns",
+    "auto_resize_rows",
+    "frozen_row_count",
+    "frozen_column_count",
+    "hide_columns",
+    "unhide_columns",
+    "hide_rows",
+    "unhide_rows",
+    "insert_rows",
+    "insert_rows_at",
+    "insert_columns",
+    "insert_columns_at",
+    "delete_rows",
+    "delete_row_range",
+    "delete_columns"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "move_sheet_rows": {
+   "result_contents": [],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, spreadsheet_id, source_sheet, start_row, end_row, destination_sheet",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Sheets API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool moves rows from one sheet to another within the same spreadsheet, which involves sending data to the Google Sheets API to perform the move operation.",
+   "kind": "WRITE",
+   "destination_args": [
+    "user_google_email",
+    "spreadsheet_id",
+    "source_sheet",
+    "destination_sheet"
+   ],
+   "value_args": [
+    "start_row",
+    "end_row"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "manage_named_range": {
+   "result_contents": [
+    {
+     "part": "named range details",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "user"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, spreadsheet_id, action, name, range_name, named_range_id, new_name, new_range",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Sheets API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages named ranges in a Google Sheet, which involves sending data to the Google Sheets API.",
+   "kind": "WRITE",
+   "destination_args": [
+    "spreadsheet_id"
+   ],
+   "value_args": [
+    "name",
+    "range_name",
+    "named_range_id",
+    "new_name",
+    "new_range"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_spreadsheet_comments": {
+   "result_contents": [
+    {
+     "part": "comments",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, spreadsheet_id, max_comments",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Sheets API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists comments from a Google Spreadsheet, which involves reading data from the Google Sheets API.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "manage_spreadsheet_comment": {
+   "result_contents": [
+    {
+     "part": "comment details",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "user"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, spreadsheet_id, action, comment_content, comment_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Sheets API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages comments on a Google Spreadsheet, which involves sending data to the Google Sheets API. [received records: comment details taken as outside-party text]",
+   "kind": "WRITE",
+   "destination_args": [
+    "spreadsheet_id"
+   ],
+   "value_args": [
+    "comment_content",
+    "comment_id"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "list_spaces": {
+   "result_contents": [
+    {
+     "part": "list of spaces",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, page_size, space_type",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Chat API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists Google Chat spaces accessible to the user, which involves reading data from the Google Chat API. [received records: list of spaces taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "get_messages": {
+   "result_contents": [
+    {
+     "part": "messages",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, space_id, page_size, order_by, message_filter",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Chat API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves messages from a Google Chat space, which involves reading data from the Google Chat API.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "send_message": {
+   "result_contents": [
+    {
+     "part": "message status",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, space_id, message_text, thread_key, thread_name, message_name",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Chat API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": true,
+    "argument": "space_id",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool sends or edits a message in a Google Chat space, which involves sending data to the Google Chat API.",
+   "kind": "WRITE",
+   "destination_args": [
+    "space_id"
+   ],
+   "value_args": [
+    "message_text"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "search_messages": {
+   "result_contents": [
+    {
+     "part": "search results",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, query, space_id, page_size, time_filter, max_spaces",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Chat API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches for messages in Google Chat spaces, which involves reading data from the Google Chat API.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "create_reaction": {
+   "result_contents": [
+    {
+     "part": "reaction status",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, message_id, emoji_unicode",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Chat API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool adds an emoji reaction to a Google Chat message, which involves sending data to the Google Chat API.",
+   "kind": "WRITE",
+   "destination_args": [
+    "message_id"
+   ],
+   "value_args": [
+    "emoji_unicode"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "download_chat_attachment": {
+   "result_contents": [
+    {
+     "part": "local file path",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "user_local",
+     "control": "outside_party",
+     "control_before_rule": "none"
+    },
+    {
+     "part": "temporary download URL",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "none",
+     "control": "none"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool downloads an attachment from a Google Chat message and saves it to local disk, returning either a local file path or a temporary download URL. [received records: local file path taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "create_form": {
+   "result_contents": [],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool creates a new form using the title given in the request. No outbound calls or result contents are specified.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "title",
+    "description",
+    "document_title"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "get_form": {
+   "result_contents": [
+    {
+     "part": "form data",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves a form using the form ID, returning form data from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "set_publish_settings": {
+   "result_contents": [],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool updates the publish settings of a form, but does not specify any outbound calls or result contents.",
+   "kind": "WRITE",
+   "destination_args": [
+    "form_id"
+   ],
+   "value_args": [
+    "is_published",
+    "is_accepting_responses"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "get_form_response": {
+   "result_contents": [
+    {
+     "part": "form response data",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves a specific response from a form, returning response data from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_form_responses": {
+   "result_contents": [
+    {
+     "part": "list of form responses",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists responses from a form, returning a list of responses from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "batch_update_form": {
+   "result_contents": [],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool applies batch updates to a Google Form, modifying form content and settings. No outbound calls or result contents are specified.",
+   "kind": "WRITE",
+   "destination_args": [
+    "form_id"
+   ],
+   "value_args": [
+    "requests"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "create_presentation": {
+   "result_contents": [],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool creates a new Google Slides presentation. No outbound calls or result contents are specified.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "title"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "get_presentation": {
+   "result_contents": [
+    {
+     "part": "presentation details",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves details about a Google Slides presentation using the user's Google email and presentation ID. It reads data from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "batch_update_presentation": {
+   "result_contents": [
+    {
+     "part": "update status",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool applies batch updates to a Google Slides presentation using the user's Google email, presentation ID, and a list of update requests. It modifies data in the user's account.",
+   "kind": "WRITE",
+   "destination_args": [
+    "presentation_id"
+   ],
+   "value_args": [
+    "requests"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "get_page": {
+   "result_contents": [
+    {
+     "part": "page details",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves details about a specific page in a presentation using the user's Google email, presentation ID, and page object ID. It reads data from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "get_page_thumbnail": {
+   "result_contents": [
+    {
+     "part": "thumbnail URL",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool generates a thumbnail URL for a specific page in a presentation using the user's Google email, presentation ID, and page object ID. It computes a URL based on the user's account data.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_presentation_comments": {
+   "result_contents": [
+    {
+     "part": "comments list",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists all comments from a Google Presentation using the user's Google email and presentation ID. It reads data from the user's account. [received records: comments list taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "manage_presentation_comment": {
+   "result_contents": [
+    {
+     "part": "comment management status",
+     "produced_at": "call",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages comments on a Google Presentation using the user's Google email, presentation ID, and specified action. It modifies data in the user's account. [received records: comment management status taken as outside-party text]",
+   "kind": "WRITE",
+   "destination_args": [
+    "presentation_id"
+   ],
+   "value_args": [
+    "comment_content"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "list_task_lists": {
+   "result_contents": [
+    {
+     "part": "task lists",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists all task lists for the user using the user's Google email. It reads data from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "get_task_list": {
+   "result_contents": [
+    {
+     "part": "task list details",
+     "produced_at": "call",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves details of a specific task list using the user's Google email and task list ID. It reads data from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "manage_task_list": {
+   "result_contents": [
+    {
+     "part": "status or confirmation message",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, action, task_list_id, title",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Tasks API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages task lists by performing actions like create, update, delete, or clear completed tasks. It interacts with the Google Tasks API using the user's Google email and task list details.",
+   "kind": "WRITE",
+   "destination_args": [
+    "user_google_email",
+    "task_list_id"
+   ],
+   "value_args": [
+    "action",
+    "title"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_tasks": {
+   "result_contents": [
+    {
+     "part": "list of tasks",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, task_list_id, max_results, page_token, show_completed, show_deleted, show_hidden, show_assigned, completed_max, completed_min, due_max, due_min, updated_min",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Tasks API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists tasks from a specific task list using the user's Google email and task list ID, interacting with the Google Tasks API.",
+   "kind": "READ",
+   "destination_args": [
+    "user_google_email",
+    "task_list_id"
+   ],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "get_task": {
+   "result_contents": [
+    {
+     "part": "task details",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, task_list_id, task_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Tasks API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves details of a specific task using the user's Google email, task list ID, and task ID, interacting with the Google Tasks API.",
+   "kind": "READ",
+   "destination_args": [
+    "user_google_email",
+    "task_list_id",
+    "task_id"
+   ],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "manage_task": {
+   "result_contents": [
+    {
+     "part": "status or confirmation message",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, action, task_list_id, task_id, title, notes, status, due, parent, previous, destination_task_list",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Tasks API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages tasks by performing actions like create, update, delete, or move within task lists, interacting with the Google Tasks API using the user's Google email and task details.",
+   "kind": "WRITE",
+   "destination_args": [
+    "user_google_email",
+    "task_list_id",
+    "task_id"
+   ],
+   "value_args": [
+    "action",
+    "title",
+    "notes",
+    "status",
+    "due",
+    "parent",
+    "previous",
+    "destination_task_list"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_contacts": {
+   "result_contents": [
+    {
+     "part": "list of contacts",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, page_size, page_token, sort_order",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Contacts API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists contacts for the authenticated user using the user's Google email, interacting with the Google Contacts API.",
+   "kind": "READ",
+   "destination_args": [
+    "user_google_email"
+   ],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "get_contact": {
+   "result_contents": [
+    {
+     "part": "contact details",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, contact_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Contacts API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves detailed information about a specific contact using the user's Google email and contact ID, interacting with the Google Contacts API.",
+   "kind": "READ",
+   "destination_args": [
+    "user_google_email",
+    "contact_id"
+   ],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "search_contacts": {
+   "result_contents": [
+    {
+     "part": "search results",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, query, page_size",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Contacts API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool searches contacts by name, email, phone number, or other fields using the user's Google email and query, interacting with the Google Contacts API. [received records: search results taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [
+    "user_google_email"
+   ],
+   "value_args": [
+    "query"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "manage_contact": {
+   "result_contents": [
+    {
+     "part": "status or confirmation message",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, action, contact_id, given_name, family_name, phones, emails, organizations, nicknames, urls, user_defined, relations, notes, address, birthday, phones_mode, emails_mode, organizations_mode, nicknames_mode, urls_mode, user_defined_mode, relations_mode, phone, email, organization, job_title",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Contacts API",
+     "at": "completion"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "completion"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "completion"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages contacts by performing actions like create, update, or delete, interacting with the Google Contacts API using the user's Google email and contact details.",
+   "kind": "WRITE",
+   "destination_args": [
+    "user_google_email",
+    "contact_id"
+   ],
+   "value_args": [
+    "action",
+    "given_name",
+    "family_name",
+    "phones",
+    "emails",
+    "organizations",
+    "nicknames",
+    "urls",
+    "user_defined",
+    "relations",
+    "notes",
+    "address",
+    "birthday",
+    "phones_mode",
+    "emails_mode",
+    "organizations_mode",
+    "nicknames_mode",
+    "urls_mode",
+    "user_defined_mode",
+    "relations_mode",
+    "phone",
+    "email",
+    "organization",
+    "job_title"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_contact_groups": {
+   "result_contents": [
+    {
+     "part": "contact group list",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists contact groups for the user, which implies reading from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "get_contact_group": {
+   "result_contents": [
+    {
+     "part": "contact group details",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool gets details of a specific contact group, including its members, which implies reading from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "manage_contacts_batch": {
+   "result_contents": [
+    {
+     "part": "batch operation result",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool performs batch operations on contacts, which implies modifying the user's account.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "contacts",
+    "updates",
+    "contact_ids"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "manage_contact_group": {
+   "result_contents": [
+    {
+     "part": "contact group management result",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages contact groups, which implies modifying the user's account.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "group_id",
+    "name",
+    "add_contact_ids",
+    "remove_contact_ids"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "search_custom": {
+   "result_contents": [
+    {
+     "part": "search results",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "public",
+     "control": "outside_party"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, q, num, start, safe, search_type, site_search, site_search_filter, date_restrict, file_type, language, country, sites",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Custom Search API",
+     "at": "description"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool performs a search using Google Custom Search JSON API, which implies sending a request to an external service.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [
+    "q"
+   ],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "get_search_engine_info": {
+   "result_contents": [
+    {
+     "part": "search engine metadata",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool retrieves metadata about a Programmable Search Engine, which implies reading from the user's account.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "get_script_project": {
+   "result_contents": [
+    {
+     "part": "Apps Script project details",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "outside_party",
+     "control_before_rule": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads Apps Script projects and their source files, which implies reading from the user's account. [received records: Apps Script project details taken as outside-party text]",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [],
+   "identifier_output_fields": [
+    "return"
+   ],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "UNTRUSTED"
+   ],
+   "injectable_output_fields": [
+    "return"
+   ]
+  },
+  "manage_script_content": {
+   "result_contents": [
+    {
+     "part": "script content management result",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "description"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "description"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool updates the source files of an Apps Script project, which implies modifying the user's account.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "files"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET"
+   ],
+   "injectable_output_fields": []
+  },
+  "run_script_function": {
+   "result_contents": [
+    {
+     "part": "execution_result",
+     "produced_at": "completion",
+     "origin": "unknown",
+     "scope": "unknown",
+     "control": "unknown"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, script_id, function_name, parameters, dev_mode, deployment_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Apps Script API",
+     "at": "execution"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "remote_sandbox",
+    "at": "execution"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "execution"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool executes a function in a deployed script, which implies running code in a remote sandbox (`Executes a function in a deployed script`). The execution result is unknown as it depends on the script's function. The call sends data to the Google Apps Script API, a literal host in code.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "user_google_email",
+    "script_id",
+    "function_name",
+    "parameters",
+    "dev_mode",
+    "deployment_id"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "manage_deployment": {
+   "result_contents": [
+    {
+     "part": "deployment_status",
+     "produced_at": "completion",
+     "origin": "unknown",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, action, script_id, deployment_id, description, version_description, version_number",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Apps Script API",
+     "at": "execution"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "execution"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "execution"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool manages deployments by creating, updating, or deleting them (`Create, update, or delete Apps Script deployments`). The result is a deployment status, controlled by the service. The call sends data to the Google Apps Script API, a literal host in code.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "user_google_email",
+    "action",
+    "script_id",
+    "deployment_id",
+    "description",
+    "version_description",
+    "version_number"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "list_script_deployments": {
+   "result_contents": [
+    {
+     "part": "deployments_list",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, script_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Apps Script API",
+     "at": "execution"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "execution"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "execution"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists deployments for a script project (`List deployments for an Apps Script project`). The result is a list of deployments, read from the user's account. The call sends data to the Google Apps Script API, a literal host in code.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [
+    "user_google_email",
+    "script_id"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "manage_script_project": {
+   "result_contents": [
+    {
+     "part": "project_status",
+     "produced_at": "completion",
+     "origin": "unknown",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, action, script_id, title, parent_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Apps Script API",
+     "at": "execution"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "execution"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "execution"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool creates or deletes script projects (`Create or delete an Apps Script project`). The result is a project status, controlled by the service. The call sends data to the Google Apps Script API, a literal host in code.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "user_google_email",
+    "action",
+    "script_id",
+    "title",
+    "parent_id"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "manage_script_version": {
+   "result_contents": [
+    {
+     "part": "version_status",
+     "produced_at": "completion",
+     "origin": "unknown",
+     "scope": "unknown",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, action, script_id, description",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Apps Script API",
+     "at": "execution"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "execution"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "execution"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool creates immutable version snapshots of a script project (`Create immutable version snapshots of a script project`). The result is a version status, controlled by the service. The call sends data to the Google Apps Script API, a literal host in code.",
+   "kind": "WRITE",
+   "destination_args": [],
+   "value_args": [
+    "user_google_email",
+    "action",
+    "script_id",
+    "description"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "get_script_version": {
+   "result_contents": [
+    {
+     "part": "version_list_or_details",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, action, script_id, version_number",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Apps Script API",
+     "at": "execution"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "execution"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "execution"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool lists or retrieves version snapshots of a script project (`List or retrieve immutable version snapshots of a script project`). The result is a list or details of versions, read from the user's account. The call sends data to the Google Apps Script API, a literal host in code.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [
+    "user_google_email",
+    "action",
+    "script_id",
+    "version_number"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "get_script_activity": {
+   "result_contents": [
+    {
+     "part": "activity_data",
+     "produced_at": "completion",
+     "origin": "resource_read",
+     "scope": "user_account",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, action, script_id, page_size, metrics_granularity",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Google Apps Script API",
+     "at": "execution"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "execution"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "execution"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool reads execution activity for scripts (`Read execution activity for scripts`). The result is activity data, read from the user's account. The call sends data to the Google Apps Script API, a literal host in code.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [
+    "user_google_email",
+    "action",
+    "script_id",
+    "page_size",
+    "metrics_granularity"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  },
+  "generate_trigger_code": {
+   "result_contents": [
+    {
+     "part": "trigger_code",
+     "produced_at": "completion",
+     "origin": "computed",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [],
+   "runs_supplied_code": {
+    "where": "none",
+    "at": "execution"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "execution"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool generates Apps Script code for creating triggers (`Generates Apps Script code for creating triggers`). The result is computed trigger code, controlled by the service. There are no outbound calls as the code is generated locally.",
+   "kind": "READ",
+   "destination_args": [],
+   "value_args": [
+    "trigger_type",
+    "function_name",
+    "schedule"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [],
+   "injectable_output_fields": []
+  },
+  "manage_script_trigger": {
+   "result_contents": [
+    {
+     "part": "list of triggers",
+     "produced_at": "list action",
+     "origin": "computed",
+     "scope": "user_account",
+     "control": "service"
+    },
+    {
+     "part": "confirmation of deletion",
+     "produced_at": "delete action",
+     "origin": "literal",
+     "scope": "none",
+     "control": "service"
+    }
+   ],
+   "outbound_calls": [
+    {
+     "data": "user_google_email, action, script_id, trigger_id, handler_function, dev_mode, deployment_id",
+     "destination_class": "literal_host_in_code",
+     "host_or_config": "Apps Script REST API",
+     "at": "execution"
+    }
+   ],
+   "runs_supplied_code": {
+    "where": "remote_sandbox",
+    "at": "execution"
+   },
+   "delivers_to_chosen_party": {
+    "value": false,
+    "argument": "",
+    "at": "execution"
+   },
+   "evidence": [
+    "description"
+   ],
+   "rationale": "The tool interacts with the Apps Script REST API to list or delete triggers. The `list` action computes a list of triggers, which is user_account scoped as it pertains to the user's script project. The `delete` action provides a confirmation of deletion, which is a literal response. The tool makes outbound calls to the Apps Script REST API, which is a literal host in code. The tool runs code in a remote sandbox as it uses the Execution API to manage triggers.",
+   "kind": "WRITE",
+   "destination_args": [
+    "user_google_email",
+    "script_id"
+   ],
+   "value_args": [
+    "action",
+    "trigger_id",
+    "handler_function",
+    "dev_mode",
+    "deployment_id"
+   ],
+   "identifier_output_fields": [],
+   "attacker_named_fields": [],
+   "default_enabled": true,
+   "undetermined": false,
+   "labels": [
+    "SECRET",
+    "SINK"
+   ],
+   "injectable_output_fields": []
+  }
+ },
+ "value_conditions": [
+  {
+   "syntax": "OAuth 2.1",
+   "kind": "flag",
+   "effect": "disable start_google_auth",
+   "default": "",
+   "evidence": "description"
+  }
+ ],
+ "notes": [],
+ "usage": {
+  "input_tokens": 57340,
+  "output_tokens": 21131,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 30720
+ }
+}

@@ -1,0 +1,3134 @@
+{
+ "batch": {
+  "tools": {
+   "firebase_login": {
+    "result_contents": [
+     {
+      "part": "Success! Logged in as <email>",
+      "produced_at": "lib/commands/login.js:31",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "authCode",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "authOrigin",
+      "at": "lib/auth.js:236"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/commands/login.js:18-108"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/commands/login.js:18-108",
+     "lib/auth.js:218-260"
+    ],
+    "rationale": "The `firebase_login` tool initiates a login process by generating a URL and session ID for the user to authenticate. Once the user provides the authorization code, it sends this code to the Firebase authentication server (`authOrigin`) to obtain tokens. The result includes a success message with the logged-in email, which is computed from the authentication response.",
+    "kind": "WRITE",
+    "destination_args": [
+     "authCode"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": []
+   },
+   "firebase_logout": {
+    "result_contents": [
+     {
+      "part": "Logged out from <email>",
+      "produced_at": "lib/mcp/tools/core/logout.js:47",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "refresh_token",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "authOrigin",
+      "at": "lib/auth.js:634"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/mcp/tools/core/logout.js:23-61"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/logout.js:23-61",
+     "lib/auth.js:627-641"
+    ],
+    "rationale": "The `firebase_logout` tool logs out the user by invalidating the refresh token with the Firebase authentication server (`authOrigin`). It returns a message indicating the email of the account that was logged out, which is computed from the account information.",
+    "kind": "WRITE",
+    "destination_args": [
+     "email"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": []
+   },
+   "firebase_get_project": {
+    "result_contents": [
+     {
+      "part": "Project metadata and configuration details",
+      "produced_at": "lib/mcp/tools/core/get_project.js:22",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/mcp/tools/core/get_project.js:21-22"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/get_project.js:21-22"
+    ],
+    "rationale": "The `firebase_get_project` tool retrieves metadata and configuration details for the currently active Firebase project. The result is read from the user's account and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "firebase_list_apps": {
+    "result_contents": [
+     {
+      "part": "List of Firebase Apps",
+      "produced_at": "lib/mcp/tools/core/index.js:26",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/mcp/tools/core/index.js:26"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/index.js:26"
+    ],
+    "rationale": "The `firebase_list_apps` tool retrieves a list of Firebase Apps registered in the currently active Firebase project. The result is read from the user's account and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "firebase_list_projects": {
+    "result_contents": [
+     {
+      "part": "List of Firebase Projects",
+      "produced_at": "lib/mcp/tools/core/index.js:27",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/mcp/tools/core/index.js:27"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/index.js:27"
+    ],
+    "rationale": "The `firebase_list_projects` tool retrieves a list of Firebase Projects that the signed-in user has access to. The result is read from the user's account and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "firebase_get_sdk_config": {
+    "result_contents": [
+     {
+      "part": "Firebase SDK configuration",
+      "produced_at": "lib/mcp/tools/core/index.js:28",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/mcp/tools/core/index.js:28"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/index.js:28"
+    ],
+    "rationale": "The `firebase_get_sdk_config` tool retrieves the Firebase configuration information for a Firebase App. The result is read from the user's account and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "firebase_create_project": {
+    "result_contents": [
+     {
+      "part": "Created project details",
+      "produced_at": "lib/mcp/tools/core/index.js:29",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "project_id, display_name",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "management/projects",
+      "at": "lib/mcp/tools/core/create_project.js:49"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/mcp/tools/core/create_project.js:49"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/index.js:29",
+     "lib/mcp/tools/core/create_project.js:49"
+    ],
+    "rationale": "The `firebase_create_project` tool creates a new Firebase Project using the provided project ID and display name. The result includes details of the created project, which are computed and controlled by the service. The tool sends the project ID and display name to the Firebase management service to create the project.",
+    "kind": "WRITE",
+    "destination_args": [
+     "project_id"
+    ],
+    "value_args": [
+     "display_name"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "injectable_output_fields": []
+   },
+   "firebase_create_app": {
+    "result_contents": [
+     {
+      "part": "Created app details",
+      "produced_at": "lib/mcp/tools/core/create_app.js:59",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "display_name, platform, android_config, ios_config",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "management/apps",
+      "at": "lib/mcp/tools/core/create_app.js:59"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/mcp/tools/core/create_app.js:59"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/index.js:30",
+     "lib/mcp/tools/core/create_app.js:59"
+    ],
+    "rationale": "The `firebase_create_app` tool creates a new Firebase App in the currently active Firebase Project. It sends the app details to the Firebase management service to create the app. The result includes details of the created app, which are computed and controlled by the service.",
+    "kind": "WRITE",
+    "destination_args": [
+     "platform"
+    ],
+    "value_args": [
+     "display_name",
+     "android_config",
+     "ios_config"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "injectable_output_fields": []
+   },
+   "firebase_create_android_sha": {
+    "result_contents": [
+     {
+      "part": "Successfully added {certType} certificate to Android app {app_id}",
+      "produced_at": "lib/mcp/tools/core/create_android_sha.js:42",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "{projectId, app_id, sha_hash, certType}",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "apps_1.createAppAndroidSha",
+      "at": "lib/mcp/tools/core/create_android_sha.js:36"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/create_android_sha.js:17-43"
+    ],
+    "rationale": "The tool `firebase_create_android_sha` adds a SHA certificate to an Android app. It computes the certificate type based on the hash length and calls `createAppAndroidSha` to perform the operation. The result is a success message indicating the certificate type and app ID, which is computed and controlled by the service.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "app_id",
+     "sha_hash"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": []
+   },
+   "firebase_get_environment": {
+    "result_contents": [
+     {
+      "part": "# Environment Information\n\nProject Directory: {config.projectDir}\nProject Config Path: {projectConfigPath}\nActive Project ID: {activeProject}\nGemini in Firebase Terms of Service: {geminiTosAccepted}\nBilling Enabled: {billingEnabled}\nAuthenticated User: {authenticatedUser}\nDetected App IDs: {detectedApps}\nAvailable Project Aliases (format: '[alias]: [projectId]'): {availableProjects}{hasOtherAccounts ? `\nAvailable Accounts: \n\n${availableAccounts}` : \"\"}\n{config.projectFileContents ? `\nfirebase.json contents:\n\n\u007fjson\n${config.projectFileContents}\n\u007f` : `\nNo firebase.json file was found.\n\nIf this project does not use Firebase services that require a firebase.json file, no action is necessary.\n\nIf this project uses Firebase services that require a firebase.json file, the user will most likely want to:\n\na) Change the project directory using the 'firebase_update_environment' tool to select a directory with a 'firebase.json' file in it, or\nb) Initialize a new Firebase project directory using the 'firebase_init' tool.\n\nConfirm with the user before taking action.`}",
+      "produced_at": "lib/mcp/tools/core/get_environment.js:29-54",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/get_environment.js:56-97"
+    ],
+    "rationale": "The tool `firebase_get_environment` retrieves the current Firebase environment configuration. It returns a detailed environment information string, which includes project directory, active project ID, authenticated user, and more. This information is computed from the user's local configuration and is controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": []
+   },
+   "firebase_update_environment": {
+    "result_contents": [
+     {
+      "part": "- Updated project directory to '{project_dir}'\n",
+      "produced_at": "lib/mcp/tools/core/update_environment.js:46",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "- Updated active project to '{active_project}'\n",
+      "produced_at": "lib/mcp/tools/core/update_environment.js:51",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "- Updated active account to '{active_user_account}'\n",
+      "produced_at": "lib/mcp/tools/core/update_environment.js:55",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "No changes were made.",
+      "produced_at": "lib/mcp/tools/core/update_environment.js:58",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/update_environment.js:10-59"
+    ],
+    "rationale": "The tool `firebase_update_environment` updates the environment configuration for the Firebase CLI and MCP server. It echoes back the changes made to the project directory, active project, and active user account. If no changes are made, it returns a literal message. The echoed arguments are controlled by the user.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "project_dir",
+     "active_project",
+     "active_user_account"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "firebase_init": {
+    "result_contents": [
+     {
+      "part": "Successfully setup those features: {featuresList.join(\", \")}\n\nTo get started:\n\n- {setup.instructions.join(\"\\n\\n- \")}\n",
+      "produced_at": "lib/mcp/tools/core/init.js:255-260",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/init.js:14-260"
+    ],
+    "rationale": "The tool `firebase_init` initializes selected Firebase services in the workspace. It returns a success message listing the features set up and instructions to get started. The result is computed based on the features initialized and is controlled by the service.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "features"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "firebase_get_security_rules": {
+    "result_contents": [
+     {
+      "part": "Ruleset contains no rules files.",
+      "produced_at": "lib/mcp/tools/core/get_security_rules.js:56",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "{rules?.[0].content}",
+      "produced_at": "lib/mcp/tools/core/get_security_rules.js:56",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "GET request to /projects/{projectId}/releases",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "rules_1.listAllReleases",
+      "at": "lib/mcp/tools/core/get_security_rules.js:51"
+     },
+     {
+      "data": "GET request to /projects/{projectId}/rulesets/{rulesetName}",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "rules_1.getRulesetContent",
+      "at": "lib/mcp/tools/core/get_security_rules.js:55"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/get_security_rules.js:11-57"
+    ],
+    "rationale": "The tool `firebase_get_security_rules` retrieves security rules for a specified Firebase service. It reads the rules from the user's account and returns them. If no rules are found, it returns a literal message. The rules are fetched from Firebase services, and the content is controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "type"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "injectable_output_fields": []
+   },
+   "firebase_read_resources": {
+    "result_contents": [
+     {
+      "part": "{resource contents}",
+      "produced_at": "lib/mcp/tools/core/read_resources.js:14",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/read_resources.js:14"
+    ],
+    "rationale": "The tool `firebase_read_resources` reads the contents of specified `firebase://` resources. It returns the resource contents, which are public and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "uris"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": []
+   },
+   "firebase_deploy": {
+    "result_contents": [
+     {
+      "part": "Deployment started with Job ID: {jobId}. Polling status...",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:93",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "{only}",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "app.callServerTool",
+      "at": "lib/mcp/apps/deploy/mcp-app.js:81"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/apps/deploy/mcp-app.js:4-110"
+    ],
+    "rationale": "The tool `firebase_deploy` initiates a deployment of Firebase services. It returns a message with the Job ID if the deployment starts successfully. The deployment is initiated by calling `app.callServerTool` with the specified services to deploy.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "only"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": []
+   },
+   "firebase_deploy_status": {
+    "result_contents": [
+     {
+      "part": "Deployment completed successfully!",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:41",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Deployment failed: {job.error || \"Unknown error\"}",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:47",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "{jobId}",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "app.callServerTool",
+      "at": "lib/mcp/apps/deploy/mcp-app.js:24"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/apps/deploy/mcp-app.js:4-110"
+    ],
+    "rationale": "The tool `firebase_deploy_status` checks the status of a deployment job. It returns a success message if the deployment is completed successfully or an error message if it fails. The status is checked by calling `app.callServerTool` with the Job ID.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "jobId"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": []
+   },
+   "developerknowledge_search_documents": {
+    "result_contents": [
+     {
+      "part": "chunks of text, names, and URLs for matching documents",
+      "produced_at": "lib/mcp/onemcp/index.js:26-30",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "query",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "developerKnowledgeOrigin",
+      "at": "lib/mcp/onemcp/index.js:26-30"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/onemcp/index.js:26-30"
+    ],
+    "rationale": "The `developerknowledge_search_documents` tool sends a query to the `developerKnowledgeOrigin` and returns chunks of text, names, and URLs for matching documents. The result is read from a public resource and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [
+     "query"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": []
+   },
+   "developerknowledge_answer_query": {
+    "result_contents": [
+     {
+      "part": "generated answer_text and a list of document names (references)",
+      "produced_at": "lib/mcp/onemcp/index.js:26-30",
+      "origin": "computed",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "query",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "developerKnowledgeOrigin",
+      "at": "lib/mcp/onemcp/index.js:26-30"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/onemcp/index.js:26-30"
+    ],
+    "rationale": "The `developerknowledge_answer_query` tool sends a query to the `developerKnowledgeOrigin` and returns a generated answer and a list of document names. The result is computed from public resources and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [
+     "query"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": []
+   },
+   "developerknowledge_get_documents": {
+    "result_contents": [
+     {
+      "part": "full content of documents",
+      "produced_at": "lib/mcp/onemcp/index.js:26-30",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "names",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "developerKnowledgeOrigin",
+      "at": "lib/mcp/onemcp/index.js:26-30"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/onemcp/index.js:26-30"
+    ],
+    "rationale": "The `developerknowledge_get_documents` tool retrieves the full content of documents from the `developerKnowledgeOrigin`. The result is read from a public resource and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [
+     "names"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": []
+   }
+  },
+  "value_conditions": [
+   {
+    "syntax": "experiments.isEnabled(\"appcheckadmin\")",
+    "kind": "flag",
+    "effect": "Enables appcheck services and providers commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:27"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"apptesting\")",
+    "kind": "flag",
+    "effect": "Enables apptesting wata command",
+    "default": "",
+    "evidence": "lib/commands/index.js:55"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"crashlyticsWeb\")",
+    "kind": "flag",
+    "effect": "Enables crashlytics sourcemap upload command",
+    "default": "",
+    "evidence": "lib/commands/index.js:79"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"rtdbrules\")",
+    "kind": "flag",
+    "effect": "Enables database rules commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:92"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"extMigrationFeatures\")",
+    "kind": "flag",
+    "effect": "Enables ext migrate command",
+    "default": "",
+    "evidence": "lib/commands/index.js:123"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"functionsiac\")",
+    "kind": "flag",
+    "effect": "Enables functions export command",
+    "default": "",
+    "evidence": "lib/commands/index.js:170"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"deletegcfartifacts\")",
+    "kind": "flag",
+    "effect": "Enables functions deletegcfartifacts command",
+    "default": "",
+    "evidence": "lib/commands/index.js:179"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"kits\")",
+    "kind": "flag",
+    "effect": "Enables functions kits commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:191"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"internaltesting\")",
+    "kind": "flag",
+    "effect": "Enables internaltesting commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:213"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"apphosting\")",
+    "kind": "flag",
+    "effect": "Enables apphosting commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:220"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"ailogic\")",
+    "kind": "flag",
+    "effect": "Enables ailogic commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:245"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"mcp\")",
+    "kind": "flag",
+    "effect": "Enables mcp command",
+    "default": "",
+    "evidence": "lib/commands/index.js:267"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"appcheckadmin\")",
+    "kind": "flag",
+    "effect": "Enables appcheck services and providers commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:27"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"apptesting\")",
+    "kind": "flag",
+    "effect": "Enables apptesting wata command",
+    "default": "",
+    "evidence": "lib/commands/index.js:55"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"crashlyticsWeb\")",
+    "kind": "flag",
+    "effect": "Enables crashlytics sourcemap upload command",
+    "default": "",
+    "evidence": "lib/commands/index.js:79"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"rtdbrules\")",
+    "kind": "flag",
+    "effect": "Enables database rules commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:92"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"extMigrationFeatures\")",
+    "kind": "flag",
+    "effect": "Enables ext migrate command",
+    "default": "",
+    "evidence": "lib/commands/index.js:123"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"functionsiac\")",
+    "kind": "flag",
+    "effect": "Enables functions export command",
+    "default": "",
+    "evidence": "lib/commands/index.js:170"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"deletegcfartifacts\")",
+    "kind": "flag",
+    "effect": "Enables functions deletegcfartifacts command",
+    "default": "",
+    "evidence": "lib/commands/index.js:179"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"kits\")",
+    "kind": "flag",
+    "effect": "Enables functions kits commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:191"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"internaltesting\")",
+    "kind": "flag",
+    "effect": "Enables internaltesting commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:213"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"apphosting\")",
+    "kind": "flag",
+    "effect": "Enables apphosting commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:220"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"ailogic\")",
+    "kind": "flag",
+    "effect": "Enables ailogic commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:245"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"mcp\")",
+    "kind": "flag",
+    "effect": "Enables mcp command",
+    "default": "",
+    "evidence": "lib/commands/index.js:267"
+   }
+  ],
+  "notes": []
+ },
+ "methods": {},
+ "statement_calls": [
+  {
+   "subject": "handler lines lib/commands/login.js:18-108",
+   "attempt": 0,
+   "ids": [
+    "lib/commands/login.js:36#0",
+    "lib/commands/login.js:41#0",
+    "lib/commands/login.js:41#1",
+    "lib/commands/login.js:53#0",
+    "lib/commands/login.js:53#1",
+    "lib/commands/login.js:57#0",
+    "lib/commands/login.js:57#1",
+    "lib/commands/login.js:61#0",
+    "lib/commands/login.js:61#1",
+    "lib/commands/login.js:63#0",
+    "lib/commands/login.js:67#0",
+    "lib/commands/login.js:67#1",
+    "lib/commands/login.js:74#0",
+    "lib/commands/login.js:95#0",
+    "lib/commands/login.js:108#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/commands/login.js:36#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/commands/login.js:41#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/commands/login.js:41#1\",\"part\":\"message\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/commands/login.js:53#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/commands/login.js:53#1\",\"part\":\"clc.bold(sessionIdPrefix)\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/commands/login.js:57#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/commands/login.js:57#1\",\"part\":\"loginUrl\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/commands/login.js:61#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/commands/login.js:61#1\",\"part\":\"clc.bold(`firebase login <authorizationCode>`)\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/commands/login.js:63#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/commands/login.js:67#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/commands/login.js:67#1\",\"part\":\"message\",\"origin\":\"unknown\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/commands/login.js:74#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/commands/login.js:95#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/commands/login.js:108#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2965,
+    "output_tokens": 623,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/auth.js:218-260",
+   "attempt": 0,
+   "ids": [
+    "lib/auth.js:234#0",
+    "lib/auth.js:260#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/auth.js:234#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/auth.js:260#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"unknown\",\"control\":\"unknown\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1681,
+    "output_tokens": 82,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/mcp/tools/core/logout.js:23-61",
+   "attempt": 0,
+   "ids": [
+    "lib/mcp/tools/core/logout.js:26#0",
+    "lib/mcp/tools/core/logout.js:34#0",
+    "lib/mcp/tools/core/logout.js:34#1",
+    "lib/mcp/tools/core/logout.js:47#0",
+    "lib/mcp/tools/core/logout.js:47#1",
+    "lib/mcp/tools/core/logout.js:53#0",
+    "lib/mcp/tools/core/logout.js:53#1",
+    "lib/mcp/tools/core/logout.js:59#0",
+    "lib/mcp/tools/core/logout.js:59#1",
+    "lib/mcp/tools/core/logout.js:61#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/mcp/tools/core/logout.js:26#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/logout.js:34#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/logout.js:34#1\",\"part\":\"email\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/mcp/tools/core/logout.js:47#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/logout.js:47#1\",\"part\":\"account.user.email\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/logout.js:53#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/logout.js:53#1\",\"part\":\"account.user.email\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/logout.js:59#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/logout.js:59#1\",\"part\":\"newDefaultAccount.user.email\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/logout.js:61#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2013,
+    "output_tokens": 439,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/mcp/tools/core/get_project.js:21-22",
+   "attempt": 0,
+   "ids": [
+    "lib/mcp/tools/core/get_project.js:22#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/mcp/tools/core/get_project.js:22#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 1225,
+    "output_tokens": 50,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/mcp/tools/core/create_app.js:59-66",
+   "attempt": 0,
+   "ids": [
+    "lib/mcp/tools/core/create_app.js:59#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/mcp/tools/core/create_app.js:59#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1294,
+    "output_tokens": 49,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/mcp/tools/core/create_android_sha.js:17-43",
+   "attempt": 0,
+   "ids": [
+    "lib/mcp/tools/core/create_android_sha.js:40#0",
+    "lib/mcp/tools/core/create_android_sha.js:42#0",
+    "lib/mcp/tools/core/create_android_sha.js:42#1",
+    "lib/mcp/tools/core/create_android_sha.js:42#2"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/mcp/tools/core/create_android_sha.js:40#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/create_android_sha.js:42#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/create_android_sha.js:42#1\",\"part\":\"certType\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/create_android_sha.js:42#2\",\"part\":\"app_id\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 1652,
+    "output_tokens": 183,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/mcp/tools/core/get_environment.js:56-97",
+   "attempt": 0,
+   "ids": [
+    "lib/mcp/tools/core/get_environment.js:82#0",
+    "lib/mcp/tools/core/get_environment.js:97#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/mcp/tools/core/get_environment.js:82#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/get_environment.js:97#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 1827,
+    "output_tokens": 92,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/mcp/tools/core/update_environment.js:10-59",
+   "attempt": 0,
+   "ids": [
+    "lib/mcp/tools/core/update_environment.js:44#0",
+    "lib/mcp/tools/core/update_environment.js:44#1",
+    "lib/mcp/tools/core/update_environment.js:46#0",
+    "lib/mcp/tools/core/update_environment.js:46#1",
+    "lib/mcp/tools/core/update_environment.js:50#0",
+    "lib/mcp/tools/core/update_environment.js:50#1",
+    "lib/mcp/tools/core/update_environment.js:55#0",
+    "lib/mcp/tools/core/update_environment.js:55#1",
+    "lib/mcp/tools/core/update_environment.js:59#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/mcp/tools/core/update_environment.js:44#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/update_environment.js:44#1\",\"part\":\"project_dir\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/mcp/tools/core/update_environment.js:46#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/update_environment.js:46#1\",\"part\":\"project_dir\",\"origin\":\"argument_echo\",\"scope\":\"user_local\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/mcp/tools/core/update_environment.js:50#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/update_environment.js:50#1\",\"part\":\"active_project\",\"origin\":\"argument_echo\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/mcp/tools/core/update_environment.js:55#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/update_environment.js:55#1\",\"part\":\"active_user_account\",\"origin\":\"argument_echo\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":true,\"value_from_argument\":true},{\"id\":\"lib/mcp/tools/core/update_environment.js:59#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2214,
+    "output_tokens": 406,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/mcp/tools/core/init.js:14-163",
+   "attempt": 0,
+   "ids": [
+    "lib/mcp/tools/core/init.js:87#0",
+    "lib/mcp/tools/core/init.js:87#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/mcp/tools/core/init.js:87#0\",\"part\":\"\\\\nThe first Cloud SQL instance in the project will use the SQL Connect no-cost trial. See its terms of service: \",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/init.js:87#1\",\"part\":\"(0, freeTrial_1.freeTrialTermsLink)()\",\"origin\":\"resource_read\",\"scope\":\"public\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 3045,
+    "output_tokens": 123,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/mcp/tools/core/init.js:164-260",
+   "attempt": 0,
+   "ids": [
+    "lib/mcp/tools/core/init.js:172#0",
+    "lib/mcp/tools/core/init.js:180#0",
+    "lib/mcp/tools/core/init.js:193#0",
+    "lib/mcp/tools/core/init.js:216#0",
+    "lib/mcp/tools/core/init.js:223#0",
+    "lib/mcp/tools/core/init.js:231#0",
+    "lib/mcp/tools/core/init.js:252#0",
+    "lib/mcp/tools/core/init.js:255#0",
+    "lib/mcp/tools/core/init.js:255#1",
+    "lib/mcp/tools/core/init.js:259#0",
+    "lib/mcp/tools/core/init.js:259#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/mcp/tools/core/init.js:172#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/init.js:180#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/init.js:193#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/init.js:216#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/init.js:223#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/init.js:231#0\",\"part\":\"the statement\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/init.js:252#0\",\"part\":\"the statement\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":true,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/init.js:255#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/init.js:255#1\",\"part\":\"featuresList.join(\\\", \\\")\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/init.js:259#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/init.js:259#1\",\"part\":\"setup.instructions.join(\\\"\\\\n\\\\n- \\\")\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2635,
+    "output_tokens": 477,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/mcp/tools/core/get_security_rules.js:11-57",
+   "attempt": 0,
+   "ids": [
+    "lib/mcp/tools/core/get_security_rules.js:31#0",
+    "lib/mcp/tools/core/get_security_rules.js:31#1",
+    "lib/mcp/tools/core/get_security_rules.js:41#0",
+    "lib/mcp/tools/core/get_security_rules.js:41#1",
+    "lib/mcp/tools/core/get_security_rules.js:44#0",
+    "lib/mcp/tools/core/get_security_rules.js:54#0",
+    "lib/mcp/tools/core/get_security_rules.js:54#1",
+    "lib/mcp/tools/core/get_security_rules.js:54#2",
+    "lib/mcp/tools/core/get_security_rules.js:56#0"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/mcp/tools/core/get_security_rules.js:31#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/get_security_rules.js:31#1\",\"part\":\"projectId\",\"origin\":\"argument_echo\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/mcp/tools/core/get_security_rules.js:41#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/get_security_rules.js:41#1\",\"part\":\"response.status\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/get_security_rules.js:44#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/get_security_rules.js:54#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/get_security_rules.js:54#1\",\"part\":\"productName\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/tools/core/get_security_rules.js:54#2\",\"part\":\"projectId\",\"origin\":\"argument_echo\",\"scope\":\"user_account\",\"control\":\"user\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/mcp/tools/core/get_security_rules.js:56#0\",\"part\":\"the statement\",\"origin\":\"resource_read\",\"scope\":\"user_account\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false}]}",
+   "usage": {
+    "input_tokens": 2278,
+    "output_tokens": 410,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  },
+  {
+   "subject": "handler lines lib/mcp/apps/deploy/mcp-app.js:4-110",
+   "attempt": 0,
+   "ids": [
+    "lib/mcp/apps/deploy/mcp-app.js:11#0",
+    "lib/mcp/apps/deploy/mcp-app.js:11#1",
+    "lib/mcp/apps/deploy/mcp-app.js:12#0",
+    "lib/mcp/apps/deploy/mcp-app.js:12#1",
+    "lib/mcp/apps/deploy/mcp-app.js:12#2",
+    "lib/mcp/apps/deploy/mcp-app.js:28#0",
+    "lib/mcp/apps/deploy/mcp-app.js:28#1",
+    "lib/mcp/apps/deploy/mcp-app.js:32#0",
+    "lib/mcp/apps/deploy/mcp-app.js:47#0",
+    "lib/mcp/apps/deploy/mcp-app.js:47#1",
+    "lib/mcp/apps/deploy/mcp-app.js:56#0",
+    "lib/mcp/apps/deploy/mcp-app.js:56#1",
+    "lib/mcp/apps/deploy/mcp-app.js:66#0",
+    "lib/mcp/apps/deploy/mcp-app.js:69#0",
+    "lib/mcp/apps/deploy/mcp-app.js:76#0",
+    "lib/mcp/apps/deploy/mcp-app.js:76#1",
+    "lib/mcp/apps/deploy/mcp-app.js:79#0",
+    "lib/mcp/apps/deploy/mcp-app.js:79#1",
+    "lib/mcp/apps/deploy/mcp-app.js:85#0",
+    "lib/mcp/apps/deploy/mcp-app.js:85#1",
+    "lib/mcp/apps/deploy/mcp-app.js:93#0",
+    "lib/mcp/apps/deploy/mcp-app.js:93#1",
+    "lib/mcp/apps/deploy/mcp-app.js:105#0",
+    "lib/mcp/apps/deploy/mcp-app.js:105#1"
+   ],
+   "response": "{\"statements\":[{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:11#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:11#1\",\"part\":\"type\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:12#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:12#1\",\"part\":\"new Date().toLocaleTimeString()\",\"origin\":\"computed\",\"scope\":\"none\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:12#2\",\"part\":\"message\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:28#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:28#1\",\"part\":\"JSON.stringify(statusRes.content)\",\"origin\":\"resource_read\",\"scope\":\"unknown\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:32#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:47#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:47#1\",\"part\":\"job.error || \\\"Unknown error\\\"\",\"origin\":\"resource_read\",\"scope\":\"unknown\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:56#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:56#1\",\"part\":\"message\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:66#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:69#0\",\"part\":\"the statement\",\"origin\":\"not_output\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:76#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:76#1\",\"part\":\"targets.join(\\\", \\\")\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:79#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:79#1\",\"part\":\"onlyArg\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:85#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:85#1\",\"part\":\"JSON.stringify(result.content)\",\"origin\":\"resource_read\",\"scope\":\"unknown\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:93#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:93#1\",\"part\":\"jobId\",\"origin\":\"resource_read\",\"scope\":\"unknown\",\"control\":\"service\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:105#0\",\"part\":\"fixed text of the template\",\"origin\":\"literal\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":false},{\"id\":\"lib/mcp/apps/deploy/mcp-app.js:105#1\",\"part\":\"message\",\"origin\":\"argument_echo\",\"scope\":\"none\",\"control\":\"none\",\"gate\":false,\"value_from_argument\":true}]}",
+   "usage": {
+    "input_tokens": 3267,
+    "output_tokens": 1123,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+   }
+  }
+ ],
+ "final": {
+  "tools": {
+   "firebase_login": {
+    "result_contents": [
+     {
+      "part": "Success! Logged in as <email>",
+      "produced_at": "lib/commands/login.js:31",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/commands/login.js:41#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/commands/login.js:41",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/commands/login.js:41#1",
+      "part": "message",
+      "produced_at": "lib/commands/login.js:41",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     },
+     {
+      "id": "lib/commands/login.js:53#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/commands/login.js:53",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/commands/login.js:53#1",
+      "part": "clc.bold(sessionIdPrefix)",
+      "produced_at": "lib/commands/login.js:53",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/commands/login.js:57#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/commands/login.js:57",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/commands/login.js:57#1",
+      "part": "loginUrl",
+      "produced_at": "lib/commands/login.js:57",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/commands/login.js:61#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/commands/login.js:61",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/commands/login.js:61#1",
+      "part": "clc.bold(`firebase login <authorizationCode>`)",
+      "produced_at": "lib/commands/login.js:61",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/commands/login.js:67#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/commands/login.js:67",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/commands/login.js:67#1",
+      "part": "message",
+      "produced_at": "lib/commands/login.js:67",
+      "origin": "unknown",
+      "scope": "unknown",
+      "control": "unknown"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "authCode",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "authOrigin",
+      "at": "lib/auth.js:236"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/commands/login.js:18-108"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/commands/login.js:18-108",
+     "lib/auth.js:218-260"
+    ],
+    "rationale": "The `firebase_login` tool initiates a login process by generating a URL and session ID for the user to authenticate. Once the user provides the authorization code, it sends this code to the Firebase authentication server (`authOrigin`) to obtain tokens. The result includes a success message with the logged-in email, which is computed from the authentication response.",
+    "kind": "WRITE",
+    "destination_args": [
+     "authCode"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "firebase_logout": {
+    "result_contents": [
+     {
+      "part": "Logged out from <email>",
+      "produced_at": "lib/mcp/tools/core/logout.js:47",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/tools/core/logout.js:26#0",
+      "part": "the statement",
+      "produced_at": "lib/mcp/tools/core/logout.js:26",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/logout.js:34#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/tools/core/logout.js:34",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/logout.js:34#1",
+      "part": "email",
+      "produced_at": "lib/mcp/tools/core/logout.js:34",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/logout.js:47#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/tools/core/logout.js:47",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/logout.js:47#1",
+      "part": "account.user.email",
+      "produced_at": "lib/mcp/tools/core/logout.js:47",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "lib/mcp/tools/core/logout.js:53#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/tools/core/logout.js:53",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/logout.js:53#1",
+      "part": "account.user.email",
+      "produced_at": "lib/mcp/tools/core/logout.js:53",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "lib/mcp/tools/core/logout.js:59#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/tools/core/logout.js:59",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/logout.js:59#1",
+      "part": "newDefaultAccount.user.email",
+      "produced_at": "lib/mcp/tools/core/logout.js:59",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "lib/mcp/tools/core/logout.js:61#0",
+      "part": "the statement",
+      "produced_at": "lib/mcp/tools/core/logout.js:61",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "refresh_token",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "authOrigin",
+      "at": "lib/auth.js:634"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/mcp/tools/core/logout.js:23-61"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/logout.js:23-61",
+     "lib/auth.js:627-641"
+    ],
+    "rationale": "The `firebase_logout` tool logs out the user by invalidating the refresh token with the Firebase authentication server (`authOrigin`). It returns a message indicating the email of the account that was logged out, which is computed from the account information.",
+    "kind": "WRITE",
+    "destination_args": [
+     "email"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "firebase_get_project": {
+    "result_contents": [
+     {
+      "part": "Project metadata and configuration details",
+      "produced_at": "lib/mcp/tools/core/get_project.js:22",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/tools/core/get_project.js:22#0",
+      "part": "the statement",
+      "produced_at": "lib/mcp/tools/core/get_project.js:22",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/mcp/tools/core/get_project.js:21-22"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/get_project.js:21-22"
+    ],
+    "rationale": "The `firebase_get_project` tool retrieves metadata and configuration details for the currently active Firebase project. The result is read from the user's account and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "firebase_list_apps": {
+    "result_contents": [
+     {
+      "part": "List of Firebase Apps",
+      "produced_at": "lib/mcp/tools/core/index.js:26",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/mcp/tools/core/index.js:26"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/index.js:26"
+    ],
+    "rationale": "The `firebase_list_apps` tool retrieves a list of Firebase Apps registered in the currently active Firebase project. The result is read from the user's account and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "firebase_list_projects": {
+    "result_contents": [
+     {
+      "part": "List of Firebase Projects",
+      "produced_at": "lib/mcp/tools/core/index.js:27",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/mcp/tools/core/index.js:27"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/index.js:27"
+    ],
+    "rationale": "The `firebase_list_projects` tool retrieves a list of Firebase Projects that the signed-in user has access to. The result is read from the user's account and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "firebase_get_sdk_config": {
+    "result_contents": [
+     {
+      "part": "Firebase SDK configuration",
+      "produced_at": "lib/mcp/tools/core/index.js:28",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/mcp/tools/core/index.js:28"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/index.js:28"
+    ],
+    "rationale": "The `firebase_get_sdk_config` tool retrieves the Firebase configuration information for a Firebase App. The result is read from the user's account and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "firebase_create_project": {
+    "result_contents": [
+     {
+      "part": "Created project details",
+      "produced_at": "lib/mcp/tools/core/index.js:29",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "project_id, display_name",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "management/projects",
+      "at": "lib/mcp/tools/core/create_project.js:49"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/mcp/tools/core/create_project.js:49"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/index.js:29",
+     "lib/mcp/tools/core/create_project.js:49"
+    ],
+    "rationale": "The `firebase_create_project` tool creates a new Firebase Project using the provided project ID and display name. The result includes details of the created project, which are computed and controlled by the service. The tool sends the project ID and display name to the Firebase management service to create the project.",
+    "kind": "WRITE",
+    "destination_args": [
+     "project_id"
+    ],
+    "value_args": [
+     "display_name"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "firebase_create_app": {
+    "result_contents": [
+     {
+      "part": "Created app details",
+      "produced_at": "lib/mcp/tools/core/create_app.js:59",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "display_name, platform, android_config, ios_config",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "management/apps",
+      "at": "lib/mcp/tools/core/create_app.js:59"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": "lib/mcp/tools/core/create_app.js:59"
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/index.js:30",
+     "lib/mcp/tools/core/create_app.js:59"
+    ],
+    "rationale": "The `firebase_create_app` tool creates a new Firebase App in the currently active Firebase Project. It sends the app details to the Firebase management service to create the app. The result includes details of the created app, which are computed and controlled by the service.",
+    "kind": "WRITE",
+    "destination_args": [
+     "platform"
+    ],
+    "value_args": [
+     "display_name",
+     "android_config",
+     "ios_config"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "firebase_create_android_sha": {
+    "result_contents": [
+     {
+      "part": "Successfully added {certType} certificate to Android app {app_id}",
+      "produced_at": "lib/mcp/tools/core/create_android_sha.js:42",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/tools/core/create_android_sha.js:42#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/tools/core/create_android_sha.js:42",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/create_android_sha.js:42#1",
+      "part": "certType",
+      "produced_at": "lib/mcp/tools/core/create_android_sha.js:42",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/tools/core/create_android_sha.js:42#2",
+      "part": "app_id",
+      "produced_at": "lib/mcp/tools/core/create_android_sha.js:42",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "{projectId, app_id, sha_hash, certType}",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "apps_1.createAppAndroidSha",
+      "at": "lib/mcp/tools/core/create_android_sha.js:36"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/create_android_sha.js:17-43"
+    ],
+    "rationale": "The tool `firebase_create_android_sha` adds a SHA certificate to an Android app. It computes the certificate type based on the hash length and calls `createAppAndroidSha` to perform the operation. The result is a success message indicating the certificate type and app ID, which is computed and controlled by the service.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "app_id",
+     "sha_hash"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "firebase_get_environment": {
+    "result_contents": [
+     {
+      "part": "# Environment Information\n\nProject Directory: {config.projectDir}\nProject Config Path: {projectConfigPath}\nActive Project ID: {activeProject}\nGemini in Firebase Terms of Service: {geminiTosAccepted}\nBilling Enabled: {billingEnabled}\nAuthenticated User: {authenticatedUser}\nDetected App IDs: {detectedApps}\nAvailable Project Aliases (format: '[alias]: [projectId]'): {availableProjects}{hasOtherAccounts ? `\nAvailable Accounts: \n\n${availableAccounts}` : \"\"}\n{config.projectFileContents ? `\nfirebase.json contents:\n\n\u007fjson\n${config.projectFileContents}\n\u007f` : `\nNo firebase.json file was found.\n\nIf this project does not use Firebase services that require a firebase.json file, no action is necessary.\n\nIf this project uses Firebase services that require a firebase.json file, the user will most likely want to:\n\na) Change the project directory using the 'firebase_update_environment' tool to select a directory with a 'firebase.json' file in it, or\nb) Initialize a new Firebase project directory using the 'firebase_init' tool.\n\nConfirm with the user before taking action.`}",
+      "produced_at": "lib/mcp/tools/core/get_environment.js:29-54",
+      "origin": "computed",
+      "scope": "user_local",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/tools/core/get_environment.js:97#0",
+      "part": "the statement",
+      "produced_at": "lib/mcp/tools/core/get_environment.js:97",
+      "origin": "computed",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/get_environment.js:56-97"
+    ],
+    "rationale": "The tool `firebase_get_environment` retrieves the current Firebase environment configuration. It returns a detailed environment information string, which includes project directory, active project ID, authenticated user, and more. This information is computed from the user's local configuration and is controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "firebase_update_environment": {
+    "result_contents": [
+     {
+      "part": "- Updated project directory to '{project_dir}'\n",
+      "produced_at": "lib/mcp/tools/core/update_environment.js:46",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "- Updated active project to '{active_project}'\n",
+      "produced_at": "lib/mcp/tools/core/update_environment.js:51",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "- Updated active account to '{active_user_account}'\n",
+      "produced_at": "lib/mcp/tools/core/update_environment.js:55",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "No changes were made.",
+      "produced_at": "lib/mcp/tools/core/update_environment.js:58",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/update_environment.js:44#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/tools/core/update_environment.js:44",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/update_environment.js:44#1",
+      "part": "project_dir",
+      "produced_at": "lib/mcp/tools/core/update_environment.js:44",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "lib/mcp/tools/core/update_environment.js:46#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/tools/core/update_environment.js:46",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/update_environment.js:46#1",
+      "part": "project_dir",
+      "produced_at": "lib/mcp/tools/core/update_environment.js:46",
+      "origin": "argument_echo",
+      "scope": "user_local",
+      "control": "user"
+     },
+     {
+      "id": "lib/mcp/tools/core/update_environment.js:50#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/tools/core/update_environment.js:50",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/update_environment.js:50#1",
+      "part": "active_project",
+      "produced_at": "lib/mcp/tools/core/update_environment.js:50",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "lib/mcp/tools/core/update_environment.js:55#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/tools/core/update_environment.js:55",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/update_environment.js:55#1",
+      "part": "active_user_account",
+      "produced_at": "lib/mcp/tools/core/update_environment.js:55",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/update_environment.js:10-59"
+    ],
+    "rationale": "The tool `firebase_update_environment` updates the environment configuration for the Firebase CLI and MCP server. It echoes back the changes made to the project directory, active project, and active user account. If no changes are made, it returns a literal message. The echoed arguments are controlled by the user.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "project_dir",
+     "active_project",
+     "active_user_account"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "firebase_init": {
+    "result_contents": [
+     {
+      "part": "Successfully setup those features: {featuresList.join(\", \")}\n\nTo get started:\n\n- {setup.instructions.join(\"\\n\\n- \")}\n",
+      "produced_at": "lib/mcp/tools/core/init.js:255-260",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/tools/core/init.js:87#0",
+      "part": "\\nThe first Cloud SQL instance in the project will use the SQL Connect no-cost trial. See its terms of service:",
+      "produced_at": "lib/mcp/tools/core/init.js:87",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/init.js:87#1",
+      "part": "(0, freeTrial_1.freeTrialTermsLink)()",
+      "produced_at": "lib/mcp/tools/core/init.js:87",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/tools/core/init.js:172#0",
+      "part": "the statement",
+      "produced_at": "lib/mcp/tools/core/init.js:172",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/init.js:180#0",
+      "part": "the statement",
+      "produced_at": "lib/mcp/tools/core/init.js:180",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/init.js:193#0",
+      "part": "the statement",
+      "produced_at": "lib/mcp/tools/core/init.js:193",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/init.js:216#0",
+      "part": "the statement",
+      "produced_at": "lib/mcp/tools/core/init.js:216",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/init.js:223#0",
+      "part": "the statement",
+      "produced_at": "lib/mcp/tools/core/init.js:223",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/init.js:231#0",
+      "part": "the statement",
+      "produced_at": "lib/mcp/tools/core/init.js:231",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/init.js:252#0",
+      "part": "the statement",
+      "produced_at": "lib/mcp/tools/core/init.js:252",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/init.js:255#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/tools/core/init.js:255",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/init.js:255#1",
+      "part": "featuresList.join(\", \")",
+      "produced_at": "lib/mcp/tools/core/init.js:255",
+      "origin": "computed",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/init.js:259#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/tools/core/init.js:259",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/init.js:259#1",
+      "part": "setup.instructions.join(\"\\n\\n- \")",
+      "produced_at": "lib/mcp/tools/core/init.js:259",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/init.js:14-260"
+    ],
+    "rationale": "The tool `firebase_init` initializes selected Firebase services in the workspace. It returns a success message listing the features set up and instructions to get started. The result is computed based on the features initialized and is controlled by the service.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "features"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "firebase_get_security_rules": {
+    "result_contents": [
+     {
+      "part": "Ruleset contains no rules files.",
+      "produced_at": "lib/mcp/tools/core/get_security_rules.js:56",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "{rules?.[0].content}",
+      "produced_at": "lib/mcp/tools/core/get_security_rules.js:56",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/tools/core/get_security_rules.js:31#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/tools/core/get_security_rules.js:31",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/get_security_rules.js:31#1",
+      "part": "projectId",
+      "produced_at": "lib/mcp/tools/core/get_security_rules.js:31",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "lib/mcp/tools/core/get_security_rules.js:41#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/tools/core/get_security_rules.js:41",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/get_security_rules.js:41#1",
+      "part": "response.status",
+      "produced_at": "lib/mcp/tools/core/get_security_rules.js:41",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/tools/core/get_security_rules.js:44#0",
+      "part": "the statement",
+      "produced_at": "lib/mcp/tools/core/get_security_rules.js:44",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/tools/core/get_security_rules.js:54#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/tools/core/get_security_rules.js:54",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/tools/core/get_security_rules.js:54#1",
+      "part": "productName",
+      "produced_at": "lib/mcp/tools/core/get_security_rules.js:54",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/tools/core/get_security_rules.js:54#2",
+      "part": "projectId",
+      "produced_at": "lib/mcp/tools/core/get_security_rules.js:54",
+      "origin": "argument_echo",
+      "scope": "user_account",
+      "control": "user"
+     },
+     {
+      "id": "lib/mcp/tools/core/get_security_rules.js:56#0",
+      "part": "the statement",
+      "produced_at": "lib/mcp/tools/core/get_security_rules.js:56",
+      "origin": "resource_read",
+      "scope": "user_account",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "GET request to /projects/{projectId}/releases",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "rules_1.listAllReleases",
+      "at": "lib/mcp/tools/core/get_security_rules.js:51"
+     },
+     {
+      "data": "GET request to /projects/{projectId}/rulesets/{rulesetName}",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "rules_1.getRulesetContent",
+      "at": "lib/mcp/tools/core/get_security_rules.js:55"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/get_security_rules.js:11-57"
+    ],
+    "rationale": "The tool `firebase_get_security_rules` retrieves security rules for a specified Firebase service. It reads the rules from the user's account and returns them. If no rules are found, it returns a literal message. The rules are fetched from Firebase services, and the content is controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "type"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SECRET",
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "firebase_read_resources": {
+    "result_contents": [
+     {
+      "part": "{resource contents}",
+      "produced_at": "lib/mcp/tools/core/read_resources.js:14",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/tools/core/read_resources.js:14"
+    ],
+    "rationale": "The tool `firebase_read_resources` reads the contents of specified `firebase://` resources. It returns the resource contents, which are public and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "uris"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "firebase_deploy": {
+    "result_contents": [
+     {
+      "part": "Deployment started with Job ID: {jobId}. Polling status...",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:93",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:11#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:11",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:11#1",
+      "part": "type",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:11",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:12#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:12",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:12#1",
+      "part": "new Date().toLocaleTimeString()",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:12",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:12#2",
+      "part": "message",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:12",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:28#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:28",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:28#1",
+      "part": "JSON.stringify(statusRes.content)",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:28",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:47#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:47",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:47#1",
+      "part": "job.error || \"Unknown error\"",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:47",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:56#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:56",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:56#1",
+      "part": "message",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:56",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:76#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:76",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:76#1",
+      "part": "targets.join(\", \")",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:76",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:79#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:79",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:79#1",
+      "part": "onlyArg",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:79",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:85#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:85",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:85#1",
+      "part": "JSON.stringify(result.content)",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:85",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:93#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:93",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:93#1",
+      "part": "jobId",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:93",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:105#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:105",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:105#1",
+      "part": "message",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:105",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "{only}",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "app.callServerTool",
+      "at": "lib/mcp/apps/deploy/mcp-app.js:81"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/apps/deploy/mcp-app.js:4-110",
+     "lib/mcp/apps/deploy/mcp-app.js:80-83"
+    ],
+    "rationale": "The tool `firebase_deploy` initiates a deployment of Firebase services. It returns a message with the Job ID if the deployment starts successfully. The deployment is initiated by calling `app.callServerTool` with the specified services to deploy.",
+    "kind": "WRITE",
+    "destination_args": [],
+    "value_args": [
+     "only"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "firebase_deploy_status": {
+    "result_contents": [
+     {
+      "part": "Deployment completed successfully!",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:41",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "part": "Deployment failed: {job.error || \"Unknown error\"}",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:47",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:11#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:11",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:11#1",
+      "part": "type",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:11",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:12#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:12",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:12#1",
+      "part": "new Date().toLocaleTimeString()",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:12",
+      "origin": "computed",
+      "scope": "none",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:12#2",
+      "part": "message",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:12",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:28#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:28",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:28#1",
+      "part": "JSON.stringify(statusRes.content)",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:28",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:47#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:47",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:47#1",
+      "part": "job.error || \"Unknown error\"",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:47",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:56#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:56",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:56#1",
+      "part": "message",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:56",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:76#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:76",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:76#1",
+      "part": "targets.join(\", \")",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:76",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:79#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:79",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:79#1",
+      "part": "onlyArg",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:79",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:85#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:85",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:85#1",
+      "part": "JSON.stringify(result.content)",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:85",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:93#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:93",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:93#1",
+      "part": "jobId",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:93",
+      "origin": "resource_read",
+      "scope": "unknown",
+      "control": "service"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:105#0",
+      "part": "fixed text of the template",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:105",
+      "origin": "literal",
+      "scope": "none",
+      "control": "none"
+     },
+     {
+      "id": "lib/mcp/apps/deploy/mcp-app.js:105#1",
+      "part": "message",
+      "produced_at": "lib/mcp/apps/deploy/mcp-app.js:105",
+      "origin": "argument_echo",
+      "scope": "none",
+      "control": "none"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "{jobId}",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "app.callServerTool",
+      "at": "lib/mcp/apps/deploy/mcp-app.js:24"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/apps/deploy/mcp-app.js:4-110",
+     "lib/mcp/apps/deploy/mcp-app.js:23-26"
+    ],
+    "rationale": "The tool `firebase_deploy_status` checks the status of a deployment job. It returns a success message if the deployment is completed successfully or an error message if it fails. The status is checked by calling `app.callServerTool` with the Job ID.",
+    "kind": "READ",
+    "destination_args": [],
+    "value_args": [
+     "jobId"
+    ],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "developerknowledge_search_documents": {
+    "result_contents": [
+     {
+      "part": "chunks of text, names, and URLs for matching documents",
+      "produced_at": "lib/mcp/onemcp/index.js:26-30",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "query",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "developerKnowledgeOrigin",
+      "at": "lib/mcp/onemcp/index.js:26-30"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/onemcp/index.js:26-30"
+    ],
+    "rationale": "The `developerknowledge_search_documents` tool sends a query to the `developerKnowledgeOrigin` and returns chunks of text, names, and URLs for matching documents. The result is read from a public resource and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [
+     "query"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "developerknowledge_answer_query": {
+    "result_contents": [
+     {
+      "part": "generated answer_text and a list of document names (references)",
+      "produced_at": "lib/mcp/onemcp/index.js:26-30",
+      "origin": "computed",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "query",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "developerKnowledgeOrigin",
+      "at": "lib/mcp/onemcp/index.js:26-30"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/onemcp/index.js:26-30"
+    ],
+    "rationale": "The `developerknowledge_answer_query` tool sends a query to the `developerKnowledgeOrigin` and returns a generated answer and a list of document names. The result is computed from public resources and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [
+     "query"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [
+     "return"
+    ],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   },
+   "developerknowledge_get_documents": {
+    "result_contents": [
+     {
+      "part": "full content of documents",
+      "produced_at": "lib/mcp/onemcp/index.js:26-30",
+      "origin": "resource_read",
+      "scope": "public",
+      "control": "service"
+     }
+    ],
+    "outbound_calls": [
+     {
+      "data": "names",
+      "destination_class": "literal_host_in_code",
+      "host_or_config": "developerKnowledgeOrigin",
+      "at": "lib/mcp/onemcp/index.js:26-30"
+     }
+    ],
+    "runs_supplied_code": {
+     "where": "none",
+     "at": ""
+    },
+    "delivers_to_chosen_party": {
+     "value": false,
+     "argument": "",
+     "at": ""
+    },
+    "evidence": [
+     "lib/mcp/onemcp/index.js:26-30"
+    ],
+    "rationale": "The `developerknowledge_get_documents` tool retrieves the full content of documents from the `developerKnowledgeOrigin`. The result is read from a public resource and controlled by the service.",
+    "kind": "READ",
+    "destination_args": [
+     "names"
+    ],
+    "value_args": [],
+    "identifier_output_fields": [],
+    "attacker_named_fields": [],
+    "default_enabled": true,
+    "undetermined": false,
+    "labels": [
+     "SINK"
+    ],
+    "injectable_output_fields": [],
+    "coverage_gaps": []
+   }
+  },
+  "value_conditions": [
+   {
+    "syntax": "experiments.isEnabled(\"appcheckadmin\")",
+    "kind": "flag",
+    "effect": "Enables appcheck services and providers commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:27"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"apptesting\")",
+    "kind": "flag",
+    "effect": "Enables apptesting wata command",
+    "default": "",
+    "evidence": "lib/commands/index.js:55"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"crashlyticsWeb\")",
+    "kind": "flag",
+    "effect": "Enables crashlytics sourcemap upload command",
+    "default": "",
+    "evidence": "lib/commands/index.js:79"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"rtdbrules\")",
+    "kind": "flag",
+    "effect": "Enables database rules commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:92"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"extMigrationFeatures\")",
+    "kind": "flag",
+    "effect": "Enables ext migrate command",
+    "default": "",
+    "evidence": "lib/commands/index.js:123"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"functionsiac\")",
+    "kind": "flag",
+    "effect": "Enables functions export command",
+    "default": "",
+    "evidence": "lib/commands/index.js:170"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"deletegcfartifacts\")",
+    "kind": "flag",
+    "effect": "Enables functions deletegcfartifacts command",
+    "default": "",
+    "evidence": "lib/commands/index.js:179"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"kits\")",
+    "kind": "flag",
+    "effect": "Enables functions kits commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:191"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"internaltesting\")",
+    "kind": "flag",
+    "effect": "Enables internaltesting commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:213"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"apphosting\")",
+    "kind": "flag",
+    "effect": "Enables apphosting commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:220"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"ailogic\")",
+    "kind": "flag",
+    "effect": "Enables ailogic commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:245"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"mcp\")",
+    "kind": "flag",
+    "effect": "Enables mcp command",
+    "default": "",
+    "evidence": "lib/commands/index.js:267"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"appcheckadmin\")",
+    "kind": "flag",
+    "effect": "Enables appcheck services and providers commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:27"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"apptesting\")",
+    "kind": "flag",
+    "effect": "Enables apptesting wata command",
+    "default": "",
+    "evidence": "lib/commands/index.js:55"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"crashlyticsWeb\")",
+    "kind": "flag",
+    "effect": "Enables crashlytics sourcemap upload command",
+    "default": "",
+    "evidence": "lib/commands/index.js:79"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"rtdbrules\")",
+    "kind": "flag",
+    "effect": "Enables database rules commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:92"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"extMigrationFeatures\")",
+    "kind": "flag",
+    "effect": "Enables ext migrate command",
+    "default": "",
+    "evidence": "lib/commands/index.js:123"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"functionsiac\")",
+    "kind": "flag",
+    "effect": "Enables functions export command",
+    "default": "",
+    "evidence": "lib/commands/index.js:170"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"deletegcfartifacts\")",
+    "kind": "flag",
+    "effect": "Enables functions deletegcfartifacts command",
+    "default": "",
+    "evidence": "lib/commands/index.js:179"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"kits\")",
+    "kind": "flag",
+    "effect": "Enables functions kits commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:191"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"internaltesting\")",
+    "kind": "flag",
+    "effect": "Enables internaltesting commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:213"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"apphosting\")",
+    "kind": "flag",
+    "effect": "Enables apphosting commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:220"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"ailogic\")",
+    "kind": "flag",
+    "effect": "Enables ailogic commands",
+    "default": "",
+    "evidence": "lib/commands/index.js:245"
+   },
+   {
+    "syntax": "experiments.isEnabled(\"mcp\")",
+    "kind": "flag",
+    "effect": "Enables mcp command",
+    "default": "",
+    "evidence": "lib/commands/index.js:267"
+   }
+  ],
+  "notes": []
+ },
+ "hashes": {
+  "rubric_sha": "191e69d289880d38",
+  "schema_sha": "0f8d7d93eb07c885",
+  "source_sha": "56f78dba7d35772f"
+ },
+ "run": {
+  "model": "gpt-4o-2024-08-06",
+  "temperature": 0.0,
+  "seed": 0,
+  "files": [
+   "lib/commands/index.js",
+   "lib/mcp/tools/core/get_project.js",
+   "lib/mcp/apps/update_environment/mcp-app.js",
+   "lib/mcp/tools/core/create_android_sha.js",
+   "lib/mcp/apps/init/mcp-app.js",
+   "lib/mcp/tools/core/get_security_rules.js",
+   "lib/mcp/apps/deploy/mcp-app.js",
+   "lib/dataconnect/client.js",
+   "lib/mcp/prompts/core/init.js",
+   "lib/mcp/tools/core/index.js",
+   "lib/mcp/prompts/core/deploy.js",
+   "lib/mcp/errors.js",
+   "lib/mcp/onemcp/index.js",
+   "lib/mcp/tools/core/get_environment.js",
+   "lib/auth.js",
+   "lib/mcp/resources/guides/init_hosting.js",
+   "lib/mcp/prompts/crashlytics/connect.js",
+   "lib/mcp/tools/core/logout.js",
+   "lib/mcp/resources/guides/init_backend.js",
+   "lib/mcp/resources/guides/app_id.js",
+   "lib/mcp/tools/core/update_environment.js",
+   "lib/mcp/resources/guides/crashlytics_connect.js",
+   "lib/commands/logout.js",
+   "lib/mcp/prompts/dataconnect/schema.js",
+   "lib/mcp/tools/dataconnect/compile.js",
+   "lib/mcp/tools/crashlytics/reports.js",
+   "lib/mcp/tools/core/create_app.js",
+   "lib/mcp/tools/dataconnect/execute.js",
+   "lib/mcp/tools/dataconnect/list_services.js",
+   "lib/commands/login.js",
+   "lib/mcp/tools/core/init.js",
+   "lib/mcp/resources/guides/init_ai.js",
+   "README.md"
+  ]
+ }
+}
